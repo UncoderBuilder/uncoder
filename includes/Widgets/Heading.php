@@ -115,6 +115,36 @@ class Heading extends Widget_Base {
 				'selectors'   => array( '{{WRAPPER}} :is(mark, strong)' => 'color: {{VALUE}}; background: none' ),
 			)
 		);
+		// A marker box behind the highlighted words (after the color, whose rule clears the background).
+		$this->add_control(
+			'highlight_background',
+			array(
+				'type'        => 'color',
+				'label'       => __( 'Highlight background', 'uncoder' ),
+				'description' => __( 'A box behind the <mark> or <strong> words.', 'uncoder' ),
+				'selectors'   => array( '{{WRAPPER}} :is(mark, strong)' => 'background: {{VALUE}}; -webkit-box-decoration-break: clone; box-decoration-break: clone' ),
+			)
+		);
+		$this->add_responsive_control(
+			'highlight_padding',
+			array(
+				'type'       => 'dimensions',
+				'label'      => __( 'Highlight padding', 'uncoder' ),
+				'size_units' => array( 'px', 'em' ),
+				'condition'  => array( 'highlight_background!' => '' ),
+				'selectors'  => array( '{{WRAPPER}} :is(mark, strong)' => 'padding: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'highlight_radius',
+			array(
+				'type'       => 'dimensions',
+				'label'      => __( 'Highlight radius', 'uncoder' ),
+				'size_units' => array( 'px', 'em' ),
+				'condition'  => array( 'highlight_background!' => '' ),
+				'selectors'  => array( '{{WRAPPER}} :is(mark, strong)' => 'border-radius: {{VALUE}}' ),
+			)
+		);
 		$this->add_responsive_control(
 			'max_width',
 			array(

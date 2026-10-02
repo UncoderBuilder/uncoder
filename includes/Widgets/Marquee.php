@@ -73,7 +73,7 @@ class Marquee extends Widget_Base {
 				'label'       => __( 'Items', 'uncoder' ),
 				'title_field' => 'text',
 				'fields'      => array(
-					'type'  => array(
+					'type'         => array(
 						'type'    => 'choose',
 						'label'   => __( 'Item', 'uncoder' ),
 						'default' => 'text',
@@ -82,7 +82,7 @@ class Marquee extends Widget_Base {
 							'image' => array( 'label' => __( 'Image', 'uncoder' ), 'icon' => 'image' ),
 						),
 					),
-					'text'  => array(
+					'text'         => array(
 						'type'      => 'text',
 						'label'     => __( 'Text', 'uncoder' ),
 						'html'      => 'inline',
@@ -90,21 +90,35 @@ class Marquee extends Widget_Base {
 						'inline'    => true,
 						'condition' => array( 'type!' => 'image' ),
 					),
-					'icon'  => array(
+					'icon'         => array(
 						'type'        => 'icon',
 						'label'       => __( 'Icon', 'uncoder' ),
 						'description' => __( 'Optional, shown before the text.', 'uncoder' ),
 						'condition'   => array( 'type!' => 'image' ),
 					),
-					'image' => array(
+					'image'        => array(
 						'type'      => 'media',
 						'label'     => __( 'Image', 'uncoder' ),
 						'condition' => array( 'type' => 'image' ),
 					),
-					'link'  => array( 'type' => 'url', 'label' => __( 'Link', 'uncoder' ) ),
+					'link'         => array( 'type' => 'url', 'label' => __( 'Link', 'uncoder' ) ),
+					// Per item: a brand word in its own colour, or hollow letters next to filled ones.
+					'item_color'   => array(
+						'type'      => 'color',
+						'label'     => __( 'Item color', 'uncoder' ),
+						'condition' => array( 'type!' => 'image' ),
+						'selectors' => array( '{{WRAPPER}} .uncoder-marquee__item{{CURRENT_ITEM}}' => 'color: {{VALUE}}' ),
+					),
+					'item_outline' => array(
+						'type'        => 'color',
+						'label'       => __( 'Hollow outline', 'uncoder' ),
+						'description' => __( 'Outlined letters with no fill, in this color.', 'uncoder' ),
+						'condition'   => array( 'type!' => 'image' ),
+						'selectors'   => array( '{{WRAPPER}} .uncoder-marquee__item{{CURRENT_ITEM}}' => 'color: transparent; -webkit-text-stroke: 1px {{VALUE}}' ),
+					),
 				),
 				'default'     => $this->default_items(),
-				'ai'          => 'Rows: {"text":"…","icon":{"library":"lucide","value":"…"}} for text (icon optional) or {"type":"image","image":{"id":123}} for an image (logos, photos); mix freely. Optional "link".',
+				'ai'          => 'Rows: {"text":"…","icon":{"library":"lucide","value":"…"}} for text (icon optional) or {"type":"image","image":{"id":123}} for an image (logos, photos); mix freely. Optional "link"; per text row "item_color" and "item_outline" (hollow letters in that color).',
 			)
 		);
 		$this->add_control(

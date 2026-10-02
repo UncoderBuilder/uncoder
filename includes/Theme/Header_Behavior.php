@@ -7,6 +7,7 @@
 
 namespace Uncoder\Builder\Theme;
 
+use Uncoder\Builder\Core\Breakpoints;
 use Uncoder\Builder\Core\Utils;
 use Uncoder\Builder\Plugin;
 
@@ -93,11 +94,17 @@ final class Header_Behavior {
 		$doc    = Plugin::instance()->documents()->get( $header_id );
 		$s      = $doc ? $doc->page_settings() : array();
 		$sticky = (string) ( $s['header_sticky'] ?? '' );
+		$off    = array();
 		if ( '' === $sticky && $doc ) {
-			// Headers built with the generic "sticky" option on their top-level container.
+			// Headers built with the generic "sticky" option on their top-level container; its "Sticky on"
+			// devices carry over (e.g. a header that only sticks on tablets and phones).
 			foreach ( $doc->elements() as $node ) {
 				if ( 'top' === ( $node['settings']['_sticky'] ?? '' ) ) {
 					$sticky = 'always';
+					$on     = $node['settings']['_sticky_on'] ?? null;
+					if ( is_array( $on ) ) {
+						$off = array_values( array_diff( Breakpoints::devices(), $on ) );
+					}
 					break;
 				}
 			}
@@ -114,6 +121,7 @@ final class Header_Behavior {
 
 		self::$cache[ $header_id ] = array(
 			'sticky'      => in_array( $sticky, array( 'always', 'reveal' ), true ) ? $sticky : '',
+			'sticky_off'  => $off,
 			'transparent' => $transparent,
 			'settings'    => $s,
 		);
@@ -136,6 +144,13 @@ final class Header_Behavior {
 		$vars    = array();
 		if ( '' !== $b['sticky'] ) {
 			$classes[] = 'uncoder-header--sticky';
+			// Devices left out of "Sticky on" scroll normally (the visibility CSS ranges); a transparent header
+			// keeps overlaying there instead.
+			if ( ! $b['transparent'] ) {
+				foreach ( $b['sticky_off'] as $device ) {
+					$classes[] = 'uncoder-sticky-off-' . sanitize_html_class( (string) $device );
+				}
+			}
 			if ( 'reveal' === $b['sticky'] ) {
 				$classes[] = 'uncoder-header--reveal';
 			}

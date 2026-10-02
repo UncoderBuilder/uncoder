@@ -477,7 +477,29 @@ final class Site_Kit {
 				'title'       => $seo['title'],
 				'description' => $seo['description'],
 			),
+			'meta'           => self::public_meta( $id ),
 		);
+	}
+
+	/**
+	 * A post's own custom fields: public keys (no leading underscore) with one plain value each, e.g. a byline a card
+	 * shows through the Custom field tag. Plugin data (protected keys, arrays, objects) stays behind.
+	 *
+	 * @return array<string,string>
+	 */
+	private static function public_meta( int $id ): array {
+		$out = array();
+		foreach ( (array) get_post_meta( $id ) as $key => $values ) {
+			$key = (string) $key;
+			if ( is_protected_meta( $key, 'post' ) || 1 !== count( (array) $values ) || count( $out ) >= 50 ) {
+				continue;
+			}
+			$value = maybe_unserialize( $values[0] );
+			if ( is_scalar( $value ) && strlen( (string) $value ) <= 5000 ) {
+				$out[ $key ] = (string) $value;
+			}
+		}
+		return $out;
 	}
 
 	/** @return array<string,mixed> */
@@ -1317,6 +1339,13 @@ final class Site_Kit {
 			$seo = is_array( $item['seo'] ?? null ) ? $item['seo'] : array();
 			if ( ! empty( $seo['title'] ) || ! empty( $seo['description'] ) ) {
 				Seo::set( $id, ! empty( $seo['title'] ) ? (string) $seo['title'] : null, ! empty( $seo['description'] ) ? (string) $seo['description'] : null );
+			}
+			// Custom fields: public keys only, values filtered like post text.
+			foreach ( (array) ( $item['meta'] ?? array() ) as $key => $value ) {
+				$key = sanitize_key( (string) $key );
+				if ( '' !== $key && ! is_protected_meta( $key, 'post' ) && is_scalar( $value ) ) {
+					update_post_meta( $id, $key, wp_slash( wp_kses_post( (string) $value ) ) );
+				}
 			}
 			$report['created'][] = array(
 				'id'       => $id,

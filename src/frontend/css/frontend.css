@@ -235,18 +235,21 @@ html:not([data-uncoder-scheme="dark"]) .uncoder-hide-in-light {
   gap: var(--uncoder-row-gap) var(--uncoder-gap);
 }
 
-.uncoder-container--grid > .uncoder-container,
-.uncoder-container--grid > .uncoder-container__inner > .uncoder-container {
-  width: auto;
+/* Grid cells: child containers fill their cell unless they set a width (an absolutely placed badge keeps its own).
+   One class of specificity (:where() for the rest): above the base rule, below a container's own width setting. */
+.uncoder-container--grid > :where(.uncoder-container),
+.uncoder-container--grid > :where(.uncoder-container__inner > .uncoder-container) {
+  --uncoder-width: auto;
 }
 
 .uncoder-container--boxed {
   padding-inline: var(--uncoder-gutter, 24px);
 }
 
-/* Rows that justify their content: child containers take their content width unless they set one. */
-.uncoder-container--fit > .uncoder-container,
-.uncoder-container--fit > .uncoder-container__inner > .uncoder-container {
+/* Rows that justify their content: child containers take their content width unless they set one (same
+   specificity trick as the grid rule above, so a boxed row does not override its children's widths). */
+.uncoder-container--fit > :where(.uncoder-container),
+.uncoder-container--fit > :where(.uncoder-container__inner > .uncoder-container) {
   --uncoder-width: auto;
 }
 

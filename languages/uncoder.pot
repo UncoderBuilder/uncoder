@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-02T19:28:24+00:00\n"
+"POT-Creation-Date: 2026-10-02T23:15:46+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: uncoder\n"
@@ -79,7 +79,7 @@ msgstr[1] ""
 
 #: includes/Admin/Admin.php:171
 #: includes/Editor/Admin_Bar.php:67
-#: includes/Widgets/Loop_Grid.php:296
+#: includes/Widgets/Loop_Grid.php:310
 msgid "Loading…"
 msgstr ""
 
@@ -109,7 +109,7 @@ msgstr ""
 #: includes/Widgets/Accordion.php:270
 #: includes/Widgets/Accordion.php:288
 #: includes/Widgets/Accordion.php:330
-#: includes/Widgets/Accordion.php:363
+#: includes/Widgets/Accordion.php:399
 #: includes/Widgets/Alert.php:238
 #: includes/Widgets/Alert.php:319
 #: includes/Widgets/Alert.php:329
@@ -160,9 +160,9 @@ msgstr ""
 #: includes/Widgets/Link_In_Bio.php:731
 #: includes/Widgets/Link_In_Bio.php:752
 #: includes/Widgets/Login.php:283
-#: includes/Widgets/Loop_Grid.php:542
-#: includes/Widgets/Marquee.php:225
-#: includes/Widgets/Marquee.php:298
+#: includes/Widgets/Loop_Grid.php:556
+#: includes/Widgets/Marquee.php:239
+#: includes/Widgets/Marquee.php:312
 #: includes/Widgets/Nav_Menu.php:820
 #: includes/Widgets/Nav_Menu.php:838
 #: includes/Widgets/Off_Canvas.php:382
@@ -200,7 +200,7 @@ msgstr ""
 #: includes/Widgets/Slides.php:911
 #: includes/Widgets/Social_Icons.php:88
 #: includes/Widgets/Steps.php:289
-#: includes/Widgets/Support/Carousel_Engine.php:437
+#: includes/Widgets/Support/Carousel_Engine.php:544
 #: includes/Widgets/Table.php:392
 #: includes/Widgets/Table_Of_Contents.php:234
 #: includes/Widgets/Table_Of_Contents.php:265
@@ -253,11 +253,11 @@ msgstr ""
 #: includes/Controls/Groups/Background.php:49
 #: includes/Controls/Groups/Background.php:58
 #: includes/Controls/Groups/Background.php:72
-#: includes/Core/Common_Controls.php:156
-#: includes/Core/Common_Controls.php:297
+#: includes/Core/Common_Controls.php:179
+#: includes/Core/Common_Controls.php:320
 #: includes/Widgets/Link_In_Bio.php:328
 #: includes/Widgets/Login.php:245
-#: includes/Widgets/Loop_Grid.php:216
+#: includes/Widgets/Loop_Grid.php:230
 #: includes/Widgets/Price_Table.php:289
 #: includes/Widgets/Reading_Progress.php:57
 msgid "Position"
@@ -268,23 +268,23 @@ msgid "Attachment"
 msgstr ""
 
 #: includes/Controls/Groups/Background.php:51
-#: includes/Core/Common_Controls.php:317
-#: includes/Core/Common_Controls.php:320
-#: includes/Widgets/Loop_Grid.php:227
+#: includes/Core/Common_Controls.php:340
+#: includes/Core/Common_Controls.php:343
+#: includes/Widgets/Loop_Grid.php:241
 msgid "Repeat"
 msgstr ""
 
 #: includes/Controls/Groups/Background.php:52
 #: includes/Controls/Groups/Background.php:71
 #: includes/Controls/Groups/Typography.php:57
-#: includes/Core/Common_Controls.php:263
+#: includes/Core/Common_Controls.php:286
 #: includes/Widgets/Accordion.php:310
-#: includes/Widgets/Accordion.php:353
+#: includes/Widgets/Accordion.php:389
 #: includes/Widgets/Alert.php:246
 #: includes/Widgets/Alert.php:307
 #: includes/Widgets/Author_Box.php:198
 #: includes/Widgets/Blockquote.php:208
-#: includes/Widgets/Button.php:94
+#: includes/Widgets/Button.php:95
 #: includes/Widgets/Countdown.php:328
 #: includes/Widgets/Counter.php:204
 #: includes/Widgets/Facebook_Embed.php:197
@@ -294,7 +294,7 @@ msgstr ""
 #: includes/Widgets/Icon_Box.php:405
 #: includes/Widgets/Icon_List.php:303
 #: includes/Widgets/Link_In_Bio.php:711
-#: includes/Widgets/Marquee.php:288
+#: includes/Widgets/Marquee.php:302
 #: includes/Widgets/Off_Canvas.php:410
 #: includes/Widgets/Post_Navigation.php:219
 #: includes/Widgets/Price_Table.php:272
@@ -310,7 +310,7 @@ msgstr ""
 #: includes/Widgets/Testimonial.php:347
 #: includes/Widgets/Text_Path.php:285
 #: includes/Widgets/Timeline.php:237
-#: includes/Widgets/Video.php:260
+#: includes/Widgets/Video.php:286
 #: includes/Widgets/Video_Playlist.php:300
 msgid "Size"
 msgstr ""
@@ -338,7 +338,7 @@ msgstr ""
 #: includes/Widgets/Facebook_Embed.php:90
 #: includes/Widgets/Video.php:36
 #: includes/Widgets/Video.php:60
-#: includes/Widgets/Video.php:232
+#: includes/Widgets/Video.php:258
 #: includes/Widgets/Video_Playlist.php:106
 msgid "Video"
 msgstr ""
@@ -361,7 +361,7 @@ msgstr ""
 #: includes/Widgets/Image_Gallery.php:70
 #: includes/Widgets/Image_Gallery.php:93
 #: includes/Widgets/Image_Gallery.php:244
-#: includes/Widgets/Marquee.php:327
+#: includes/Widgets/Marquee.php:341
 msgid "Images"
 msgstr ""
 
@@ -398,7 +398,7 @@ msgstr ""
 #: includes/Widgets/Alert.php:93
 #: includes/Widgets/Animated_Headline.php:70
 #: includes/Widgets/Blockquote.php:92
-#: includes/Widgets/Button.php:79
+#: includes/Widgets/Button.php:80
 #: includes/Widgets/Divider.php:46
 #: includes/Widgets/Form.php:358
 #: includes/Widgets/Icon_List.php:224
@@ -466,14 +466,14 @@ msgstr ""
 #: includes/Widgets/Icon_List.php:57
 #: includes/Widgets/Marquee.php:73
 #: includes/Widgets/Post_Info.php:90
-#: includes/Widgets/Post_Info.php:236
+#: includes/Widgets/Post_Info.php:250
 #: includes/Widgets/Price_List.php:46
 #: includes/Widgets/Price_List.php:51
 msgid "Items"
 msgstr ""
 
 #: includes/Controls/Groups/Query.php:39
-#: includes/Widgets/Support/Carousel_Engine.php:270
+#: includes/Widgets/Support/Carousel_Engine.php:377
 msgid "Offset"
 msgstr ""
 
@@ -519,7 +519,7 @@ msgid "Avoid duplicates"
 msgstr ""
 
 #: includes/Controls/Groups/Shadow.php:33
-#: includes/Core/Common_Controls.php:551
+#: includes/Core/Common_Controls.php:574
 #: includes/Widgets/Image_Compare.php:147
 #: includes/Widgets/Nav_Menu.php:96
 #: includes/Widgets/Steps.php:115
@@ -528,7 +528,7 @@ msgid "Horizontal"
 msgstr ""
 
 #: includes/Controls/Groups/Shadow.php:34
-#: includes/Core/Common_Controls.php:544
+#: includes/Core/Common_Controls.php:567
 #: includes/Widgets/Icon_List.php:111
 #: includes/Widgets/Image_Compare.php:148
 #: includes/Widgets/Nav_Menu.php:97
@@ -538,7 +538,7 @@ msgid "Vertical"
 msgstr ""
 
 #: includes/Controls/Groups/Shadow.php:35
-#: includes/Core/Common_Controls.php:593
+#: includes/Core/Common_Controls.php:616
 msgid "Blur"
 msgstr ""
 
@@ -561,14 +561,14 @@ msgid "Offset Y"
 msgstr ""
 
 #: includes/Controls/Groups/Transform.php:40
-#: includes/Core/Common_Controls.php:555
+#: includes/Core/Common_Controls.php:578
 #: includes/Widgets/Icon.php:176
 #: includes/Widgets/Icon_Box.php:458
 msgid "Rotate"
 msgstr ""
 
 #: includes/Controls/Groups/Transform.php:41
-#: includes/Core/Common_Controls.php:560
+#: includes/Core/Common_Controls.php:583
 #: includes/Elements/Container.php:679
 #: includes/Widgets/Star_Rating.php:51
 msgid "Scale"
@@ -599,7 +599,7 @@ msgid "Weight"
 msgstr ""
 
 #: includes/Controls/Groups/Typography.php:61
-#: includes/Core/Common_Controls.php:395
+#: includes/Core/Common_Controls.php:418
 msgid "Transform"
 msgstr ""
 
@@ -620,10 +620,10 @@ msgid "Word spacing"
 msgstr ""
 
 #: includes/Core/Animated_Backgrounds.php:104
-#: includes/Core/Common_Controls.php:416
-#: includes/Core/Common_Controls.php:576
-#: includes/Core/Common_Controls.php:626
-#: includes/Core/Common_Controls.php:711
+#: includes/Core/Common_Controls.php:439
+#: includes/Core/Common_Controls.php:599
+#: includes/Core/Common_Controls.php:649
+#: includes/Core/Common_Controls.php:734
 #: includes/Core/Masks.php:44
 #: includes/Elements/Container.php:428
 #: includes/Elements/Container.php:501
@@ -642,7 +642,7 @@ msgstr ""
 #: includes/Widgets/Image_Gallery.php:214
 #: includes/Widgets/Image_Gallery.php:252
 #: includes/Widgets/Link_In_Bio.php:280
-#: includes/Widgets/Loop_Grid.php:255
+#: includes/Widgets/Loop_Grid.php:269
 #: includes/Widgets/Posts.php:309
 #: includes/Widgets/Posts.php:395
 #: includes/Widgets/Price_List.php:160
@@ -653,7 +653,7 @@ msgstr ""
 #: includes/Widgets/Slides.php:221
 #: includes/Widgets/Slides.php:455
 #: includes/Widgets/Slides.php:516
-#: includes/Widgets/Support/Carousel_Engine.php:143
+#: includes/Widgets/Support/Carousel_Engine.php:246
 #: includes/Widgets/Table.php:201
 #: includes/Widgets/Table_Of_Contents.php:107
 #: includes/Widgets/Tabs.php:216
@@ -679,8 +679,8 @@ msgstr ""
 #: includes/Core/Assets.php:77
 #: includes/Widgets/Form.php:325
 #: includes/Widgets/Form.php:1117
-#: includes/Widgets/Loop_Grid.php:278
-#: includes/Widgets/Loop_Grid.php:768
+#: includes/Widgets/Loop_Grid.php:292
+#: includes/Widgets/Loop_Grid.php:782
 #: includes/Widgets/Posts.php:330
 #: includes/Widgets/Posts.php:970
 #: includes/Widgets/Post_Navigation.php:74
@@ -689,8 +689,8 @@ msgid "Next"
 msgstr ""
 
 #: includes/Core/Assets.php:78
-#: includes/Widgets/Loop_Grid.php:269
-#: includes/Widgets/Loop_Grid.php:767
+#: includes/Widgets/Loop_Grid.php:283
+#: includes/Widgets/Loop_Grid.php:781
 #: includes/Widgets/Posts.php:321
 #: includes/Widgets/Posts.php:969
 #: includes/Widgets/Post_Navigation.php:65
@@ -716,7 +716,7 @@ msgstr ""
 #: includes/Widgets/Image_Gallery.php:112
 #: includes/Widgets/Language_Switcher.php:67
 #: includes/Widgets/Loop_Grid.php:110
-#: includes/Widgets/Loop_Grid.php:344
+#: includes/Widgets/Loop_Grid.php:358
 #: includes/Widgets/Nav_Menu.php:93
 #: includes/Widgets/Posts.php:88
 #: includes/Widgets/Posts.php:93
@@ -730,6 +730,7 @@ msgstr ""
 #: includes/Widgets/Slides.php:321
 #: includes/Widgets/Star_Rating.php:125
 #: includes/Widgets/Steps.php:107
+#: includes/Widgets/Support/Carousel_Engine.php:113
 #: includes/Widgets/Tabs.php:132
 #: includes/Widgets/Team_Member.php:180
 #: includes/Widgets/Team_Member.php:185
@@ -746,13 +747,13 @@ msgstr ""
 
 #: includes/Core/Common_Controls.php:72
 #: includes/Widgets/Accordion.php:228
-#: includes/Widgets/Accordion.php:376
+#: includes/Widgets/Accordion.php:412
 #: includes/Widgets/Alert.php:218
 #: includes/Widgets/Author_Box.php:178
 #: includes/Widgets/Blockquote.php:140
-#: includes/Widgets/Button.php:215
+#: includes/Widgets/Button.php:226
 #: includes/Widgets/Call_To_Action.php:658
-#: includes/Widgets/Carousel.php:116
+#: includes/Widgets/Carousel.php:120
 #: includes/Widgets/Flip_Box.php:344
 #: includes/Widgets/Form.php:908
 #: includes/Widgets/Form.php:973
@@ -766,11 +767,12 @@ msgstr ""
 #: includes/Widgets/Login.php:352
 #: includes/Widgets/Login.php:446
 #: includes/Widgets/Loop_Filter.php:165
-#: includes/Widgets/Loop_Grid.php:529
+#: includes/Widgets/Loop_Grid.php:543
 #: includes/Widgets/Nav_Menu.php:856
 #: includes/Widgets/Off_Canvas.php:329
 #: includes/Widgets/Off_Canvas.php:359
 #: includes/Widgets/Post_Comments.php:236
+#: includes/Widgets/Post_Info.php:369
 #: includes/Widgets/Post_Navigation.php:154
 #: includes/Widgets/Price_Table.php:387
 #: includes/Widgets/Price_Table.php:697
@@ -790,11 +792,11 @@ msgid "Padding"
 msgstr ""
 
 #: includes/Core/Common_Controls.php:84
-#: includes/Core/Common_Controls.php:158
-#: includes/Core/Common_Controls.php:219
+#: includes/Core/Common_Controls.php:181
+#: includes/Core/Common_Controls.php:242
 #: includes/Widgets/Animated_Headline.php:249
 #: includes/Widgets/Featured_Image.php:180
-#: includes/Widgets/Heading.php:153
+#: includes/Widgets/Heading.php:183
 #: includes/Widgets/Hotspot.php:171
 #: includes/Widgets/Icon.php:58
 #: includes/Widgets/Icon_Box.php:108
@@ -809,7 +811,7 @@ msgstr ""
 #: includes/Core/Common_Controls.php:85
 #: includes/Elements/Container.php:72
 #: includes/Menus/Mega_Menu.php:200
-#: includes/Widgets/Button.php:136
+#: includes/Widgets/Button.php:137
 #: includes/Widgets/Countdown.php:222
 #: includes/Widgets/Form.php:402
 #: includes/Widgets/Login.php:423
@@ -824,7 +826,7 @@ msgid "Fit content"
 msgstr ""
 
 #: includes/Core/Common_Controls.php:87
-#: includes/Core/Common_Controls.php:268
+#: includes/Core/Common_Controls.php:291
 #: includes/Site/Custom_Icons.php:96
 #: includes/Widgets/Image.php:117
 #: includes/Widgets/Post_Info.php:147
@@ -850,27 +852,27 @@ msgstr ""
 #: includes/Widgets/Image_Compare.php:133
 #: includes/Widgets/Login.php:485
 #: includes/Widgets/Loop_Filter.php:150
-#: includes/Widgets/Loop_Grid.php:321
-#: includes/Widgets/Marquee.php:186
+#: includes/Widgets/Loop_Grid.php:335
+#: includes/Widgets/Marquee.php:200
 #: includes/Widgets/Nav_Menu.php:107
 #: includes/Widgets/Nav_Menu.php:213
 #: includes/Widgets/Nav_Menu.php:408
 #: includes/Widgets/Posts.php:340
-#: includes/Widgets/Post_Info.php:222
+#: includes/Widgets/Post_Info.php:236
 #: includes/Widgets/Scheme_Switch.php:78
 #: includes/Widgets/Tabs.php:150
 msgid "Start"
 msgstr ""
 
 #: includes/Core/Common_Controls.php:115
-#: includes/Core/Common_Controls.php:299
+#: includes/Core/Common_Controls.php:322
 #: includes/Elements/Container.php:176
 #: includes/Elements/Container.php:193
 #: includes/Widgets/Accordion.php:240
 #: includes/Widgets/Author_Box.php:154
 #: includes/Widgets/Blockquote.php:126
 #: includes/Widgets/Breadcrumbs.php:142
-#: includes/Widgets/Button.php:134
+#: includes/Widgets/Button.php:135
 #: includes/Widgets/Call_To_Action.php:318
 #: includes/Widgets/Countdown.php:220
 #: includes/Widgets/Counter.php:175
@@ -891,9 +893,9 @@ msgstr ""
 #: includes/Widgets/Login.php:248
 #: includes/Widgets/Login.php:486
 #: includes/Widgets/Loop_Filter.php:151
-#: includes/Widgets/Loop_Grid.php:322
+#: includes/Widgets/Loop_Grid.php:336
 #: includes/Widgets/Lottie.php:167
-#: includes/Widgets/Marquee.php:187
+#: includes/Widgets/Marquee.php:201
 #: includes/Widgets/Nav_Menu.php:108
 #: includes/Widgets/Nav_Menu.php:214
 #: includes/Widgets/Nav_Menu.php:409
@@ -901,7 +903,7 @@ msgstr ""
 #: includes/Widgets/Off_Canvas.php:127
 #: includes/Widgets/Posts.php:341
 #: includes/Widgets/Posts.php:448
-#: includes/Widgets/Post_Info.php:223
+#: includes/Widgets/Post_Info.php:237
 #: includes/Widgets/Price_List.php:268
 #: includes/Widgets/Price_Table.php:371
 #: includes/Widgets/Price_Table.php:616
@@ -914,7 +916,7 @@ msgstr ""
 #: includes/Widgets/Social_Icons.php:178
 #: includes/Widgets/Star_Rating.php:145
 #: includes/Widgets/Steps.php:141
-#: includes/Widgets/Support/Carousel_Engine.php:361
+#: includes/Widgets/Support/Carousel_Engine.php:468
 #: includes/Widgets/Table.php:66
 #: includes/Widgets/Table.php:403
 #: includes/Widgets/Tabs.php:151
@@ -934,19 +936,19 @@ msgstr ""
 #: includes/Widgets/Image_Compare.php:135
 #: includes/Widgets/Login.php:487
 #: includes/Widgets/Loop_Filter.php:152
-#: includes/Widgets/Loop_Grid.php:323
-#: includes/Widgets/Marquee.php:188
+#: includes/Widgets/Loop_Grid.php:337
+#: includes/Widgets/Marquee.php:202
 #: includes/Widgets/Nav_Menu.php:109
 #: includes/Widgets/Nav_Menu.php:410
 #: includes/Widgets/Posts.php:342
-#: includes/Widgets/Post_Info.php:224
+#: includes/Widgets/Post_Info.php:238
 #: includes/Widgets/Scheme_Switch.php:80
 #: includes/Widgets/Tabs.php:152
 msgid "End"
 msgstr ""
 
 #: includes/Core/Common_Controls.php:117
-#: includes/Core/Common_Controls.php:267
+#: includes/Core/Common_Controls.php:290
 #: includes/Elements/Container.php:195
 #: includes/Widgets/Nav_Menu.php:110
 #: includes/Widgets/Share_Buttons.php:312
@@ -963,41 +965,58 @@ msgstr ""
 msgid "Shrink"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:159
+#: includes/Core/Common_Controls.php:157
+#: includes/Widgets/Loop_Grid.php:251
+msgid "Column span"
+msgstr ""
+
+#: includes/Core/Common_Controls.php:158
+msgid "Inside a grid container: the number of columns this element takes."
+msgstr ""
+
+#: includes/Core/Common_Controls.php:168
+msgid "Row span"
+msgstr ""
+
+#: includes/Core/Common_Controls.php:169
+msgid "Inside a grid container: the number of rows this element takes."
+msgstr ""
+
+#: includes/Core/Common_Controls.php:182
 msgid "Relative"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:160
+#: includes/Core/Common_Controls.php:183
 msgid "Absolute"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:161
+#: includes/Core/Common_Controls.php:184
 msgid "Fixed"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:162
-#: includes/Core/Common_Controls.php:415
+#: includes/Core/Common_Controls.php:185
+#: includes/Core/Common_Controls.php:438
 #: includes/Widgets/Table_Of_Contents.php:179
 msgid "Sticky"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:171
+#: includes/Core/Common_Controls.php:194
 msgid "Offsets"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:181
+#: includes/Core/Common_Controls.php:204
 msgid "Z-index"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:191
+#: includes/Core/Common_Controls.php:214
 msgid "Global classes"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:199
+#: includes/Core/Common_Controls.php:222
 msgid "Background & border"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:201
+#: includes/Core/Common_Controls.php:224
 #: includes/Elements/Container.php:410
 #: includes/Elements/Container.php:417
 #: includes/Elements/Container.php:459
@@ -1005,18 +1024,18 @@ msgstr ""
 #: includes/Widgets/Accordion.php:260
 #: includes/Widgets/Accordion.php:278
 #: includes/Widgets/Accordion.php:296
-#: includes/Widgets/Accordion.php:371
+#: includes/Widgets/Accordion.php:407
 #: includes/Widgets/Alert.php:337
 #: includes/Widgets/Animated_Headline.php:272
 #: includes/Widgets/Author_Box.php:163
 #: includes/Widgets/Blockquote.php:135
-#: includes/Widgets/Button.php:167
-#: includes/Widgets/Button.php:187
+#: includes/Widgets/Button.php:168
+#: includes/Widgets/Button.php:188
 #: includes/Widgets/Call_To_Action.php:369
 #: includes/Widgets/Call_To_Action.php:674
 #: includes/Widgets/Call_To_Action.php:711
 #: includes/Widgets/Call_To_Action.php:716
-#: includes/Widgets/Carousel.php:101
+#: includes/Widgets/Carousel.php:105
 #: includes/Widgets/Code_Highlight.php:235
 #: includes/Widgets/Code_Highlight.php:274
 #: includes/Widgets/Code_Highlight.php:321
@@ -1048,11 +1067,11 @@ msgstr ""
 #: includes/Widgets/Login.php:403
 #: includes/Widgets/Logo_Grid.php:251
 #: includes/Widgets/Loop_Filter.php:160
-#: includes/Widgets/Loop_Grid.php:398
-#: includes/Widgets/Loop_Grid.php:416
-#: includes/Widgets/Loop_Grid.php:434
-#: includes/Widgets/Loop_Grid.php:483
-#: includes/Widgets/Loop_Grid.php:501
+#: includes/Widgets/Loop_Grid.php:412
+#: includes/Widgets/Loop_Grid.php:430
+#: includes/Widgets/Loop_Grid.php:448
+#: includes/Widgets/Loop_Grid.php:497
+#: includes/Widgets/Loop_Grid.php:515
 #: includes/Widgets/Nav_Menu.php:483
 #: includes/Widgets/Nav_Menu.php:501
 #: includes/Widgets/Nav_Menu.php:530
@@ -1073,6 +1092,7 @@ msgstr ""
 #: includes/Widgets/Post_Comments.php:152
 #: includes/Widgets/Post_Comments.php:199
 #: includes/Widgets/Post_Comments.php:217
+#: includes/Widgets/Post_Info.php:366
 #: includes/Widgets/Price_List.php:360
 #: includes/Widgets/Price_Table.php:382
 #: includes/Widgets/Price_Table.php:656
@@ -1097,8 +1117,8 @@ msgstr ""
 #: includes/Widgets/Soundcloud.php:206
 #: includes/Widgets/Steps.php:228
 #: includes/Widgets/Steps.php:246
-#: includes/Widgets/Support/Carousel_Engine.php:291
-#: includes/Widgets/Support/Carousel_Engine.php:311
+#: includes/Widgets/Support/Carousel_Engine.php:398
+#: includes/Widgets/Support/Carousel_Engine.php:418
 #: includes/Widgets/Table.php:273
 #: includes/Widgets/Table.php:368
 #: includes/Widgets/Table_Of_Contents.php:196
@@ -1113,8 +1133,8 @@ msgstr ""
 #: includes/Widgets/Testimonial.php:179
 #: includes/Widgets/Testimonial_Carousel.php:218
 #: includes/Widgets/Timeline.php:286
-#: includes/Widgets/Video.php:289
-#: includes/Widgets/Video.php:307
+#: includes/Widgets/Video.php:315
+#: includes/Widgets/Video.php:333
 #: includes/Widgets/Video_Playlist.php:318
 #: includes/Widgets/Video_Playlist.php:337
 #: includes/Widgets/Video_Playlist.php:402
@@ -1123,16 +1143,16 @@ msgstr ""
 msgid "Background"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:202
+#: includes/Core/Common_Controls.php:225
 #: includes/Elements/Container.php:553
 #: includes/Widgets/Accordion.php:200
-#: includes/Widgets/Accordion.php:381
+#: includes/Widgets/Accordion.php:417
 #: includes/Widgets/Alert.php:193
 #: includes/Widgets/Author_Box.php:164
 #: includes/Widgets/Author_Box.php:222
-#: includes/Widgets/Button.php:171
+#: includes/Widgets/Button.php:172
 #: includes/Widgets/Call_To_Action.php:381
-#: includes/Widgets/Carousel.php:102
+#: includes/Widgets/Carousel.php:106
 #: includes/Widgets/Code_Highlight.php:265
 #: includes/Widgets/Facebook_Embed.php:292
 #: includes/Widgets/Featured_Image.php:206
@@ -1153,7 +1173,7 @@ msgstr ""
 #: includes/Widgets/Login.php:318
 #: includes/Widgets/Login.php:388
 #: includes/Widgets/Logo_Grid.php:255
-#: includes/Widgets/Loop_Grid.php:515
+#: includes/Widgets/Loop_Grid.php:529
 #: includes/Widgets/Nav_Menu.php:741
 #: includes/Widgets/Nav_Menu.php:870
 #: includes/Widgets/Nav_Menu.php:1002
@@ -1166,7 +1186,7 @@ msgstr ""
 #: includes/Widgets/Site_Logo.php:209
 #: includes/Widgets/Soundcloud.php:199
 #: includes/Widgets/Steps.php:260
-#: includes/Widgets/Support/Carousel_Engine.php:295
+#: includes/Widgets/Support/Carousel_Engine.php:402
 #: includes/Widgets/Table_Of_Contents.php:197
 #: includes/Widgets/Tabs.php:303
 #: includes/Widgets/Tabs.php:463
@@ -1175,21 +1195,21 @@ msgstr ""
 #: includes/Widgets/Testimonial.php:321
 #: includes/Widgets/Testimonial_Carousel.php:219
 #: includes/Widgets/Timeline.php:308
-#: includes/Widgets/Video.php:242
+#: includes/Widgets/Video.php:268
 #: includes/Widgets/Video_Playlist.php:359
 msgid "Border"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:207
+#: includes/Core/Common_Controls.php:230
 #: includes/Widgets/Accordion.php:213
 #: includes/Widgets/Alert.php:209
 #: includes/Widgets/Author_Box.php:169
 #: includes/Widgets/Author_Box.php:217
 #: includes/Widgets/Blockquote.php:149
-#: includes/Widgets/Button.php:206
+#: includes/Widgets/Button.php:217
 #: includes/Widgets/Call_To_Action.php:386
 #: includes/Widgets/Call_To_Action.php:649
-#: includes/Widgets/Carousel.php:107
+#: includes/Widgets/Carousel.php:111
 #: includes/Widgets/Code_Highlight.php:260
 #: includes/Widgets/Facebook_Embed.php:287
 #: includes/Widgets/Featured_Image.php:201
@@ -1214,9 +1234,9 @@ msgstr ""
 #: includes/Widgets/Login.php:343
 #: includes/Widgets/Login.php:437
 #: includes/Widgets/Logo_Grid.php:260
-#: includes/Widgets/Loop_Grid.php:444
-#: includes/Widgets/Loop_Grid.php:520
-#: includes/Widgets/Marquee.php:373
+#: includes/Widgets/Loop_Grid.php:458
+#: includes/Widgets/Loop_Grid.php:534
+#: includes/Widgets/Marquee.php:387
 #: includes/Widgets/Nav_Menu.php:735
 #: includes/Widgets/Nav_Menu.php:865
 #: includes/Widgets/Off_Canvas.php:338
@@ -1244,7 +1264,7 @@ msgstr ""
 #: includes/Widgets/Social_Icons.php:248
 #: includes/Widgets/Soundcloud.php:194
 #: includes/Widgets/Steps.php:265
-#: includes/Widgets/Support/Carousel_Engine.php:329
+#: includes/Widgets/Support/Carousel_Engine.php:436
 #: includes/Widgets/Table.php:299
 #: includes/Widgets/Table_Of_Contents.php:202
 #: includes/Widgets/Tabs.php:287
@@ -1257,38 +1277,38 @@ msgstr ""
 #: includes/Widgets/Testimonial.php:316
 #: includes/Widgets/Testimonial_Carousel.php:224
 #: includes/Widgets/Timeline.php:303
-#: includes/Widgets/Video.php:237
-#: includes/Widgets/Video.php:270
+#: includes/Widgets/Video.php:263
+#: includes/Widgets/Video.php:296
 #: includes/Widgets/Video_Playlist.php:289
 #: includes/Widgets/Video_Playlist.php:354
 #: includes/Widgets/Video_Playlist.php:514
 msgid "Border radius"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:212
+#: includes/Core/Common_Controls.php:235
 #: includes/Elements/Container.php:563
 msgid "Box shadow"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:218
+#: includes/Core/Common_Controls.php:241
 msgid "Overflow"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:219
+#: includes/Core/Common_Controls.php:242
 #: includes/Widgets/Form.php:154
 msgid "Hidden"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:219
+#: includes/Core/Common_Controls.php:242
 #: includes/Widgets/Animated_Headline.php:146
 msgid "Clip"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:219
+#: includes/Core/Common_Controls.php:242
 msgid "Scroll"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:227
+#: includes/Core/Common_Controls.php:250
 #: includes/Elements/Container.php:480
 #: includes/Widgets/Blockquote.php:228
 #: includes/Widgets/Call_To_Action.php:510
@@ -1302,11 +1322,11 @@ msgstr ""
 msgid "Opacity"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:237
+#: includes/Core/Common_Controls.php:260
 msgid "Mask"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:242
+#: includes/Core/Common_Controls.php:265
 #: includes/Elements/Container.php:500
 #: includes/Widgets/Animated_Headline.php:125
 #: includes/Widgets/Animated_Headline.php:276
@@ -1318,31 +1338,31 @@ msgstr ""
 msgid "Shape"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:253
+#: includes/Core/Common_Controls.php:276
 msgid "Mask image"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:254
+#: includes/Core/Common_Controls.php:277
 msgid "Opaque parts show the element; transparent parts hide it."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:265
+#: includes/Core/Common_Controls.php:288
 msgid "Fit"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:266
+#: includes/Core/Common_Controls.php:289
 #: includes/Widgets/Featured_Image.php:183
 #: includes/Widgets/Image.php:239
 #: includes/Widgets/Progress_Bar.php:177
 msgid "Fill"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:283
+#: includes/Core/Common_Controls.php:306
 msgid "Mask width"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:300
-#: includes/Core/Common_Controls.php:416
+#: includes/Core/Common_Controls.php:323
+#: includes/Core/Common_Controls.php:439
 #: includes/Elements/Container.php:491
 #: includes/Widgets/Author_Box.php:60
 #: includes/Widgets/Call_To_Action.php:124
@@ -1357,14 +1377,14 @@ msgstr ""
 #: includes/Widgets/Price_List.php:177
 #: includes/Widgets/Price_List.php:267
 #: includes/Widgets/Slides.php:154
-#: includes/Widgets/Support/Carousel_Engine.php:82
+#: includes/Widgets/Support/Carousel_Engine.php:183
 #: includes/Widgets/Table.php:174
 #: includes/Widgets/Table.php:320
 msgid "Top"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:301
-#: includes/Core/Common_Controls.php:416
+#: includes/Core/Common_Controls.php:324
+#: includes/Core/Common_Controls.php:439
 #: includes/Elements/Container.php:491
 #: includes/Widgets/Call_To_Action.php:125
 #: includes/Widgets/Call_To_Action.php:337
@@ -1374,18 +1394,18 @@ msgstr ""
 #: includes/Widgets/Hotspot.php:203
 #: includes/Widgets/Off_Canvas.php:166
 #: includes/Widgets/Slides.php:156
-#: includes/Widgets/Support/Carousel_Engine.php:84
+#: includes/Widgets/Support/Carousel_Engine.php:185
 #: includes/Widgets/Table.php:175
 #: includes/Widgets/Table.php:321
 msgid "Bottom"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:302
+#: includes/Core/Common_Controls.php:325
 #: includes/Widgets/Accordion.php:239
 #: includes/Widgets/Author_Box.php:59
 #: includes/Widgets/Author_Box.php:153
 #: includes/Widgets/Blockquote.php:125
-#: includes/Widgets/Button.php:133
+#: includes/Widgets/Button.php:134
 #: includes/Widgets/Call_To_Action.php:122
 #: includes/Widgets/Call_To_Action.php:290
 #: includes/Widgets/Call_To_Action.php:317
@@ -1410,7 +1430,7 @@ msgstr ""
 #: includes/Widgets/Login.php:247
 #: includes/Widgets/Logo_Grid.php:130
 #: includes/Widgets/Lottie.php:166
-#: includes/Widgets/Marquee.php:137
+#: includes/Widgets/Marquee.php:151
 #: includes/Widgets/Nav_Menu.php:311
 #: includes/Widgets/Nav_Menu.php:954
 #: includes/Widgets/Off_Canvas.php:126
@@ -1428,7 +1448,7 @@ msgstr ""
 #: includes/Widgets/Social_Icons.php:177
 #: includes/Widgets/Star_Rating.php:144
 #: includes/Widgets/Steps.php:140
-#: includes/Widgets/Support/Carousel_Engine.php:360
+#: includes/Widgets/Support/Carousel_Engine.php:467
 #: includes/Widgets/Table.php:65
 #: includes/Widgets/Table.php:402
 #: includes/Widgets/Tabs.php:170
@@ -1440,12 +1460,12 @@ msgstr ""
 msgid "Left"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:303
+#: includes/Core/Common_Controls.php:326
 #: includes/Widgets/Accordion.php:241
 #: includes/Widgets/Author_Box.php:61
 #: includes/Widgets/Author_Box.php:155
 #: includes/Widgets/Blockquote.php:127
-#: includes/Widgets/Button.php:135
+#: includes/Widgets/Button.php:136
 #: includes/Widgets/Call_To_Action.php:123
 #: includes/Widgets/Call_To_Action.php:291
 #: includes/Widgets/Call_To_Action.php:319
@@ -1468,7 +1488,7 @@ msgstr ""
 #: includes/Widgets/Login.php:249
 #: includes/Widgets/Logo_Grid.php:131
 #: includes/Widgets/Lottie.php:168
-#: includes/Widgets/Marquee.php:138
+#: includes/Widgets/Marquee.php:152
 #: includes/Widgets/Nav_Menu.php:312
 #: includes/Widgets/Nav_Menu.php:956
 #: includes/Widgets/Off_Canvas.php:128
@@ -1484,7 +1504,7 @@ msgstr ""
 #: includes/Widgets/Slides.php:168
 #: includes/Widgets/Social_Icons.php:179
 #: includes/Widgets/Star_Rating.php:146
-#: includes/Widgets/Support/Carousel_Engine.php:362
+#: includes/Widgets/Support/Carousel_Engine.php:469
 #: includes/Widgets/Table.php:67
 #: includes/Widgets/Table.php:404
 #: includes/Widgets/Tabs.php:172
@@ -1496,95 +1516,95 @@ msgstr ""
 msgid "Right"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:304
+#: includes/Core/Common_Controls.php:327
 msgid "Top left"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:305
+#: includes/Core/Common_Controls.php:328
 msgid "Top right"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:306
+#: includes/Core/Common_Controls.php:329
 msgid "Bottom left"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:307
+#: includes/Core/Common_Controls.php:330
 msgid "Bottom right"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:319
+#: includes/Core/Common_Controls.php:342
 msgid "No repeat"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:321
+#: includes/Core/Common_Controls.php:344
 msgid "Repeat horizontally"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:322
+#: includes/Core/Common_Controls.php:345
 msgid "Repeat vertically"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:323
+#: includes/Core/Common_Controls.php:346
 msgid "Round"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:324
+#: includes/Core/Common_Controls.php:347
 #: includes/Widgets/Spacer.php:46
 msgid "Space"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:333
+#: includes/Core/Common_Controls.php:356
 msgid "Anchor & classes"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:338
+#: includes/Core/Common_Controls.php:361
 #: includes/Widgets/Menu_Anchor.php:60
 msgid "Anchor ID"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:340
+#: includes/Core/Common_Controls.php:363
 msgid "Link to this element with #your-id (e.g. a menu item “/#contact”). Also usable as a CSS id."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:348
+#: includes/Core/Common_Controls.php:371
 msgid "CSS classes"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:350
+#: includes/Core/Common_Controls.php:373
 msgid "Extra classes for your own CSS, separated by spaces. Every element already has uncoder-{type} and uncoder-{id}."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:355
+#: includes/Core/Common_Controls.php:378
 msgid "Animations"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:366
+#: includes/Core/Common_Controls.php:389
 msgid "Motion & effects"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:367
+#: includes/Core/Common_Controls.php:390
 #: includes/Widgets/Timeline.php:166
 msgid "Entrance animation"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:372
+#: includes/Core/Common_Controls.php:395
 #: includes/Widgets/Flip_Box.php:217
 #: includes/Widgets/Progress_Bar.php:127
 msgid "Duration (ms)"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:383
+#: includes/Core/Common_Controls.php:406
 #: includes/Widgets/Slides.php:537
-#: includes/Widgets/Support/Carousel_Engine.php:191
+#: includes/Widgets/Support/Carousel_Engine.php:298
 msgid "Delay (ms)"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:394
+#: includes/Core/Common_Controls.php:417
 #: includes/Elements/Container.php:412
 #: includes/Widgets/Accordion.php:247
 #: includes/Widgets/Alert.php:314
 #: includes/Widgets/Breadcrumbs.php:158
-#: includes/Widgets/Button.php:154
+#: includes/Widgets/Button.php:155
 #: includes/Widgets/Call_To_Action.php:392
 #: includes/Widgets/Call_To_Action.php:495
 #: includes/Widgets/Call_To_Action.php:547
@@ -1606,9 +1626,9 @@ msgstr ""
 #: includes/Widgets/Login.php:301
 #: includes/Widgets/Login.php:371
 #: includes/Widgets/Logo_Grid.php:216
-#: includes/Widgets/Loop_Grid.php:385
-#: includes/Widgets/Loop_Grid.php:470
-#: includes/Widgets/Marquee.php:220
+#: includes/Widgets/Loop_Grid.php:399
+#: includes/Widgets/Loop_Grid.php:484
+#: includes/Widgets/Marquee.php:234
 #: includes/Widgets/Nav_Menu.php:470
 #: includes/Widgets/Nav_Menu.php:620
 #: includes/Widgets/Nav_Menu.php:815
@@ -1631,22 +1651,22 @@ msgstr ""
 #: includes/Widgets/Slides.php:934
 #: includes/Widgets/Social_Icons.php:255
 #: includes/Widgets/Steps.php:223
-#: includes/Widgets/Support/Carousel_Engine.php:278
+#: includes/Widgets/Support/Carousel_Engine.php:385
 #: includes/Widgets/Table_Of_Contents.php:260
 #: includes/Widgets/Tabs.php:293
 #: includes/Widgets/Team_Member.php:414
 #: includes/Widgets/Text_Path.php:221
-#: includes/Widgets/Video.php:276
+#: includes/Widgets/Video.php:302
 #: includes/Widgets/Video_Playlist.php:389
 msgid "Normal"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:397
+#: includes/Core/Common_Controls.php:420
 #: includes/Elements/Container.php:454
 #: includes/Widgets/Accordion.php:265
 #: includes/Widgets/Alert.php:324
 #: includes/Widgets/Breadcrumbs.php:168
-#: includes/Widgets/Button.php:174
+#: includes/Widgets/Button.php:175
 #: includes/Widgets/Call_To_Action.php:395
 #: includes/Widgets/Call_To_Action.php:518
 #: includes/Widgets/Call_To_Action.php:714
@@ -1664,9 +1684,9 @@ msgstr ""
 #: includes/Widgets/Link_In_Bio.php:611
 #: includes/Widgets/Login.php:390
 #: includes/Widgets/Logo_Grid.php:229
-#: includes/Widgets/Loop_Grid.php:403
-#: includes/Widgets/Loop_Grid.php:488
-#: includes/Widgets/Marquee.php:230
+#: includes/Widgets/Loop_Grid.php:417
+#: includes/Widgets/Loop_Grid.php:502
+#: includes/Widgets/Marquee.php:244
 #: includes/Widgets/Nav_Menu.php:488
 #: includes/Widgets/Nav_Menu.php:638
 #: includes/Widgets/Nav_Menu.php:833
@@ -1688,21 +1708,21 @@ msgstr ""
 #: includes/Widgets/Slides.php:939
 #: includes/Widgets/Social_Icons.php:277
 #: includes/Widgets/Steps.php:241
-#: includes/Widgets/Support/Carousel_Engine.php:298
+#: includes/Widgets/Support/Carousel_Engine.php:405
 #: includes/Widgets/Table_Of_Contents.php:278
 #: includes/Widgets/Tabs.php:306
 #: includes/Widgets/Team_Member.php:418
 #: includes/Widgets/Text_Path.php:231
-#: includes/Widgets/Video.php:294
+#: includes/Widgets/Video.php:320
 #: includes/Widgets/Video_Playlist.php:407
 msgid "Hover"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:398
+#: includes/Core/Common_Controls.php:421
 msgid "Transform on hover"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:405
+#: includes/Core/Common_Controls.php:428
 #: includes/Widgets/Call_To_Action.php:483
 #: includes/Widgets/Google_Maps.php:166
 #: includes/Widgets/Icon_Box.php:334
@@ -1710,24 +1730,24 @@ msgstr ""
 msgid "Transition (ms)"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:423
+#: includes/Core/Common_Controls.php:446
 msgid "Sticky offset (px)"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:429
-#: includes/Core/Common_Controls.php:647
+#: includes/Core/Common_Controls.php:452
+#: includes/Core/Common_Controls.php:670
 msgid "Desktop"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:437
+#: includes/Core/Common_Controls.php:460
 msgid "Sticky on"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:440
+#: includes/Core/Common_Controls.php:463
 msgid "Devices where the element sticks; elsewhere it scrolls with the page."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:444
+#: includes/Core/Common_Controls.php:467
 #: includes/Widgets/Call_To_Action.php:490
 #: includes/Widgets/Featured_Image.php:208
 #: includes/Widgets/Google_Maps.php:158
@@ -1745,127 +1765,127 @@ msgstr ""
 msgid "CSS filters"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:449
+#: includes/Core/Common_Controls.php:472
 msgid "Backdrop filter"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:450
+#: includes/Core/Common_Controls.php:473
 msgid "Blurs or tints what shows through the element (frosted glass). Give it a semi-transparent background."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:458
+#: includes/Core/Common_Controls.php:481
 msgid "Visibility"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:459
+#: includes/Core/Common_Controls.php:482
 msgid "Hide on desktop"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:460
+#: includes/Core/Common_Controls.php:483
 msgid "Hide on tablet"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:461
+#: includes/Core/Common_Controls.php:484
 msgid "Hide on mobile"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:466
+#: includes/Core/Common_Controls.php:489
 msgid "Hide in dark mode"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:467
+#: includes/Core/Common_Controls.php:490
 msgid "With dark mode on in the Design System: e.g. a dark logo for light pages and a light one for dark pages."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:470
+#: includes/Core/Common_Controls.php:493
 msgid "Hide in light mode"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:473
+#: includes/Core/Common_Controls.php:496
 msgid "Conditions"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:478
+#: includes/Core/Common_Controls.php:501
 msgid "Show this element when"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:479
+#: includes/Core/Common_Controls.php:502
 msgid "Any set can match; every rule in a set must match. Checked on the server, so a hidden element is not in the page at all. The editor always shows it. With a page cache, user-based rules need the cache to vary by login (most do)."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:485
+#: includes/Core/Common_Controls.php:508
 msgid "Interactions"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:490
+#: includes/Core/Common_Controls.php:513
 msgid "When…"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:491
+#: includes/Core/Common_Controls.php:514
 msgid "Make things happen without code: toggle a class, show or hide another element, open a popup, scroll somewhere. They run on the live page, not while editing."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:499
+#: includes/Core/Common_Controls.php:522
 msgid "Start hidden"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:500
+#: includes/Core/Common_Controls.php:523
 msgid "For a box that an interaction shows (Show or Show / hide). The editor keeps it visible, dimmed."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:505
+#: includes/Core/Common_Controls.php:528
 msgid "Attributes & CSS"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:510
+#: includes/Core/Common_Controls.php:533
 msgid "Custom attributes"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:511
+#: includes/Core/Common_Controls.php:534
 msgid "One per line: key|value. Event handlers are not allowed."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:519
+#: includes/Core/Common_Controls.php:542
 msgid "Custom CSS"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:520
+#: includes/Core/Common_Controls.php:543
 msgid "Use \"selector\" to target this element, e.g. selector:hover { opacity:.8 }. Each device tab adds CSS for that screen size and smaller (desktop applies everywhere)."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:533
+#: includes/Core/Common_Controls.php:556
 msgid "Scroll & mouse effects"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:534
+#: includes/Core/Common_Controls.php:557
 msgid "While scrolling"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:545
+#: includes/Core/Common_Controls.php:568
 msgid "−10 to 10. Positive moves up faster than the page, negative lags behind (parallax)."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:552
+#: includes/Core/Common_Controls.php:575
 msgid "Positive drifts right as the page scrolls down."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:568
+#: includes/Core/Common_Controls.php:591
 msgid "Amount (%)"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:577
+#: includes/Core/Common_Controls.php:600
 msgid "In (as it enters)"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:578
+#: includes/Core/Common_Controls.php:601
 msgid "Out (as it leaves)"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:579
+#: includes/Core/Common_Controls.php:602
 msgid "In and out"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:585
+#: includes/Core/Common_Controls.php:608
 #: includes/Widgets/Animated_Headline.php:149
 #: includes/Widgets/Flip_Box.php:183
 #: includes/Widgets/Slides.php:432
@@ -1873,135 +1893,135 @@ msgstr ""
 msgid "Fade"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:595
+#: includes/Core/Common_Controls.php:618
 msgid "Replaces the CSS filters of this element while active."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:602
+#: includes/Core/Common_Controls.php:625
 msgid "Range start"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:606
+#: includes/Core/Common_Controls.php:629
 msgid "Percent of the trip across the screen, from entering at the bottom (0) to leaving at the top (100)."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:613
+#: includes/Core/Common_Controls.php:636
 msgid "Range end"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:619
+#: includes/Core/Common_Controls.php:642
 msgid "Pointer"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:624
+#: includes/Core/Common_Controls.php:647
 msgid "Mouse effect"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:627
+#: includes/Core/Common_Controls.php:650
 #: includes/Elements/Container.php:432
 #: includes/Elements/Container.php:719
 msgid "Follow the pointer"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:628
+#: includes/Core/Common_Controls.php:651
 msgid "3D tilt on hover"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:635
+#: includes/Core/Common_Controls.php:658
 msgid "Strength"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:637
+#: includes/Core/Common_Controls.php:660
 msgid "Negative values move the other way."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:645
+#: includes/Core/Common_Controls.php:668
 msgid "Apply on"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:648
+#: includes/Core/Common_Controls.php:671
 msgid "Tablet"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:649
+#: includes/Core/Common_Controls.php:672
 msgid "Mobile"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:651
+#: includes/Core/Common_Controls.php:674
 msgid "Empty means every device. Effects never run for visitors who prefer reduced motion."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:708
+#: includes/Core/Common_Controls.php:731
 msgid "Text reveal"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:709
+#: includes/Core/Common_Controls.php:732
 msgid "Animates the text in piece by piece when it scrolls into view."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:712
+#: includes/Core/Common_Controls.php:735
 msgid "Word by word"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:713
+#: includes/Core/Common_Controls.php:736
 msgid "Letter by letter"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:714
+#: includes/Core/Common_Controls.php:737
 msgid "Line by line"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:722
+#: includes/Core/Common_Controls.php:745
 msgid "Reveal effect"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:732
+#: includes/Core/Common_Controls.php:755
 #: includes/Widgets/Off_Canvas.php:68
 #: includes/Widgets/Off_Canvas.php:253
 msgid "Trigger"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:733
+#: includes/Core/Common_Controls.php:756
 msgid "Follow the scroll: the text starts faint and lights up piece by piece as the visitor scrolls, and dims again when scrolling back."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:735
+#: includes/Core/Common_Controls.php:758
 msgid "Once, when it scrolls into view"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:736
+#: includes/Core/Common_Controls.php:759
 msgid "Follow the scroll"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:745
+#: includes/Core/Common_Controls.php:768
 msgid "Start opacity"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:746
+#: includes/Core/Common_Controls.php:769
 msgid "How visible the text is before it is revealed. Empty: 0, or 0.2 when following the scroll."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:758
+#: includes/Core/Common_Controls.php:781
 msgid "Blur (px)"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:759
+#: includes/Core/Common_Controls.php:782
 msgid "Empty: 10, or 4 when following the scroll."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:773
+#: includes/Core/Common_Controls.php:796
 msgid "Stagger (ms)"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:774
+#: includes/Core/Common_Controls.php:797
 msgid "Pause between pieces. Empty: 60 for words, 25 for letters, 140 for lines."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:788
+#: includes/Core/Common_Controls.php:811
 msgid "Reveal duration (ms)"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:799
+#: includes/Core/Common_Controls.php:822
 msgid "Reveal delay (ms)"
 msgstr ""
 
@@ -2169,7 +2189,7 @@ msgstr ""
 #: includes/Widgets/Countdown.php:168
 #: includes/Widgets/Countdown.php:315
 #: includes/Widgets/Counter.php:115
-#: includes/Widgets/Marquee.php:283
+#: includes/Widgets/Marquee.php:297
 #: includes/Widgets/Post_Info.php:203
 msgid "Separator"
 msgstr ""
@@ -2509,8 +2529,9 @@ msgstr ""
 
 #: includes/Elements/Container.php:113
 #: includes/Widgets/Logo_Grid.php:127
-#: includes/Widgets/Marquee.php:134
+#: includes/Widgets/Marquee.php:148
 #: includes/Widgets/Steps.php:112
+#: includes/Widgets/Support/Carousel_Engine.php:100
 msgid "Direction"
 msgstr ""
 
@@ -2554,7 +2575,7 @@ msgstr ""
 
 #: includes/Elements/Container.php:151
 #: includes/Widgets/Form.php:218
-#: includes/Widgets/Marquee.php:160
+#: includes/Widgets/Marquee.php:174
 #: includes/Widgets/Table.php:108
 #: includes/Widgets/Table.php:113
 msgid "Rows"
@@ -2576,7 +2597,7 @@ msgstr ""
 #: includes/Widgets/Icon_List.php:188
 #: includes/Widgets/Language_Switcher.php:120
 #: includes/Widgets/Login.php:488
-#: includes/Widgets/Loop_Grid.php:453
+#: includes/Widgets/Loop_Grid.php:467
 #: includes/Widgets/Posts.php:727
 #: includes/Widgets/Post_Navigation.php:137
 msgid "Space between"
@@ -2604,15 +2625,16 @@ msgstr ""
 #: includes/Elements/Container.php:205
 #: includes/Widgets/Image_Gallery.php:168
 #: includes/Widgets/Loop_Filter.php:157
+#: includes/Widgets/Post_Info.php:371
 #: includes/Widgets/Share_Buttons.php:332
-#: includes/Widgets/Support/Carousel_Engine.php:69
+#: includes/Widgets/Support/Carousel_Engine.php:170
 #: includes/Widgets/Team_Member.php:399
 msgid "Gap"
 msgstr ""
 
 #: includes/Elements/Container.php:215
 #: includes/Widgets/Form.php:780
-#: includes/Widgets/Loop_Grid.php:358
+#: includes/Widgets/Loop_Grid.php:372
 #: includes/Widgets/Posts.php:373
 #: includes/Widgets/Sitemap.php:264
 msgid "Row gap"
@@ -2648,7 +2670,7 @@ msgstr ""
 
 #: includes/Elements/Container.php:259
 #: includes/Widgets/Animated_Headline.php:163
-#: includes/Widgets/Button.php:70
+#: includes/Widgets/Button.php:71
 #: includes/Widgets/Featured_Image.php:81
 #: includes/Widgets/Heading.php:62
 #: includes/Widgets/Hotspot.php:159
@@ -2699,8 +2721,8 @@ msgstr ""
 
 #: includes/Elements/Container.php:294
 #: includes/Widgets/Loop_Carousel.php:87
-#: includes/Widgets/Loop_Grid.php:171
-#: includes/Widgets/Loop_Grid.php:176
+#: includes/Widgets/Loop_Grid.php:185
+#: includes/Widgets/Loop_Grid.php:190
 #: includes/Widgets/Posts.php:61
 #: includes/Widgets/Posts.php:66
 msgid "Query"
@@ -2772,6 +2794,7 @@ msgid "e.g. No posts yet."
 msgstr ""
 
 #: includes/Elements/Container.php:426
+#: includes/Widgets/Support/Carousel_Engine.php:64
 msgid "Motion"
 msgstr ""
 
@@ -2821,13 +2844,14 @@ msgstr ""
 #: includes/Widgets/Flip_Box.php:242
 #: includes/Widgets/Google_Maps.php:87
 #: includes/Widgets/Image.php:209
-#: includes/Widgets/Marquee.php:148
+#: includes/Widgets/Marquee.php:162
 #: includes/Widgets/Off_Canvas.php:185
 #: includes/Widgets/Progress_Bar.php:158
 #: includes/Widgets/Reading_Progress.php:96
 #: includes/Widgets/Search_Form.php:237
 #: includes/Widgets/Slides.php:326
 #: includes/Widgets/Soundcloud.php:89
+#: includes/Widgets/Video.php:144
 msgid "Height"
 msgstr ""
 
@@ -2851,6 +2875,7 @@ msgstr ""
 #: includes/Elements/Container.php:558
 #: includes/Widgets/Loop_Filter.php:164
 #: includes/Widgets/Nav_Menu.php:1007
+#: includes/Widgets/Post_Info.php:370
 msgid "Radius"
 msgstr ""
 
@@ -2865,8 +2890,8 @@ msgstr ""
 #: includes/Elements/Container.php:575
 #: includes/Elements/Container.php:580
 #: includes/Widgets/Breadcrumbs.php:183
-#: includes/Widgets/Button.php:159
-#: includes/Widgets/Button.php:179
+#: includes/Widgets/Button.php:160
+#: includes/Widgets/Button.php:180
 #: includes/Widgets/Call_To_Action.php:377
 #: includes/Widgets/Call_To_Action.php:682
 #: includes/Widgets/Call_To_Action.php:710
@@ -2892,11 +2917,11 @@ msgstr ""
 #: includes/Widgets/Login.php:395
 #: includes/Widgets/Login.php:459
 #: includes/Widgets/Loop_Filter.php:159
-#: includes/Widgets/Loop_Grid.php:390
-#: includes/Widgets/Loop_Grid.php:408
-#: includes/Widgets/Loop_Grid.php:426
-#: includes/Widgets/Loop_Grid.php:475
-#: includes/Widgets/Loop_Grid.php:493
+#: includes/Widgets/Loop_Grid.php:404
+#: includes/Widgets/Loop_Grid.php:422
+#: includes/Widgets/Loop_Grid.php:440
+#: includes/Widgets/Loop_Grid.php:489
+#: includes/Widgets/Loop_Grid.php:507
 #: includes/Widgets/Nav_Menu.php:475
 #: includes/Widgets/Nav_Menu.php:493
 #: includes/Widgets/Nav_Menu.php:521
@@ -2918,7 +2943,8 @@ msgstr ""
 #: includes/Widgets/Post_Comments.php:191
 #: includes/Widgets/Post_Comments.php:209
 #: includes/Widgets/Post_Content.php:78
-#: includes/Widgets/Post_Info.php:242
+#: includes/Widgets/Post_Info.php:256
+#: includes/Widgets/Post_Info.php:365
 #: includes/Widgets/Price_Table.php:571
 #: includes/Widgets/Price_Table.php:664
 #: includes/Widgets/Price_Table.php:674
@@ -2952,10 +2978,10 @@ msgstr ""
 #: includes/Widgets/Breadcrumbs.php:173
 #: includes/Widgets/Hotspot.php:403
 #: includes/Widgets/Login.php:467
-#: includes/Widgets/Marquee.php:235
+#: includes/Widgets/Marquee.php:249
 #: includes/Widgets/Post_Comments.php:78
 #: includes/Widgets/Post_Content.php:86
-#: includes/Widgets/Post_Info.php:250
+#: includes/Widgets/Post_Info.php:264
 #: includes/Widgets/Sitemap.php:310
 #: includes/Widgets/Sitemap.php:320
 #: includes/Widgets/Text_Editor.php:98
@@ -3429,7 +3455,7 @@ msgstr ""
 #: includes/Widgets/Alert.php:138
 #: includes/Widgets/Alert.php:229
 #: includes/Widgets/Breadcrumbs.php:96
-#: includes/Widgets/Button.php:104
+#: includes/Widgets/Button.php:105
 #: includes/Widgets/Divider.php:92
 #: includes/Widgets/Divider.php:110
 #: includes/Widgets/Flip_Box.php:61
@@ -3502,7 +3528,7 @@ msgid "Call to action"
 msgstr ""
 
 #: includes/Patterns/Patterns.php:64
-#: includes/Widgets/Accordion.php:370
+#: includes/Widgets/Accordion.php:406
 #: includes/Widgets/Alert.php:264
 #: includes/Widgets/Call_To_Action.php:140
 #: includes/Widgets/Icon_Box.php:535
@@ -4030,7 +4056,7 @@ msgid "Popup triggers and layout were not converted: set them in the popup setti
 msgstr ""
 
 #: includes/Site/Elementor_Import.php:623
-#: includes/Site/Site_Kit.php:649
+#: includes/Site/Site_Kit.php:671
 msgid "The file did not arrive. It may be larger than the server allows."
 msgstr ""
 
@@ -4039,7 +4065,7 @@ msgid "No Elementor template was found in this file. Export templates in Element
 msgstr ""
 
 #: includes/Site/Elementor_Import.php:675
-#: includes/Site/Site_Kit.php:652
+#: includes/Site/Site_Kit.php:674
 msgid "This server cannot open zip files (the PHP zip extension is missing)."
 msgstr ""
 
@@ -4141,51 +4167,51 @@ msgstr ""
 msgid "This export has expired. Export again."
 msgstr ""
 
-#: includes/Site/Site_Kit.php:656
+#: includes/Site/Site_Kit.php:678
 msgid "This is not a zip file."
 msgstr ""
 
-#: includes/Site/Site_Kit.php:660
+#: includes/Site/Site_Kit.php:682
 msgid "This zip holds too many files to be an Uncoder site kit."
 msgstr ""
 
-#: includes/Site/Site_Kit.php:692
+#: includes/Site/Site_Kit.php:714
 msgid "This site kit is too large to unpack on this server."
 msgstr ""
 
-#: includes/Site/Site_Kit.php:714
+#: includes/Site/Site_Kit.php:736
 msgid "This zip is not an Uncoder site kit (or it comes from a newer version of Uncoder)."
 msgstr ""
 
-#: includes/Site/Site_Kit.php:844
+#: includes/Site/Site_Kit.php:866
 msgid "This import has expired. Upload the kit again."
 msgstr ""
 
-#: includes/Site/Site_Kit.php:970
+#: includes/Site/Site_Kit.php:992
 msgid "Before site kit import"
 msgstr ""
 
-#: includes/Site/Site_Kit.php:999
+#: includes/Site/Site_Kit.php:1021
 msgid "Custom code was not imported: your account cannot add unfiltered HTML."
 msgstr ""
 
 #. translators: 1: item title, 2: content type.
-#: includes/Site/Site_Kit.php:1134
+#: includes/Site/Site_Kit.php:1156
 #, php-format
 msgid "“%1$s” was skipped: “%2$s” is not available on this site."
 msgstr ""
 
-#: includes/Site/Site_Kit.php:1147
-#: includes/Site/Site_Kit.php:1276
+#: includes/Site/Site_Kit.php:1169
+#: includes/Site/Site_Kit.php:1298
 #: includes/Site/Transfer.php:289
 msgid "Imported"
 msgstr ""
 
-#: includes/Site/Site_Kit.php:1359
+#: includes/Site/Site_Kit.php:1388
 msgid "(imported)"
 msgstr ""
 
-#: includes/Site/Site_Kit.php:1492
+#: includes/Site/Site_Kit.php:1521
 msgid "This SVG was not imported: it contains active content."
 msgstr ""
 
@@ -4495,7 +4521,7 @@ msgid "None: the icon turns upside down when the item opens."
 msgstr ""
 
 #: includes/Widgets/Accordion.php:157
-#: includes/Widgets/Button.php:109
+#: includes/Widgets/Button.php:110
 #: includes/Widgets/Form.php:345
 #: includes/Widgets/Off_Canvas.php:111
 #: includes/Widgets/Tabs.php:186
@@ -4517,7 +4543,7 @@ msgstr ""
 
 #: includes/Widgets/Accordion.php:192
 #: includes/Widgets/Nav_Menu.php:569
-#: includes/Widgets/Post_Info.php:266
+#: includes/Widgets/Post_Info.php:280
 #: includes/Widgets/Price_List.php:198
 #: includes/Widgets/Sitemap.php:372
 #: includes/Widgets/Table_Of_Contents.php:311
@@ -4534,12 +4560,12 @@ msgstr ""
 #: includes/Widgets/Alert.php:223
 #: includes/Widgets/Author_Box.php:183
 #: includes/Widgets/Blockquote.php:154
-#: includes/Widgets/Button.php:172
-#: includes/Widgets/Button.php:199
+#: includes/Widgets/Button.php:173
+#: includes/Widgets/Button.php:200
 #: includes/Widgets/Call_To_Action.php:393
 #: includes/Widgets/Call_To_Action.php:396
 #: includes/Widgets/Call_To_Action.php:697
-#: includes/Widgets/Carousel.php:121
+#: includes/Widgets/Carousel.php:125
 #: includes/Widgets/Code_Highlight.php:266
 #: includes/Widgets/Facebook_Embed.php:293
 #: includes/Widgets/Featured_Image.php:207
@@ -4573,7 +4599,7 @@ msgstr ""
 #: includes/Widgets/Social_Icons.php:314
 #: includes/Widgets/Soundcloud.php:200
 #: includes/Widgets/Steps.php:270
-#: includes/Widgets/Support/Carousel_Engine.php:296
+#: includes/Widgets/Support/Carousel_Engine.php:403
 #: includes/Widgets/Table_Of_Contents.php:216
 #: includes/Widgets/Tabs.php:304
 #: includes/Widgets/Tabs.php:343
@@ -4583,8 +4609,8 @@ msgstr ""
 #: includes/Widgets/Testimonial.php:322
 #: includes/Widgets/Testimonial_Carousel.php:229
 #: includes/Widgets/Timeline.php:309
-#: includes/Widgets/Video.php:243
-#: includes/Widgets/Video.php:313
+#: includes/Widgets/Video.php:269
+#: includes/Widgets/Video.php:339
 #: includes/Widgets/Video_Playlist.php:294
 msgid "Shadow"
 msgstr ""
@@ -4599,7 +4625,7 @@ msgstr ""
 #: includes/Widgets/Author_Box.php:281
 #: includes/Widgets/Blockquote.php:238
 #: includes/Widgets/Breadcrumbs.php:156
-#: includes/Widgets/Button.php:152
+#: includes/Widgets/Button.php:153
 #: includes/Widgets/Call_To_Action.php:563
 #: includes/Widgets/Call_To_Action.php:584
 #: includes/Widgets/Call_To_Action.php:614
@@ -4641,10 +4667,10 @@ msgstr ""
 #: includes/Widgets/Login.php:369
 #: includes/Widgets/Login.php:454
 #: includes/Widgets/Loop_Filter.php:158
-#: includes/Widgets/Loop_Grid.php:383
-#: includes/Widgets/Loop_Grid.php:468
-#: includes/Widgets/Loop_Grid.php:537
-#: includes/Widgets/Marquee.php:218
+#: includes/Widgets/Loop_Grid.php:397
+#: includes/Widgets/Loop_Grid.php:482
+#: includes/Widgets/Loop_Grid.php:551
+#: includes/Widgets/Marquee.php:232
 #: includes/Widgets/Nav_Menu.php:468
 #: includes/Widgets/Nav_Menu.php:618
 #: includes/Widgets/Nav_Menu.php:882
@@ -4663,7 +4689,8 @@ msgstr ""
 #: includes/Widgets/Post_Content.php:110
 #: includes/Widgets/Post_Excerpt.php:100
 #: includes/Widgets/Post_Excerpt.php:128
-#: includes/Widgets/Post_Info.php:237
+#: includes/Widgets/Post_Info.php:251
+#: includes/Widgets/Post_Info.php:364
 #: includes/Widgets/Post_Navigation.php:169
 #: includes/Widgets/Post_Navigation.php:188
 #: includes/Widgets/Post_Title.php:83
@@ -4688,7 +4715,7 @@ msgstr ""
 #: includes/Widgets/Slides.php:749
 #: includes/Widgets/Slides.php:902
 #: includes/Widgets/Social_Icons.php:325
-#: includes/Widgets/Support/Carousel_Engine.php:428
+#: includes/Widgets/Support/Carousel_Engine.php:535
 #: includes/Widgets/Table.php:260
 #: includes/Widgets/Table.php:355
 #: includes/Widgets/Table.php:375
@@ -4709,7 +4736,7 @@ msgstr ""
 #: includes/Widgets/Archive_Title.php:73
 #: includes/Widgets/Blockquote.php:123
 #: includes/Widgets/Breadcrumbs.php:139
-#: includes/Widgets/Button.php:131
+#: includes/Widgets/Button.php:132
 #: includes/Widgets/Countdown.php:217
 #: includes/Widgets/Counter.php:172
 #: includes/Widgets/Divider.php:70
@@ -4729,7 +4756,7 @@ msgstr ""
 #: includes/Widgets/Language_Switcher.php:103
 #: includes/Widgets/Login.php:483
 #: includes/Widgets/Loop_Filter.php:148
-#: includes/Widgets/Loop_Grid.php:319
+#: includes/Widgets/Loop_Grid.php:333
 #: includes/Widgets/Lottie.php:164
 #: includes/Widgets/Nav_Menu.php:105
 #: includes/Widgets/Nav_Menu.php:952
@@ -4737,7 +4764,7 @@ msgstr ""
 #: includes/Widgets/Posts.php:338
 #: includes/Widgets/Post_Content.php:65
 #: includes/Widgets/Post_Excerpt.php:92
-#: includes/Widgets/Post_Info.php:220
+#: includes/Widgets/Post_Info.php:234
 #: includes/Widgets/Post_Title.php:75
 #: includes/Widgets/Price_Table.php:368
 #: includes/Widgets/Scheme_Switch.php:76
@@ -4749,7 +4776,7 @@ msgstr ""
 #: includes/Widgets/Social_Icons.php:175
 #: includes/Widgets/Star_Rating.php:142
 #: includes/Widgets/Steps.php:138
-#: includes/Widgets/Support/Carousel_Engine.php:358
+#: includes/Widgets/Support/Carousel_Engine.php:465
 #: includes/Widgets/Table.php:62
 #: includes/Widgets/Table.php:400
 #: includes/Widgets/Team_Member.php:227
@@ -4783,7 +4810,7 @@ msgstr ""
 #: includes/Widgets/Link_In_Bio.php:721
 #: includes/Widgets/Login.php:291
 #: includes/Widgets/Logo_Grid.php:192
-#: includes/Widgets/Marquee.php:256
+#: includes/Widgets/Marquee.php:270
 #: includes/Widgets/Posts.php:477
 #: includes/Widgets/Posts.php:550
 #: includes/Widgets/Posts.php:578
@@ -4809,10 +4836,32 @@ msgid "Open color"
 msgstr ""
 
 #: includes/Widgets/Accordion.php:346
+msgid "Icon box size"
+msgstr ""
+
+#: includes/Widgets/Accordion.php:347
+msgid "Puts the icon in a tile of this size (with the background and radius below)."
+msgstr ""
+
+#: includes/Widgets/Accordion.php:357
+#: includes/Widgets/Flip_Box.php:400
+#: includes/Widgets/Nav_Menu.php:767
+msgid "Icon background"
+msgstr ""
+
+#: includes/Widgets/Accordion.php:365
+msgid "Open icon background"
+msgstr ""
+
+#: includes/Widgets/Accordion.php:373
+msgid "Icon radius"
+msgstr ""
+
+#: includes/Widgets/Accordion.php:382
 msgid "Item icons"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:401
+#: includes/Widgets/Accordion.php:437
 msgid "Add an item to start building the accordion."
 msgstr ""
 
@@ -4867,11 +4916,11 @@ msgid "Soft with side accent"
 msgstr ""
 
 #: includes/Widgets/Alert.php:98
-#: includes/Widgets/Button.php:84
+#: includes/Widgets/Button.php:85
 #: includes/Widgets/Call_To_Action.php:56
 #: includes/Widgets/Form.php:363
 #: includes/Widgets/Link_In_Bio.php:249
-#: includes/Widgets/Loop_Grid.php:309
+#: includes/Widgets/Loop_Grid.php:323
 #: includes/Widgets/Nav_Menu.php:452
 #: includes/Widgets/Share_Buttons.php:225
 #: includes/Widgets/Slides.php:128
@@ -5129,7 +5178,7 @@ msgstr ""
 #: includes/Widgets/Animated_Headline.php:205
 #: includes/Widgets/Loop_Carousel.php:63
 #: includes/Widgets/Lottie.php:112
-#: includes/Widgets/Video.php:181
+#: includes/Widgets/Video.php:207
 msgid "Loop"
 msgstr ""
 
@@ -5138,8 +5187,8 @@ msgstr ""
 #: includes/Widgets/Blockquote.php:247
 #: includes/Widgets/Call_To_Action.php:610
 #: includes/Widgets/Counter.php:198
-#: includes/Widgets/Heading.php:128
-#: includes/Widgets/Marquee.php:242
+#: includes/Widgets/Heading.php:158
+#: includes/Widgets/Marquee.php:256
 #: includes/Widgets/Post_Title.php:123
 #: includes/Widgets/Site_Tagline.php:90
 #: includes/Widgets/Site_Title.php:99
@@ -5149,7 +5198,7 @@ msgstr ""
 
 #: includes/Widgets/Animated_Headline.php:228
 #: includes/Widgets/Archive_Title.php:113
-#: includes/Widgets/Heading.php:133
+#: includes/Widgets/Heading.php:163
 #: includes/Widgets/Post_Title.php:128
 #: includes/Widgets/Site_Title.php:104
 msgid "Text stroke"
@@ -5157,28 +5206,28 @@ msgstr ""
 
 #: includes/Widgets/Animated_Headline.php:239
 #: includes/Widgets/Archive_Title.php:124
-#: includes/Widgets/Heading.php:144
+#: includes/Widgets/Heading.php:174
 #: includes/Widgets/Post_Title.php:139
 #: includes/Widgets/Site_Title.php:115
 msgid "Stroke color"
 msgstr ""
 
 #: includes/Widgets/Animated_Headline.php:247
-#: includes/Widgets/Heading.php:152
+#: includes/Widgets/Heading.php:182
 #: includes/Widgets/Post_Title.php:114
 #: includes/Widgets/Text_Editor.php:114
 msgid "Text wrap"
 msgstr ""
 
 #: includes/Widgets/Animated_Headline.php:250
-#: includes/Widgets/Heading.php:153
+#: includes/Widgets/Heading.php:183
 #: includes/Widgets/Post_Title.php:117
 #: includes/Widgets/Text_Editor.php:115
 msgid "Balanced"
 msgstr ""
 
 #: includes/Widgets/Animated_Headline.php:251
-#: includes/Widgets/Heading.php:153
+#: includes/Widgets/Heading.php:183
 #: includes/Widgets/Post_Title.php:118
 #: includes/Widgets/Text_Editor.php:115
 msgid "Pretty"
@@ -5226,7 +5275,7 @@ msgstr ""
 
 #: includes/Widgets/Archive_Description.php:62
 #: includes/Widgets/Breadcrumbs.php:95
-#: includes/Widgets/Button.php:60
+#: includes/Widgets/Button.php:61
 #: includes/Widgets/Divider.php:91
 #: includes/Widgets/Divider.php:100
 #: includes/Widgets/Form.php:143
@@ -5236,12 +5285,13 @@ msgstr ""
 #: includes/Widgets/Icon_List.php:350
 #: includes/Widgets/Marquee.php:81
 #: includes/Widgets/Marquee.php:87
-#: includes/Widgets/Marquee.php:217
+#: includes/Widgets/Marquee.php:231
 #: includes/Widgets/Off_Canvas.php:82
 #: includes/Widgets/Post_Comments.php:64
 #: includes/Widgets/Post_Content.php:72
 #: includes/Widgets/Post_Excerpt.php:99
 #: includes/Widgets/Post_Info.php:120
+#: includes/Widgets/Post_Info.php:215
 #: includes/Widgets/Price_Table.php:163
 #: includes/Widgets/Price_Table.php:243
 #: includes/Widgets/Search_Form.php:108
@@ -5261,7 +5311,7 @@ msgstr ""
 #: includes/Widgets/Archive_Description.php:84
 #: includes/Widgets/Archive_Title.php:103
 #: includes/Widgets/Featured_Image.php:141
-#: includes/Widgets/Heading.php:122
+#: includes/Widgets/Heading.php:152
 #: includes/Widgets/Hotspot.php:338
 #: includes/Widgets/Icon_Box.php:587
 #: includes/Widgets/Image.php:200
@@ -5554,7 +5604,7 @@ msgid "Separator text"
 msgstr ""
 
 #: includes/Widgets/Breadcrumbs.php:113
-#: includes/Widgets/Marquee.php:114
+#: includes/Widgets/Marquee.php:128
 msgid "Separator icon"
 msgstr ""
 
@@ -5592,7 +5642,7 @@ msgid "Separator & icons"
 msgstr ""
 
 #: includes/Widgets/Breadcrumbs.php:207
-#: includes/Widgets/Post_Info.php:276
+#: includes/Widgets/Post_Info.php:290
 msgid "Separator color"
 msgstr ""
 
@@ -5601,7 +5651,7 @@ msgid "Separator spacing"
 msgstr ""
 
 #: includes/Widgets/Breadcrumbs.php:224
-#: includes/Widgets/Button.php:224
+#: includes/Widgets/Button.php:235
 #: includes/Widgets/Flip_Box.php:409
 #: includes/Widgets/Hotspot.php:257
 #: includes/Widgets/Image_Gallery.php:302
@@ -5610,14 +5660,14 @@ msgstr ""
 #: includes/Widgets/Nav_Menu.php:748
 #: includes/Widgets/Nav_Menu.php:796
 #: includes/Widgets/Off_Canvas.php:310
-#: includes/Widgets/Post_Info.php:305
+#: includes/Widgets/Post_Info.php:319
 #: includes/Widgets/Price_Table.php:454
 #: includes/Widgets/Price_Table.php:595
 #: includes/Widgets/Search_Form.php:401
 #: includes/Widgets/Share_Buttons.php:351
 #: includes/Widgets/Slides.php:789
 #: includes/Widgets/Steps.php:276
-#: includes/Widgets/Support/Carousel_Engine.php:260
+#: includes/Widgets/Support/Carousel_Engine.php:367
 #: includes/Widgets/Team_Member.php:390
 #: includes/Widgets/Timeline.php:272
 msgid "Icon size"
@@ -5642,9 +5692,9 @@ msgstr ""
 msgid "Breadcrumb"
 msgstr ""
 
-#: includes/Widgets/Button.php:39
-#: includes/Widgets/Button.php:55
-#: includes/Widgets/Button.php:151
+#: includes/Widgets/Button.php:40
+#: includes/Widgets/Button.php:56
+#: includes/Widgets/Button.php:152
 #: includes/Widgets/Flip_Box.php:273
 #: includes/Widgets/Form.php:924
 #: includes/Widgets/Login.php:368
@@ -5655,46 +5705,46 @@ msgstr ""
 msgid "Button"
 msgstr ""
 
-#: includes/Widgets/Button.php:51
+#: includes/Widgets/Button.php:52
 msgid "Call-to-action link styled as a button. Variants: primary (Design System), secondary, outline, ghost, link."
 msgstr ""
 
-#: includes/Widgets/Button.php:61
+#: includes/Widgets/Button.php:62
 msgid "Click here"
 msgstr ""
 
-#: includes/Widgets/Button.php:82
+#: includes/Widgets/Button.php:83
 #: includes/Widgets/Call_To_Action.php:54
 #: includes/Widgets/Form.php:361
-#: includes/Widgets/Loop_Grid.php:307
+#: includes/Widgets/Loop_Grid.php:321
 #: includes/Widgets/Nav_Menu.php:450
 #: includes/Widgets/Slides.php:126
 msgid "Primary"
 msgstr ""
 
-#: includes/Widgets/Button.php:83
+#: includes/Widgets/Button.php:84
 #: includes/Widgets/Call_To_Action.php:55
 #: includes/Widgets/Form.php:362
-#: includes/Widgets/Loop_Grid.php:308
+#: includes/Widgets/Loop_Grid.php:322
 #: includes/Widgets/Nav_Menu.php:451
 #: includes/Widgets/Slides.php:127
 msgid "Secondary"
 msgstr ""
 
-#: includes/Widgets/Button.php:85
+#: includes/Widgets/Button.php:86
 #: includes/Widgets/Call_To_Action.php:57
 #: includes/Widgets/Form.php:364
-#: includes/Widgets/Loop_Grid.php:310
+#: includes/Widgets/Loop_Grid.php:324
 #: includes/Widgets/Slides.php:129
 msgid "Ghost"
 msgstr ""
 
-#: includes/Widgets/Button.php:86
+#: includes/Widgets/Button.php:87
 #: includes/Widgets/Call_To_Action.php:58
 msgid "Text link"
 msgstr ""
 
-#: includes/Widgets/Button.php:112
+#: includes/Widgets/Button.php:113
 #: includes/Widgets/Form.php:348
 #: includes/Widgets/Image_Compare.php:100
 #: includes/Widgets/Off_Canvas.php:114
@@ -5703,7 +5753,7 @@ msgstr ""
 msgid "Before"
 msgstr ""
 
-#: includes/Widgets/Button.php:113
+#: includes/Widgets/Button.php:114
 #: includes/Widgets/Form.php:349
 #: includes/Widgets/Image_Compare.php:109
 #: includes/Widgets/Off_Canvas.php:115
@@ -5712,14 +5762,14 @@ msgstr ""
 msgid "After"
 msgstr ""
 
-#: includes/Widgets/Button.php:122
+#: includes/Widgets/Button.php:123
 #: includes/Widgets/Off_Canvas.php:320
-#: includes/Widgets/Post_Info.php:315
+#: includes/Widgets/Post_Info.php:329
 #: includes/Widgets/Social_Icons.php:330
 msgid "Icon spacing"
 msgstr ""
 
-#: includes/Widgets/Button.php:147
+#: includes/Widgets/Button.php:148
 #: includes/Widgets/Call_To_Action.php:457
 #: includes/Widgets/Featured_Image.php:213
 #: includes/Widgets/Icon_Box.php:315
@@ -5733,11 +5783,11 @@ msgstr ""
 msgid "Hover effect"
 msgstr ""
 
-#: includes/Widgets/Button.php:148
+#: includes/Widgets/Button.php:149
 msgid "Button ID"
 msgstr ""
 
-#: includes/Widgets/Button.php:195
+#: includes/Widgets/Button.php:196
 #: includes/Widgets/Call_To_Action.php:712
 #: includes/Widgets/Call_To_Action.php:717
 #: includes/Widgets/Flip_Box.php:279
@@ -5749,7 +5799,7 @@ msgstr ""
 #: includes/Widgets/Login.php:333
 #: includes/Widgets/Login.php:411
 #: includes/Widgets/Loop_Filter.php:161
-#: includes/Widgets/Loop_Grid.php:509
+#: includes/Widgets/Loop_Grid.php:523
 #: includes/Widgets/Off_Canvas.php:300
 #: includes/Widgets/Posts.php:416
 #: includes/Widgets/Post_Comments.php:160
@@ -5761,11 +5811,19 @@ msgstr ""
 #: includes/Widgets/Slides.php:809
 #: includes/Widgets/Slides.php:937
 #: includes/Widgets/Slides.php:942
-#: includes/Widgets/Support/Carousel_Engine.php:319
+#: includes/Widgets/Support/Carousel_Engine.php:426
 #: includes/Widgets/Table.php:281
 #: includes/Widgets/Tabs.php:320
 #: includes/Widgets/Tabs.php:339
 msgid "Border color"
+msgstr ""
+
+#: includes/Widgets/Button.php:205
+msgid "Fill color"
+msgstr ""
+
+#: includes/Widgets/Button.php:206
+msgid "The color that sweeps in with the Fill hover effects."
 msgstr ""
 
 #: includes/Widgets/Call_To_Action.php:30
@@ -5828,7 +5886,7 @@ msgstr ""
 #: includes/Widgets/Flip_Box.php:136
 #: includes/Widgets/Google_Maps.php:128
 #: includes/Widgets/Login.php:114
-#: includes/Widgets/Loop_Grid.php:286
+#: includes/Widgets/Loop_Grid.php:300
 #: includes/Widgets/Search_Form.php:118
 #: includes/Widgets/Slides.php:243
 msgid "Button text"
@@ -5849,7 +5907,7 @@ msgstr ""
 #: includes/Widgets/Call_To_Action.php:210
 #: includes/Widgets/Flip_Box.php:156
 #: includes/Widgets/Link_In_Bio.php:245
-#: includes/Widgets/Loop_Grid.php:304
+#: includes/Widgets/Loop_Grid.php:318
 #: includes/Widgets/Nav_Menu.php:447
 #: includes/Widgets/Slides.php:711
 msgid "Button style"
@@ -5889,7 +5947,7 @@ msgstr ""
 #: includes/Widgets/Flip_Box.php:165
 #: includes/Widgets/Slides.php:730
 #: includes/Widgets/Slides.php:779
-#: includes/Widgets/Support/Carousel_Engine.php:250
+#: includes/Widgets/Support/Carousel_Engine.php:357
 #: includes/Widgets/Team_Member.php:380
 msgid "Button size"
 msgstr ""
@@ -5934,7 +5992,7 @@ msgstr ""
 #: includes/Widgets/Flip_Box.php:374
 #: includes/Widgets/Icon_List.php:327
 #: includes/Widgets/Slides.php:155
-#: includes/Widgets/Support/Carousel_Engine.php:83
+#: includes/Widgets/Support/Carousel_Engine.php:184
 #: includes/Widgets/Table.php:319
 msgid "Middle"
 msgstr ""
@@ -5953,7 +6011,7 @@ msgstr ""
 
 #: includes/Widgets/Call_To_Action.php:406
 #: includes/Widgets/Flip_Box.php:420
-#: includes/Widgets/Marquee.php:344
+#: includes/Widgets/Marquee.php:358
 msgid "Image width"
 msgstr ""
 
@@ -6062,9 +6120,9 @@ msgid "Distance from corner"
 msgstr ""
 
 #: includes/Widgets/Carousel.php:31
-#: includes/Widgets/Support/Carousel_Engine.php:41
-#: includes/Widgets/Support/Carousel_Engine.php:223
-#: includes/Widgets/Support/Carousel_Engine.php:526
+#: includes/Widgets/Support/Carousel_Engine.php:56
+#: includes/Widgets/Support/Carousel_Engine.php:330
+#: includes/Widgets/Support/Carousel_Engine.php:648
 msgid "Carousel"
 msgstr ""
 
@@ -6073,17 +6131,17 @@ msgid "Swipeable carousel whose slides are containers holding any widgets. One r
 msgstr ""
 
 #. translators: %d: slide number.
-#: includes/Widgets/Carousel.php:68
-#: includes/Widgets/Carousel.php:70
 #: includes/Widgets/Carousel.php:72
+#: includes/Widgets/Carousel.php:74
+#: includes/Widgets/Carousel.php:76
 #: includes/Widgets/Slides.php:1139
 #, php-format
 msgid "Slide %d"
 msgstr ""
 
-#: includes/Widgets/Carousel.php:77
-#: includes/Widgets/Carousel.php:82
-#: includes/Widgets/Carousel.php:100
+#: includes/Widgets/Carousel.php:81
+#: includes/Widgets/Carousel.php:86
+#: includes/Widgets/Carousel.php:104
 #: includes/Widgets/Slides.php:41
 #: includes/Widgets/Slides.php:197
 #: includes/Widgets/Slides.php:202
@@ -6091,7 +6149,7 @@ msgstr ""
 msgid "Slides"
 msgstr ""
 
-#: includes/Widgets/Carousel.php:87
+#: includes/Widgets/Carousel.php:91
 #: includes/Widgets/Form.php:161
 #: includes/Widgets/Link_In_Bio.php:210
 #: includes/Widgets/Link_In_Bio.php:316
@@ -6102,17 +6160,17 @@ msgstr ""
 msgid "Label"
 msgstr ""
 
-#: includes/Widgets/Carousel.php:88
+#: includes/Widgets/Carousel.php:92
 msgid "Shown in the navigator; each slide is edited as a container on the canvas."
 msgstr ""
 
-#: includes/Widgets/Carousel.php:89
+#: includes/Widgets/Carousel.php:93
 #: includes/Widgets/Flip_Box.php:182
 #: includes/Widgets/Slides.php:431
 msgid "Slide"
 msgstr ""
 
-#: includes/Widgets/Carousel.php:135
+#: includes/Widgets/Carousel.php:139
 msgid "Add a slide to start building the carousel."
 msgstr ""
 
@@ -6745,7 +6803,7 @@ msgstr ""
 #: includes/Widgets/Image_Carousel.php:120
 #: includes/Widgets/Image_Compare.php:184
 #: includes/Widgets/Image_Gallery.php:148
-#: includes/Widgets/Marquee.php:356
+#: includes/Widgets/Marquee.php:370
 #: includes/Widgets/Price_List.php:294
 #: includes/Widgets/Video.php:133
 msgid "Aspect ratio"
@@ -6904,7 +6962,7 @@ msgstr ""
 #: includes/Widgets/Image_Carousel.php:123
 #: includes/Widgets/Image_Compare.php:186
 #: includes/Widgets/Image_Gallery.php:151
-#: includes/Widgets/Marquee.php:358
+#: includes/Widgets/Marquee.php:372
 #: includes/Widgets/Posts.php:156
 #: includes/Widgets/Price_List.php:301
 #: includes/Widgets/Team_Member.php:218
@@ -6918,11 +6976,13 @@ msgstr ""
 
 #: includes/Widgets/Featured_Image.php:181
 #: includes/Widgets/Image.php:239
+#: includes/Widgets/Video.php:159
 msgid "Cover"
 msgstr ""
 
 #: includes/Widgets/Featured_Image.php:182
 #: includes/Widgets/Image.php:239
+#: includes/Widgets/Video.php:158
 msgid "Contain"
 msgstr ""
 
@@ -7061,27 +7121,22 @@ msgstr ""
 #: includes/Widgets/Icon_List.php:80
 #: includes/Widgets/Image_Gallery.php:293
 #: includes/Widgets/Nav_Menu.php:759
-#: includes/Widgets/Post_Info.php:297
+#: includes/Widgets/Post_Info.php:311
 #: includes/Widgets/Price_Table.php:182
 #: includes/Widgets/Price_Table.php:445
 #: includes/Widgets/Scheme_Switch.php:98
 #: includes/Widgets/Slides.php:807
 #: includes/Widgets/Slides.php:812
 #: includes/Widgets/Social_Icons.php:282
-#: includes/Widgets/Support/Carousel_Engine.php:283
-#: includes/Widgets/Support/Carousel_Engine.php:303
+#: includes/Widgets/Support/Carousel_Engine.php:390
+#: includes/Widgets/Support/Carousel_Engine.php:410
 #: includes/Widgets/Tabs.php:508
 #: includes/Widgets/Team_Member.php:415
 #: includes/Widgets/Team_Member.php:419
-#: includes/Widgets/Video.php:281
-#: includes/Widgets/Video.php:299
+#: includes/Widgets/Video.php:307
+#: includes/Widgets/Video.php:325
 #: includes/Widgets/Video_Playlist.php:310
 msgid "Icon color"
-msgstr ""
-
-#: includes/Widgets/Flip_Box.php:400
-#: includes/Widgets/Nav_Menu.php:767
-msgid "Icon background"
 msgstr ""
 
 #: includes/Widgets/Form.php:70
@@ -7591,7 +7646,7 @@ msgstr ""
 
 #: includes/Widgets/Form.php:770
 #: includes/Widgets/Icon_List.php:177
-#: includes/Widgets/Loop_Grid.php:349
+#: includes/Widgets/Loop_Grid.php:363
 #: includes/Widgets/Posts.php:364
 #: includes/Widgets/Sitemap.php:254
 msgid "Column gap"
@@ -7811,7 +7866,7 @@ msgstr ""
 #: includes/Widgets/Login.php:475
 #: includes/Widgets/Post_Comments.php:86
 #: includes/Widgets/Post_Content.php:94
-#: includes/Widgets/Post_Info.php:258
+#: includes/Widgets/Post_Info.php:272
 #: includes/Widgets/Post_Title.php:96
 #: includes/Widgets/Text_Editor.php:106
 msgid "Link hover color"
@@ -7823,6 +7878,22 @@ msgstr ""
 
 #: includes/Widgets/Heading.php:114
 msgid "Colors text wrapped in <mark> or <strong>."
+msgstr ""
+
+#: includes/Widgets/Heading.php:123
+msgid "Highlight background"
+msgstr ""
+
+#: includes/Widgets/Heading.php:124
+msgid "A box behind the <mark> or <strong> words."
+msgstr ""
+
+#: includes/Widgets/Heading.php:132
+msgid "Highlight padding"
+msgstr ""
+
+#: includes/Widgets/Heading.php:142
+msgid "Highlight radius"
 msgstr ""
 
 #: includes/Widgets/Hotspot.php:35
@@ -8078,7 +8149,7 @@ msgstr ""
 
 #: includes/Widgets/Icon_Box.php:244
 #: includes/Widgets/Image_Box.php:179
-#: includes/Widgets/Support/Carousel_Engine.php:79
+#: includes/Widgets/Support/Carousel_Engine.php:180
 #: includes/Widgets/Table.php:317
 msgid "Vertical alignment"
 msgstr ""
@@ -9083,24 +9154,25 @@ msgid "Divider lines"
 msgstr ""
 
 #: includes/Widgets/Logo_Grid.php:114
-#: includes/Widgets/Marquee.php:122
+#: includes/Widgets/Marquee.php:136
 msgid "Loop duration (seconds)"
 msgstr ""
 
 #: includes/Widgets/Logo_Grid.php:115
-#: includes/Widgets/Marquee.php:123
+#: includes/Widgets/Marquee.php:137
 msgid "Time for one full loop; lower is faster."
 msgstr ""
 
 #: includes/Widgets/Logo_Grid.php:140
-#: includes/Widgets/Marquee.php:203
+#: includes/Widgets/Marquee.php:217
 #: includes/Widgets/Slides.php:549
-#: includes/Widgets/Support/Carousel_Engine.php:203
+#: includes/Widgets/Support/Carousel_Engine.php:134
+#: includes/Widgets/Support/Carousel_Engine.php:310
 msgid "Pause on hover"
 msgstr ""
 
 #: includes/Widgets/Logo_Grid.php:149
-#: includes/Widgets/Marquee.php:211
+#: includes/Widgets/Marquee.php:225
 msgid "Fade edges"
 msgstr ""
 
@@ -9130,7 +9202,7 @@ msgstr ""
 #: includes/Widgets/Nav_Menu.php:727
 #: includes/Widgets/Nav_Menu.php:944
 #: includes/Widgets/Post_Comments.php:115
-#: includes/Widgets/Post_Info.php:285
+#: includes/Widgets/Post_Info.php:299
 #: includes/Widgets/Post_Navigation.php:146
 #: includes/Widgets/Price_List.php:256
 #: includes/Widgets/Price_Table.php:637
@@ -9143,7 +9215,7 @@ msgid "Divider width"
 msgstr ""
 
 #: includes/Widgets/Logo_Grid.php:295
-#: includes/Widgets/Marquee.php:306
+#: includes/Widgets/Marquee.php:320
 msgid "Edge fade width"
 msgstr ""
 
@@ -9170,15 +9242,15 @@ msgid "Loop item template"
 msgstr ""
 
 #: includes/Widgets/Loop_Carousel.php:102
-#: includes/Widgets/Loop_Grid.php:191
-#: includes/Widgets/Loop_Grid.php:536
+#: includes/Widgets/Loop_Grid.php:205
+#: includes/Widgets/Loop_Grid.php:550
 #: includes/Widgets/Posts.php:81
 #: includes/Widgets/Posts.php:734
 msgid "Nothing found message"
 msgstr ""
 
 #: includes/Widgets/Loop_Carousel.php:111
-#: includes/Widgets/Loop_Grid.php:164
+#: includes/Widgets/Loop_Grid.php:178
 msgid "Featured image as CSS variable"
 msgstr ""
 
@@ -9191,19 +9263,19 @@ msgid "Create a Loop item template in Theme Builder, design the card with dynami
 msgstr ""
 
 #: includes/Widgets/Loop_Carousel.php:136
-#: includes/Widgets/Loop_Grid.php:856
+#: includes/Widgets/Loop_Grid.php:870
 msgid "The selected loop item template no longer exists. Choose another one."
 msgstr ""
 
 #. translators: %d: template id.
 #: includes/Widgets/Loop_Carousel.php:138
-#: includes/Widgets/Loop_Grid.php:858
+#: includes/Widgets/Loop_Grid.php:872
 #, php-format
 msgid "Template #%d is not a Loop item template. Choose a template of type “Loop item”."
 msgstr ""
 
 #: includes/Widgets/Loop_Carousel.php:139
-#: includes/Widgets/Loop_Grid.php:859
+#: includes/Widgets/Loop_Grid.php:873
 msgid "The selected loop item template is not published."
 msgstr ""
 
@@ -9212,12 +9284,12 @@ msgid "This loop item template is already shown here: a loop cannot display the 
 msgstr ""
 
 #: includes/Widgets/Loop_Carousel.php:146
-#: includes/Widgets/Loop_Grid.php:845
+#: includes/Widgets/Loop_Grid.php:859
 msgid "Open Theme Builder"
 msgstr ""
 
 #: includes/Widgets/Loop_Carousel.php:164
-#: includes/Widgets/Loop_Grid.php:908
+#: includes/Widgets/Loop_Grid.php:925
 msgid "No posts match this query."
 msgstr ""
 
@@ -9366,7 +9438,7 @@ msgid "No terms to show yet."
 msgstr ""
 
 #: includes/Widgets/Loop_Grid.php:71
-#: includes/Widgets/Loop_Grid.php:862
+#: includes/Widgets/Loop_Grid.php:876
 msgid "Loop Grid"
 msgstr ""
 
@@ -9388,104 +9460,116 @@ msgid "Cards keep their own height and move up into the gaps."
 msgstr ""
 
 #: includes/Widgets/Loop_Grid.php:154
-#: includes/Widgets/Support/Carousel_Engine.php:81
-msgid "Equal height"
+msgid "Masonry order"
 msgstr ""
 
 #: includes/Widgets/Loop_Grid.php:155
+msgid "Column by column: card 1 in the first column, card 2 in the second… and so on, each under the previous card of its column (with an alternate template every second card this forms a checkerboard)."
+msgstr ""
+
+#: includes/Widgets/Loop_Grid.php:158
+msgid "Shortest column first"
+msgstr ""
+
+#: includes/Widgets/Loop_Grid.php:159
+msgid "Column by column"
+msgstr ""
+
+#: includes/Widgets/Loop_Grid.php:168
+#: includes/Widgets/Support/Carousel_Engine.php:182
+msgid "Equal height"
+msgstr ""
+
+#: includes/Widgets/Loop_Grid.php:169
 msgid "Stretches the cards of a row to the tallest one."
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:165
+#: includes/Widgets/Loop_Grid.php:179
 msgid "Adds --uncoder-loop-image to every card, e.g. for custom CSS \"background-image: var(--uncoder-loop-image)\"."
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:192
+#: includes/Widgets/Loop_Grid.php:206
 #: includes/Widgets/Posts.php:82
 msgid "Nothing found. Try another search or browse the latest posts."
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:198
-#: includes/Widgets/Loop_Grid.php:203
+#: includes/Widgets/Loop_Grid.php:212
+#: includes/Widgets/Loop_Grid.php:217
 msgid "Alternate template"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:204
+#: includes/Widgets/Loop_Grid.php:218
 msgid "Optional second Loop item template shown at a set position, e.g. a highlighted card."
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:228
+#: includes/Widgets/Loop_Grid.php:242
 msgid "On: every Nth card. Off: only the Nth card."
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:237
-msgid "Column span"
-msgstr ""
-
-#: includes/Widgets/Loop_Grid.php:238
+#: includes/Widgets/Loop_Grid.php:252
 msgid "Keep it at or below the number of columns."
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:247
-#: includes/Widgets/Loop_Grid.php:252
-#: includes/Widgets/Loop_Grid.php:378
+#: includes/Widgets/Loop_Grid.php:261
+#: includes/Widgets/Loop_Grid.php:266
+#: includes/Widgets/Loop_Grid.php:392
 #: includes/Widgets/Posts.php:301
 #: includes/Widgets/Posts.php:306
 #: includes/Widgets/Posts.php:643
 #: includes/Widgets/Slides.php:513
-#: includes/Widgets/Support/Carousel_Engine.php:140
-#: includes/Widgets/Support/Carousel_Engine.php:339
+#: includes/Widgets/Support/Carousel_Engine.php:242
+#: includes/Widgets/Support/Carousel_Engine.php:446
 msgid "Pagination"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:256
+#: includes/Widgets/Loop_Grid.php:270
 #: includes/Widgets/Posts.php:310
 msgid "Numbers"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:257
+#: includes/Widgets/Loop_Grid.php:271
 #: includes/Widgets/Posts.php:311
 msgid "Previous / next"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:258
+#: includes/Widgets/Loop_Grid.php:272
 #: includes/Widgets/Posts.php:312
 msgid "Numbers with previous / next"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:259
-#: includes/Widgets/Loop_Grid.php:463
+#: includes/Widgets/Loop_Grid.php:273
+#: includes/Widgets/Loop_Grid.php:477
 msgid "Load more button"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:260
+#: includes/Widgets/Loop_Grid.php:274
 msgid "Infinite scroll"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:268
+#: includes/Widgets/Loop_Grid.php:282
 #: includes/Widgets/Posts.php:320
 msgid "Previous text"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:277
+#: includes/Widgets/Loop_Grid.php:291
 #: includes/Widgets/Posts.php:329
 msgid "Next text"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:287
-#: includes/Widgets/Loop_Grid.php:744
+#: includes/Widgets/Loop_Grid.php:301
+#: includes/Widgets/Loop_Grid.php:758
 msgid "Load more"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:295
+#: includes/Widgets/Loop_Grid.php:309
 msgid "Loading text"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:367
+#: includes/Widgets/Loop_Grid.php:381
 msgid "Pagination distance"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:421
+#: includes/Widgets/Loop_Grid.php:435
 #: includes/Widgets/Nav_Menu.php:516
 #: includes/Widgets/Nav_Menu.php:656
 #: includes/Widgets/Nav_Menu.php:920
@@ -9496,41 +9580,41 @@ msgstr ""
 msgid "Active"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:755
+#: includes/Widgets/Loop_Grid.php:769
 msgid "Next page"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:793
+#: includes/Widgets/Loop_Grid.php:807
 #: includes/Widgets/Posts.php:995
 msgid "Posts pagination"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:829
+#: includes/Widgets/Loop_Grid.php:843
 msgid "All items are loaded."
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:830
+#: includes/Widgets/Loop_Grid.php:844
 msgid "Could not load more items. Please try again."
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:842
+#: includes/Widgets/Loop_Grid.php:856
 msgid "Choose a loop item template"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:843
+#: includes/Widgets/Loop_Grid.php:857
 msgid "Create a Loop item template in Theme Builder, design the card with dynamic tags (featured image, post title, excerpt, read more), publish it, then pick it in Layout → Loop item template."
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:861
+#: includes/Widgets/Loop_Grid.php:875
 msgid "This loop item template is already shown here: a loop grid cannot display the template it is placed in."
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:902
+#: includes/Widgets/Loop_Grid.php:919
 msgid "This loop item template is not published yet: the cards only show on the live site once it is."
 msgstr ""
 
 #. translators: %s: number of items.
-#: includes/Widgets/Loop_Grid.php:923
+#: includes/Widgets/Loop_Grid.php:940
 #, php-format
 msgid "%s more item loaded"
 msgid_plural "%s more items loaded"
@@ -9657,80 +9741,92 @@ msgstr ""
 msgid "Optional, shown before the text."
 msgstr ""
 
-#: includes/Widgets/Marquee.php:139
+#: includes/Widgets/Marquee.php:108
+msgid "Item color"
+msgstr ""
+
+#: includes/Widgets/Marquee.php:114
+msgid "Hollow outline"
+msgstr ""
+
+#: includes/Widgets/Marquee.php:115
+msgid "Outlined letters with no fill, in this color."
+msgstr ""
+
+#: includes/Widgets/Marquee.php:153
 msgid "Up"
 msgstr ""
 
-#: includes/Widgets/Marquee.php:140
+#: includes/Widgets/Marquee.php:154
 msgid "Down"
 msgstr ""
 
-#: includes/Widgets/Marquee.php:149
+#: includes/Widgets/Marquee.php:163
 msgid "The visible height of an up / down marquee. Default: 420px."
 msgstr ""
 
-#: includes/Widgets/Marquee.php:161
+#: includes/Widgets/Marquee.php:175
 msgid "Columns when the marquee moves up or down. Each row shows all the items."
 msgstr ""
 
-#: includes/Widgets/Marquee.php:174
+#: includes/Widgets/Marquee.php:188
 msgid "Alternate direction"
 msgstr ""
 
-#: includes/Widgets/Marquee.php:175
+#: includes/Widgets/Marquee.php:189
 msgid "Every other row moves the opposite way."
 msgstr ""
 
-#: includes/Widgets/Marquee.php:184
+#: includes/Widgets/Marquee.php:198
 msgid "Item alignment"
 msgstr ""
 
-#: includes/Widgets/Marquee.php:236
+#: includes/Widgets/Marquee.php:250
 msgid "Items with a link."
 msgstr ""
 
-#: includes/Widgets/Marquee.php:247
+#: includes/Widgets/Marquee.php:261
 msgid "Outline text color"
 msgstr ""
 
-#: includes/Widgets/Marquee.php:248
+#: includes/Widgets/Marquee.php:262
 msgid "Hollow letters: set the text color to transparent and pick an outline color."
 msgstr ""
 
-#: includes/Widgets/Marquee.php:266
+#: includes/Widgets/Marquee.php:280
 msgid "Item icon size"
 msgstr ""
 
-#: includes/Widgets/Marquee.php:276
+#: includes/Widgets/Marquee.php:290
 msgid "Item icon color"
 msgstr ""
 
-#: includes/Widgets/Marquee.php:317
+#: includes/Widgets/Marquee.php:331
 #: includes/Widgets/Price_Table.php:604
 msgid "Space between rows"
 msgstr ""
 
-#: includes/Widgets/Marquee.php:332
+#: includes/Widgets/Marquee.php:346
 msgid "Image height"
 msgstr ""
 
-#: includes/Widgets/Marquee.php:333
+#: includes/Widgets/Marquee.php:347
 msgid "Left / right marquees. Default: 64px."
 msgstr ""
 
-#: includes/Widgets/Marquee.php:345
+#: includes/Widgets/Marquee.php:359
 msgid "Up / down marquees. Default: the full column width."
 msgstr ""
 
-#: includes/Widgets/Marquee.php:382
+#: includes/Widgets/Marquee.php:396
 msgid "Grey until hovered"
 msgstr ""
 
-#: includes/Widgets/Marquee.php:383
+#: includes/Widgets/Marquee.php:397
 msgid "Logos and photos in greyscale that turn to colour under the pointer."
 msgstr ""
 
-#: includes/Widgets/Marquee.php:393
+#: includes/Widgets/Marquee.php:407
 msgid "Add items to build the marquee."
 msgstr ""
 
@@ -10197,7 +10293,7 @@ msgstr ""
 
 #: includes/Widgets/Off_Canvas.php:148
 #: includes/Widgets/Slides.php:568
-#: includes/Widgets/Support/Carousel_Engine.php:222
+#: includes/Widgets/Support/Carousel_Engine.php:329
 #: includes/Widgets/Tabs.php:234
 msgid "Accessible name"
 msgstr ""
@@ -10402,7 +10498,7 @@ msgstr ""
 
 #. translators: %s: number of comments.
 #: includes/Widgets/Posts.php:840
-#: includes/Widgets/Post_Info.php:417
+#: includes/Widgets/Post_Info.php:460
 #, php-format
 msgid "%s comment"
 msgid_plural "%s comments"
@@ -10411,7 +10507,7 @@ msgstr[1] ""
 
 #. translators: %s: number of minutes.
 #: includes/Widgets/Posts.php:850
-#: includes/Widgets/Post_Info.php:427
+#: includes/Widgets/Post_Info.php:470
 #, php-format
 msgid "%s min read"
 msgid_plural "%s min read"
@@ -10447,7 +10543,7 @@ msgid "Space between comments"
 msgstr ""
 
 #: includes/Widgets/Post_Comments.php:123
-#: includes/Widgets/Post_Info.php:334
+#: includes/Widgets/Post_Info.php:348
 msgid "Avatar radius"
 msgstr ""
 
@@ -10642,19 +10738,40 @@ msgid "Show avatar instead of the icon"
 msgstr ""
 
 #: includes/Widgets/Post_Info.php:212
+msgid "Terms style"
+msgstr ""
+
+#: includes/Widgets/Post_Info.php:216
+msgid "Pills"
+msgstr ""
+
+#: includes/Widgets/Post_Info.php:225
 msgid "Terms separator"
 msgstr ""
 
-#: includes/Widgets/Post_Info.php:292
+#: includes/Widgets/Post_Info.php:306
 msgid "Icons & avatar"
 msgstr ""
 
-#: includes/Widgets/Post_Info.php:324
+#: includes/Widgets/Post_Info.php:338
 msgid "Avatar size"
 msgstr ""
 
+#: includes/Widgets/Post_Info.php:358
+msgid "Term pills"
+msgstr ""
+
+#: includes/Widgets/Post_Info.php:367
+msgid "Hover text color"
+msgstr ""
+
+#: includes/Widgets/Post_Info.php:368
+#: includes/Widgets/Video_Playlist.php:326
+msgid "Hover background"
+msgstr ""
+
 #. translators: %s: number of comments.
-#: includes/Widgets/Post_Info.php:417
+#: includes/Widgets/Post_Info.php:460
 msgid "No comments"
 msgstr ""
 
@@ -10668,7 +10785,7 @@ msgstr ""
 
 #: includes/Widgets/Post_Navigation.php:51
 #: includes/Widgets/Slides.php:482
-#: includes/Widgets/Support/Carousel_Engine.php:95
+#: includes/Widgets/Support/Carousel_Engine.php:196
 msgid "Navigation"
 msgstr ""
 
@@ -10688,20 +10805,20 @@ msgstr ""
 #: includes/Widgets/Post_Navigation.php:210
 #: includes/Widgets/Slides.php:487
 #: includes/Widgets/Slides.php:770
-#: includes/Widgets/Support/Carousel_Engine.php:100
-#: includes/Widgets/Support/Carousel_Engine.php:241
+#: includes/Widgets/Support/Carousel_Engine.php:201
+#: includes/Widgets/Support/Carousel_Engine.php:348
 msgid "Arrows"
 msgstr ""
 
 #: includes/Widgets/Post_Navigation.php:98
 #: includes/Widgets/Slides.php:495
-#: includes/Widgets/Support/Carousel_Engine.php:122
+#: includes/Widgets/Support/Carousel_Engine.php:224
 msgid "Previous icon"
 msgstr ""
 
 #: includes/Widgets/Post_Navigation.php:107
 #: includes/Widgets/Slides.php:504
-#: includes/Widgets/Support/Carousel_Engine.php:131
+#: includes/Widgets/Support/Carousel_Engine.php:233
 msgid "Next icon"
 msgstr ""
 
@@ -11070,7 +11187,7 @@ msgid "A labelled bar filled to a percentage, e.g. skills or goals. The fill ani
 msgstr ""
 
 #: includes/Widgets/Progress_Bar.php:50
-#: includes/Widgets/Support/Carousel_Engine.php:146
+#: includes/Widgets/Support/Carousel_Engine.php:249
 msgid "Progress bar"
 msgstr ""
 
@@ -11125,7 +11242,7 @@ msgstr ""
 
 #: includes/Widgets/Progress_Bar.php:186
 #: includes/Widgets/Reading_Progress.php:114
-#: includes/Widgets/Support/Carousel_Engine.php:466
+#: includes/Widgets/Support/Carousel_Engine.php:573
 msgid "Track color"
 msgstr ""
 
@@ -11206,7 +11323,7 @@ msgid "The Anchor ID (Behaviour → Anchor & classes) of the section to measure,
 msgstr ""
 
 #: includes/Widgets/Reading_Progress.php:106
-#: includes/Widgets/Support/Carousel_Engine.php:457
+#: includes/Widgets/Support/Carousel_Engine.php:564
 msgid "Bar color"
 msgstr ""
 
@@ -11824,7 +11941,7 @@ msgid "Slider"
 msgstr ""
 
 #: includes/Widgets/Slides.php:441
-#: includes/Widgets/Support/Carousel_Engine.php:171
+#: includes/Widgets/Support/Carousel_Engine.php:276
 msgid "Transition duration (ms)"
 msgstr ""
 
@@ -11867,21 +11984,21 @@ msgid "Change slides with a touch swipe or a mouse drag."
 msgstr ""
 
 #: includes/Widgets/Slides.php:517
-#: includes/Widgets/Support/Carousel_Engine.php:144
+#: includes/Widgets/Support/Carousel_Engine.php:247
 msgid "Dots"
 msgstr ""
 
 #: includes/Widgets/Slides.php:518
-#: includes/Widgets/Support/Carousel_Engine.php:145
+#: includes/Widgets/Support/Carousel_Engine.php:248
 msgid "Fraction (2 / 5)"
 msgstr ""
 
 #: includes/Widgets/Slides.php:522
 #: includes/Widgets/Slides.php:527
 #: includes/Widgets/Soundcloud.php:122
-#: includes/Widgets/Support/Carousel_Engine.php:178
-#: includes/Widgets/Support/Carousel_Engine.php:183
-#: includes/Widgets/Video.php:166
+#: includes/Widgets/Support/Carousel_Engine.php:284
+#: includes/Widgets/Support/Carousel_Engine.php:289
+#: includes/Widgets/Video.php:192
 msgid "Autoplay"
 msgstr ""
 
@@ -11890,12 +12007,12 @@ msgid "Never starts in the editor or for visitors who prefer reduced motion; pau
 msgstr ""
 
 #: includes/Widgets/Slides.php:558
-#: includes/Widgets/Support/Carousel_Engine.php:212
+#: includes/Widgets/Support/Carousel_Engine.php:319
 msgid "Pause button"
 msgstr ""
 
 #: includes/Widgets/Slides.php:559
-#: includes/Widgets/Support/Carousel_Engine.php:213
+#: includes/Widgets/Support/Carousel_Engine.php:320
 msgid "Required by WCAG 2.2.2 for content that moves on its own."
 msgstr ""
 
@@ -11933,56 +12050,56 @@ msgid "Distance from bottom"
 msgstr ""
 
 #: includes/Widgets/Slides.php:850
-#: includes/Widgets/Support/Carousel_Engine.php:376
+#: includes/Widgets/Support/Carousel_Engine.php:483
 msgid "Dot size"
 msgstr ""
 
 #: includes/Widgets/Slides.php:861
-#: includes/Widgets/Support/Carousel_Engine.php:387
+#: includes/Widgets/Support/Carousel_Engine.php:494
 msgid "Active dot width"
 msgstr ""
 
 #: includes/Widgets/Slides.php:862
-#: includes/Widgets/Support/Carousel_Engine.php:388
+#: includes/Widgets/Support/Carousel_Engine.php:495
 msgid "Same as the dot size for round dots, wider for a pill."
 msgstr ""
 
 #: includes/Widgets/Slides.php:873
-#: includes/Widgets/Support/Carousel_Engine.php:399
+#: includes/Widgets/Support/Carousel_Engine.php:506
 msgid "Space between dots"
 msgstr ""
 
 #: includes/Widgets/Slides.php:884
-#: includes/Widgets/Support/Carousel_Engine.php:410
+#: includes/Widgets/Support/Carousel_Engine.php:517
 msgid "Dot color"
 msgstr ""
 
 #: includes/Widgets/Slides.php:893
-#: includes/Widgets/Support/Carousel_Engine.php:419
+#: includes/Widgets/Support/Carousel_Engine.php:526
 msgid "Active dot color"
 msgstr ""
 
 #: includes/Widgets/Slides.php:920
-#: includes/Widgets/Support/Carousel_Engine.php:475
+#: includes/Widgets/Support/Carousel_Engine.php:582
 msgid "Pause button color"
 msgstr ""
 
 #. translators: 1: slide number, 2: number of slides.
 #: includes/Widgets/Slides.php:960
-#: includes/Widgets/Support/Carousel_Engine.php:501
+#: includes/Widgets/Support/Carousel_Engine.php:611
 #, php-format
 msgid "Slide %1$s of %2$s"
 msgstr ""
 
 #: includes/Widgets/Slides.php:961
 #: includes/Widgets/Slides.php:1021
-#: includes/Widgets/Support/Carousel_Engine.php:502
-#: includes/Widgets/Support/Carousel_Engine.php:589
+#: includes/Widgets/Support/Carousel_Engine.php:612
+#: includes/Widgets/Support/Carousel_Engine.php:724
 msgid "Pause autoplay"
 msgstr ""
 
 #: includes/Widgets/Slides.php:962
-#: includes/Widgets/Support/Carousel_Engine.php:503
+#: includes/Widgets/Support/Carousel_Engine.php:613
 msgid "Start autoplay"
 msgstr ""
 
@@ -11991,22 +12108,22 @@ msgid "Add a slide to start building the slider."
 msgstr ""
 
 #: includes/Widgets/Slides.php:1004
-#: includes/Widgets/Support/Carousel_Engine.php:525
+#: includes/Widgets/Support/Carousel_Engine.php:647
 msgid "carousel"
 msgstr ""
 
 #: includes/Widgets/Slides.php:1037
-#: includes/Widgets/Support/Carousel_Engine.php:565
+#: includes/Widgets/Support/Carousel_Engine.php:700
 msgid "Previous slide"
 msgstr ""
 
 #: includes/Widgets/Slides.php:1037
-#: includes/Widgets/Support/Carousel_Engine.php:573
+#: includes/Widgets/Support/Carousel_Engine.php:708
 msgid "Next slide"
 msgstr ""
 
 #: includes/Widgets/Slides.php:1052
-#: includes/Widgets/Support/Carousel_Engine.php:594
+#: includes/Widgets/Support/Carousel_Engine.php:729
 msgid "Choose slide"
 msgstr ""
 
@@ -12017,13 +12134,13 @@ msgid "Go to slide %d"
 msgstr ""
 
 #: includes/Widgets/Slides.php:1111
-#: includes/Widgets/Support/Carousel_Engine.php:542
+#: includes/Widgets/Support/Carousel_Engine.php:674
 msgid "slide"
 msgstr ""
 
 #. translators: 1: slide number, 2: number of slides.
 #: includes/Widgets/Slides.php:1113
-#: includes/Widgets/Support/Carousel_Engine.php:544
+#: includes/Widgets/Support/Carousel_Engine.php:676
 #, php-format
 msgid "%1$d of %2$d"
 msgstr ""
@@ -12133,7 +12250,7 @@ msgid "Player options"
 msgstr ""
 
 #: includes/Widgets/Soundcloud.php:113
-#: includes/Widgets/Video.php:206
+#: includes/Widgets/Video.php:232
 msgid "Load player on click"
 msgstr ""
 
@@ -12397,80 +12514,120 @@ msgstr ""
 msgid "Website"
 msgstr ""
 
-#: includes/Widgets/Support/Carousel_Engine.php:46
+#: includes/Widgets/Support/Carousel_Engine.php:67
+msgid "Slide by slide"
+msgstr ""
+
+#: includes/Widgets/Support/Carousel_Engine.php:68
+msgid "Continuous (ticker)"
+msgstr ""
+
+#: includes/Widgets/Support/Carousel_Engine.php:77
+msgid "Slide width"
+msgstr ""
+
+#: includes/Widgets/Support/Carousel_Engine.php:88
+msgid "Speed (px per second)"
+msgstr ""
+
+#: includes/Widgets/Support/Carousel_Engine.php:103
+msgid "To the left"
+msgstr ""
+
+#: includes/Widgets/Support/Carousel_Engine.php:104
+msgid "To the right"
+msgstr ""
+
+#: includes/Widgets/Support/Carousel_Engine.php:116
+msgid "Moving row"
+msgstr ""
+
+#: includes/Widgets/Support/Carousel_Engine.php:117
+msgid "Still list"
+msgstr ""
+
+#: includes/Widgets/Support/Carousel_Engine.php:119
+msgid "Set \"Still list\" on phones to show the slides one under another."
+msgstr ""
+
+#: includes/Widgets/Support/Carousel_Engine.php:135
+msgid "Also while a link inside has keyboard focus. Visitors who prefer reduced motion get a still row they can scroll."
+msgstr ""
+
+#: includes/Widgets/Support/Carousel_Engine.php:145
 msgid "Slides per view"
 msgstr ""
 
-#: includes/Widgets/Support/Carousel_Engine.php:58
+#: includes/Widgets/Support/Carousel_Engine.php:158
 msgid "Slides to scroll"
 msgstr ""
 
-#: includes/Widgets/Support/Carousel_Engine.php:108
+#: includes/Widgets/Support/Carousel_Engine.php:210
 msgid "Arrows position"
 msgstr ""
 
-#: includes/Widgets/Support/Carousel_Engine.php:111
+#: includes/Widgets/Support/Carousel_Engine.php:213
 msgid "Inside, over the slides"
 msgstr ""
 
-#: includes/Widgets/Support/Carousel_Engine.php:112
+#: includes/Widgets/Support/Carousel_Engine.php:214
 msgid "Outside the slides"
 msgstr ""
 
-#: includes/Widgets/Support/Carousel_Engine.php:113
+#: includes/Widgets/Support/Carousel_Engine.php:215
 msgid "Below, next to the pagination"
 msgstr ""
 
-#: includes/Widgets/Support/Carousel_Engine.php:154
+#: includes/Widgets/Support/Carousel_Engine.php:257
 msgid "Rewind"
 msgstr ""
 
-#: includes/Widgets/Support/Carousel_Engine.php:155
+#: includes/Widgets/Support/Carousel_Engine.php:258
 msgid "Next on the last slide goes back to the first one."
 msgstr ""
 
-#: includes/Widgets/Support/Carousel_Engine.php:162
+#: includes/Widgets/Support/Carousel_Engine.php:266
 msgid "Mouse drag"
 msgstr ""
 
-#: includes/Widgets/Support/Carousel_Engine.php:163
+#: includes/Widgets/Support/Carousel_Engine.php:267
 msgid "Touch swipe and trackpads always work."
 msgstr ""
 
-#: includes/Widgets/Support/Carousel_Engine.php:184
+#: includes/Widgets/Support/Carousel_Engine.php:290
 msgid "Never starts for visitors who prefer reduced motion; pauses while hovered or focused."
 msgstr ""
 
-#: includes/Widgets/Support/Carousel_Engine.php:224
+#: includes/Widgets/Support/Carousel_Engine.php:331
 msgid "Announced by screen readers, e.g. \"Customer stories\"."
 msgstr ""
 
-#: includes/Widgets/Support/Carousel_Engine.php:271
+#: includes/Widgets/Support/Carousel_Engine.php:378
 msgid "Distance from the slides edge (inside / outside) or between the two arrows (below)."
 msgstr ""
 
-#: includes/Widgets/Support/Carousel_Engine.php:348
+#: includes/Widgets/Support/Carousel_Engine.php:455
 msgid "Distance from slides"
 msgstr ""
 
-#: includes/Widgets/Support/Carousel_Engine.php:446
+#: includes/Widgets/Support/Carousel_Engine.php:553
 msgid "Bar height"
 msgstr ""
 
 #. translators: %s: slide number.
-#: includes/Widgets/Support/Carousel_Engine.php:499
+#: includes/Widgets/Support/Carousel_Engine.php:609
 #, php-format
 msgid "Go to slide %s"
 msgstr ""
 
 #. translators: %s: menu item label.
-#: includes/Widgets/Support/Nav_Menu_Walker.php:230
+#: includes/Widgets/Support/Nav_Menu_Walker.php:263
 #, php-format
 msgid "Show submenu for %s"
 msgstr ""
 
 #. translators: %s: menu item label.
-#: includes/Widgets/Support/Nav_Menu_Walker.php:230
+#: includes/Widgets/Support/Nav_Menu_Walker.php:263
 msgid "this item"
 msgstr ""
 
@@ -13617,108 +13774,120 @@ msgstr ""
 msgid "Names the play button and player for screen readers."
 msgstr ""
 
-#: includes/Widgets/Video.php:141
+#: includes/Widgets/Video.php:145
+msgid "Overrides the aspect ratio."
+msgstr ""
+
+#: includes/Widgets/Video.php:155
+msgid "Video fit"
+msgstr ""
+
+#: includes/Widgets/Video.php:156
+msgid "Cover fills the frame and crops the edges."
+msgstr ""
+
+#: includes/Widgets/Video.php:167
 #: includes/Widgets/Video_Playlist.php:235
 msgid "Playback"
 msgstr ""
 
-#: includes/Widgets/Video.php:146
+#: includes/Widgets/Video.php:172
 msgid "Start at (seconds)"
 msgstr ""
 
-#: includes/Widgets/Video.php:156
+#: includes/Widgets/Video.php:182
 msgid "End at (seconds)"
 msgstr ""
 
-#: includes/Widgets/Video.php:167
+#: includes/Widgets/Video.php:193
 msgid "Starts muted when the video scrolls into view. Skipped for visitors who prefer reduced motion."
 msgstr ""
 
-#: includes/Widgets/Video.php:174
+#: includes/Widgets/Video.php:200
 msgid "Mute"
 msgstr ""
 
-#: includes/Widgets/Video.php:188
+#: includes/Widgets/Video.php:214
 msgid "Player controls"
 msgstr ""
 
-#: includes/Widgets/Video.php:196
+#: includes/Widgets/Video.php:222
 #: includes/Widgets/Video_Playlist.php:257
 msgid "Privacy mode"
 msgstr ""
 
-#: includes/Widgets/Video.php:197
+#: includes/Widgets/Video.php:223
 #: includes/Widgets/Video_Playlist.php:258
 msgid "Uses youtube-nocookie.com and Vimeo \"do not track\"."
 msgstr ""
 
-#: includes/Widgets/Video.php:207
+#: includes/Widgets/Video.php:233
 msgid "Shows a poster and play button; the player (and its cookies) load only when played."
 msgstr ""
 
-#: includes/Widgets/Video.php:216
+#: includes/Widgets/Video.php:242
 msgid "Poster image"
 msgstr ""
 
-#: includes/Widgets/Video.php:218
+#: includes/Widgets/Video.php:244
 msgid "Shown before playback. YouTube videos use their own thumbnail when empty."
 msgstr ""
 
-#: includes/Widgets/Video.php:226
+#: includes/Widgets/Video.php:252
 #: includes/Widgets/Video_Playlist.php:266
 msgid "Play icon"
 msgstr ""
 
-#: includes/Widgets/Video.php:248
+#: includes/Widgets/Video.php:274
 msgid "Poster overlay"
 msgstr ""
 
-#: includes/Widgets/Video.php:252
+#: includes/Widgets/Video.php:278
 msgid "Poster filters"
 msgstr ""
 
-#: includes/Widgets/Video.php:255
+#: includes/Widgets/Video.php:281
 #: includes/Widgets/Video_Playlist.php:295
 msgid "Play button"
 msgstr ""
 
-#: includes/Widgets/Video.php:425
+#: includes/Widgets/Video.php:451
 msgid "Vimeo video player"
 msgstr ""
 
-#: includes/Widgets/Video.php:427
+#: includes/Widgets/Video.php:453
 msgid "YouTube video player"
 msgstr ""
 
-#: includes/Widgets/Video.php:429
+#: includes/Widgets/Video.php:455
 msgid "Video player"
 msgstr ""
 
-#: includes/Widgets/Video.php:454
+#: includes/Widgets/Video.php:480
 msgid "Paste a Vimeo link in the settings."
 msgstr ""
 
-#: includes/Widgets/Video.php:454
+#: includes/Widgets/Video.php:480
 msgid "Paste a YouTube link in the settings."
 msgstr ""
 
 #. translators: %s: video title.
-#: includes/Widgets/Video.php:493
+#: includes/Widgets/Video.php:519
 #: includes/Widgets/Video_Playlist.php:755
 #, php-format
 msgid "Play video: %s"
 msgstr ""
 
 #. translators: %s: video title.
-#: includes/Widgets/Video.php:493
+#: includes/Widgets/Video.php:519
 msgid "Play video"
 msgstr ""
 
-#: includes/Widgets/Video.php:518
+#: includes/Widgets/Video.php:544
 msgid "Choose a video file in the settings."
 msgstr ""
 
-#: includes/Widgets/Video.php:518
+#: includes/Widgets/Video.php:544
 msgid "Enter a video file URL in the settings."
 msgstr ""
 
@@ -13843,10 +14012,6 @@ msgstr ""
 
 #: includes/Widgets/Video_Playlist.php:279
 msgid "Gap to the list"
-msgstr ""
-
-#: includes/Widgets/Video_Playlist.php:326
-msgid "Hover background"
 msgstr ""
 
 #: includes/Widgets/Video_Playlist.php:460

@@ -136,6 +136,32 @@ class Video extends Widget_Base {
 				'selectors' => array( '{{WRAPPER}}' => 'aspect-ratio: {{VALUE}}' ),
 			)
 		);
+		// Banner videos: a fixed height (the ratio then gives way) and a file that fills the frame.
+		$this->add_responsive_control(
+			'height',
+			array(
+				'type'        => 'slider',
+				'label'       => __( 'Height', 'uncoder' ),
+				'description' => __( 'Overrides the aspect ratio.', 'uncoder' ),
+				'size_units'  => array( 'px', 'vh', 'rem' ),
+				'range'       => array( 'px' => array( 'min' => 100, 'max' => 1200 ) ),
+				'selectors'   => array( '{{WRAPPER}}' => 'aspect-ratio: auto; height: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'fit',
+			array(
+				'type'        => 'select',
+				'label'       => __( 'Video fit', 'uncoder' ),
+				'description' => __( 'Cover fills the frame and crops the edges.', 'uncoder' ),
+				'options'     => array(
+					''      => __( 'Contain', 'uncoder' ),
+					'cover' => __( 'Cover', 'uncoder' ),
+				),
+				'condition'   => array( 'source' => array( 'hosted', 'external' ) ),
+				'selectors'   => array( '{{WRAPPER}} .uncoder-video__el' => 'object-fit: {{VALUE}}' ),
+			)
+		);
 		$this->end_section();
 
 		$this->start_section( 'playback', array( 'label' => __( 'Playback', 'uncoder' ) ) );
@@ -523,7 +549,10 @@ class Video extends Widget_Base {
 		if ( $start || $end > $start ) {
 			$url .= '#t=' . $start . ( $end > $start ? ',' . $end : '' );
 		}
-		$poster   = is_array( $s['poster'] ?? null ) && ! empty( $s['poster']['url'] ) ? (string) $s['poster']['url'] : '';
+		// The poster by attachment id first (the stored URL may point at the site a Site Kit came from).
+		$poster_v = is_array( $s['poster'] ?? null ) ? $s['poster'] : array();
+		$poster   = ! empty( $poster_v['id'] ) ? (string) wp_get_attachment_image_url( (int) $poster_v['id'], 'full' ) : '';
+		$poster   = '' !== $poster ? $poster : (string) ( $poster_v['url'] ?? '' );
 		$autoplay = ! empty( $s['autoplay'] ) && ! $ctx->editor;
 		$video    = array(
 			'class'       => 'uncoder-video__el',

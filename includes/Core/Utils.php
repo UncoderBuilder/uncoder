@@ -296,7 +296,7 @@ final class Utils {
 			'u'      => array(),
 			's'      => array(),
 			'mark'   => array( 'class' => true ),
-			'br'     => array(),
+			'br'     => array( 'class' => true ), // "uncoder-hide-mobile": a line break on some devices only.
 			'sup'    => array(),
 			'sub'    => array(),
 			'code'   => array(),

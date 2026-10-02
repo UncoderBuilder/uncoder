@@ -24,6 +24,9 @@ final class Audit {
 	/** @var array<string,string> */
 	private array $kit_colors = array();
 
+	/** Depth of containers hidden on phones around the node being checked (their rows never show there). */
+	private int $hidden_mobile = 0;
+
 	private const DEFAULT_COPY = array( 'add your heading text here', 'click here', 'lorem ipsum', 'add your text here', 'button', 'your title here' );
 
 	/**
@@ -125,7 +128,9 @@ final class Audit {
 				if ( empty( $node['children'] ) && ! self::is_shape( $s ) ) {
 					$this->add( 'warning', 'structure', $id, 'Empty container.', 'Add content or delete it.' );
 				}
-				$this->check_responsive_container( $id, $s, (array) ( $node['children'] ?? array() ) );
+				if ( ! $this->hidden_mobile && empty( $s['_hide_mobile'] ) ) {
+					$this->check_responsive_container( $id, $s, (array) ( $node['children'] ?? array() ) );
+				}
 			}
 
 			// Collect font families from typography groups.
@@ -138,7 +143,10 @@ final class Audit {
 			$this->check_widget( $id, $type, $s, $eff, $node, $my_bg, $state, $my_text );
 
 			if ( ! empty( $node['children'] ) ) {
+				$hidden               = ! empty( $s['_hide_mobile'] );
+				$this->hidden_mobile += $hidden ? 1 : 0;
 				$this->walk( (array) $node['children'], $depth + 1, $node, $my_bg, $state, $my_text );
+				$this->hidden_mobile -= $hidden ? 1 : 0;
 			}
 		}
 	}

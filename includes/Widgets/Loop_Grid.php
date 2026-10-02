@@ -148,6 +148,20 @@ class Loop_Grid extends Widget_Base {
 			)
 		);
 		$this->add_control(
+			'masonry_order',
+			array(
+				'type'        => 'select',
+				'label'       => __( 'Masonry order', 'uncoder' ),
+				'description' => __( 'Column by column: card 1 in the first column, card 2 in the second… and so on, each under the previous card of its column (with an alternate template every second card this forms a checkerboard).', 'uncoder' ),
+				'default'     => '',
+				'options'     => array(
+					''        => __( 'Shortest column first', 'uncoder' ),
+					'columns' => __( 'Column by column', 'uncoder' ),
+				),
+				'condition'   => array( 'masonry' => true ),
+			)
+		);
+		$this->add_control(
 			'equal_height',
 			array(
 				'type'        => 'switch',
@@ -892,6 +906,9 @@ class Loop_Grid extends Widget_Base {
 		}
 		if ( ! empty( $s['masonry'] ) ) {
 			$classes[] = 'uncoder-loop-grid--masonry';
+			if ( 'columns' === ( $s['masonry_order'] ?? '' ) ) {
+				$classes[] = 'uncoder-loop-grid--masonry-columns';
+			}
 		} elseif ( ! empty( $s['equal_height'] ) ) {
 			$classes[] = 'uncoder-loop-grid--equal';
 		}

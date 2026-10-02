@@ -15,7 +15,7 @@ const MASONRY_ROW = 4; // px; must match grid-auto-rows in loop-grid.css
 
 const isItem = (node: Element): node is HTMLElement => node instanceof HTMLElement && node.classList.contains('uncoder-loop-grid__item');
 
-function masonry(grid: HTMLElement): () => void {
+function masonry(grid: HTMLElement, inOrder: boolean): () => void {
   let frame = 0;
   const items = () => Array.from(grid.children).filter(isItem);
   const layout = () => {
@@ -26,7 +26,21 @@ function masonry(grid: HTMLElement): () => void {
       const height = item.getBoundingClientRect().height + (parseFloat(getComputedStyle(item).marginBottom) || 0);
       return [item, Math.max(1, Math.ceil(height / MASONRY_ROW))] as const;
     });
-    for (const [item, span] of spans) item.style.gridRowEnd = `span ${span}`;
+    if (!inOrder) {
+      // Each card moves up into the shortest column (grid auto-placement).
+      for (const [item, span] of spans) item.style.gridRowEnd = `span ${span}`;
+      return;
+    }
+    // "Column by column": card n goes to column n mod columns, under the previous card of that column, so a
+    // short / tall pattern (e.g. an alternate card every second place) forms a checkerboard.
+    const columns = Math.max(1, getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length);
+    const bottoms = new Array<number>(columns).fill(1);
+    spans.forEach(([item, span], i) => {
+      const col = i % columns;
+      item.style.gridColumn = `${col + 1}`;
+      item.style.gridRow = `${bottoms[col]} / span ${span}`;
+      bottoms[col] += span;
+    });
   };
   const schedule = () => {
     if (!frame) frame = requestAnimationFrame(layout);
@@ -52,7 +66,7 @@ function masonry(grid: HTMLElement): () => void {
     grid.removeEventListener('load', schedule, true);
     window.removeEventListener('resize', schedule);
     grid.classList.remove('is-masonry');
-    items().forEach((item) => item.style.removeProperty('grid-row-end'));
+    items().forEach((item) => ['grid-row-end', 'grid-row', 'grid-column'].forEach((p) => item.style.removeProperty(p)));
   };
 }
 
@@ -205,7 +219,7 @@ window.UncoderWB.register('loop-grid', (el, api) => {
   if (!root || !grid) return;
 
   const cleanups: Array<() => void> = [];
-  if (root.classList.contains('uncoder-loop-grid--masonry')) cleanups.push(masonry(grid));
+  if (root.classList.contains('uncoder-loop-grid--masonry')) cleanups.push(masonry(grid, root.classList.contains('uncoder-loop-grid--masonry-columns')));
 
   const s = api.settings<LoopSettings>(el);
   if (!api.editor && (s.mode === 'load_more' || s.mode === 'infinite')) cleanups.push(loader(el, root, grid, s, api));
