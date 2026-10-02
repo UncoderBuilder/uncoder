@@ -108,12 +108,48 @@ class Text_Editor extends Widget_Base {
 			)
 		);
 		$this->add_responsive_control(
+			'text_wrap',
+			array(
+				'type'      => 'select',
+				'label'     => __( 'Text wrap', 'uncoder' ),
+				'options'   => array( '' => __( 'Default', 'uncoder' ), 'balance' => __( 'Balanced', 'uncoder' ), 'pretty' => __( 'Pretty', 'uncoder' ) ),
+				'selectors' => array( '{{WRAPPER}} > *' => 'text-wrap: {{VALUE}}' ),
+				'ai'        => '"balance" evens out the lines of short intros (2–4 lines) instead of leaving one long and one short line; "pretty" only avoids a single word on the last line (good for longer paragraphs).',
+			)
+		);
+		$this->add_control(
+			'link_underline',
+			array(
+				'type'      => 'choose',
+				'label'     => __( 'Link underline', 'uncoder' ),
+				'options'   => array(
+					''          => array( 'label' => __( 'Default', 'uncoder' ), 'icon' => 'rotate-ccw' ),
+					'none'      => array( 'label' => __( 'None', 'uncoder' ), 'icon' => 'minus' ),
+					'underline' => array( 'label' => __( 'Underline', 'uncoder' ), 'icon' => 'underline' ),
+				),
+				'selectors' => array( '{{WRAPPER}} a' => 'text-decoration: {{VALUE}}; text-underline-offset: 0.2em' ),
+				'ai'        => 'Underline of links in the text: "none" for footer / navigation lists, "underline" to force it; empty keeps the theme default.',
+			)
+		);
+		$this->add_control(
+			'link_hover_underline',
+			array(
+				'type'      => 'switch',
+				'label'     => __( 'Underline on hover', 'uncoder' ),
+				'selectors' => array( '{{WRAPPER}} a:hover' => 'text-decoration: underline; text-underline-offset: 0.2em' ),
+			)
+		);
+		$this->add_responsive_control(
 			'paragraph_spacing',
 			array(
 				'type'       => 'slider',
 				'label'      => __( 'Paragraph spacing', 'uncoder' ),
 				'size_units' => array( 'px', 'em', 'rem' ),
-				'selectors'  => array( '{{WRAPPER}} > :not(:last-child)' => 'margin-bottom: {{VALUE}}' ),
+				// The top margins go too: a theme's default (often 1em) would otherwise win over a smaller spacing.
+				'selectors'  => array(
+					'{{WRAPPER}} > :not(:last-child)'  => 'margin-bottom: {{VALUE}}',
+					'{{WRAPPER}} > :not(:first-child)' => 'margin-top: 0',
+				),
 			)
 		);
 		$this->add_responsive_control(

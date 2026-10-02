@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
  */
 final class Header_Behavior {
 
-	public const KEYS = array( 'header_sticky', 'header_transparent', 'header_transparent_color', 'header_transparent_logo', 'header_transparent_logo_white', 'header_scrolled_bg', 'header_scrolled_shadow', 'header_scrolled_height', 'header_scroll_offset' );
+	public const KEYS = array( 'header_sticky', 'header_transparent', 'header_transparent_color', 'header_transparent_logo', 'header_transparent_logo_white', 'header_transparent_keep_colors', 'header_scrolled_bg', 'header_scrolled_shadow', 'header_scrolled_height', 'header_scroll_offset' );
 
 	/** Alternate logo (attachment id) for the header being rendered while transparent; read by the site-logo widget. */
 	public static int $transparent_logo = 0;
@@ -61,7 +61,7 @@ final class Header_Behavior {
 				)
 				: array();
 		}
-		foreach ( array( 'header_transparent_logo_white', 'header_scrolled_shadow' ) as $key ) {
+		foreach ( array( 'header_transparent_logo_white', 'header_transparent_keep_colors', 'header_scrolled_shadow' ) as $key ) {
 			if ( array_key_exists( $key, $raw ) ) {
 				$out[ $key ] = (bool) $raw[ $key ];
 			}
@@ -153,7 +153,12 @@ final class Header_Behavior {
 		}
 		if ( $b['transparent'] ) {
 			$classes[] = 'uncoder-header--transparent is-transparent';
-			$vars[]    = '--uncoder-hdr-t-color:' . ( ! empty( $s['header_transparent_color'] ) ? $s['header_transparent_color'] : '#ffffff' );
+			// "Keep colors": the header only overlays the page (a light hero); otherwise its text, menu and icons
+			// switch to the transparent text color (white by default) while it is transparent.
+			if ( empty( $s['header_transparent_keep_colors'] ) ) {
+				$classes[] = 'uncoder-header--recolor';
+				$vars[]    = '--uncoder-hdr-t-color:' . ( ! empty( $s['header_transparent_color'] ) ? $s['header_transparent_color'] : '#ffffff' );
+			}
 			if ( ! empty( $s['header_transparent_logo_white'] ) && empty( $s['header_transparent_logo'] ) ) {
 				$classes[] = 'uncoder-header--logo-white';
 			}

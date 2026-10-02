@@ -93,19 +93,32 @@ final class Fonts {
 	/**
 	 * One css2 `family=` parameter. Families with an optical-size axis also load it (browsers then use the
 	 * display cut for big headings, e.g. Inter Display) — `family=Inter:opsz,wght@14..32,400;14..32,600`.
+	 * Families with italics load them too (`ital` axis), so <em> and italic styles use the real italic instead
+	 * of a slanted copy; browsers only download the italic files when italic text is on the page.
+	 * Twin of googleFamilyParam() in src/shared/fonts-url.ts (the editor canvas).
 	 *
 	 * @param string          $family  Family.
 	 * @param string|string[] $weights Weight list or a "min..max" range.
 	 */
 	public static function family_param( string $family, $weights ): string {
-		$name = str_replace( ' ', '+', $family );
-		$opsz = self::catalog()[ $family ]['o'] ?? null;
-		$list = is_string( $weights ) ? array( $weights ) : $weights;
+		$name   = str_replace( ' ', '+', $family );
+		$info   = self::catalog()[ $family ] ?? array();
+		$opsz   = $info['o'] ?? null;
+		$list   = is_string( $weights ) ? array( $weights ) : array_values( $weights );
+		$axes   = array();
+		$tuples = $list;
 		if ( is_array( $opsz ) && 2 === count( $opsz ) ) {
-			$range = (int) $opsz[0] . '..' . (int) $opsz[1];
-			return 'family=' . $name . ':opsz,wght@' . implode( ';', array_map( static fn( $w ) => $range . ',' . $w, $list ) );
+			$range  = (int) $opsz[0] . '..' . (int) $opsz[1];
+			$tuples = array_map( static fn( $w ) => $range . ',' . $w, $tuples );
+			$axes[] = 'opsz';
 		}
-		return 'family=' . $name . ':wght@' . implode( ';', $list );
+		if ( ! empty( $info['i'] ) ) {
+			// Google wants every upright tuple first (ital 0), then the italic ones (ital 1).
+			$tuples = array_merge( array_map( static fn( $t ) => '0,' . $t, $tuples ), array_map( static fn( $t ) => '1,' . $t, $tuples ) );
+			array_unshift( $axes, 'ital' );
+		}
+		$axes[] = 'wght';
+		return 'family=' . $name . ':' . implode( ',', $axes ) . '@' . implode( ';', $tuples );
 	}
 
 	/**

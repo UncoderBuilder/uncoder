@@ -133,6 +133,16 @@
   cursor: pointer;
 }
 
+/* A select still on its placeholder ("Select an option") looks like a placeholder, as empty inputs do; the
+   options in the open list keep the normal text color. The widget's Placeholder color overrides it. */
+.uncoder-form .uncoder-form__select select.uncoder-form__field:has(> option[value=""]:checked) {
+  color: color-mix(in srgb, currentColor 55%, transparent);
+}
+
+.uncoder-form .uncoder-form__select select.uncoder-form__field option {
+  color: initial;
+}
+
 /* File */
 .uncoder-form .uncoder-form__field--file {
   -webkit-appearance: auto;

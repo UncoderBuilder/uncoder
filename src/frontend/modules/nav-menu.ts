@@ -3,7 +3,7 @@
 window.UncoderWB.register('nav-menu', (el, api) => {
   const root = (el.matches('.uncoder-nav-menu') ? (el as HTMLElement) : el.querySelector<HTMLElement>('.uncoder-nav-menu'));
   if (!root) return;
-  const s = api.settings<{ trigger?: 'hover' | 'click'; stretch?: boolean; attach?: string; fx?: string; magnet?: number; letters?: boolean }>(el);
+  const s = api.settings<{ trigger?: 'hover' | 'click'; stretch?: boolean; row?: boolean; attach?: string; fx?: string; magnet?: number; letters?: boolean }>(el);
   const hover = s.trigger !== 'click';
   const main = root.querySelector<HTMLElement>('.uncoder-menu--main');
   const toggle = root.querySelector<HTMLButtonElement>('.uncoder-nav-menu__toggle');
@@ -208,6 +208,15 @@ window.UncoderWB.register('nav-menu', (el, api) => {
     if (s.stretch) {
       root.style.setProperty('--uncoder-nav-panel-x', `${-rect.left}px`);
       root.style.setProperty('--uncoder-nav-panel-w', `${html.clientWidth}px`);
+    } else if (s.row) {
+      // "Match the header row": the dropdown lines up under the container the menu sits in (a floating bar).
+      const row = root.parentElement?.closest<HTMLElement>('.uncoder-container');
+      if (row) {
+        const r = row.getBoundingClientRect();
+        root.style.setProperty('--uncoder-nav-panel-x', `${r.left - rect.left}px`);
+        root.style.setProperty('--uncoder-nav-panel-w', `${r.width}px`);
+        root.style.setProperty('--uncoder-nav-panel-top', `${r.bottom - rect.top}px`);
+      }
     }
     if (header) {
       const bottom = header.getBoundingClientRect().bottom;

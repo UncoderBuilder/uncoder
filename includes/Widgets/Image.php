@@ -165,12 +165,20 @@ class Image extends Widget_Base {
 			array(
 				'type'      => 'choose',
 				'label'     => __( 'Alignment', 'uncoder' ),
-				'options'   => array(
+				'options'              => array(
 					'left'   => array( 'label' => __( 'Left', 'uncoder' ), 'icon' => 'align-left' ),
 					'center' => array( 'label' => __( 'Center', 'uncoder' ), 'icon' => 'align-center' ),
 					'right'  => array( 'label' => __( 'Right', 'uncoder' ), 'icon' => 'align-right' ),
 				),
-				'selectors' => array( '{{WRAPPER}}' => 'text-align: {{VALUE}}' ),
+				// A flex column (not only text-align) so an image wider than its box — a decoration bleeding off a
+				// phone screen — still centres, overflowing both sides. Every value sets the same properties, so
+				// per-device alignments override each other cleanly.
+				'selectors_dictionary' => array(
+					'left'   => 'text-align: left; display: flex; flex-direction: column; align-items: flex-start',
+					'center' => 'text-align: center; display: flex; flex-direction: column; align-items: center',
+					'right'  => 'text-align: right; display: flex; flex-direction: column; align-items: flex-end',
+				),
+				'selectors'            => array( '{{WRAPPER}}' => '{{VALUE}}' ),
 			)
 		);
 		$this->end_section();

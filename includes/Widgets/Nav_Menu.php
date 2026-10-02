@@ -331,6 +331,19 @@ class Nav_Menu extends Widget_Base {
 			)
 		);
 		$this->add_control(
+			'dropdown_row',
+			array(
+				'type'        => 'switch',
+				'label'       => __( 'Match the header row', 'uncoder' ),
+				'description' => __( 'Opens the dropdown right under the row the menu sits in, with the same width (for floating, rounded headers). Overrides Full-width dropdown.', 'uncoder' ),
+				'condition'   => array(
+					'breakpoint!' => 'none',
+					'mobile_mode' => 'dropdown',
+				),
+				'ai'          => 'For a floating "pill" header bar: the mobile dropdown lines up under the bar. Style it with m_bg, m_radius (e.g. 0 0 16px 16px), m_border, m_padding and give the bar `_states` {"&:has(.is-panel-open)": {"radius": "16px 16px 0 0"}} so bar and menu read as one panel.',
+			)
+		);
+		$this->add_control(
 			'toggle_style',
 			array(
 				'type'      => 'choose',
@@ -986,6 +999,27 @@ class Nav_Menu extends Widget_Base {
 			)
 		);
 		$this->add_group( 'm_shadow', array( 'type' => 'box_shadow', 'label' => __( 'Shadow', 'uncoder' ), 'selector' => '{{WRAPPER}} .uncoder-nav-menu__inner' ) );
+		$this->add_group( 'm_border', array( 'type' => 'border', 'label' => __( 'Border', 'uncoder' ), 'selector' => '{{WRAPPER}} .uncoder-nav-menu__inner' ) );
+		$this->add_responsive_control(
+			'm_radius',
+			array(
+				'type'       => 'dimensions',
+				'label'      => __( 'Radius', 'uncoder' ),
+				'size_units' => array( 'px', '%', 'rem' ),
+				'selectors'  => array( '{{WRAPPER}} .uncoder-nav-menu__inner' => 'border-radius: {{VALUE}}' ),
+			)
+		);
+		$this->add_responsive_control(
+			'm_button_spacing',
+			array(
+				'type'       => 'slider',
+				'label'      => __( 'Button spacing', 'uncoder' ),
+				'size_units' => array( 'px', 'em', 'rem' ),
+				'condition'  => array( 'm_button_text!' => '' ),
+				'selectors'  => array( '{{WRAPPER}} .uncoder-nav-menu__cta' => 'padding-top: {{VALUE}}' ),
+				'ai'         => 'Space between the last menu item and the mobile menu button.',
+			)
+		);
 		$this->add_control(
 			'm_button_color',
 			array(
@@ -1098,7 +1132,8 @@ class Nav_Menu extends Widget_Base {
 			'data-settings' => $this->json_attr(
 				array(
 					'trigger'   => 'click' === ( $s['submenu_trigger'] ?? 'hover' ) ? 'click' : 'hover',
-					'stretch'   => 'panel' === $mode || ( 'dropdown' === $mode && ! empty( $s['dropdown_stretch'] ) ),
+					'stretch'   => 'panel' === $mode || ( 'dropdown' === $mode && ! empty( $s['dropdown_stretch'] ) && empty( $s['dropdown_row'] ) ),
+					'row'       => 'dropdown' === $mode && ! empty( $s['dropdown_row'] ),
 					'attach'    => 'panel' === $mode ? 'header' : '',
 					'fx'        => self::effect( $s ),
 					'magnet'    => 'magnet' === self::effect( $s ) ? max( 0.05, min( 0.6, (float) ( $s['magnet_strength'] ?? 0.3 ) ) ) : 0,

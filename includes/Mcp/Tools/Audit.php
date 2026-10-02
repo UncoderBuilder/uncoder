@@ -208,12 +208,14 @@ final class Audit {
 			}
 		}
 
-		// Common: fixed pixel widths that overflow phones.
-		// max_width only caps (harmless on small screens); fixed widths are what overflow.
-		foreach ( array( '_custom_width', 'width' ) as $key ) {
-			$v = $s[ $key ] ?? null;
-			if ( is_array( $v ) && 'px' === ( $v['unit'] ?? '' ) && (float) ( $v['size'] ?? 0 ) > 360 && ! isset( $s[ $key . '_mobile' ] ) ) {
-				$this->add( 'warning', 'responsive', $id, sprintf( '%s is %spx without a mobile value.', $key, $v['size'] ), sprintf( 'Add %s_mobile (e.g. 100%%) or use a percentage.', $key ) );
+		// Common: fixed pixel widths that overflow phones. Containers and the widget width (_custom_width) are
+		// clamped by max-width: 100%, so only an image whose max width is lifted can overflow — and an absolutely
+		// positioned decoration does that on purpose (its section clips it).
+		$lifted = 'none' === ( $s['max_width']['size'] ?? '' ) || 'none' === ( $s['max_width'] ?? '' );
+		if ( 'image' === $type && $lifted && ! in_array( $s['_position'] ?? '', array( 'absolute', 'fixed' ), true ) ) {
+			$v = $s['width'] ?? null;
+			if ( is_array( $v ) && 'px' === ( $v['unit'] ?? '' ) && (float) ( $v['size'] ?? 0 ) > 360 && ! isset( $s['width_mobile'] ) ) {
+				$this->add( 'warning', 'responsive', $id, sprintf( 'Image is %spx wide with no maximum, without a mobile value.', $v['size'] ), 'Add width_mobile (e.g. 100%), or keep max_width so it shrinks.' );
 			}
 		}
 	}
@@ -251,11 +253,28 @@ final class Audit {
 	 * @param array<int, array<string,mixed>> $children Child nodes.
 	 */
 	private function check_responsive_container( string $id, array $s, array $children ): void {
-		$containers = count( array_filter( $children, static fn( $c ) => 'container' === ( $c['type'] ?? '' ) ) );
-		// Rows of small items (avatar + name, icon + label, buttons) may stay rows; column layouts should stack.
+		// Rows of small items (avatar + name, icon tile + label, time · icon · text, buttons) may stay rows;
+		// layouts of two or more real columns should stack. A column is a container that is not a small fixed
+		// tile (≤ 160px wide), or a wide widget (text, image or media that is not a small fixed size).
 		// A header bar (logo · menu · button) stays a row too: its menu turns into a toggle on phones.
+		$small   = static function ( array $c ): bool {
+			$w = $c['settings']['width'] ?? ( $c['settings']['_custom_width'] ?? null );
+			return is_array( $w ) && 'px' === ( $w['unit'] ?? '' ) && (float) ( $w['size'] ?? 0 ) <= 160;
+		};
+		$columns = count(
+			array_filter(
+				$children,
+				static function ( $c ) use ( $small ) {
+					$type = (string) ( $c['type'] ?? '' );
+					if ( in_array( $type, array( 'icon', 'button', 'heading', 'site-logo', 'social-icons', 'star-rating', 'divider', 'spacer' ), true ) ) {
+						return false;
+					}
+					return ! $small( (array) $c );
+				}
+			)
+		);
 		$has_menu  = (bool) array_filter( $children, static fn( $c ) => 'nav-menu' === ( $c['type'] ?? '' ) );
-		$is_layout = ( $containers >= 2 || count( $children ) >= 3 ) && ! $has_menu;
+		$is_layout = $columns >= 2 && ! $has_menu;
 		if ( 'grid' !== ( $s['layout'] ?? '' ) && in_array( self::on_mobile( $s, 'direction', 'column' ), array( 'row', 'row-reverse' ), true ) && $is_layout && 'wrap' !== self::on_mobile( $s, 'wrap', '' ) ) {
 			$this->add( 'warning', 'responsive', $id, sprintf( 'Row with %d columns keeps the row layout on phones.', count( $children ) ), 'Add "direction_mobile": "column" (and a smaller gap_mobile).' );
 		}

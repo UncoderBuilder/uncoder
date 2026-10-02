@@ -58,7 +58,8 @@ a.uncoder-icon-list__inner:focus-visible {
   align-items: center;
   justify-content: center;
   height: 1.5em;
-  height: 1lh;
+  /* At least one line tall, and as tall as the icon when the icon is bigger than the text line. */
+  height: max(1lh, var(--uncoder-ilist-icon-size));
   color: var(--uncoder-ilist-icon-color);
   transition: color 0.2s;
 }
@@ -70,6 +71,8 @@ a.uncoder-icon-list__inner:focus-visible {
 .uncoder-icon-list__text {
   min-width: 0;
   overflow-wrap: break-word;
+  /* An icon taller than the text line: the first line moves down to centre on it (0 with Vertical position: middle). */
+  padding-top: var(--uncoder-ilist-text-shift, max(0px, calc((var(--uncoder-ilist-icon-size) - 1lh) / 2)));
   transition: color 0.2s;
 }
 

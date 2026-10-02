@@ -59,6 +59,12 @@ export function PagePanel() {
             options: { '': 'Nowhere', all: 'All pages', front: 'Front page', selected: 'Pages that turn it on' },
             description: 'Overlays the first section of the page. With Sticky it turns solid once the page scrolls.',
           },
+          header_transparent_keep_colors: {
+            type: 'switch',
+            label: 'Keep the header’s own colors',
+            description: 'Only overlay the page; text, menu and logo keep their colors (for light heroes).',
+            condition: { 'header_transparent!': '' },
+          },
           header_transparent_color: { type: 'color', label: 'Text color while transparent', condition: { 'header_transparent!': '' } },
           header_transparent_logo: { type: 'media', label: 'Logo while transparent', condition: { 'header_transparent!': '' } },
           header_transparent_logo_white: {

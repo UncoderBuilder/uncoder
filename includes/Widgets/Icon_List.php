@@ -327,10 +327,11 @@ class Icon_List extends Widget_Base {
 					'middle' => array( 'label' => __( 'Middle', 'uncoder' ), 'icon' => 'align-center-vertical' ),
 				),
 				'selectors_dictionary' => array(
-					'top'    => 'flex-start',
-					'middle' => 'center',
+					'top'    => '--uncoder-ilist-valign: flex-start',
+					// Centred items need no first-line shift (see .uncoder-icon-list__text).
+					'middle' => '--uncoder-ilist-valign: center; --uncoder-ilist-text-shift: 0px',
 				),
-				'selectors'            => array( '{{WRAPPER}}' => '--uncoder-ilist-valign: {{VALUE}}' ),
+				'selectors'            => array( '{{WRAPPER}}' => '{{VALUE}}' ),
 			)
 		);
 		$this->add_control(

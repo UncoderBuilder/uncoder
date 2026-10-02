@@ -112,6 +112,19 @@ final class Design_Tools {
 							'type'        => 'string',
 							'description' => 'Site-wide custom CSS (replaces the previous value). Prefer settings; use only for what controls cannot express.',
 						),
+						'variables'   => $list(
+							'Design variables (sizes): [{"id":"space-md","name":"Space md","group":"spacing|size|radius|other","value":"24px"}]. Printed as --uncoder-v-<id>; use them in size fields ({"size":"var(--uncoder-v-space-md)","unit":"custom"}) and per side in spacing / radius fields. Values may be fluid: "clamp(1rem, 3vw, 2rem)", "max(40px, calc(50vw - 600px))".',
+							array(
+								'id'    => array( 'type' => 'string' ),
+								'name'  => array( 'type' => 'string' ),
+								'group' => array( 'type' => 'string' ),
+								'value' => array( 'type' => 'string' ),
+							)
+						),
+						'breakpoints' => array(
+							'type'        => array( 'array', 'object' ),
+							'description' => 'Responsive breakpoints (max widths in px): [{"id":"tablet","value":1024},{"id":"mobile","value":767}] or {"tablet":{"value":1024}}. Optional ones: laptop, tablet_extra, mobile_extra (max) and widescreen (min) — turn one on with "enabled":true. Changing a width keeps whether it is on.',
+						),
 						'remove'     => array(
 							'type'        => 'object',
 							'description' => 'Remove items by id: {"colors":["tertiary"],"typography":["quote"],"classes":["card"]}.',
@@ -177,9 +190,32 @@ final class Design_Tools {
 		if ( ! current_user_can( 'edit_theme_options' ) ) {
 			return new WP_Error( 'forbidden', 'Changing the design system requires the edit_theme_options capability.' );
 		}
-		$kit    = Plugin::instance()->kit();
-		$errors = array();
-		$input  = array_intersect_key( $a, array_flip( array( 'colors', 'fonts', 'typography', 'buttons', 'layout', 'forms', 'theme', 'custom_css', 'settings', 'classes' ) ) );
+		$kit     = Plugin::instance()->kit();
+		$errors  = array();
+		$known   = array( 'colors', 'fonts', 'typography', 'buttons', 'layout', 'forms', 'theme', 'custom_css', 'settings', 'classes', 'variables', 'breakpoints', 'remove' );
+		$unknown = array_diff( array_keys( $a ), $known );
+		if ( $unknown ) {
+			// Never drop input silently: the caller would believe it was saved.
+			$errors[] = sprintf( 'Ignored unknown key(s): %s. Allowed: %s.', implode( ', ', $unknown ), implode( ', ', $known ) );
+		}
+		$input = array_intersect_key( $a, array_flip( array_diff( $known, array( 'remove' ) ) ) );
+		// Breakpoints may come as a list [{"id":"tablet","value":1199}] or a map {"tablet":{"value":1199}}.
+		if ( isset( $input['breakpoints'] ) && is_array( $input['breakpoints'] ) && isset( $input['breakpoints'][0] ) ) {
+			$map = array();
+			foreach ( $input['breakpoints'] as $bp ) {
+				if ( is_array( $bp ) && isset( $bp['id'] ) ) {
+					$map[ (string) $bp['id'] ] = array_diff_key( $bp, array( 'id' => 1 ) );
+				}
+			}
+			$input['breakpoints'] = $map;
+		}
+		if ( isset( $input['breakpoints'] ) && is_array( $input['breakpoints'] ) ) {
+			foreach ( array_keys( $input['breakpoints'] ) as $id ) {
+				if ( ! isset( \Uncoder\Builder\Core\Breakpoints::DEFAULTS[ $id ] ) ) {
+					$errors[] = sprintf( 'breakpoints: unknown id "%s" (allowed: %s).', $id, implode( ', ', array_keys( \Uncoder\Builder\Core\Breakpoints::DEFAULTS ) ) );
+				}
+			}
+		}
 		// Accept {"primary":"#123456"} maps for convenience.
 		foreach ( array( 'colors', 'fonts' ) as $list ) {
 			if ( isset( $input[ $list ] ) && is_array( $input[ $list ] ) && ! isset( $input[ $list ][0] ) && $input[ $list ] ) {

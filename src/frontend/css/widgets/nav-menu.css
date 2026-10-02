@@ -724,7 +724,8 @@
 .uncoder-nav-menu__panel--dropdown {
   position: absolute;
   z-index: 1000;
-  top: calc(100% + var(--uncoder-nav-m-offset));
+  /* --uncoder-nav-panel-top: set by nav-menu.ts when the dropdown matches the header row. */
+  top: calc(var(--uncoder-nav-panel-top, 100%) + var(--uncoder-nav-m-offset));
   left: var(--uncoder-nav-panel-x, 0px);
   width: var(--uncoder-nav-panel-w, max(100%, 280px));
   opacity: 0;

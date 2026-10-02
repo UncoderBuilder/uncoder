@@ -145,19 +145,23 @@ html:not([data-uncoder-scheme="dark"]) .uncoder-hide-in-light {
 }
 
 .uncoder-location--header.uncoder-header--transparent.is-transparent {
-  --uncoder-heading-color: var(--uncoder-hdr-t-color);
   box-shadow: none;
+}
+
+/* Recolor (unless the header keeps its own colors): text, menu bar and toggle in the transparent text color. */
+.uncoder-location--header.uncoder-header--recolor.is-transparent {
+  --uncoder-heading-color: var(--uncoder-hdr-t-color);
   color: var(--uncoder-hdr-t-color);
 }
 
-.uncoder.uncoder-location--header.is-transparent .uncoder-nav-menu {
+.uncoder.uncoder-location--header.uncoder-header--recolor.is-transparent .uncoder-nav-menu {
   --uncoder-nav-color: var(--uncoder-hdr-t-color);
   --uncoder-nav-color-hover: var(--uncoder-hdr-t-color);
   --uncoder-nav-color-active: var(--uncoder-hdr-t-color);
   --uncoder-nav-pointer: var(--uncoder-hdr-t-color);
 }
 
-.uncoder.uncoder-location--header.is-transparent :is(.uncoder-nav-menu__toggle, .uncoder-site-title, .uncoder-site-title a, .uncoder-svg) {
+.uncoder.uncoder-location--header.uncoder-header--recolor.is-transparent :is(.uncoder-nav-menu__toggle, .uncoder-site-title, .uncoder-site-title a, .uncoder-svg) {
   color: var(--uncoder-hdr-t-color);
 }
 
@@ -696,6 +700,9 @@ img.uncoder-svg--img {
 /* Image */
 .uncoder-image {
   margin: 0;
+  /* The image is inline (so the alignment setting works); a zero line height keeps the text strut from adding
+     a few pixels around it. The caption sets its own line height. */
+  line-height: 0;
 }
 .uncoder-image img {
   display: inline-block;
@@ -712,6 +719,7 @@ img.uncoder-svg--img {
 .uncoder-image__caption {
   margin-top: 0.6em;
   font-size: 0.875em;
+  line-height: 1.5;
   opacity: 0.8;
 }
 .uncoder-image--hover-zoom {

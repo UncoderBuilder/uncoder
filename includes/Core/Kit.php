@@ -410,10 +410,15 @@ final class Kit {
 			$out['breakpoints'] = array();
 			foreach ( $data['breakpoints'] as $id => $bp ) {
 				if ( isset( Breakpoints::DEFAULTS[ $id ] ) && is_array( $bp ) ) {
-					$out['breakpoints'][ $id ] = array(
-						'enabled' => ! empty( $bp['enabled'] ),
-						'value'   => max( 320, min( 3840, absint( $bp['value'] ?? Breakpoints::DEFAULTS[ $id ]['value'] ) ) ),
-					);
+					$entry = array();
+					// A change that only gives a width keeps the breakpoint's on/off state (update() merges per field).
+					if ( array_key_exists( 'enabled', $bp ) ) {
+						$entry['enabled'] = ! empty( $bp['enabled'] );
+					}
+					if ( isset( $bp['value'] ) || ! isset( $entry['enabled'] ) ) {
+						$entry['value'] = max( 320, min( 3840, absint( $bp['value'] ?? Breakpoints::DEFAULTS[ $id ]['value'] ) ) );
+					}
+					$out['breakpoints'][ $id ] = $entry;
 				}
 			}
 		}
@@ -526,9 +531,16 @@ final class Kit {
 				}
 			}
 		}
-		foreach ( array( 'layout', 'buttons', 'forms', 'theme', 'settings', 'breakpoints' ) as $section ) {
+		foreach ( array( 'layout', 'buttons', 'forms', 'theme', 'settings' ) as $section ) {
 			if ( isset( $partial[ $section ] ) ) {
 				$current[ $section ] = array_merge( (array) $current[ $section ], $partial[ $section ] );
+			}
+		}
+		// Breakpoints merge per breakpoint and per field: a new width keeps the on/off state and the reverse.
+		if ( isset( $partial['breakpoints'] ) && is_array( $partial['breakpoints'] ) ) {
+			$current['breakpoints'] = (array) ( $current['breakpoints'] ?? array() );
+			foreach ( $partial['breakpoints'] as $id => $bp ) {
+				$current['breakpoints'][ $id ] = array_merge( (array) ( $current['breakpoints'][ $id ] ?? array() ), (array) $bp );
 			}
 		}
 		if ( isset( $partial['custom_css'] ) ) {

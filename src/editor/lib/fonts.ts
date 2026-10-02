@@ -1,5 +1,6 @@
 // Google Fonts catalog for pickers + on-demand <link> injection in the canvas.
 import { registerFontCategories } from '@shared/css';
+import { googleFamilyParam, sortWeights } from '@shared/fonts-url';
 import { config } from './config';
 
 export interface FontInfo {
@@ -10,7 +11,7 @@ export interface FontInfo {
   custom?: boolean;
 }
 
-let catalog: Record<string, { c: string; w: string[]; o?: [number, number]; custom?: boolean }> | null = null;
+let catalog: Record<string, { c: string; w: string[]; o?: [number, number]; i?: number; custom?: boolean }> | null = null;
 let loading: Promise<void> | null = null;
 let canvasDoc: Document | null = null;
 const loaded = new Set<string>();
@@ -54,13 +55,13 @@ export const fonts = {
     for (const [family, weights] of used) {
       const info = catalog[family];
       if (!info || info.custom) continue;
-      const w = [...new Set([...weights, '400'])].filter((x) => info.w.includes(x)).sort();
+      const w = sortWeights([...new Set([...weights, '400'])].filter((x) => info.w.includes(x)));
       const key = family + ':' + w.join(',');
       if (loaded.has(key)) continue;
       loaded.add(key);
       const list = w.length ? w : [info.w[0]];
-      // Twin of Fonts::family_param(): families with an optical-size axis load it too.
-      missing.push(info.o ? `family=${family.replace(/ /g, '+')}:opsz,wght@${list.map((x) => `${info.o![0]}..${info.o![1]},${x}`).join(';')}` : `family=${family.replace(/ /g, '+')}:wght@${list.join(';')}`);
+      // Twin of Fonts::family_param(): optical-size axis and italics when the family has them.
+      missing.push(googleFamilyParam(family, list, info));
     }
     if (!missing.length) return;
     const link = canvasDoc.createElement('link');

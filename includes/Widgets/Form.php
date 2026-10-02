@@ -852,7 +852,11 @@ class Form extends Widget_Base {
 			array(
 				'type'      => 'color',
 				'label'     => __( 'Placeholder color', 'uncoder' ),
-				'selectors' => array( self::FIELD . '::placeholder' => 'color: {{VALUE}}; opacity: 1' ),
+				'selectors' => array(
+					self::FIELD . '::placeholder' => 'color: {{VALUE}}; opacity: 1',
+					// A select showing its placeholder option.
+					'{{WRAPPER}} .uncoder-form__select select.uncoder-form__field:has(> option[value=""]:checked)' => 'color: {{VALUE}}',
+				),
 			)
 		);
 		$this->add_control(

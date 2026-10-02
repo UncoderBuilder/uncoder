@@ -210,6 +210,19 @@ final class Site_Kit {
 
 		if ( ! empty( $parts['design'] ) ) {
 			$files['design.json'] = Plugin::instance()->kit()->export();
+			// The brand travels with the design: logo and site icon (media values, so their files go along).
+			$brand = array();
+			foreach ( array( 'logo' => self::site_logo_id(), 'icon' => (int) get_option( 'site_icon' ) ) as $key => $att ) {
+				if ( $att && wp_get_attachment_url( $att ) ) {
+					$brand[ $key ] = array(
+						'id'  => $att,
+						'url' => (string) wp_get_attachment_url( $att ),
+					);
+				}
+			}
+			if ( $brand ) {
+				$files['design.json']['brand'] = $brand;
+			}
 		}
 		if ( ! empty( $parts['templates'] ) ) {
 			$items = array();
@@ -950,7 +963,9 @@ final class Site_Kit {
 			$kit    = Plugin::instance()->kit();
 			$errors = array();
 			$data   = self::relink( self::read( $dir, 'design.json' ), $state, $ids, $old_home );
-			$clean  = $kit->sanitize( $data, 'sanitize', $errors );
+			$brand  = (array) ( $data['brand'] ?? array() );
+			unset( $data['brand'] );
+			$clean = $kit->sanitize( $data, 'sanitize', $errors );
 			if ( $clean ) {
 				$kit->snapshot( __( 'Before site kit import', 'uncoder' ) );
 				$kit->save( array_merge( $kit->all(), $clean ) );
@@ -958,6 +973,18 @@ final class Site_Kit {
 			}
 			foreach ( $errors as $e ) {
 				$report['warnings'][] = 'Design System: ' . $e;
+			}
+			// Logo and site icon: taken over when the kit replaces this site's design, or when the site has none.
+			$logo = absint( $brand['logo']['id'] ?? 0 );
+			if ( $logo && \Uncoder\Builder\Core\Media::is_image( $logo ) && ( 'replace' === $conflicts || ! self::site_logo_id() ) ) {
+				set_theme_mod( 'custom_logo', $logo );
+				update_option( 'site_logo', $logo );
+				$report['brand'][] = 'logo';
+			}
+			$icon = absint( $brand['icon']['id'] ?? 0 );
+			if ( $icon && wp_attachment_is_image( $icon ) && ( 'replace' === $conflicts || ! get_option( 'site_icon' ) ) ) {
+				update_option( 'site_icon', $icon );
+				$report['brand'][] = 'icon';
 			}
 		}
 		if ( ! empty( $parts['settings'] ) && is_readable( $dir . '/settings.json' ) ) {
@@ -1520,6 +1547,12 @@ final class Site_Kit {
 			}
 		}
 		return $value;
+	}
+
+	/** The site logo attachment (theme mod, or the block themes' site_logo option). */
+	private static function site_logo_id(): int {
+		$id = (int) get_theme_mod( 'custom_logo' );
+		return $id ? $id : (int) get_option( 'site_logo' );
 	}
 
 	/**
