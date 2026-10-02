@@ -23,6 +23,8 @@ export interface Method {
   label: string;
   /** API key or OAuth sign-in. */
   auth: 'key' | 'oauth';
+  /** Connects from the vendor's servers (web connectors): the site must be public and use HTTPS. */
+  cloud?: boolean;
   intro: string;
   steps: Step[];
   note?: string;
@@ -80,6 +82,7 @@ export function clients(c: Ctx): ClientDef[] {
           id: 'connector',
           label: 'Claude app (connector)',
           auth: 'oauth',
+          cloud: true,
           intro: 'Works in Claude on the web, desktop and mobile. You sign in to this site once; no key to copy.',
           steps: [
             { text: 'In Claude, open Settings → Connectors and click “Add custom connector”.' },
@@ -141,13 +144,28 @@ export function clients(c: Ctx): ClientDef[] {
       name: 'ChatGPT',
       mono: 'G',
       tint: '#10a37f',
-      blurb: 'Developer mode connectors',
+      blurb: 'Desktop app and web connectors',
       methods: [
         {
-          id: 'connector',
-          label: 'Developer mode connector',
+          id: 'desktop',
+          label: 'ChatGPT desktop app',
           auth: 'oauth',
-          intro: 'Available on ChatGPT plans with developer mode. You sign in to this site; no key to copy.',
+          intro: 'In the ChatGPT app for Windows and Mac. You sign in to this site; no key to copy. Works with a site on your own computer too.',
+          steps: [
+            { text: 'In the ChatGPT desktop app, open Settings → Plugins → MCPs and click Add → Add MCP server.' },
+            { text: `Name it “${name}”, choose Streamable HTTP and paste this URL:`, url: true },
+            { text: 'Leave “Bearer token env var” and the header fields empty, then click Save.' },
+            { text: `Sign in when ChatGPT asks (or run “codex mcp login ${name}” in a terminal). Your browser opens ${c.site}: log in, review the permissions and click Approve.` },
+            { text: try_ },
+          ],
+          note: '“Bearer token env var” takes the name of an environment variable, not a key: a key pasted there is ignored and the connection fails. To use an API key instead of signing in, save it in an environment variable (for example UNCODER_TOKEN), restart ChatGPT and enter that name.',
+        },
+        {
+          id: 'connector',
+          label: 'ChatGPT on the web',
+          auth: 'oauth',
+          cloud: true,
+          intro: 'A custom connector on chatgpt.com, on plans with developer mode. You sign in to this site; no key to copy.',
           steps: [
             { text: 'In ChatGPT, open Settings → Apps & Connectors → Advanced settings and turn on Developer mode.' },
             { text: 'Back in Apps & Connectors, click Create.' },

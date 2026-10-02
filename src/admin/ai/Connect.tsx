@@ -39,7 +39,8 @@ export function ConnectPanel({ status, freshKey, onCreateKey }: Props) {
   );
   const client = list.find((c) => c.id === clientId) ?? list[0];
   const method = client.methods.find((m) => m.id === methodByClient[client.id]) ?? client.methods[0];
-  const needsHttps = method.auth === 'oauth' && (!status?.https || local);
+  // Only web connectors connect from the vendor's servers; desktop apps and editors reach the site from this computer.
+  const needsHttps = !!method.cloud && (!status?.https || local);
 
   return (
     <div className="uncoder-ui-connect">
