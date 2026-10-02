@@ -11,6 +11,7 @@ import { AiWritingPanel } from '../ai/Writing';
 import { ActivityPanel } from '../ai/Activity';
 import { CreateKeyDialog, GrantsPanel, KeysPanel, SecretDialog } from '../ai/Access';
 import { ConnectPanel, type FreshKey, type FreshLink } from '../ai/Connect';
+import type { ClientId } from '../ai/snippets';
 import { McpSettingsPanel } from '../ai/McpSettings';
 
 const TABS = ['connect', 'keys', 'apps', 'activity', 'settings', 'writing'] as const;
@@ -24,7 +25,7 @@ export function AiScreen() {
   const keys = useResource((signal) => mcpApi.keys(signal), []);
   const grants = useResource((signal) => mcpApi.grants(signal), []);
   const [freshKey, setFreshKey] = useState<FreshKey | null>(null);
-  const [freshLink, setFreshLink] = useState<FreshLink | null>(null);
+  const [freshLinks, setFreshLinks] = useState<Partial<Record<ClientId, FreshLink>>>({});
   const [secretOpen, setSecretOpen] = useState(false);
   const [createFor, setCreateFor] = useState<string | null>(null);
   const [enabling, setEnabling] = useState(false);
@@ -147,13 +148,13 @@ export function AiScreen() {
           <ConnectPanel
             status={s}
             freshKey={freshKey}
-            freshLink={freshLink}
+            freshLinks={freshLinks}
             onCreateKey={(name) => setCreateFor(name)}
-            onCreateLink={async (name) => {
+            onCreateLink={async (client, name) => {
               try {
                 // Read, Content and Design: enough to build and edit; Site settings stay off for a link.
                 const res = await mcpApi.createKey({ name, scopes: ['read', 'content', 'design'], expires_days: 0, link: true });
-                setFreshLink({ id: res.id, name, url: res.url });
+                setFreshLinks((all) => ({ ...all, [client]: { id: res.id, name, url: res.url } }));
                 keys.reload();
                 toast('Connection link created');
               } catch (e) {

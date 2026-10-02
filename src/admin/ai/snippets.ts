@@ -1,8 +1,11 @@
-// Connection instructions per MCP client, generated with the real endpoint (and a fresh key when there is one).
+// Connection instructions per MCP client, generated with the real endpoint and, once created, the client's own
+// connection link (one URL that carries its own key: …/mcp?token=uncoder_link_…). The link is the default way for
+// every client; signing in (OAuth) and API keys in a header stay as alternatives.
 
 export type ClientId = 'claude' | 'chatgpt' | 'cursor' | 'vscode' | 'windsurf' | 'other';
 
 export const KEY_PLACEHOLDER = 'YOUR_API_KEY';
+export const LINK_PLACEHOLDER = 'YOUR_CONNECTION_LINK';
 
 export interface Snippet {
   code: string;
@@ -16,16 +19,18 @@ export interface Step {
   snippet?: Snippet;
   /** Renders the endpoint URL with a copy button. */
   url?: boolean;
-  /** Renders the connection link (or the button that creates it) with a copy button. */
+  /** Renders the client's connection link (or the button that creates it) with a copy button. */
   link?: boolean;
+  /** A one-click install that opens the app with this server filled in (shown once the link exists). */
+  open?: { label: string; href: string; icon?: string };
 }
 
 export interface Method {
   id: string;
   label: string;
-  /** API key, connection link (one URL with its own key) or OAuth sign-in. */
-  auth: 'key' | 'link' | 'oauth';
-  /** Connects from the vendor's servers (web connectors): the site must be public and use HTTPS. */
+  /** Connection link (one URL with its own key), OAuth sign-in or an API key in a header. */
+  auth: 'link' | 'oauth' | 'key';
+  /** Connects from the vendor's servers: the site must be public and use HTTPS. */
   cloud?: boolean;
   intro: string;
   steps: Step[];
@@ -47,12 +52,15 @@ export interface ClientDef {
 interface Ctx {
   url: string;
   key: string;
+  /** Each client's connection link, once created ('' before). */
+  links: Partial<Record<ClientId, string>>;
   site: string;
-  bridge: string;
   metadata: string;
 }
 
 const json = (v: unknown) => JSON.stringify(v, null, 2);
+/** Base64 of a UTF-8 string (Cursor's install links carry the server config this way). */
+const b64 = (s: string) => btoa(String.fromCharCode(...new TextEncoder().encode(s)));
 
 /** A server name that is valid in every client config: "uncoder" or "uncoder-my-site". */
 export function serverName(site: string): string {
@@ -69,7 +77,27 @@ export function serverName(site: string): string {
 export function clients(c: Ctx): ClientDef[] {
   const name = serverName(c.site);
   const bearer = `Bearer ${c.key}`;
+  const link = (id: ClientId) => c.links[id] || LINK_PLACEHOLDER;
+  const create = (who: string): Step => ({ text: `Create a connection link for ${who} and copy it:`, link: true });
   const try_ = `Try: “Read the Uncoder build guide, then design a home page for ${c.site}.”`;
+  const keepPrivate = 'Keep the link private, like a password: anyone who has it can use these permissions. Revoke it any time under API keys.';
+
+  // mcp-remote refuses plain http except to localhost, so local .test/.local sites need --allow-http.
+  const plainHttp = (() => {
+    try {
+      const u = new URL(c.url);
+      return u.protocol === 'http:' && !['localhost', '127.0.0.1'].includes(u.hostname);
+    } catch {
+      return false;
+    }
+  })();
+  const bridge = (l: string) => ['-y', 'mcp-remote', l, ...(plainHttp ? ['--allow-http'] : [])];
+
+  const claude = link('claude');
+  const cursor = link('cursor');
+  const vscode = link('vscode');
+  const windsurf = link('windsurf');
+  const other = link('other');
 
   return [
     {
@@ -78,64 +106,68 @@ export function clients(c: Ctx): ClientDef[] {
       name: 'Claude',
       mono: 'C',
       tint: '#d97757',
-      blurb: 'Claude apps, Claude Code and Claude Desktop',
+      blurb: 'Claude app, Claude Code and Claude Desktop',
       methods: [
         {
-          id: 'connector',
-          label: 'Claude app (connector)',
-          auth: 'oauth',
+          id: 'app',
+          label: 'Claude app',
+          auth: 'link',
           cloud: true,
-          intro: 'Works in Claude on the web, desktop and mobile. You sign in to this site once; no key to copy.',
+          intro: 'Claude on the web, desktop and mobile: add your site as a custom connector with one link.',
           steps: [
-            { text: 'In Claude, open Settings → Connectors and click “Add custom connector”.' },
-            { text: `Name it “${c.site}” and paste this URL:`, url: true },
-            { text: `Click Connect. A sign-in window from ${c.site} opens: log in, review the permissions and click Approve.` },
-            { text: 'In a chat, open the “Search and tools” menu and make sure the connector is enabled.' },
+            create('Claude'),
+            {
+              text: 'Open Claude with the connector filled in, then click Add:',
+              open: { label: 'Add to Claude', icon: 'external-link', href: `https://claude.ai/customize/connectors?modal=add-custom-connector&connectorName=${encodeURIComponent(c.site)}&connectorUrl=${encodeURIComponent(claude)}` },
+            },
+            { text: `Or by hand: in Claude, open Customize → Connectors → Add custom connector, name it “${c.site}”, paste the link as the URL and click Add. If Claude asks how to sign in, choose No sign-in.` },
+            { text: 'In a chat, check that the connector is turned on in the tools menu.' },
             { text: try_ },
           ],
-          note: 'On Team and Enterprise plans an owner adds the connector in Organization settings → Connectors first.',
+          note: 'On Team and Enterprise plans an owner adds custom connectors under Organization settings → Connectors. Claude connects from Anthropic’s servers: your site must be public, use HTTPS and let Claude through any firewall.',
         },
         {
           id: 'code',
           label: 'Claude Code',
-          auth: 'key',
-          intro: 'Add the server from your terminal. Claude Code speaks Streamable HTTP natively.',
+          auth: 'link',
+          intro: 'One command in your terminal. Claude Code connects from your computer, so a local site works too.',
           steps: [
-            {
-              text: 'Run this in your project (add “--scope user” to use it everywhere):',
-              snippet: { lang: 'shell', label: 'Terminal', code: `claude mcp add --transport http ${name} ${c.url} \\\n  --header "Authorization: ${bearer}"` },
-            },
+            create('Claude Code'),
+            { text: 'Run this (leave out “--scope user” to add it to the current project only):', snippet: { lang: 'shell', label: 'Terminal', code: `claude mcp add --transport http --scope user ${name} "${claude}"` } },
             { text: 'Start Claude Code and run /mcp to check that the server is connected.' },
             { text: try_ },
           ],
-          note: `Prefer signing in instead of a key? Run “claude mcp add --transport http ${name} ${c.url}”, then /mcp → Authenticate.`,
+          note: keepPrivate,
         },
         {
           id: 'desktop',
-          label: 'Claude Desktop (config file)',
-          auth: 'key',
-          intro: 'For Claude Desktop without connectors: a local bridge (mcp-remote, needs Node.js) forwards to this site.',
+          label: 'Claude Desktop',
+          auth: 'link',
+          intro: 'Claude Desktop uses the same connectors as the Claude app, so “Claude app” works there too. For a site on your own computer, add it to the config file instead (needs Node.js 18+).',
           steps: [
+            create('Claude Desktop'),
             { text: 'Open Claude Desktop → Settings → Developer → Edit Config.' },
             {
-              text: 'Add this server to claude_desktop_config.json (merge it into “mcpServers” if the file already has servers):',
-              snippet: {
-                lang: 'json',
-                file: 'claude_desktop_config.json',
-                code: json({
-                  mcpServers: {
-                    [name]: {
-                      command: 'npx',
-                      args: ['-y', 'mcp-remote', c.url, '--header', 'Authorization:${UNCODER_AUTH}'],
-                      env: { UNCODER_AUTH: bearer },
-                    },
-                  },
-                }),
-              },
+              text: 'Add your site to claude_desktop_config.json (merge it into “mcpServers” if the file already has servers):',
+              snippet: { lang: 'json', file: 'claude_desktop_config.json', code: json({ mcpServers: { [name]: { command: 'npx', args: bridge(claude) } } }) },
             },
-            { text: 'Quit and reopen Claude Desktop. The tools appear in the “Search and tools” menu.' },
+            { text: 'Quit and reopen Claude Desktop. The tools appear in the tools menu.' },
           ],
-          note: 'The header is passed through an environment variable because some systems split arguments that contain spaces.',
+          note: 'mcp-remote is a small open-source bridge that runs on your computer and forwards to this site.',
+        },
+        {
+          id: 'signin',
+          label: 'Sign in instead',
+          auth: 'oauth',
+          cloud: true,
+          intro: 'No key in the URL: Claude signs in to this site and you approve it once.',
+          steps: [
+            { text: 'In Claude, open Customize → Connectors → Add custom connector.' },
+            { text: `Name it “${c.site}” and paste this URL:`, url: true },
+            { text: `Click Add and sign in when Claude asks: log in to ${c.site}, review the permissions and click Approve.` },
+            { text: try_ },
+          ],
+          note: `Claude Code can sign in too: run “claude mcp add --transport http ${name} ${c.url}”, then /mcp → Authenticate.`,
         },
       ],
     },
@@ -150,46 +182,43 @@ export function clients(c: Ctx): ClientDef[] {
       methods: [
         {
           id: 'link',
-          label: 'Desktop app · link',
+          label: 'Desktop app',
           auth: 'link',
-          intro: 'The simplest way: one URL that already carries its own key. Nothing to sign in to, nothing else to fill in.',
+          intro: 'The ChatGPT app for Windows and Mac: paste one link. Works with a site on your own computer too.',
           steps: [
-            { text: 'Create a connection link for ChatGPT and copy it:', link: true },
-            { text: 'In the ChatGPT desktop app, open Settings → Plugins → MCPs and click Add → Add MCP server.' },
+            create('ChatGPT'),
+            { text: 'In the ChatGPT desktop app, open Settings → Plugins → MCPs and click Add → Add MCP server (in some versions: Settings → MCP servers → Add server).' },
             { text: `Name it “${name}”, choose Streamable HTTP, paste the link into URL and click Save. Leave every other field empty.` },
             { text: try_ },
           ],
-          note: 'Keep the link private, like a password: anyone who has it can use these permissions. Revoke it any time under API keys, and create a new one.',
+          note: `${keepPrivate} The same link works in the Codex CLI: codex mcp add ${name} --url "<link>".`,
         },
         {
-          id: 'desktop',
-          label: 'Desktop app · sign in',
-          auth: 'oauth',
-          intro: 'In the ChatGPT app for Windows and Mac. You sign in to this site; no key to copy. Works with a site on your own computer too.',
-          steps: [
-            { text: 'In the ChatGPT desktop app, open Settings → Plugins → MCPs and click Add → Add MCP server.' },
-            { text: `Name it “${name}”, choose Streamable HTTP and paste this URL:`, url: true },
-            { text: 'Leave “Bearer token env var” and the header fields empty, then click Save.' },
-            { text: `Sign in when ChatGPT asks (or run “codex mcp login ${name}” in a terminal). Your browser opens ${c.site}: log in, review the permissions and click Approve.` },
-            { text: try_ },
-          ],
-          note: '“Bearer token env var” takes the name of an environment variable, not a key: a key pasted there is ignored and the connection fails. To use an API key instead of signing in, save it in an environment variable (for example UNCODER_TOKEN), restart ChatGPT and enter that name.',
-        },
-        {
-          id: 'connector',
-          label: 'ChatGPT on the web',
-          auth: 'oauth',
+          id: 'web',
+          label: 'On the web',
+          auth: 'link',
           cloud: true,
-          intro: 'A custom connector on chatgpt.com, on plans with developer mode. You sign in to this site; no key to copy.',
+          intro: 'A custom connector on chatgpt.com, on plans with developer mode.',
           steps: [
-            { text: 'In ChatGPT, open Settings → Apps & Connectors → Advanced settings and turn on Developer mode.' },
-            { text: 'Back in Apps & Connectors, click Create.' },
-            { text: `Enter a name (“${c.site}”), choose OAuth as authentication and paste this MCP server URL:`, url: true },
-            { text: `Confirm that you trust the connector and click Create. Log in to ${c.site} and approve access.` },
-            { text: 'In a new chat, open the + menu → Developer mode and enable the connector.' },
+            create('ChatGPT'),
+            { text: 'In ChatGPT’s settings, turn on Developer mode.' },
+            { text: `Create a connector named “${c.site}”, paste the link as its MCP server URL, choose No authentication and create it.` },
+            { text: 'In a new chat, enable the connector from the + menu.' },
             { text: try_ },
           ],
-          note: 'Write tools ask for confirmation in ChatGPT before they change your site.',
+          note: 'On Business and Enterprise workspaces an admin turns on developer mode first. ChatGPT connects from OpenAI’s servers, so your site must be public and use HTTPS. Write actions ask for confirmation in ChatGPT.',
+        },
+        {
+          id: 'signin',
+          label: 'Sign in instead',
+          auth: 'oauth',
+          intro: 'No key in the URL: ChatGPT signs in to this site and you approve it once.',
+          steps: [
+            { text: 'Desktop app: Settings → Plugins → MCPs → Add → Add MCP server. Choose Streamable HTTP and paste this URL, leave every other field empty and click Save:', url: true },
+            { text: `Sign in when ChatGPT asks (or run “codex mcp login ${name}” in a terminal). Your browser opens ${c.site}: log in, review the permissions and click Approve.` },
+            { text: 'On the web: create the connector with the same URL and choose OAuth as the authentication.' },
+          ],
+          note: '“Bearer token env var” takes the name of an environment variable, not a key: a key pasted there is ignored and the connection fails.',
         },
       ],
     },
@@ -199,21 +228,20 @@ export function clients(c: Ctx): ClientDef[] {
       name: 'Cursor',
       mono: 'Cu',
       tint: '#1f2328',
-      blurb: 'mcp.json with a remote URL',
+      blurb: 'One-click install or mcp.json',
       methods: [
         {
-          id: 'json',
-          label: 'mcp.json',
-          auth: 'key',
-          intro: 'Cursor connects to remote MCP servers directly.',
+          id: 'link',
+          label: 'Connection link',
+          auth: 'link',
+          intro: 'Install in one click, or add one line to mcp.json.',
           steps: [
-            {
-              text: 'Add this to ~/.cursor/mcp.json (all projects) or .cursor/mcp.json in a project:',
-              snippet: { lang: 'json', file: 'mcp.json', code: json({ mcpServers: { [name]: { url: c.url, headers: { Authorization: bearer } } } }) },
-            },
-            { text: 'Open Cursor Settings → MCP & Integrations and check that the server shows a green dot and its tools.' },
+            create('Cursor'),
+            { text: 'Open Cursor and confirm the install:', open: { label: 'Add to Cursor', icon: 'download', href: `cursor://anysphere.cursor-deeplink/mcp/install?name=${encodeURIComponent(name)}&config=${encodeURIComponent(b64(JSON.stringify({ url: cursor })))}` } },
+            { text: 'Or by hand: add this to ~/.cursor/mcp.json (all projects) or .cursor/mcp.json in a project:', snippet: { lang: 'json', file: 'mcp.json', code: json({ mcpServers: { [name]: { url: cursor } } }) } },
+            { text: 'In Cursor’s MCP settings, check that the server shows a green dot and its tools.' },
           ],
-          note: 'Do not commit a project mcp.json that contains a key.',
+          note: 'Do not commit a project mcp.json that contains a link. Revoke the link under API keys if it was shared.',
         },
       ],
     },
@@ -226,18 +254,17 @@ export function clients(c: Ctx): ClientDef[] {
       blurb: 'GitHub Copilot agent mode',
       methods: [
         {
-          id: 'json',
-          label: 'mcp.json',
-          auth: 'key',
-          intro: 'VS Code supports Streamable HTTP servers in Copilot agent mode.',
+          id: 'link',
+          label: 'Connection link',
+          auth: 'link',
+          intro: 'Install in one click, or add it with “MCP: Add Server”.',
           steps: [
-            {
-              text: 'Run “MCP: Open User Configuration” from the Command Palette (or create .vscode/mcp.json in a workspace) and add:',
-              snippet: { lang: 'json', file: 'mcp.json', code: json({ servers: { [name]: { type: 'http', url: c.url, headers: { Authorization: bearer } } } }) },
-            },
-            { text: 'Click Start above the server entry, then pick the tools in Copilot Chat → agent mode → Tools.' },
+            create('VS Code'),
+            { text: 'Open VS Code and confirm the install:', open: { label: 'Install in VS Code', icon: 'download', href: `vscode:mcp/install?${encodeURIComponent(JSON.stringify({ name, type: 'http', url: vscode }))}` } },
+            { text: 'Or by hand: run “MCP: Add Server” → HTTP and paste the link, or add it to your user mcp.json (“MCP: Open User Configuration”):', snippet: { lang: 'json', file: 'mcp.json', code: json({ servers: { [name]: { type: 'http', url: vscode } } }) } },
+            { text: 'Start the server, then pick its tools in Copilot Chat → Agent mode → Tools.' },
           ],
-          note: 'Keep keys in the user configuration so they are never committed with a workspace.',
+          note: 'On Copilot Business and Enterprise, an organization admin must allow MCP servers first. Keep links in your user configuration, not in a shared workspace.',
         },
       ],
     },
@@ -247,21 +274,20 @@ export function clients(c: Ctx): ClientDef[] {
       name: 'Windsurf',
       mono: 'W',
       tint: '#0b8a7a',
-      blurb: 'Cascade MCP servers',
+      blurb: 'Windsurf and Devin Desktop',
       methods: [
         {
-          id: 'json',
-          label: 'mcp_config.json',
-          auth: 'key',
-          intro: 'Windsurf’s Cascade connects to remote servers with a serverUrl.',
+          id: 'link',
+          label: 'Connection link',
+          auth: 'link',
+          intro: 'Windsurf (now Devin Desktop) connects to remote servers with a serverUrl.',
           steps: [
-            { text: 'Open Windsurf Settings → Cascade → MCP servers → View raw config (~/.codeium/windsurf/mcp_config.json).' },
-            {
-              text: 'Add the server:',
-              snippet: { lang: 'json', file: 'mcp_config.json', code: json({ mcpServers: { [name]: { serverUrl: c.url, headers: { Authorization: bearer } } } }) },
-            },
-            { text: 'Refresh the MCP servers list in Cascade.' },
+            create('Windsurf'),
+            { text: 'Open the MCP config: in the app’s MCP settings choose View raw config, or open mcp_config.json (Devin Desktop: %APPDATA%\\devin on Windows, ~/.config/devin on Mac and Linux; older Windsurf: ~/.codeium/windsurf).' },
+            { text: 'Add the server:', snippet: { lang: 'json', file: 'mcp_config.json', code: json({ mcpServers: { [name]: { serverUrl: windsurf } } }) } },
+            { text: 'Refresh the MCP servers list.' },
           ],
+          note: `With the Devin CLI: devin mcp add ${name} "<link>". ${keepPrivate}`,
         },
       ],
     },
@@ -271,41 +297,39 @@ export function clients(c: Ctx): ClientDef[] {
       name: 'Other clients',
       mono: '…',
       tint: '#6b7280',
-      blurb: 'Any Streamable HTTP or stdio client',
+      blurb: 'Gemini CLI, Cline, Zed and any MCP client',
       methods: [
         {
           id: 'link',
           label: 'Connection link',
           auth: 'link',
-          intro: 'For clients that take just a server URL: one link that carries its own key.',
+          intro: 'Any client that takes a remote (Streamable HTTP) server URL: paste the link, no headers or sign-in needed.',
           steps: [
-            { text: 'Create a connection link and copy it:', link: true },
-            { text: 'Paste it as the server URL (Streamable HTTP) in your client. No headers needed.' },
+            create('your app'),
+            { text: 'Gemini CLI:', snippet: { lang: 'shell', label: 'Terminal', code: `gemini mcp add --transport http ${name} "${other}"` } },
+            { text: 'Cline (MCP Servers → Remote Servers, or cline_mcp_settings.json):', snippet: { lang: 'json', file: 'cline_mcp_settings.json', code: json({ mcpServers: { [name]: { type: 'streamableHttp', url: other } } }) } },
+            { text: 'Zed (settings.json):', snippet: { lang: 'json', file: 'settings.json', code: json({ context_servers: { [name]: { url: other } } }) } },
+            { text: 'Continue (.continue/mcpServers/uncoder.yaml):', snippet: { lang: 'text', file: 'uncoder.yaml', code: `name: ${c.site}\nversion: 0.0.1\nschema: v1\nmcpServers:\n  - name: ${c.site}\n    type: streamable-http\n    url: ${other}` } },
           ],
-          note: 'Keep the link private, like a password. Revoke it any time under API keys.',
-        },
-        {
-          id: 'http',
-          label: 'Streamable HTTP',
-          auth: 'key',
-          intro: 'Any MCP client that supports remote (Streamable HTTP) servers.',
-          steps: [
-            { text: 'Server URL:', url: true },
-            { text: 'Send the API key as a bearer token in every request:', snippet: { lang: 'text', label: 'HTTP header', code: `Authorization: ${bearer}` } },
-            {
-              text: 'Clients that support OAuth 2.1 can sign in instead of using a key. They discover everything from:',
-              snippet: { lang: 'text', label: 'Protected resource metadata', code: c.metadata },
-            },
-          ],
+          note: keepPrivate,
         },
         {
           id: 'stdio',
-          label: 'stdio bridge',
+          label: 'Local (stdio) apps',
+          auth: 'link',
+          intro: 'For apps that only launch local servers. mcp-remote, a small open-source bridge, runs on your computer and forwards to this site (needs Node.js 18+).',
+          steps: [create('your app'), { text: 'Use this as the server command:', snippet: { lang: 'shell', label: 'Command', code: `npx ${bridge(`"${other}"`).join(' ')}` } }],
+          note: keepPrivate,
+        },
+        {
+          id: 'http',
+          label: 'API key in a header',
           auth: 'key',
-          intro: 'For clients that only launch local (stdio) servers. Needs Node.js 18+.',
+          intro: 'For clients that send headers and when you prefer no key in the URL.',
           steps: [
-            { text: 'Use this as the server command:', snippet: { lang: 'shell', label: 'Command', code: c.bridge.replace('<API_KEY>', c.key) } },
-            { text: 'Or with the generic mcp-remote bridge:', snippet: { lang: 'shell', label: 'Command', code: `npx -y mcp-remote ${c.url} --header "Authorization: ${bearer}"` } },
+            { text: 'Server URL:', url: true },
+            { text: 'Send the API key as a bearer token in every request:', snippet: { lang: 'text', label: 'HTTP header', code: `Authorization: ${bearer}` } },
+            { text: 'Clients that support OAuth 2.1 can sign in instead of using a key. They discover everything from:', snippet: { lang: 'text', label: 'Protected resource metadata', code: c.metadata } },
           ],
         },
       ],

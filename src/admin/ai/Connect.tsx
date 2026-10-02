@@ -24,13 +24,14 @@ export interface FreshLink {
 interface Props {
   status: McpStatus | undefined;
   freshKey: FreshKey | null;
-  freshLink: FreshLink | null;
-  /** Creates a connection link for this client (resolves when it is shown). */
-  onCreateLink: (name: string) => Promise<void>;
+  /** Connection links created on this screen, one per client (each shown once). */
+  freshLinks: Partial<Record<ClientId, FreshLink>>;
+  /** Creates a connection link for a client (resolves when it is shown). */
+  onCreateLink: (client: ClientId, name: string) => Promise<void>;
   onCreateKey: (suggestedName: string) => void;
 }
 
-export function ConnectPanel({ status, freshKey, freshLink, onCreateLink, onCreateKey }: Props) {
+export function ConnectPanel({ status, freshKey, freshLinks, onCreateLink, onCreateKey }: Props) {
   const [linking, setLinking] = useState(false);
   const [clientId, setClientId] = useState<ClientId>('claude');
   const [methodByClient, setMethodByClient] = useState<Record<string, string>>({});
@@ -42,17 +43,18 @@ export function ConnectPanel({ status, freshKey, freshLink, onCreateLink, onCrea
       clients({
         url,
         key: freshKey?.secret ?? KEY_PLACEHOLDER,
+        links: Object.fromEntries(Object.entries(freshLinks).map(([id, l]) => [id, l?.url ?? ''])),
         site: cfg.site.name || 'WordPress',
-        bridge: status?.bridge ?? `npx -y @uncoder/mcp --url ${url} --key <API_KEY>`,
         metadata: status?.metadata ?? url.replace(/mcp$/, 'oauth/protected-resource'),
       }),
-    [url, freshKey, status],
+    [url, freshKey, freshLinks, status],
   );
   const client = list.find((c) => c.id === clientId) ?? list[0];
   const method = client.methods.find((m) => m.id === methodByClient[client.id]) ?? client.methods[0];
   // Only web connectors connect from the vendor's servers; desktop apps and editors reach the site from this computer.
   const needsHttps = (!!method.cloud && (!status?.https || local)) || (method.auth === 'link' && !status?.https && !local);
   const linksOff = method.auth === 'link' && status?.settings.links === false;
+  const freshLink = freshLinks[client.id] ?? null;
 
   return (
     <div className="uncoder-ui-connect">
@@ -110,9 +112,9 @@ export function ConnectPanel({ status, freshKey, freshLink, onCreateLink, onCrea
 
         {needsHttps && (
           <Callout tone="warning" title={local ? 'This site is not reachable from the internet' : 'HTTPS required'}>
-            {method.auth === 'link'
-              ? 'Connection links carry their key in the URL, so they work only over HTTPS. Enable SSL on this site first, or sign in instead.'
-              : `${client.name} connects from its own servers, so the URL must be public and use HTTPS. ${local ? 'For a local site, use a tunnel (for example ngrok or Cloudflare Tunnel) or connect a desktop client with an API key.' : 'Enable SSL on this site first.'}`}
+            {method.cloud
+              ? `${client.name} connects from its own servers, so your site must be public and use HTTPS. ${local ? `For a site on your computer, use one of the other ${client.name} methods or a tunnel (for example ngrok or Cloudflare Tunnel).` : 'Enable SSL on this site first.'}`
+              : 'Connection links carry their key in the URL, so they work only over HTTPS. Enable SSL on this site first, or sign in instead.'}
           </Callout>
         )}
         {linksOff && (
@@ -165,7 +167,7 @@ export function ConnectPanel({ status, freshKey, freshLink, onCreateLink, onCrea
                       onClick={async () => {
                         setLinking(true);
                         try {
-                          await onCreateLink(`${client.name} link`);
+                          await onCreateLink(client.id, `${client.name} link`);
                         } finally {
                           setLinking(false);
                         }
@@ -173,6 +175,15 @@ export function ConnectPanel({ status, freshKey, freshLink, onCreateLink, onCrea
                     >
                       Create connection link
                     </Button>
+                  ))}
+                {s.open &&
+                  (freshLink ? (
+                    <a className="uncoder-ui-btn uncoder-ui-btn--primary uncoder-ui-btn--md" href={s.open.href} target={s.open.href.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer">
+                      <Icon name={s.open.icon ?? 'external-link'} size={14} />
+                      {s.open.label}
+                    </a>
+                  ) : (
+                    <p className="uncoder-ui-connect__hint">“{s.open.label}” appears here once the link exists.</p>
                   ))}
                 {s.snippet && <CodeBlock code={s.snippet.code} lang={s.snippet.lang} file={s.snippet.file} label={s.snippet.label} />}
               </div>

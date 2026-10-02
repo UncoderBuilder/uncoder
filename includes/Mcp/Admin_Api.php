@@ -83,7 +83,7 @@ final class Admin_Api {
 				'https'      => is_ssl() || 0 === strpos( home_url(), 'https://' ),
 				'app_passwords' => function_exists( 'wp_is_application_passwords_available' ) && wp_is_application_passwords_available(),
 				'abilities'  => function_exists( 'wp_register_ability' ),
-				'bridge'     => 'npx -y @uncoder/mcp --url ' . OAuth::resource() . ' --key <API_KEY>',
+				'bridge'     => 'npx -y mcp-remote "<connection link>"',
 			)
 		);
 	}
