@@ -129,7 +129,7 @@ function RollbackCard() {
     }
   };
   return (
-    <Card title="Version rollback" description="Had a problem after an update? Download an earlier Uncoder version from builder.uncoder.co and upload it under Plugins → Add New. Back up the site first.">
+    <Card title="Version rollback" description="Had a problem after an update? Download an earlier Uncoder version from GitHub and upload it under Plugins → Add New. Back up the site first.">
       {!d ? (
         <SkeletonRows rows={1} cols={2} />
       ) : d.versions.length ? (

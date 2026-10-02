@@ -76,7 +76,7 @@
       "tag": "release",
       "title": "Uncoder 0.1.0 is here",
       "body": "The first public version: a visual builder, a full Theme Builder, forms, popups and a built-in MCP server. Free, with no account.",
-      "link": { "label": "Read the launch post", "url": "https://builder.uncoder.co/" }
+      "link": { "label": "Read the launch post", "url": "https://uncoderbuilder.com/blog/" }
     }
   ]
 }

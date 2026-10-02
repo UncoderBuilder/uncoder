@@ -82,7 +82,8 @@ function backgroundOf(el: Element, win: Window): Rgba | null {
   for (let node: Element | null = el; node; node = node.parentElement) {
     const s = win.getComputedStyle(node);
     if (s.backgroundImage && s.backgroundImage !== 'none') return null;
-    if (node.querySelector(':scope > .uncoder-bg-video, :scope > .uncoder-bg-slideshow')) return null;
+    // Moving backgrounds (video, slideshow, animated) have no single colour to measure against.
+    if (node.querySelector(':scope > .uncoder-bg-video, :scope > .uncoder-bg-slideshow, :scope > .uncoder-abg')) return null;
     const c = parseColor(s.backgroundColor);
     if (c && c[3] > 0) {
       layers.push(c);

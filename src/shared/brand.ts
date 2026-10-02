@@ -2,8 +2,8 @@
 // Two paths draw the U in a 92 × 96 box; BOLT is the cut itself, used by the loader to flash it.
 // PHP twin: includes/Core/Brand.php.
 
-export const BRAND_URL = 'https://builder.uncoder.co';
-export const DOCS_URL = 'https://builder.uncoder.co/documentation/';
+export const BRAND_URL = 'https://uncoderbuilder.com';
+export const DOCS_URL = 'https://docs.uncoderbuilder.com/';
 /** WordPress.org support forum and reviews (slug `uncoder`). */
 export const SUPPORT_URL = 'mailto:hello@uncoderbuilder.com';
 

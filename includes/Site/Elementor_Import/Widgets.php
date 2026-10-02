@@ -1993,14 +1993,16 @@ final class Widgets {
 			$o['layout'] = 'vertical';
 		}
 		$s->opt( $o, 'align', 'align_items', array( 'left' => 'start', 'start' => 'start', 'center' => 'center', 'right' => 'end', 'end' => 'end', 'justify' => 'justify' ), true );
-		$pointer      = $s->str( 'pointer', 'underline' );
-		$o['pointer'] = array( 'underline' => 'underline', 'overline' => 'overline', 'double-line' => 'double', 'framed' => 'underline', 'background' => 'background', 'text' => 'none', 'none' => 'none' )[ $pointer ] ?? 'underline';
-		if ( 'framed' === $pointer || 'text' === $pointer ) {
+		// Elementor's pointer + animation become one hover effect: lines → the animated underline, a background
+		// → the sliding highlight, text effects → color only.
+		$pointer           = $s->str( 'pointer', 'underline' );
+		$o['hover_effect'] = array( 'background' => 'highlight', 'text' => 'none', 'none' => 'none' )[ $pointer ] ?? 'underline';
+		if ( in_array( $pointer, array( 'overline', 'double-line', 'framed', 'text' ), true ) ) {
 			$c->setting( 'nav-menu', 'pointer: ' . $pointer );
 		}
 		$anim = $s->str( 'animation_line', $s->str( 'animation_framed', $s->str( 'animation_background', $s->str( 'animation_text' ) ) ) );
-		if ( '' !== $anim ) {
-			$o['pointer_animation'] = array( 'fade' => 'fade', 'slide' => 'slide', 'grow' => 'grow', 'none' => 'none' )[ $anim ] ?? 'grow';
+		if ( 'underline' === $o['hover_effect'] && in_array( $anim, array( '', 'grow', 'fade', 'drop-in', 'drop-out' ), true ) ) {
+			$o['underline_from'] = 'center';
 		}
 		$s->ico( $o, 'submenu_icon', 'submenu_icon' );
 		$dropdown = $s->str( 'dropdown', 'tablet' );

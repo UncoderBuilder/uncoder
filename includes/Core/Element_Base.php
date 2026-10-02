@@ -274,6 +274,18 @@ abstract class Element_Base {
 	}
 
 	/**
+	 * Settings saved by an older version in today's form (merged or renamed settings). Runs when a document
+	 * is loaded (Document::elements()) and when settings are sanitized (Tree), so the editor, the page and AI
+	 * clients all see the same values.
+	 *
+	 * @param array<string,mixed> $settings Saved settings.
+	 * @return array<string,mixed>
+	 */
+	public function upgrade_settings( array $settings ): array {
+		return $settings;
+	}
+
+	/**
 	 * Settings with defaults applied (saved values win).
 	 *
 	 * @param array<string,mixed> $settings Saved settings.

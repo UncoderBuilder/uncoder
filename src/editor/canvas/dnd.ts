@@ -5,7 +5,7 @@ import { contentOnly, schemaOf } from '../lib/config';
 import { isDescendant } from '../lib/tree';
 import { commit, createElement, lockedBy, unlockedOnly, useDoc } from '../store/doc';
 import { useUi, viewZoom, type DropTarget } from '../store/ui';
-import { frame, toCanvas } from './frame';
+import { frame, toCanvas, toParent } from './frame';
 import { insertTree, moveNode, reId } from '../lib/tree';
 import { iconSvg } from '../lib/icons';
 import { revealAdded } from '../app/smart';
@@ -199,8 +199,26 @@ export function beginDrag(e: { clientX: number; clientY: number; pointerId?: num
   frame.doc?.documentElement.classList.add('uncoder-ui-is-dragging');
   window.addEventListener('pointermove', onMove, true);
   window.addEventListener('pointerup', onUp, true);
+  window.addEventListener('pointercancel', cancel, true);
   window.addEventListener('keydown', onKey, true);
   window.addEventListener('blur', cancel);
+  // A drag that starts inside the canvas (element toolbar, section handle, an element itself) keeps getting
+  // its pointer events in the canvas frame even with the frame's pointer events off: forward them.
+  frame.doc?.addEventListener('pointermove', onFrameMove, true);
+  frame.doc?.addEventListener('pointerup', onFrameUp, true);
+  frame.doc?.addEventListener('pointercancel', cancel, true);
+}
+
+/** A canvas pointer event in editor-window coordinates. */
+function fromFrame(e: PointerEvent): PointerEvent {
+  const p = toParent(e.clientX, e.clientY, viewZoom());
+  return { clientX: p.x, clientY: p.y, target: e.target, preventDefault: () => e.preventDefault() } as unknown as PointerEvent;
+}
+function onFrameMove(e: PointerEvent) {
+  onMove(fromFrame(e));
+}
+function onFrameUp(e: PointerEvent) {
+  onUp(fromFrame(e));
 }
 
 function start() {
@@ -277,8 +295,12 @@ function cleanup() {
   active = null;
   window.removeEventListener('pointermove', onMove, true);
   window.removeEventListener('pointerup', onUp, true);
+  window.removeEventListener('pointercancel', cancel, true);
   window.removeEventListener('keydown', onKey, true);
   window.removeEventListener('blur', cancel);
+  frame.doc?.removeEventListener('pointermove', onFrameMove, true);
+  frame.doc?.removeEventListener('pointerup', onFrameUp, true);
+  frame.doc?.removeEventListener('pointercancel', cancel, true);
   if (frame.iframe) frame.iframe.style.pointerEvents = '';
   document.body.classList.remove('uncoder-ui-is-dragging');
   frame.doc?.documentElement.classList.remove('uncoder-ui-is-dragging');

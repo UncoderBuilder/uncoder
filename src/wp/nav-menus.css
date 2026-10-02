@@ -1,0 +1,166 @@
+/* Appearance → Menus: the Icon field of menu items (nav-menus.ts). WordPress admin look. */
+
+.field-uncoder-icon {
+  position: relative;
+  margin: 6px 0 10px;
+}
+
+.uncoder-mi__label {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.uncoder-mi {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.uncoder-mi .uncoder-mi__pick {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  min-height: 32px;
+}
+
+.uncoder-mi__preview {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  color: #1d2327;
+}
+
+.uncoder-mi__preview:empty {
+  display: none;
+}
+
+.uncoder-mi__preview svg {
+  display: block;
+  width: 18px;
+  height: 18px;
+}
+
+.uncoder-mi__name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.uncoder-mi__hint {
+  display: block;
+  margin-top: 4px;
+  color: #646970;
+  font-size: 12px;
+  font-style: normal;
+}
+
+.uncoder-mi__desc-on {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 12px;
+}
+
+/* Picker */
+.uncoder-mi__pop {
+  position: absolute;
+  z-index: 100;
+  top: 58px;
+  left: 0;
+  width: min(100%, 360px);
+  padding: 8px;
+  border: 1px solid #c3c4c7;
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.14);
+  box-sizing: border-box;
+}
+
+.uncoder-mi__bar {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.uncoder-mi__pop .uncoder-mi__lib {
+  flex: 0 1 44%;
+  min-width: 0;
+  max-width: none;
+}
+
+.uncoder-mi__pop .uncoder-mi__search {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+}
+
+.uncoder-mi__foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #f0f0f1;
+}
+
+.uncoder-mi__foot .uncoder-mi__upload {
+  flex: none;
+}
+
+.uncoder-mi__foothint {
+  color: #646970;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.uncoder-mi__status {
+  margin: 6px 0 0;
+  color: #646970;
+  font-size: 12px;
+}
+
+.uncoder-mi__status:empty {
+  display: none;
+}
+
+.uncoder-mi__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(34px, 1fr));
+  gap: 2px;
+  max-height: 224px;
+  overflow-y: auto;
+  color: #646970;
+  font-size: 12px;
+}
+
+.uncoder-mi__cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: none;
+  color: #1d2327;
+  cursor: pointer;
+}
+
+.uncoder-mi__cell:hover {
+  border-color: #c3c4c7;
+  background: #f6f7f7;
+}
+
+.uncoder-mi__cell.is-active {
+  border-color: #2271b1;
+  background: #f0f6fc;
+  color: #2271b1;
+}
+
+.uncoder-mi__cell:focus-visible {
+  outline: 2px solid #2271b1;
+  outline-offset: 0;
+}

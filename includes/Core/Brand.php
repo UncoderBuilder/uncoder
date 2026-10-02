@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  */
 final class Brand {
 
-	public const URL = 'https://builder.uncoder.co';
+	public const URL = 'https://uncoderbuilder.com';
 
 	public const U_LEFT  = 'M0 0H70L49 34L29 14L11 86C3.6 80 0 69.6 0 58Z';
 	public const U_RIGHT = 'M79 0H92V58C92 82 74.6 96 46 96C34.7 96 25.1 94.1 17 90L39 56L59 76Z';

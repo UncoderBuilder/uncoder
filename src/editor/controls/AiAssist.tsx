@@ -53,7 +53,7 @@ export function AiTextButton({ control, value, onApply }: { control: ControlDef;
 
   return (
     <>
-      <button ref={ref} type="button" className={`uncoder-ui-aibtn${busy ? ' is-busy' : ''}`} aria-label={`AI writing tools for ${control.label ?? 'this field'}`} data-tip="AI writing" onClick={() => setOpen((o) => !o)}>
+      <button ref={ref} type="button" className={`uncoder-ui-aibtn${busy ? ' is-busy' : ''}`} aria-label={`AI writing tools for ${control.label ?? 'this field'}`} aria-expanded={open} data-tip="AI writing" onClick={() => setOpen((o) => !o)}>
         <Icon name={busy ? 'loader-circle' : 'sparkles'} size={12} />
       </button>
       <Popover anchor={ref} open={open} onClose={() => setOpen(false)} width={260} placement="bottom-end" label="AI writing">

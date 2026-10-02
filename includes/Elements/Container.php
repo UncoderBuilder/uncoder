@@ -7,6 +7,7 @@
 
 namespace Uncoder\Builder\Elements;
 
+use Uncoder\Builder\Core\Animated_Backgrounds;
 use Uncoder\Builder\Core\Element_Base;
 use Uncoder\Builder\Core\Shapes;
 
@@ -448,6 +449,7 @@ class Container extends Element_Base {
 				),
 			)
 		);
+		$this->register_animated_background();
 		$this->end_tab();
 		$this->start_tab( 'hover', __( 'Hover', 'uncoder' ) );
 		$this->add_group(
@@ -617,5 +619,107 @@ class Container extends Element_Base {
 			return 0 === $depth;
 		}
 		return 'boxed' === $width;
+	}
+
+	/**
+	 * Style → Background → Animated background: the animation and the settings it uses
+	 * (Core\Animated_Backgrounds, module bg-animated).
+	 */
+	private function register_animated_background(): void {
+		$this->add_control( 'bg_animation_heading', array( 'type' => 'heading', 'label' => __( 'Animated background', 'uncoder' ) ) );
+		$this->add_control(
+			'bg_animation',
+			array(
+				'type'    => 'select',
+				'label'   => __( 'Animation', 'uncoder' ),
+				'options' => Animated_Backgrounds::options(),
+				'ai'      => 'An animated layer behind the content. CSS styles "style-1"…"style-5" (soft drifting gradients, no script) or WebGL shaders: gradients "fluid-gradient", "borealis", "gradient-mesh", "mist", "mystic-lake", "noir-haze", "void-wave", "halftone"; lights "the-shining", "phase-tunnel", "plasma-line", "light-strings"; shapes "flame", "pulse-bubble", "neon-eclipse", "echo-sphere"; images "liquid-mask", "liquid-image" (use bg_anim_image or the background image); patterns "bit-wave", "flux-stripes", "perspective-grid". Colours default to the Design System. Use on one or two sections (hero, CTA), with enough contrast for the text on top.',
+			)
+		);
+		$colors = array(
+			'color_1' => array( 'bg_anim_color_1', __( 'Color 1', 'uncoder' ), '--uncoder-abg-c1' ),
+			'color_2' => array( 'bg_anim_color_2', __( 'Color 2', 'uncoder' ), '--uncoder-abg-c2' ),
+			'color_3' => array( 'bg_anim_color_3', __( 'Color 3', 'uncoder' ), '--uncoder-abg-c3' ),
+			'color_4' => array( 'bg_anim_color_4', __( 'Color 4', 'uncoder' ), '--uncoder-abg-c4' ),
+			'bg'      => array( 'bg_anim_bg', __( 'Base color', 'uncoder' ), '--uncoder-abg-cbg' ),
+		);
+		foreach ( $colors as $setting => list( $key, $label, $var ) ) {
+			$this->add_control(
+				$key,
+				array(
+					'type'        => 'color',
+					'label'       => $label,
+					'description' => 'color_1' === $setting ? __( 'Empty colours follow the Design System (primary, secondary, accent, heading).', 'uncoder' ) : '',
+					'condition'   => array( 'bg_animation' => Animated_Backgrounds::using( $setting ) ),
+					'selectors'   => array( '{{WRAPPER}}' => $var . ': {{VALUE}}' ),
+				)
+			);
+		}
+		$this->add_control(
+			'bg_anim_image',
+			array(
+				'type'        => 'media',
+				'label'       => __( 'Image', 'uncoder' ),
+				'description' => __( 'Empty: the background image of the container.', 'uncoder' ),
+				'condition'   => array( 'bg_animation' => Animated_Backgrounds::using( 'image' ) ),
+			)
+		);
+		$this->add_control(
+			'bg_anim_freeze',
+			array(
+				'type'        => 'switch',
+				'label'       => __( 'Freeze motion', 'uncoder' ),
+				'description' => __( 'Shows one still frame instead of the animation.', 'uncoder' ),
+				'condition'   => array( 'bg_animation' => Animated_Backgrounds::using( 'speed' ) ),
+			)
+		);
+		$numbers = array(
+			'bg_anim_speed'     => array( 'speed', __( 'Speed', 'uncoder' ), 1, 100, 'speed' ),
+			'bg_anim_frame'     => array( 'speed', __( 'Still frame', 'uncoder' ), 0, 1000, 'frame' ),
+			'bg_anim_scale'     => array( 'scale', __( 'Scale', 'uncoder' ), 0, 100, 'scale' ),
+			'bg_anim_intensity' => array( 'intensity', __( 'Intensity', 'uncoder' ), 0, 100, 'intensity' ),
+			'bg_anim_noise'     => array( 'noise', __( 'Noise', 'uncoder' ), 0, 100, 'noise' ),
+			'bg_anim_angle'     => array( 'angle', __( 'Angle', 'uncoder' ), 0, 360, 'angle' ),
+		);
+		foreach ( $numbers as $key => list( $setting, $label, $min, $max, $default ) ) {
+			$condition = array( 'bg_animation' => Animated_Backgrounds::using( $setting ) );
+			if ( 'bg_anim_speed' === $key ) {
+				$condition['bg_anim_freeze!'] = true;
+			} elseif ( 'bg_anim_frame' === $key ) {
+				$condition['bg_anim_freeze'] = true;
+			}
+			$this->add_control(
+				$key,
+				array(
+					'type'      => 'number',
+					'label'     => $label,
+					'min'       => $min,
+					'max'       => $max,
+					'default'   => Animated_Backgrounds::DEFAULTS[ $default ],
+					'condition' => $condition,
+				)
+			);
+		}
+		foreach ( array( 'bg_anim_offset_x' => __( 'Offset X', 'uncoder' ), 'bg_anim_offset_y' => __( 'Offset Y', 'uncoder' ) ) as $key => $label ) {
+			$this->add_control(
+				$key,
+				array(
+					'type'      => 'number',
+					'label'     => $label,
+					'min'       => -400,
+					'max'       => 400,
+					'condition' => array( 'bg_animation' => Animated_Backgrounds::using( 'offset' ) ),
+				)
+			);
+		}
+		$this->add_control(
+			'bg_anim_interactive',
+			array(
+				'type'        => 'switch',
+				'label'       => __( 'Follow the pointer', 'uncoder' ),
+				'description' => __( 'The animation reacts to the mouse.', 'uncoder' ),
+				'condition'   => array( 'bg_animation' => Animated_Backgrounds::using( 'interactive' ) ),
+			)
+		);
 	}
 }

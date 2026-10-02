@@ -1089,7 +1089,7 @@ body.uncoder-ui-scrubbing * {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 10px;
+  padding: 10px 12px;
   border-radius: var(--uncoder-ui-r-lg);
   background: var(--uncoder-ui-bg-inset);
   border: 1px solid var(--uncoder-ui-line);
@@ -1145,9 +1145,6 @@ body.uncoder-ui-scrubbing * {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.uncoder-ui-ctl__text.is-set {
-  color: var(--uncoder-ui-tx-1);
-}
 .uncoder-ui-ctl__input {
   min-width: 0;
   display: flex;
@@ -1165,7 +1162,6 @@ body.uncoder-ui-scrubbing * {
   font-size: var(--uncoder-ui-fs-xs);
   line-height: 15px;
 }
-.uncoder-ui-ctl__reset,
 .uncoder-ui-dynbtn,
 .uncoder-ui-devsw {
   width: 18px;
@@ -1181,16 +1177,13 @@ body.uncoder-ui-scrubbing * {
   color: var(--uncoder-ui-tx-3);
   position: relative;
 }
-.uncoder-ui-ctl__reset:hover,
 .uncoder-ui-dynbtn:hover,
 .uncoder-ui-devsw:hover {
   background: var(--uncoder-ui-bg-3);
   color: var(--uncoder-ui-tx-1);
 }
 .uncoder-ui-dynbtn {
-  margin-left: auto;
   color: var(--uncoder-ui-dynamic);
-  opacity: 0.8;
 }
 .uncoder-ui-devsw.is-device {
   color: var(--uncoder-ui-accent-tx);
@@ -1211,13 +1204,19 @@ body.uncoder-ui-scrubbing * {
   position: static;
   margin-right: 4px;
 }
+/* Sub-headings inside a group: sentence case, a hairline above (none when first). */
 .uncoder-ui-ctl-heading {
   margin-top: 4px;
-  color: var(--uncoder-ui-tx-3);
-  font-size: var(--uncoder-ui-fs-xs);
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  padding-top: 14px;
+  border-top: 1px solid var(--uncoder-ui-line);
+  color: var(--uncoder-ui-tx-1);
+  font-size: var(--uncoder-ui-fs-sm);
+  font-weight: 600;
+}
+.uncoder-ui-ctl-heading:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
 }
 .uncoder-ui-ctl-divider {
   width: 100%;
@@ -1916,7 +1915,7 @@ body.uncoder-ui-scrubbing * {
   color: var(--uncoder-ui-tx-1);
 }
 .uncoder-ui-rep__body {
-  padding: 8px 10px 12px;
+  padding: 8px 12px 12px;
   border-top: 1px solid var(--uncoder-ui-line);
 }
 .uncoder-ui-rep__add {
@@ -2763,6 +2762,242 @@ body.uncoder-ui-scrubbing * {
 .uncoder-ui-shapegrid__item:focus-visible {
   outline: 2px solid var(--uncoder-ui-accent);
   outline-offset: 1px;
+}
+
+/* Menu hover effect picker (controls/MenuFxControl.tsx): each tile is a tiny menu whose middle item shows
+   the effect; hovering or focusing the tile plays it. */
+.uncoder-ui-mfx {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+.uncoder-ui-mfx__tile {
+  --mfx-ink: var(--uncoder-ui-tx-3);
+  --mfx-hot: var(--uncoder-ui-accent-tx);
+  --mfx-pill: color-mix(in srgb, var(--uncoder-ui-accent) 14%, transparent);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  min-width: 0;
+  padding: 10px 8px 8px;
+  border: 1px solid var(--uncoder-ui-line);
+  border-radius: var(--uncoder-ui-r-md);
+  background: var(--uncoder-ui-bg-2);
+  color: var(--uncoder-ui-tx-1);
+  text-align: center;
+  cursor: pointer;
+  transition: border-color var(--uncoder-ui-t-fast) var(--uncoder-ui-ease), background var(--uncoder-ui-t-fast) var(--uncoder-ui-ease);
+}
+.uncoder-ui-mfx__tile:hover {
+  border-color: var(--uncoder-ui-line-3);
+}
+.uncoder-ui-mfx__tile.is-active {
+  border-color: var(--uncoder-ui-accent);
+  background: var(--uncoder-ui-accent-soft);
+}
+.uncoder-ui-mfx__tile:focus-visible {
+  outline: 2px solid var(--uncoder-ui-focus);
+  outline-offset: 1px;
+}
+.uncoder-ui-mfx__label {
+  overflow: hidden;
+  font-size: var(--uncoder-ui-fs-xs);
+  font-weight: 500;
+  line-height: 15px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.uncoder-ui-mfx__tile.is-active .uncoder-ui-mfx__label {
+  color: var(--uncoder-ui-accent-tx);
+}
+
+/* The tiny menu */
+.uncoder-ui-mfx__demo {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  height: 22px;
+}
+.uncoder-ui-mfx__i {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 22px;
+  border-radius: 999px;
+  color: var(--mfx-ink);
+  font-size: 10.5px;
+  font-weight: 500;
+  line-height: 1;
+}
+.uncoder-ui-mfx__i.is-hot {
+  color: var(--mfx-hot);
+}
+.uncoder-ui-mfx__t {
+  display: inline-block;
+}
+
+/* Animated underline */
+.uncoder-ui-mfx--underline .is-hot::after {
+  content: '';
+  position: absolute;
+  inset-inline: 5px;
+  bottom: 2px;
+  height: 1.5px;
+  border-radius: 1px;
+  background: currentColor;
+  transform-origin: left center;
+}
+.uncoder-ui-mfx--underline:is(:hover, :focus-visible) .is-hot::after {
+  animation: uncoder-ui-mfx-line 1.8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+@keyframes uncoder-ui-mfx-line {
+  0% {
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+  35%,
+  60% {
+    transform: scaleX(1);
+    transform-origin: left center;
+  }
+  61% {
+    transform-origin: right center;
+  }
+  95%,
+  100% {
+    transform: scaleX(0);
+    transform-origin: right center;
+  }
+}
+
+/* Flip text: at rest the word is caught mid-flip, leaving at the top while its copy comes in below. */
+.uncoder-ui-mfx--flip .is-hot .uncoder-ui-mfx__t {
+  overflow: hidden;
+  padding-block: 4px;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 -0.55em currentColor, 0 0.62em currentColor;
+}
+.uncoder-ui-mfx--flip:is(:hover, :focus-visible) .is-hot .uncoder-ui-mfx__t {
+  animation: uncoder-ui-mfx-flip 1.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+@keyframes uncoder-ui-mfx-flip {
+  0%,
+  15% {
+    text-shadow: 0 0 currentColor, 0 1.5em currentColor;
+  }
+  50%,
+  65% {
+    text-shadow: 0 -1.5em currentColor, 0 0 currentColor;
+  }
+  100% {
+    text-shadow: 0 0 currentColor, 0 1.5em currentColor;
+  }
+}
+
+/* Magnetic button */
+.uncoder-ui-mfx--magnet .is-hot {
+  background: var(--mfx-pill);
+  translate: 2px -1px;
+}
+.uncoder-ui-mfx--magnet:is(:hover, :focus-visible) .is-hot {
+  animation: uncoder-ui-mfx-magnet 2s ease-in-out infinite;
+}
+@keyframes uncoder-ui-mfx-magnet {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  25% {
+    translate: 3px -2px;
+  }
+  50% {
+    translate: -2px 1px;
+  }
+  75% {
+    translate: 2px 2px;
+  }
+}
+
+/* Focus item */
+.uncoder-ui-mfx--focus .uncoder-ui-mfx__i:not(.is-hot) {
+  opacity: 0.35;
+}
+.uncoder-ui-mfx--focus:is(:hover, :focus-visible) .uncoder-ui-mfx__i:not(.is-hot) {
+  animation: uncoder-ui-mfx-dim 1.8s ease-in-out infinite;
+}
+@keyframes uncoder-ui-mfx-dim {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  40%,
+  70% {
+    opacity: 0.3;
+  }
+}
+
+/* Sliding highlight */
+.uncoder-ui-mfx--highlight .uncoder-ui-mfx__i.is-hot {
+  color: var(--mfx-ink);
+}
+.uncoder-ui-mfx__glide {
+  position: absolute;
+  top: 0;
+  left: calc(50% - 18px);
+  width: 36px;
+  height: 22px;
+  border-radius: 999px;
+  background: var(--mfx-pill);
+}
+.uncoder-ui-mfx--highlight:is(:hover, :focus-visible) .uncoder-ui-mfx__glide {
+  animation: uncoder-ui-mfx-glide 2.6s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+@keyframes uncoder-ui-mfx-glide {
+  0%,
+  14%,
+  100% {
+    translate: 0 0;
+  }
+  32%,
+  46% {
+    translate: 36px 0;
+  }
+  64%,
+  78% {
+    translate: -36px 0;
+  }
+}
+
+/* Color only */
+.uncoder-ui-mfx--none:is(:hover, :focus-visible) .is-hot {
+  animation: uncoder-ui-mfx-color 1.6s ease-in-out infinite;
+}
+@keyframes uncoder-ui-mfx-color {
+  0%,
+  100% {
+    color: var(--mfx-ink);
+  }
+  40%,
+  70% {
+    color: var(--mfx-hot);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uncoder-ui-mfx *,
+  .uncoder-ui-mfx *::after {
+    animation: none !important;
+  }
+}
+@media (forced-colors: active) {
+  .uncoder-ui-mfx--flip .is-hot .uncoder-ui-mfx__t {
+    -webkit-text-fill-color: currentColor;
+    text-shadow: none;
+  }
 }
 
 /* Global classes (app/ClassesBar.tsx) */

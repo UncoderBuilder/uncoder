@@ -3,7 +3,7 @@ import type { ControlDef, Settings } from '@shared/types';
 import { useKit } from '../store/kit';
 import { Icon } from '../ui/Icon';
 import { Popover } from '../ui/Popover';
-import { IconButton, Segmented } from '../ui/primitives';
+import { Segmented } from '../ui/primitives';
 import { ControlForm } from './ControlForm';
 import type { ControlProps } from './ControlRow';
 
@@ -25,7 +25,6 @@ function GroupPopover({ control, value, onChange, summary, children, width = 280
         <span className="uncoder-ui-selectbtn__label">{summary}</span>
         <Icon name="pencil" size={12} />
       </button>
-      {!isEmptyObj(value) && <IconButton icon="rotate-ccw" label={`Reset ${control.label}`} size={12} onClick={() => onChange(undefined)} />}
       <Popover anchor={ref} open={open} onClose={() => setOpen(false)} width={width} placement="left-start" label={control.label}>
         <div className="uncoder-ui-group__pop">
           <div className="uncoder-ui-group__title">{control.label}</div>

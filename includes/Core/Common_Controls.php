@@ -726,6 +726,47 @@ final class Common_Controls {
 			)
 		);
 		$el->add_control(
+			'_reveal_trigger',
+			array(
+				'type'        => 'select',
+				'label'       => __( 'Trigger', 'uncoder' ),
+				'description' => __( 'Follow the scroll: the text starts faint and lights up piece by piece as the visitor scrolls, and dims again when scrolling back.', 'uncoder' ),
+				'options'     => array(
+					''       => __( 'Once, when it scrolls into view', 'uncoder' ),
+					'scroll' => __( 'Follow the scroll', 'uncoder' ),
+				),
+				'condition'   => array( '_reveal!' => '' ),
+			)
+		);
+		$el->add_control(
+			'_reveal_dim',
+			array(
+				'type'        => 'number',
+				'label'       => __( 'Start opacity', 'uncoder' ),
+				'description' => __( 'How visible the text is before it is revealed. Empty: 0, or 0.2 when following the scroll.', 'uncoder' ),
+				'min'         => 0,
+				'max'         => 1,
+				'step'        => 0.05,
+				'condition'   => array( '_reveal!' => '' ),
+				'selectors'   => array( '{{WRAPPER}}' => '--uncoder-reveal-dim: {{VALUE}}' ),
+			)
+		);
+		$el->add_control(
+			'_reveal_blur',
+			array(
+				'type'        => 'number',
+				'label'       => __( 'Blur (px)', 'uncoder' ),
+				'description' => __( 'Empty: 10, or 4 when following the scroll.', 'uncoder' ),
+				'min'         => 0,
+				'max'         => 40,
+				'condition'   => array(
+					'_reveal!'        => '',
+					'_reveal_effect' => 'blur',
+				),
+				'selectors'   => array( '{{WRAPPER}}' => '--uncoder-reveal-blur: {{VALUE}}px' ),
+			)
+		);
+		$el->add_control(
 			'_reveal_stagger',
 			array(
 				'type'        => 'number',
@@ -733,7 +774,10 @@ final class Common_Controls {
 				'description' => __( 'Pause between pieces. Empty: 60 for words, 25 for letters, 140 for lines.', 'uncoder' ),
 				'min'         => 0,
 				'max'         => 1000,
-				'condition'   => array( '_reveal!' => '' ),
+				'condition'   => array(
+					'_reveal!'         => '',
+					'_reveal_trigger!' => 'scroll',
+				),
 				'selectors'   => array( '{{WRAPPER}}' => '--uncoder-reveal-stagger: {{VALUE}}ms' ),
 			)
 		);
@@ -755,14 +799,17 @@ final class Common_Controls {
 				'label'     => __( 'Reveal delay (ms)', 'uncoder' ),
 				'min'       => 0,
 				'max'       => 10000,
-				'condition' => array( '_reveal!' => '' ),
+				'condition' => array(
+					'_reveal!'         => '',
+					'_reveal_trigger!' => 'scroll',
+				),
 				'selectors' => array( '{{WRAPPER}}' => '--uncoder-reveal-delay: {{VALUE}}ms' ),
 			)
 		);
 	}
 
 	/**
-	 * Text reveal as "mode effect" (e.g. "words fade-up"), or '' when off.
+	 * Text reveal as "mode effect [scroll]" (e.g. "words fade-up", "words blur scroll"), or '' when off.
 	 *
 	 * @param array<string,mixed> $s Settings.
 	 */
@@ -772,7 +819,8 @@ final class Common_Controls {
 			return '';
 		}
 		$effect = (string) ( $s['_reveal_effect'] ?? 'fade-up' );
-		return $mode . ' ' . ( isset( self::REVEAL_EFFECTS[ $effect ] ) ? $effect : 'fade-up' );
+		$scroll = 'scroll' === ( $s['_reveal_trigger'] ?? '' ) ? ' scroll' : '';
+		return $mode . ' ' . ( isset( self::REVEAL_EFFECTS[ $effect ] ) ? $effect : 'fade-up' ) . $scroll;
 	}
 
 	/**

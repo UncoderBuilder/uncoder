@@ -18,6 +18,15 @@ function requestedPanel(): LeftPanel | undefined {
 /** Inspector tabs: Content, Design (every visual setting incl. spacing), Behaviour (motion, visibility, attributes, CSS). */
 export type InspectorTab = 'content' | 'design' | 'behaviour';
 
+/** Where the inspector (settings panel) sits: docked next to the build panel, docked on the right, or floating. */
+export type InspectorAt = 'left' | 'right' | 'float';
+/** Floating inspector: top-left corner and height in window pixels. */
+export interface InspectorFloat {
+  x: number;
+  y: number;
+  h: number;
+}
+
 export interface Toast {
   id: number;
   kind: 'info' | 'success' | 'error' | 'warning';
@@ -46,6 +55,11 @@ interface UiState {
   mainPanel: LeftPanel;
   /** Islands floating over the canvas, or docked edge to edge ("docked panels"). */
   layout: 'float' | 'dock';
+  inspectorAt: InspectorAt;
+  /** Where the floating inspector was last (kept while docked, for the next time it floats). */
+  inspectorFloat: InspectorFloat | null;
+  /** The side the inspector docks to when it stops floating (the last docked side). */
+  inspectorSide: 'left' | 'right';
   /**
    * State the inspector edits: 'normal', hover / focus / active / before / after, or a custom selector around
    * "&" ("&.is-open"). Style controls then write into `_states[state]`; sections with native Normal/Hover tabs
@@ -89,6 +103,10 @@ const stored = (() => {
   }
 })();
 
+function validFloat(v: any): InspectorFloat | null {
+  return v && [v.x, v.y, v.h].every((n) => typeof n === 'number' && Number.isFinite(n)) ? { x: v.x, y: v.y, h: v.h } : null;
+}
+
 /** The last build-panel tab, except that an empty page opens on Insert (nothing to see in Layers yet). */
 function startPanel(): LeftPanel {
   if (!config.elements?.length && !config.user?.contentOnly) return 'add';
@@ -105,6 +123,9 @@ export const useUi = create<UiState>(() => ({
   panel: requestedPanel() ?? startPanel(),
   mainPanel: startPanel(),
   layout: stored.layout === 'dock' ? 'dock' : 'float',
+  inspectorAt: stored.inspectorAt === 'right' || stored.inspectorAt === 'float' ? stored.inspectorAt : 'left',
+  inspectorFloat: validFloat(stored.inspectorFloat),
+  inspectorSide: stored.inspectorSide === 'right' ? 'right' : 'left',
   inspectorState: 'normal',
   fit: 1,
   canvasWidth: 0,
@@ -132,9 +153,20 @@ useUi.subscribe((s, prev) => {
   // A custom selector belongs to the element it was made on: another selection starts from Normal.
   if (s.selected !== prev.selected && s.inspectorState !== 'normal' && s.inspectorState.includes('&')) useUi.setState({ inspectorState: 'normal' });
   if (s.panel !== prev.panel && MAIN_PANELS.includes(s.panel) && s.mainPanel !== s.panel) useUi.setState({ mainPanel: s.panel });
-  if (s.theme !== prev.theme || s.mainPanel !== prev.mainPanel || s.openSections !== prev.openSections || s.layout !== prev.layout || s.recentWidgets !== prev.recentWidgets) {
+  if (
+    s.theme !== prev.theme ||
+    s.mainPanel !== prev.mainPanel ||
+    s.openSections !== prev.openSections ||
+    s.layout !== prev.layout ||
+    s.recentWidgets !== prev.recentWidgets ||
+    s.inspectorAt !== prev.inspectorAt ||
+    s.inspectorFloat !== prev.inspectorFloat
+  ) {
     try {
-      localStorage.setItem('uncoder-editor', JSON.stringify({ theme: s.theme, panel: s.mainPanel, openSections: s.openSections, layout: s.layout, recent: s.recentWidgets }));
+      localStorage.setItem(
+        'uncoder-editor',
+        JSON.stringify({ theme: s.theme, panel: s.mainPanel, openSections: s.openSections, layout: s.layout, recent: s.recentWidgets, inspectorAt: s.inspectorAt, inspectorFloat: s.inspectorFloat, inspectorSide: s.inspectorSide }),
+      );
     } catch {
       /* private mode */
     }
@@ -166,6 +198,10 @@ export const viewZoom = (): number => {
 export const togglePanel = (panel: LeftPanel) => useUi.setState((s) => ({ panel: s.panel === panel && !MAIN_PANELS.includes(panel) ? s.mainPanel : panel }));
 
 export const setDevice = (device: string) => useUi.setState({ device, customWidth: null });
+
+/** Docks the inspector on a side, or lets it float (where it floated last, or lifted from where it is). */
+export const placeInspector = (at: InspectorAt, float?: InspectorFloat) =>
+  useUi.setState((s) => ({ inspectorAt: at, inspectorSide: at === 'float' ? s.inspectorSide : at, inspectorFloat: float ?? s.inspectorFloat }));
 
 let toastId = 0;
 export function toast(message: string, kind: Toast['kind'] = 'info', action?: Toast['action'], timeout = 4200): void {

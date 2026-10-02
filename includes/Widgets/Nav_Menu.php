@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * A WordPress menu with accessible dropdowns, pointer effects and a mobile menu
- * (dropdown, off-canvas drawer or full screen) below a chosen breakpoint.
+ * (dropdown, panel under the header, off-canvas drawer or full screen) below a chosen breakpoint.
  */
 class Nav_Menu extends Widget_Base {
 
@@ -42,7 +42,7 @@ class Nav_Menu extends Widget_Base {
 	}
 
 	public function description(): string {
-		return __( 'A WordPress menu (Appearance → Menus) with dropdown submenus and a hamburger mobile menu (dropdown, off-canvas or full screen). The main navigation of headers.', 'uncoder' );
+		return __( 'A WordPress menu (Appearance → Menus) with dropdown submenus and a hamburger mobile menu (dropdown, panel under the header, off-canvas or full screen). The main navigation of headers.', 'uncoder' );
 	}
 
 	public function frontend_scripts(): array {
@@ -159,33 +159,100 @@ class Nav_Menu extends Widget_Base {
 			)
 		);
 		$this->add_control(
-			'pointer',
+			'dd_columns',
 			array(
-				'type'    => 'select',
-				'label'   => __( 'Pointer', 'uncoder' ),
-				'default' => 'underline',
-				'options' => array(
-					'underline'  => __( 'Underline', 'uncoder' ),
-					'overline'   => __( 'Overline', 'uncoder' ),
-					'double'     => __( 'Double line', 'uncoder' ),
-					'background' => __( 'Background', 'uncoder' ),
-					'none'       => __( 'None (color only)', 'uncoder' ),
+				'type'        => 'choose',
+				'label'       => __( 'Dropdown columns', 'uncoder' ),
+				'description' => __( 'Lay dropdowns out in columns, for example items with descriptions.', 'uncoder' ),
+				'default'     => '1',
+				'options'     => array(
+					'1' => '1',
+					'2' => '2',
+					'3' => '3',
+					'4' => '4',
 				),
 			)
 		);
 		$this->add_control(
-			'pointer_animation',
+			'show_icons',
 			array(
-				'type'      => 'select',
-				'label'     => __( 'Pointer animation', 'uncoder' ),
-				'default'   => 'grow',
-				'options'   => array(
-					'grow'  => __( 'Grow', 'uncoder' ),
-					'slide' => __( 'Slide', 'uncoder' ),
-					'fade'  => __( 'Fade', 'uncoder' ),
-					'none'  => __( 'None', 'uncoder' ),
+				'type'        => 'switch',
+				'label'       => __( 'Icons', 'uncoder' ),
+				'description' => __( 'The icons chosen for menu items in Appearance → Menus, before the label.', 'uncoder' ),
+				'default'     => true,
+			)
+		);
+		$this->add_control(
+			'show_descriptions',
+			array(
+				'type'        => 'switch',
+				'label'       => __( 'Descriptions', 'uncoder' ),
+				'description' => __( 'The descriptions of menu items (Appearance → Menus), under the label in dropdowns and the mobile menu.', 'uncoder' ),
+				'default'     => true,
+			)
+		);
+		$this->add_control(
+			'hover_effect',
+			array(
+				'type'    => 'select',
+				'ui'      => 'menu_fx',
+				'label'   => __( 'Hover effect', 'uncoder' ),
+				'default' => 'underline',
+				'options' => self::effects(),
+				'ai'      => 'What a desktop menu item does under the pointer (one effect): "underline" (a line draws in under the item and leaves the other way), "flip" (the label rolls up and a copy rolls in), "magnet" (the item becomes a pill that leans towards the pointer), "focus" (the other items fade back), "highlight" (one pill glides from item to item and rests on the current page), "none" (only the color changes). The pill color is hover_bg, the line color pointer_color.',
+			)
+		);
+		$this->add_control(
+			'underline_from',
+			array(
+				'type'        => 'choose',
+				'label'       => __( 'Line from', 'uncoder' ),
+				'description' => __( 'Start: the line draws in from the start of the item and leaves at the end. Center: it grows from the middle.', 'uncoder' ),
+				'default'     => 'start',
+				'options'     => array(
+					'start'  => __( 'Start', 'uncoder' ),
+					'center' => __( 'Center', 'uncoder' ),
 				),
-				'condition' => array( 'pointer!' => 'none' ),
+				'condition'   => array( 'hover_effect' => 'underline' ),
+			)
+		);
+		$this->add_control(
+			'flip_by',
+			array(
+				'type'      => 'choose',
+				'label'     => __( 'Flip by', 'uncoder' ),
+				'default'   => 'word',
+				'options'   => array(
+					'word'   => __( 'Word', 'uncoder' ),
+					'letter' => __( 'Letter', 'uncoder' ),
+				),
+				'condition' => array( 'hover_effect' => 'flip' ),
+			)
+		);
+		$this->add_control(
+			'magnet_strength',
+			array(
+				'type'        => 'number',
+				'label'       => __( 'Pull', 'uncoder' ),
+				'description' => __( 'How far the item follows the pointer.', 'uncoder' ),
+				'default'     => 0.3,
+				'min'         => 0.05,
+				'max'         => 0.6,
+				'step'        => 0.05,
+				'condition'   => array( 'hover_effect' => 'magnet' ),
+			)
+		);
+		$this->add_control(
+			'focus_opacity',
+			array(
+				'type'        => 'number',
+				'label'       => __( 'Dimmed opacity', 'uncoder' ),
+				'description' => __( 'How visible the other items stay. Empty: 0.35.', 'uncoder' ),
+				'min'         => 0,
+				'max'         => 1,
+				'step'        => 0.05,
+				'condition'   => array( 'hover_effect' => 'focus' ),
+				'selectors'   => array( '{{WRAPPER}}' => '--uncoder-nav-focus-opacity: {{VALUE}}' ),
 			)
 		);
 		$this->end_section();
@@ -206,6 +273,19 @@ class Nav_Menu extends Widget_Base {
 			)
 		);
 		$this->add_control(
+			'mobile_menu',
+			array(
+				'type'            => 'select',
+				'label'           => __( 'Menu', 'uncoder' ),
+				'description'     => __( 'Show a different menu in the mobile menu, for example a shorter one.', 'uncoder' ),
+				'default'         => '',
+				'options_dynamic' => true,
+				'options'         => array( '' => __( 'Same as the desktop menu', 'uncoder' ) ) + array_slice( self::menu_options(), 1, null, true ),
+				'condition'       => array( 'breakpoint!' => 'none' ),
+				'ai'              => 'Optional menu for the mobile menu only (same values as "menu"). Empty = the desktop menu.',
+			)
+		);
+		$this->add_control(
 			'mobile_mode',
 			array(
 				'type'      => 'select',
@@ -213,10 +293,12 @@ class Nav_Menu extends Widget_Base {
 				'default'   => 'dropdown',
 				'options'   => array(
 					'dropdown'   => __( 'Dropdown', 'uncoder' ),
+					'panel'      => __( 'Panel under the header', 'uncoder' ),
 					'offcanvas'  => __( 'Off-canvas drawer', 'uncoder' ),
 					'fullscreen' => __( 'Full screen', 'uncoder' ),
 				),
 				'condition' => array( 'breakpoint!' => 'none' ),
+				'ai'        => '"panel" = a full-width sheet attached to the bottom edge of the header template, with airy rows, accordion submenus and the optional panel button (the modern app-style menu). Pair it with toggle_style "lines".',
 			)
 		);
 		$this->add_control(
@@ -249,12 +331,29 @@ class Nav_Menu extends Widget_Base {
 			)
 		);
 		$this->add_control(
+			'toggle_style',
+			array(
+				'type'      => 'choose',
+				'label'     => __( 'Toggle style', 'uncoder' ),
+				'default'   => 'icon',
+				'options'   => array(
+					'icon'  => array( 'label' => __( 'Icons', 'uncoder' ), 'icon' => 'menu' ),
+					'lines' => array( 'label' => __( 'Animated lines', 'uncoder' ), 'icon' => 'equal' ),
+				),
+				'condition' => array( 'breakpoint!' => 'none' ),
+				'ai'        => '"lines" = two lines that turn into an X when the menu opens.',
+			)
+		);
+		$this->add_control(
 			'toggle_icon',
 			array(
 				'type'      => 'icon',
 				'label'     => __( 'Toggle icon', 'uncoder' ),
 				'default'   => array( 'library' => 'lucide', 'value' => 'menu' ),
-				'condition' => array( 'breakpoint!' => 'none' ),
+				'condition' => array(
+					'breakpoint!'   => 'none',
+					'toggle_style!' => 'lines',
+				),
 			)
 		);
 		$this->add_control(
@@ -263,7 +362,10 @@ class Nav_Menu extends Widget_Base {
 				'type'      => 'icon',
 				'label'     => __( 'Close icon', 'uncoder' ),
 				'default'   => array( 'library' => 'lucide', 'value' => 'x' ),
-				'condition' => array( 'breakpoint!' => 'none' ),
+				'condition' => array(
+					'breakpoint!'   => 'none',
+					'toggle_style!' => 'lines',
+				),
 			)
 		);
 		$this->add_control(
@@ -301,6 +403,45 @@ class Nav_Menu extends Widget_Base {
 				),
 				'condition'            => array( 'breakpoint!' => 'none' ),
 				'selectors'            => array( '{{WRAPPER}}' => 'justify-content: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'm_button_text',
+			array(
+				'type'        => 'text',
+				'label'       => __( 'Button in the menu', 'uncoder' ),
+				'description' => __( 'A full-width button at the end of the mobile menu, e.g. "Get started". Empty: no button.', 'uncoder' ),
+				'dynamic'     => true,
+				'condition'   => array( 'breakpoint!' => 'none' ),
+			)
+		);
+		$this->add_control(
+			'm_button_link',
+			array(
+				'type'      => 'url',
+				'label'     => __( 'Button link', 'uncoder' ),
+				'dynamic'   => true,
+				'condition' => array(
+					'breakpoint!'    => 'none',
+					'm_button_text!' => '',
+				),
+			)
+		);
+		$this->add_control(
+			'm_button_variant',
+			array(
+				'type'      => 'select',
+				'label'     => __( 'Button style', 'uncoder' ),
+				'default'   => 'primary',
+				'options'   => array(
+					'primary'   => __( 'Primary', 'uncoder' ),
+					'secondary' => __( 'Secondary', 'uncoder' ),
+					'outline'   => __( 'Outline', 'uncoder' ),
+				),
+				'condition' => array(
+					'breakpoint!'    => 'none',
+					'm_button_text!' => '',
+				),
 			)
 		);
 		$this->end_section();
@@ -343,17 +484,18 @@ class Nav_Menu extends Widget_Base {
 		$this->add_control(
 			'hover_bg',
 			array(
-				'type'      => 'color',
-				'label'     => __( 'Background', 'uncoder' ),
-				'selectors' => array( '{{WRAPPER}}' => '--uncoder-nav-bg-hover: {{VALUE}}' ),
+				'type'        => 'color',
+				'label'       => __( 'Background', 'uncoder' ),
+				'description' => __( 'Also the pill of the Magnetic button and Sliding highlight effects.', 'uncoder' ),
+				'selectors'   => array( '{{WRAPPER}}' => '--uncoder-nav-bg-hover: {{VALUE}}' ),
 			)
 		);
 		$this->add_control(
 			'pointer_color',
 			array(
 				'type'      => 'color',
-				'label'     => __( 'Pointer color', 'uncoder' ),
-				'condition' => array( 'pointer' => array( 'underline', 'overline', 'double' ) ),
+				'label'     => __( 'Underline color', 'uncoder' ),
+				'condition' => array( 'hover_effect' => 'underline' ),
 				'selectors' => array( '{{WRAPPER}}' => '--uncoder-nav-pointer: {{VALUE}}' ),
 			)
 		);
@@ -380,8 +522,8 @@ class Nav_Menu extends Widget_Base {
 			'active_pointer_color',
 			array(
 				'type'      => 'color',
-				'label'     => __( 'Pointer color', 'uncoder' ),
-				'condition' => array( 'pointer' => array( 'underline', 'overline', 'double' ) ),
+				'label'     => __( 'Underline color', 'uncoder' ),
+				'condition' => array( 'hover_effect' => 'underline' ),
 				'selectors' => array( '{{WRAPPER}}' => '--uncoder-nav-pointer-active: {{VALUE}}' ),
 			)
 		);
@@ -391,10 +533,10 @@ class Nav_Menu extends Widget_Base {
 			'pointer_width',
 			array(
 				'type'       => 'slider',
-				'label'      => __( 'Pointer thickness', 'uncoder' ),
+				'label'      => __( 'Underline thickness', 'uncoder' ),
 				'size_units' => array( 'px' ),
 				'range'      => array( 'px' => array( 'min' => 1, 'max' => 10 ) ),
-				'condition'  => array( 'pointer' => array( 'underline', 'overline', 'double' ) ),
+				'condition'  => array( 'hover_effect' => 'underline' ),
 				'selectors'  => array( '{{WRAPPER}}' => '--uncoder-nav-pointer-w: {{VALUE}}' ),
 			)
 		);
@@ -424,6 +566,17 @@ class Nav_Menu extends Widget_Base {
 				'label'      => __( 'Item radius', 'uncoder' ),
 				'size_units' => array( 'px', 'em' ),
 				'selectors'  => array( '{{WRAPPER}}' => '--uncoder-nav-radius: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'icon_size',
+			array(
+				'type'        => 'slider',
+				'label'       => __( 'Icon size', 'uncoder' ),
+				'description' => __( 'Icons of the menu bar items.', 'uncoder' ),
+				'size_units'  => array( 'px', 'em' ),
+				'range'       => array( 'px' => array( 'min' => 8, 'max' => 48 ) ),
+				'selectors'   => array( '{{WRAPPER}}' => '--uncoder-nav-icon-size: {{VALUE}}' ),
 			)
 		);
 		$this->add_control(
@@ -568,11 +721,50 @@ class Nav_Menu extends Widget_Base {
 				'type'       => 'dimensions',
 				'label'      => __( 'Border radius', 'uncoder' ),
 				'size_units' => array( 'px', 'em', 'rem' ),
-				'selectors'  => array( '{{WRAPPER}} .uncoder-menu--main .uncoder-menu__sub' => 'border-radius: {{VALUE}}' ),
+				// Dropdowns and mega menu panels share the box style.
+				'selectors'  => array( '{{WRAPPER}} .uncoder-menu--main :is(.uncoder-menu__sub, .uncoder-mega)' => 'border-radius: {{VALUE}}' ),
 			)
 		);
-		$this->add_group( 'dd_border', array( 'type' => 'border', 'label' => __( 'Border', 'uncoder' ), 'selector' => '{{WRAPPER}} .uncoder-menu--main .uncoder-menu__sub' ) );
-		$this->add_group( 'dd_shadow', array( 'type' => 'box_shadow', 'label' => __( 'Shadow', 'uncoder' ), 'selector' => '{{WRAPPER}} .uncoder-menu--main .uncoder-menu__sub' ) );
+		$this->add_group( 'dd_border', array( 'type' => 'border', 'label' => __( 'Border', 'uncoder' ), 'selector' => '{{WRAPPER}} .uncoder-menu--main :is(.uncoder-menu__sub, .uncoder-mega)' ) );
+		$this->add_group( 'dd_shadow', array( 'type' => 'box_shadow', 'label' => __( 'Shadow', 'uncoder' ), 'selector' => '{{WRAPPER}} .uncoder-menu--main :is(.uncoder-menu__sub, .uncoder-mega)' ) );
+		$this->add_control( 'dd_extras_heading', array( 'type' => 'heading', 'label' => __( 'Icons and descriptions', 'uncoder' ) ) );
+		$this->add_control(
+			'dd_icon_size',
+			array(
+				'type'        => 'slider',
+				'label'       => __( 'Icon size', 'uncoder' ),
+				'description' => __( 'In dropdowns and the mobile menu.', 'uncoder' ),
+				'size_units'  => array( 'px', 'em' ),
+				'range'       => array( 'px' => array( 'min' => 8, 'max' => 48 ) ),
+				'selectors'   => array( '{{WRAPPER}}' => '--uncoder-nav-dd-icon-size: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'dd_icon_color',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Icon color', 'uncoder' ),
+				'selectors' => array( '{{WRAPPER}}' => '--uncoder-nav-dd-icon-color: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'dd_icon_bg',
+			array(
+				'type'        => 'color',
+				'label'       => __( 'Icon background', 'uncoder' ),
+				'description' => __( 'Puts each icon on a small tile.', 'uncoder' ),
+				'selectors'   => array( '{{WRAPPER}}' => '--uncoder-nav-dd-icon-bg: {{VALUE}}; --uncoder-nav-dd-icon-pad: 0.5em' ),
+			)
+		);
+		$this->add_group( 'dd_desc_typography', array( 'type' => 'typography', 'label' => __( 'Description typography', 'uncoder' ), 'selector' => '{{WRAPPER}} .uncoder-menu__desc' ) );
+		$this->add_control(
+			'dd_desc_color',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Description color', 'uncoder' ),
+				'selectors' => array( '{{WRAPPER}}' => '--uncoder-nav-desc-color: {{VALUE}}' ),
+			)
+		);
 		$this->end_section();
 
 		/* ---------------------------------------------------------- Toggle */
@@ -592,6 +784,17 @@ class Nav_Menu extends Widget_Base {
 				'size_units' => array( 'px', 'em' ),
 				'range'      => array( 'px' => array( 'min' => 12, 'max' => 64 ) ),
 				'selectors'  => array( '{{WRAPPER}} .uncoder-nav-menu__toggle' => '--uncoder-nav-toggle-size: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'toggle_line_width',
+			array(
+				'type'       => 'slider',
+				'label'      => __( 'Line thickness', 'uncoder' ),
+				'size_units' => array( 'px' ),
+				'range'      => array( 'px' => array( 'min' => 1, 'max' => 4, 'step' => 0.5 ) ),
+				'condition'  => array( 'toggle_style' => 'lines' ),
+				'selectors'  => array( '{{WRAPPER}} .uncoder-nav-menu__toggle' => '--uncoder-nav-burger-w: {{VALUE}}' ),
 			)
 		);
 		$this->add_group( 'toggle_typography', array( 'type' => 'typography', 'label' => __( 'Label typography', 'uncoder' ), 'selector' => '{{WRAPPER}} .uncoder-nav-menu__toggle-text', 'condition' => array( 'toggle_text_visible' => true ) ) );
@@ -784,6 +987,24 @@ class Nav_Menu extends Widget_Base {
 		);
 		$this->add_group( 'm_shadow', array( 'type' => 'box_shadow', 'label' => __( 'Shadow', 'uncoder' ), 'selector' => '{{WRAPPER}} .uncoder-nav-menu__inner' ) );
 		$this->add_control(
+			'm_button_color',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Button text color', 'uncoder' ),
+				'condition' => array( 'm_button_text!' => '' ),
+				'selectors' => array( '{{WRAPPER}} .uncoder-nav-menu__cta .uncoder-btn' => 'color: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'm_button_bg',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Button background', 'uncoder' ),
+				'condition' => array( 'm_button_text!' => '' ),
+				'selectors' => array( '{{WRAPPER}} .uncoder-nav-menu__cta .uncoder-btn' => 'background: {{VALUE}}; border-color: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
 			'm_close_color',
 			array(
 				'type'      => 'color',
@@ -807,21 +1028,102 @@ class Nav_Menu extends Widget_Base {
 	}
 
 	/**
+	 * Hover effects of the desktop menu (one at a time).
+	 *
+	 * @return array<string,string>
+	 */
+	public static function effects(): array {
+		return array(
+			'underline' => __( 'Animated underline', 'uncoder' ),
+			'flip'      => __( 'Flip text', 'uncoder' ),
+			'magnet'    => __( 'Magnetic button', 'uncoder' ),
+			'focus'     => __( 'Focus item', 'uncoder' ),
+			'highlight' => __( 'Sliding highlight', 'uncoder' ),
+			'none'      => __( 'Color only', 'uncoder' ),
+		);
+	}
+
+	/**
+	 * The hover effect in use.
+	 *
+	 * @param array<string,mixed> $s Settings.
+	 */
+	private static function effect( array $s ): string {
+		$effect = (string) ( $s['hover_effect'] ?? 'underline' );
+		return isset( self::effects()[ $effect ] ) ? $effect : 'underline';
+	}
+
+	/**
+	 * Before 0.1.1 the hover look took three settings (pointer, pointer_animation and an extra hover_effect);
+	 * now it is one effect. Old values map to the closest effect.
+	 *
+	 * @param array<string,mixed> $settings Saved settings.
+	 * @return array<string,mixed>
+	 */
+	public function upgrade_settings( array $settings ): array {
+		$effect = $settings['hover_effect'] ?? null;
+		$legacy = array_key_exists( 'pointer', $settings ) || array_key_exists( 'pointer_animation', $settings ) || in_array( $effect, array( '', 'roll', 'letters' ), true );
+		if ( ! $legacy ) {
+			return $settings;
+		}
+		$pointer = (string) ( $settings['pointer'] ?? 'underline' );
+		if ( 'roll' === $effect || 'letters' === $effect ) {
+			$settings['hover_effect'] = 'flip';
+			if ( 'letters' === $effect ) {
+				$settings['flip_by'] = 'letter';
+			}
+		} elseif ( ! is_string( $effect ) || ! isset( self::effects()[ $effect ] ) ) {
+			// No extra effect: the old pointer decides.
+			$settings['hover_effect'] = array(
+				'background' => 'highlight',
+				'none'       => 'none',
+			)[ $pointer ] ?? 'underline';
+			if ( 'underline' === $settings['hover_effect'] && in_array( $settings['pointer_animation'] ?? '', array( 'grow', 'fade' ), true ) ) {
+				$settings['underline_from'] = 'center';
+			}
+		}
+		unset( $settings['pointer'], $settings['pointer_animation'] );
+		return $settings;
+	}
+
+	/**
 	 * Data for the front-end module.
 	 *
 	 * @param array<string,mixed> $s Settings.
 	 * @return array<string,mixed>
 	 */
 	public function wrapper_attributes( array $s, Render_Context $ctx ): array {
+		$mode = (string) ( $s['mobile_mode'] ?? 'dropdown' );
 		return array(
 			'data-settings' => $this->json_attr(
 				array(
-					'trigger' => 'click' === ( $s['submenu_trigger'] ?? 'hover' ) ? 'click' : 'hover',
-					'stretch'   => 'dropdown' === ( $s['mobile_mode'] ?? 'dropdown' ) && ! empty( $s['dropdown_stretch'] ),
+					'trigger'   => 'click' === ( $s['submenu_trigger'] ?? 'hover' ) ? 'click' : 'hover',
+					'stretch'   => 'panel' === $mode || ( 'dropdown' === $mode && ! empty( $s['dropdown_stretch'] ) ),
+					'attach'    => 'panel' === $mode ? 'header' : '',
+					'fx'        => self::effect( $s ),
+					'magnet'    => 'magnet' === self::effect( $s ) ? max( 0.05, min( 0.6, (float) ( $s['magnet_strength'] ?? 0.3 ) ) ) : 0,
+					'letters'   => 'flip' === self::effect( $s ) && 'letter' === ( $s['flip_by'] ?? 'word' ),
 					'scrollspy' => ! array_key_exists( 'highlight_anchors', $s ) || ! empty( $s['highlight_anchors'] ),
 				)
 			),
 		);
+	}
+
+	/**
+	 * The optional button at the end of the mobile menu.
+	 *
+	 * @param array<string,mixed> $s Settings.
+	 */
+	private function panel_button( array $s ): string {
+		$text = trim( (string) ( $s['m_button_text'] ?? '' ) );
+		if ( '' === $text ) {
+			return '';
+		}
+		$variant        = in_array( $s['m_button_variant'] ?? 'primary', array( 'primary', 'secondary', 'outline' ), true ) ? $s['m_button_variant'] : 'primary';
+		$attrs          = $this->link_attrs( $s['m_button_link'] ?? array() );
+		$attrs['class'] = 'uncoder-btn uncoder-btn--' . $variant . ' uncoder-btn--md';
+		$tag            = isset( $attrs['href'] ) ? 'a' : 'span';
+		return '<div class="uncoder-nav-menu__cta"><' . $tag . Utils::attrs( $attrs ) . '><span class="uncoder-btn__text">' . esc_html( $text ) . '</span></' . $tag . '></div>';
 	}
 
 	/**
@@ -984,23 +1286,37 @@ class Nav_Menu extends Widget_Base {
 		}
 		list( $main_class, $mobile_class ) = $this->visibility( (string) ( $s['breakpoint'] ?? 'tablet' ) );
 
-		$label = $menu ? $menu->name : __( 'Main menu', 'uncoder' );
-		$mode  = in_array( $s['mobile_mode'] ?? 'dropdown', array( 'dropdown', 'offcanvas', 'fullscreen' ), true ) ? $s['mobile_mode'] : 'dropdown';
-		$main  = null !== $main_class ? $this->menu_html( $menu, $s, $ctx, false ) : '';
-		$copy  = null !== $mobile_class ? $this->menu_html( $menu, $s, $ctx, true ) : '';
+		// The mobile menu can show another menu (Mobile menu → Menu).
+		$m_menu = '' !== (string) ( $s['mobile_menu'] ?? '' ) ? $this->resolve_menu( (string) $s['mobile_menu'] ) : null;
+		$m_menu = $m_menu ?? $menu;
+
+		$label   = $menu ? $menu->name : __( 'Main menu', 'uncoder' );
+		$m_label = $m_menu ? $m_menu->name : $label;
+		$mode    = in_array( $s['mobile_mode'] ?? 'dropdown', array( 'dropdown', 'panel', 'offcanvas', 'fullscreen' ), true ) ? $s['mobile_mode'] : 'dropdown';
+		$main    = null !== $main_class ? $this->menu_html( $menu, $s, $ctx, false ) : '';
+		$copy    = null !== $mobile_class ? $this->menu_html( $m_menu, $s, $ctx, true ) : '';
 		if ( '' === $main && '' === $copy ) {
 			return;
 		}
 
-		$pointer   = in_array( $s['pointer'] ?? 'underline', array( 'underline', 'overline', 'double', 'background', 'none' ), true ) ? $s['pointer'] : 'underline';
-		$animation = in_array( $s['pointer_animation'] ?? 'grow', array( 'grow', 'slide', 'fade', 'none' ), true ) ? $s['pointer_animation'] : 'grow';
-		$classes   = array(
+		$effect  = self::effect( $s );
+		$classes = array(
 			'uncoder-nav-menu',
 			'uncoder-nav-menu--' . ( 'vertical' === ( $s['layout'] ?? 'horizontal' ) ? 'vertical' : 'horizontal' ),
-			'uncoder-nav-menu--pointer-' . $pointer,
-			'uncoder-nav-menu--anim-' . $animation,
+			'uncoder-nav-menu--fx-' . $effect,
 			'uncoder-nav-menu--' . ( 'click' === ( $s['submenu_trigger'] ?? 'hover' ) ? 'click' : 'hover' ),
 		);
+		if ( 'underline' === $effect && 'center' === ( $s['underline_from'] ?? 'start' ) ) {
+			$classes[] = 'uncoder-nav-menu--line-center';
+		}
+		if ( 'flip' === $effect && 'letter' === ( $s['flip_by'] ?? 'word' ) ) {
+			$classes[] = 'uncoder-nav-menu--flip-letters';
+		}
+		$columns = max( 1, min( 4, (int) ( $s['dd_columns'] ?? 1 ) ) );
+		if ( $columns > 1 ) {
+			$classes[] = 'uncoder-nav-menu--dd-cols';
+			$classes[] = 'uncoder-nav-menu--dd-' . $columns;
+		}
 		$panel_id = 'uncoder-' . $ctx->element_id . '-panel';
 
 		echo '<div class="' . esc_attr( implode( ' ', $classes ) ) . '">';
@@ -1029,21 +1345,25 @@ class Nav_Menu extends Widget_Base {
 					'class'         => trim( 'uncoder-nav-menu__toggle ' . $mobile_class ),
 					'aria-expanded' => 'false',
 					'aria-controls' => $panel_id,
-					'aria-haspopup' => 'dropdown' === $mode ? null : 'dialog',
+					'aria-haspopup' => in_array( $mode, array( 'dropdown', 'panel' ), true ) ? null : 'dialog',
 				)
 			) . '>';
 			// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo '<span class="uncoder-nav-menu__toggle-icon uncoder-nav-menu__toggle-icon--open">' . $this->render_icon( $open_icon ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- icon markup.
-			echo '<span class="uncoder-nav-menu__toggle-icon uncoder-nav-menu__toggle-icon--close">' . $this->render_icon( $close_icon ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- icon markup.
+			if ( 'lines' === ( $s['toggle_style'] ?? 'icon' ) ) {
+				echo '<span class="uncoder-nav-menu__toggle-icon uncoder-nav-menu__burger" aria-hidden="true"><i></i><i></i></span>';
+			} else {
+				echo '<span class="uncoder-nav-menu__toggle-icon uncoder-nav-menu__toggle-icon--open">' . $this->render_icon( $open_icon ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- icon markup.
+				echo '<span class="uncoder-nav-menu__toggle-icon uncoder-nav-menu__toggle-icon--close">' . $this->render_icon( $close_icon ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- icon markup.
+			}
 			echo '<span class="' . esc_attr( ! empty( $s['toggle_text_visible'] ) ? 'uncoder-nav-menu__toggle-text' : 'uncoder-nav-menu__toggle-text uncoder-sr-only' ) . '">' . esc_html( $text ) . '</span>';
 			echo '</button>';
 
-			$nav = '<nav class="uncoder-nav-menu__mobile" aria-label="' . esc_attr( $label ) . '">' . $copy . '</nav>';
-			if ( 'dropdown' === $mode ) {
+			$nav = '<nav class="uncoder-nav-menu__mobile" aria-label="' . esc_attr( $m_label ) . '">' . $copy . '</nav>' . $this->panel_button( $s );
+			if ( 'dropdown' === $mode || 'panel' === $mode ) {
 				// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped parts.
 				echo '<div' . Utils::attrs(
 					array(
-						'class'  => trim( 'uncoder-nav-menu__panel uncoder-nav-menu__panel--dropdown ' . $mobile_class ),
+						'class'  => trim( 'uncoder-nav-menu__panel uncoder-nav-menu__panel--dropdown ' . ( 'panel' === $mode ? 'uncoder-nav-menu__panel--header ' : '' ) . $mobile_class ),
 						'id'     => $panel_id,
 						'hidden' => true,
 					)
@@ -1056,7 +1376,7 @@ class Nav_Menu extends Widget_Base {
 					array(
 						'class'      => trim( 'uncoder-nav-menu__panel uncoder-nav-menu__panel--dialog uncoder-nav-menu__panel--' . $mode . ' uncoder-nav-menu__panel--' . $side . ' ' . $mobile_class ),
 						'id'         => $panel_id,
-						'aria-label' => $label,
+						'aria-label' => $m_label,
 					)
 				) . '>';
 				// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped

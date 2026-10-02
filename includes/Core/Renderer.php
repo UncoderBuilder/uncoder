@@ -26,6 +26,25 @@ final class Renderer {
 	/** Guards against templates embedding themselves. */
 	private static array $stack = array();
 
+	/** @var array<int,string> Documents rendered on this front-end request, in order: id => document type. */
+	private static array $rendered = array();
+
+	/**
+	 * Documents rendered on this front-end request so far (page, header, footer, templates, popups, loop items…).
+	 *
+	 * @return array<int,string> id => document type.
+	 */
+	public static function rendered(): array {
+		return self::$rendered;
+	}
+
+	/**
+	 * Whether an Uncoder document is being rendered right now (its widgets are running).
+	 */
+	public static function rendering(): bool {
+		return ! empty( self::$stack );
+	}
+
 	public function __construct( int $doc_id, bool $editor = false, int $post_id = 0 ) {
 		$this->ctx           = new Render_Context();
 		$this->ctx->doc_id   = $doc_id;
@@ -124,6 +143,10 @@ final class Renderer {
 			return '';
 		}
 		self::$stack[ $doc ] = true;
+		// What this page is made of, for the admin bar's Edit with Uncoder menu (front-end page views only).
+		if ( $doc > 0 && ! isset( self::$rendered[ $doc ] ) && ! $this->ctx->editor && ! Document::$static_render && ! is_admin() && ! ( defined( 'REST_REQUEST' ) && REST_REQUEST ) ) {
+			self::$rendered[ $doc ] = $this->ctx->doc_type;
+		}
 		$html                = '';
 		$first               = true;
 		$eager               = $this->ctx->eager;
@@ -364,6 +387,11 @@ final class Renderer {
 				$classes[] = 'uncoder-container--bg';
 				$before    = $layer;
 			}
+		}
+		$animated = Animated_Backgrounds::layer( $s );
+		if ( '' !== $animated ) {
+			$classes[] = 'uncoder-container--bg';
+			$before   .= $animated;
 		}
 		$shapes = self::shape_dividers( $s );
 		if ( '' !== $shapes ) {

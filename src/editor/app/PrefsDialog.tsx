@@ -1,5 +1,5 @@
 import { createPortal } from 'react-dom';
-import { useUi } from '../store/ui';
+import { placeInspector, useUi } from '../store/ui';
 import { setPref, usePrefs } from '../store/prefs';
 import { Icon } from '../ui/Icon';
 import { Button, Segmented, Toggle } from '../ui/primitives';
@@ -10,6 +10,7 @@ export function PrefsDialog() {
   const open = useUi((s) => s.prefsOpen);
   const theme = useUi((s) => s.theme);
   const layout = useUi((s) => s.layout);
+  const inspectorAt = useUi((s) => s.inspectorAt);
   const prefs = usePrefs();
   if (!open) return null;
   const close = () => useUi.setState({ prefsOpen: false });
@@ -44,17 +45,33 @@ export function PrefsDialog() {
         </div>
         <div className="uncoder-ui-prefs__row">
           <div>
-            <strong>Panels</strong>
-            <p>Floating islands over the canvas, or docked to the edges.</p>
+            <strong>Panel style</strong>
+            <p>Rounded islands with space around them, or panels fixed to the window edges.</p>
           </div>
           <Segmented
-            ariaLabel="Panel layout"
+            ariaLabel="Panel style"
             options={[
-              { value: 'float', label: 'Floating' },
-              { value: 'dock', label: 'Docked' },
+              { value: 'float', label: 'Islands' },
+              { value: 'dock', label: 'Edge to edge' },
             ]}
             value={layout}
             onChange={(v) => useUi.setState({ layout: v === 'dock' ? 'dock' : 'float' })}
+          />
+        </div>
+        <div className="uncoder-ui-prefs__row">
+          <div>
+            <strong>Settings panel</strong>
+            <p>Next to the build panel, on the right, or floating where you drag it.</p>
+          </div>
+          <Segmented
+            ariaLabel="Settings panel position"
+            options={[
+              { value: 'left', label: 'Left' },
+              { value: 'right', label: 'Right' },
+              { value: 'float', label: 'Floating' },
+            ]}
+            value={inspectorAt}
+            onChange={(v) => placeInspector(v === 'right' || v === 'float' ? v : 'left')}
           />
         </div>
         {rows.map((r) => (

@@ -128,7 +128,7 @@ Templates show live thumbnails and a preview. The Theme Builder works with class
 * Structured data (JSON-LD), a page preloader and page transitions.
 * A role manager decides who may use the builder and how much they may change.
 * An element manager lets you turn off widgets you don't use.
-* Support tools: system info, safe mode for troubleshooting, and rollback to an earlier version from WordPress.org.
+* Support tools: system info, safe mode for troubleshooting, and rollback to an earlier version from GitHub.
 
 = Performance, accessibility and privacy =
 
@@ -140,11 +140,12 @@ Templates show live thumbnails and a preview. The Theme Builder works with class
 
 == Installation ==
 
-1. Install and activate the plugin from **Plugins → Add New**, or upload the zip file there.
+1. Download uncoder.zip from https://github.com/UncoderBuilder/uncoder/releases/latest, then upload it in **Plugins → Add New → Upload Plugin** and activate it. Later versions arrive as normal WordPress updates.
 2. Edit any page with **Edit with Uncoder**, or create a header in **Uncoder → Theme Builder**.
 3. To build with AI, open **Uncoder → AI & MCP** and follow the steps for your AI app.
 
-Documentation: https://builder.uncoder.co/documentation
+Website: https://uncoderbuilder.com
+Documentation: https://docs.uncoderbuilder.com
 
 == Frequently Asked Questions ==
 
@@ -268,14 +269,15 @@ When a connected AI client calls `upload_media` with a URL, your server download
 
 When an AI app connects with OAuth and identifies itself with a Client ID Metadata Document (an https URL), your server fetches that document from the app's address to read its name and allowed redirect addresses. No site data is sent.
 
-= WordPress.org (version rollback) =
+= GitHub (updates and version rollback) =
 
-This applies only when an administrator opens **Uncoder → Settings → Tools → Version rollback**.
+Uncoder is distributed through GitHub releases (https://github.com/UncoderBuilder/uncoder).
 
-* Your server asks the WordPress.org plugin directory (api.wordpress.org) which versions of Uncoder exist.
-* If the administrator confirms a rollback, the chosen version is downloaded from downloads.wordpress.org and installed with the WordPress upgrader.
+* When WordPress checks for plugin updates, and when an administrator opens **Uncoder → Settings → Tools → Version rollback**, your server asks the GitHub API (api.github.com) which Uncoder releases exist. The request carries the Uncoder version and your site address in its User-Agent header; no other site data is sent. The answer is cached for six hours.
+* When an administrator installs an update or confirms a rollback, the chosen release zip is downloaded from github.com and installed with the WordPress upgrader.
+* Development copies (a linked folder or a git checkout) never ask for updates.
 
-WordPress.org privacy policy: https://wordpress.org/about/privacy/
+GitHub privacy statement: https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement
 
 = Embeds chosen by editors =
 
@@ -316,6 +318,7 @@ Bundled assets:
 * Geist and Geist Mono fonts (SIL Open Font License 1.1, see `assets/fonts/GEIST-LICENSE.txt`).
 * The Google Fonts catalog metadata (Apache 2.0).
 * The lottie-web "light" player (MIT, `assets/vendor/lottie/`, see its LICENSE.md). It is shipped minified as published; source: https://github.com/airbnb/lottie-web
+* Animated backgrounds in `assets/vendor/animated-bg/` (see its README.md): OGL by Nathan Gordon (MIT, https://github.com/oframe/ogl), and the simplex noise by Ashima Arts and Stefan Gustavson (MIT) in `fluid-gradient.js`.
 * The AI app logos on the AI & MCP screen, from Simple Icons (CC0). They are trademarks of their owners, shown only to identify compatible apps.
 
 == Screenshots ==

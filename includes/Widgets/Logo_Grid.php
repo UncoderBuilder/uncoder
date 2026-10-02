@@ -46,6 +46,11 @@ class Logo_Grid extends Widget_Base {
 		return __( 'Client or partner logos as a grid (optionally with divider lines) or an endless scrolling marquee; grayscale until hovered.', 'uncoder' );
 	}
 
+	/** Loads the images of the moving strip once it nears the screen (frontend/modules/marquee.ts). */
+	public function frontend_scripts(): array {
+		return array( 'marquee' );
+	}
+
 	public function frontend_styles(): array {
 		return array( 'marquee' );
 	}

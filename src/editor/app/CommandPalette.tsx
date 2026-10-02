@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { schemas } from '../lib/config';
 import { insertNearSelection } from '../canvas/dnd';
-import { setDevice, useUi } from '../store/ui';
+import { placeInspector, setDevice, useUi } from '../store/ui';
 import { Icon } from '../ui/Icon';
 import { doRedo, doUndo, previewPage, save, copySelection, pasteAfterSelection, duplicateSelection, deleteSelection, wrapSelection, moveSelection } from './actions';
 import { MOD } from './shortcuts';
@@ -44,7 +44,10 @@ function commands(): Command[] {
     { id: 'tablet', label: 'Tablet view', icon: 'tablet', group: 'View', run: () => setDevice('tablet') },
     { id: 'mobile', label: 'Mobile view', icon: 'smartphone', group: 'View', run: () => setDevice('mobile') },
     { id: 'theme', label: 'Toggle Paper / Petrol night interface', icon: 'sun-moon', group: 'View', run: () => useUi.setState((s) => ({ theme: s.theme === 'dark' ? 'light' : 'dark' })) },
-    { id: 'dock', label: 'Toggle docked / floating panels', icon: 'panels-top-left', group: 'View', run: () => useUi.setState((s) => ({ layout: s.layout === 'dock' ? 'float' : 'dock' })) },
+    { id: 'dock', label: 'Toggle island / edge-to-edge panels', icon: 'panels-top-left', group: 'View', run: () => useUi.setState((s) => ({ layout: s.layout === 'dock' ? 'float' : 'dock' })) },
+    { id: 'insp-left', label: 'Settings panel: dock left', icon: 'panel-left', group: 'View', run: () => placeInspector('left') },
+    { id: 'insp-right', label: 'Settings panel: dock right', icon: 'panel-right', group: 'View', run: () => placeInspector('right') },
+    { id: 'insp-float', label: 'Settings panel: float', icon: 'picture-in-picture-2', group: 'View', run: () => placeInspector('float') },
     { id: 'prefs', label: 'Editor preferences', icon: 'sliders-horizontal', group: 'View', run: () => useUi.setState({ prefsOpen: true }) },
     { id: 'stylebook', label: 'Style book (all widgets with the Design System)', icon: 'book-open', group: 'View', run: () => useUi.setState({ styleBook: true }) },
   ];

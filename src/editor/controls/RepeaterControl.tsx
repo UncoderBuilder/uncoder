@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { ControlDef, Settings } from '@shared/types';
 import { schemaOf } from '../lib/config';
+import { visible } from '../lib/schema';
 import { newId } from '../lib/tree';
 import { changeNestedItems, useDoc, type NestedOp } from '../store/doc';
 import { Icon } from '../ui/Icon';
@@ -9,7 +10,14 @@ import { ControlForm } from './ControlForm';
 import type { ControlProps } from './ControlRow';
 
 function rowTitle(row: Settings, control: ControlDef, index: number): string {
-  const field = control.title_field ?? Object.keys(control.fields ?? {}).find((k) => ['title', 'text', 'label', 'name', 'question'].includes(k));
+  const fields = control.fields ?? {};
+  let field = control.title_field ?? Object.keys(fields).find((k) => ['title', 'text', 'label', 'name', 'question'].includes(k));
+  // A title field this row hides (e.g. the text of a marquee image item): name the row after its image instead.
+  if (field && fields[field] && !visible(fields[field], { ...defaults(fields), ...row }, fields)) {
+    const media = Object.keys(fields).find((k) => fields[k].type === 'media' && visible(fields[k], { ...defaults(fields), ...row }, fields) && row[k]?.url);
+    if (media) return mediaName(row[media]) || `Item ${index + 1}`;
+    field = undefined;
+  }
   const raw = field ? row[field] : '';
   // A select field shows its option label ("Reading time"), not the stored value ("reading-time").
   const options = field ? (control.fields?.[field]?.options as Record<string, unknown> | undefined) : undefined;
@@ -17,6 +25,13 @@ function rowTitle(row: Settings, control: ControlDef, index: number): string {
   const label = typeof option === 'string' ? option : option && typeof option === 'object' && typeof (option as { label?: unknown }).label === 'string' ? (option as { label: string }).label : raw;
   const text = typeof label === 'string' ? label.replace(/<[^>]*>/g, '').trim() : '';
   return text || `Item ${index + 1}`;
+}
+
+/** "Team photo" from a media value: its alt text, else the file name without size suffix and extension. */
+function mediaName(media: { url?: string; alt?: string }): string {
+  if (media.alt) return media.alt;
+  const file = decodeURIComponent((media.url ?? '').split('/').pop() ?? '');
+  return file.replace(/-\d+x\d+(?=\.)/, '').replace(/\.[a-z0-9]+$/i, '').replace(/[-_]+/g, ' ').trim();
 }
 
 function defaults(fields: Record<string, ControlDef>): Settings {

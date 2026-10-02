@@ -43,9 +43,11 @@
   justify-content: flex-end;
 }
 
-.uncoder-nav-menu--pointer-background {
+/* Pill effects: a soft tint of the primary color and round ends, unless set in the Style tab. */
+.uncoder-nav-menu--fx-magnet,
+.uncoder-nav-menu--fx-highlight {
   --uncoder-nav-bg-hover: color-mix(in srgb, var(--uncoder-c-primary, #2b59ff) 10%, transparent);
-  --uncoder-nav-color-hover: var(--uncoder-c-primary, #2b59ff);
+  --uncoder-nav-radius: 999px;
 }
 
 .uncoder-nav-menu__main {
@@ -180,62 +182,150 @@
   rotate: 180deg;
 }
 
-/* Pointer lines */
-.uncoder-nav-menu--pointer-underline .uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__link::after,
-.uncoder-nav-menu--pointer-overline .uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__link::before,
-.uncoder-nav-menu--pointer-double .uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__link::before,
-.uncoder-nav-menu--pointer-double .uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__link::after {
+/* ------------------------------------------------------------------ Main menu hover effects (one at a time) */
+
+.uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__link {
+  transition: color 0.2s, background-color 0.2s, opacity 0.3s ease, transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__toggle {
+  transition: opacity 0.3s ease, transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Animated underline: the line draws in from the start and leaves towards the end (or grows from the
+   center). The current page keeps its line. */
+.uncoder-nav-menu--fx-underline .uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__link::after {
   content: "";
   position: absolute;
+  bottom: 0;
   inset-inline: var(--uncoder-nav-pl, 14px) var(--uncoder-nav-pr, 14px);
   height: var(--uncoder-nav-pointer-w);
   border-radius: var(--uncoder-nav-pointer-w);
   background-color: var(--uncoder-nav-pointer);
   pointer-events: none;
   transform: scaleX(0);
-  transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.28s ease, background-color 0.2s;
+  transform-origin: right center;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.2s;
 }
 
-.uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__link::after {
-  bottom: 0;
-}
-
-.uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__link::before {
-  top: 0;
-}
-
-.uncoder-nav-menu--anim-slide .uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__link::before,
-.uncoder-nav-menu--anim-slide .uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__link::after {
+.uncoder-nav-menu--fx-underline .uncoder-menu--main > .uncoder-menu__item:is(:hover, .is-open) > .uncoder-menu__link::after,
+.uncoder-nav-menu--fx-underline .uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__link:focus-visible::after {
+  transform: none;
   transform-origin: left center;
 }
 
-[dir="rtl"] .uncoder-nav-menu--anim-slide .uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__link::before,
-[dir="rtl"] .uncoder-nav-menu--anim-slide .uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__link::after {
+[dir="rtl"] .uncoder-nav-menu--fx-underline .uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__link::after {
+  transform-origin: left center;
+}
+
+[dir="rtl"] .uncoder-nav-menu--fx-underline .uncoder-menu--main > .uncoder-menu__item:is(:hover, .is-open) > .uncoder-menu__link::after,
+[dir="rtl"] .uncoder-nav-menu--fx-underline .uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__link:focus-visible::after {
   transform-origin: right center;
 }
 
-.uncoder-nav-menu--anim-fade .uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__link::before,
-.uncoder-nav-menu--anim-fade .uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__link::after {
-  transform: none;
-  opacity: 0;
+.uncoder-nav-menu--fx-underline.uncoder-nav-menu--line-center .uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__link::after {
+  transform-origin: center;
 }
 
-.uncoder-nav-menu--anim-none .uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__link::before,
-.uncoder-nav-menu--anim-none .uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__link::after {
-  transition: none;
-}
-
-.uncoder-menu--main > .uncoder-menu__item:is(:hover, .is-open) > .uncoder-menu__link::before,
-.uncoder-menu--main > .uncoder-menu__item:is(:hover, .is-open) > .uncoder-menu__link::after {
+.uncoder-nav-menu--fx-underline .uncoder-menu--main > .uncoder-menu__item:is(.uncoder-menu__item--current, .uncoder-menu__item--ancestor) > .uncoder-menu__link::after {
   transform: none;
-  opacity: 1;
-}
-
-.uncoder-menu--main > .uncoder-menu__item:is(.uncoder-menu__item--current, .uncoder-menu__item--ancestor) > .uncoder-menu__link::before,
-.uncoder-menu--main > .uncoder-menu__item:is(.uncoder-menu__item--current, .uncoder-menu__item--ancestor) > .uncoder-menu__link::after {
-  transform: none;
-  opacity: 1;
   background-color: var(--uncoder-nav-pointer-active);
+}
+
+/* Flip text: the label is drawn twice as text shadows and clipped to its line (as the button text roll);
+   by letter, nav-menu.ts splits the label and each letter flips a moment after the one before. */
+.uncoder-nav-menu--fx-flip:not(.uncoder-nav-menu--flip-letters) .uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__link .uncoder-menu__text,
+.uncoder-nav-menu--fx-flip .uncoder-menu--main .uncoder-menu__ch {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  padding-block: 0.15em;
+  margin-block: -0.15em;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 currentColor, 0 1.6em currentColor;
+  transition: text-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.uncoder-nav-menu--fx-flip .uncoder-menu--main .uncoder-menu__ch {
+  transition-delay: calc(var(--i, 0) * 18ms);
+}
+
+/* Separate letters cannot be kerned: switch kerning off from the start so the menu does not shift when the
+   label is split. */
+.uncoder-nav-menu--flip-letters .uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__link .uncoder-menu__text {
+  font-kerning: none;
+  font-variant-ligatures: none;
+}
+
+.uncoder-nav-menu--fx-flip:not(.uncoder-nav-menu--flip-letters) .uncoder-menu--main > .uncoder-menu__item:is(:hover, .is-open) > .uncoder-menu__link .uncoder-menu__text,
+.uncoder-nav-menu--fx-flip:not(.uncoder-nav-menu--flip-letters) .uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__link:focus-visible .uncoder-menu__text,
+.uncoder-nav-menu--fx-flip .uncoder-menu--main > .uncoder-menu__item:is(:hover, .is-open) > .uncoder-menu__link .uncoder-menu__ch,
+.uncoder-nav-menu--fx-flip .uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__link:focus-visible .uncoder-menu__ch {
+  text-shadow: 0 -1.6em currentColor, 0 0 currentColor;
+}
+
+/* Magnetic button: the item is a pill on hover and leans towards the pointer (nav-menu.ts sets the offset);
+   the label leans a little further, so the pill feels soft. It springs back when the pointer leaves. */
+.uncoder-nav-menu--fx-magnet .uncoder-menu--main > .uncoder-menu__item > :is(.uncoder-menu__link, .uncoder-menu__toggle) {
+  transform: translate(var(--uncoder-nav-mx, 0px), var(--uncoder-nav-my, 0px));
+}
+
+.uncoder-nav-menu--fx-magnet .uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__link .uncoder-menu__text {
+  translate: calc(var(--uncoder-nav-mx, 0px) * 0.4) calc(var(--uncoder-nav-my, 0px) * 0.4);
+  transition: translate 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.uncoder-nav-menu--fx-magnet .uncoder-menu--main > .uncoder-menu__item.is-magnet > .uncoder-menu__link {
+  transition-duration: 0.2s, 0.2s, 0.3s, 0.15s;
+}
+
+.uncoder-nav-menu--fx-magnet .uncoder-menu--main > .uncoder-menu__item.is-magnet > .uncoder-menu__link .uncoder-menu__text {
+  transition-duration: 0.15s;
+}
+
+.uncoder-nav-menu--fx-magnet .uncoder-menu--main > .uncoder-menu__item.is-magnet > .uncoder-menu__toggle {
+  transition-duration: 0.3s, 0.15s;
+}
+
+/* Focus item: while the pointer (or the keyboard) is on one item, the others fade back. */
+.uncoder-nav-menu--fx-focus .uncoder-menu--main:is(:hover, :has(> .uncoder-menu__item.is-open), :has(> .uncoder-menu__item > .uncoder-menu__link:focus-visible)) > .uncoder-menu__item:not(:hover, .is-open, :has(> .uncoder-menu__link:focus-visible)) > :is(.uncoder-menu__link, .uncoder-menu__toggle) {
+  opacity: var(--uncoder-nav-focus-opacity, 0.35);
+}
+
+/* Sliding highlight: one pill (nav-menu.ts adds it as the list's first item) glides to the item under the
+   pointer and rests on the current page. The items themselves stay transparent. */
+.uncoder-nav-menu--fx-highlight .uncoder-menu--main {
+  position: relative;
+}
+
+.uncoder-nav-menu--fx-highlight .uncoder-menu--main > .uncoder-menu__item {
+  --uncoder-nav-bg-hover: transparent;
+  --uncoder-nav-bg-active: transparent;
+}
+
+.uncoder-menu__glide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--uncoder-glide-w, 0px);
+  height: var(--uncoder-glide-h, 0px);
+  margin: 0;
+  padding: 0;
+  border-radius: var(--uncoder-nav-radius);
+  background-color: var(--uncoder-nav-bg-hover);
+  list-style: none;
+  opacity: 0;
+  pointer-events: none;
+  translate: var(--uncoder-glide-x, 0px) var(--uncoder-glide-y, 0px);
+  transition: translate 0.45s cubic-bezier(0.22, 1, 0.36, 1), width 0.45s cubic-bezier(0.22, 1, 0.36, 1), height 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.25s ease;
+}
+
+.uncoder-menu__glide.is-on {
+  opacity: 1;
+}
+
+.uncoder-menu__glide.is-jump {
+  transition: opacity 0.25s ease;
 }
 
 /* ------------------------------------------------------------------ Dropdowns */
@@ -377,6 +467,106 @@
   rotate: -90deg;
 }
 
+/* ------------------------------------------------------------------ Icons and descriptions (Appearance → Menus) */
+
+.uncoder-menu__icon {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  box-sizing: content-box;
+  width: var(--uncoder-nav-icon-size, 1.1em);
+  height: var(--uncoder-nav-icon-size, 1.1em);
+  margin-inline-end: 0.5em;
+  vertical-align: middle;
+}
+
+.uncoder-menu__icon .uncoder-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* In dropdowns and the mobile menu: the accent color, and a small tile when the icon has a background. */
+:is(.uncoder-menu--main .uncoder-menu__sub, .uncoder-menu--mobile) .uncoder-menu__icon {
+  width: var(--uncoder-nav-dd-icon-size, 1.15em);
+  height: var(--uncoder-nav-dd-icon-size, 1.15em);
+  margin-inline-end: 0.75em;
+  padding: var(--uncoder-nav-dd-icon-pad, 0px);
+  border-radius: var(--uncoder-nav-dd-icon-radius, 8px);
+  background-color: var(--uncoder-nav-dd-icon-bg, transparent);
+  color: var(--uncoder-nav-dd-icon-color, var(--uncoder-c-primary, currentColor));
+}
+
+.uncoder-menu--mobile .uncoder-menu__link:is(.uncoder-menu__link--icon, .uncoder-menu__link--rich) {
+  display: flex;
+  align-items: center;
+}
+
+/* A label with a description under it; the icon lines up with the label. */
+.uncoder-menu__link.uncoder-menu__link--rich {
+  align-items: flex-start;
+}
+
+.uncoder-menu__link--rich .uncoder-menu__icon {
+  margin-top: 0.1em;
+}
+
+.uncoder-menu__label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15em;
+  min-width: 0;
+}
+
+.uncoder-menu__link--rich .uncoder-menu__text {
+  font-weight: 500;
+}
+
+.uncoder-menu__desc {
+  max-width: 30em;
+  color: var(--uncoder-nav-desc-color, color-mix(in srgb, var(--uncoder-nav-dd-color) 72%, transparent));
+  font-size: 0.875em;
+  font-weight: 400;
+  line-height: 1.45;
+  white-space: normal;
+}
+
+.uncoder-menu--mobile .uncoder-menu__desc {
+  color: var(--uncoder-nav-desc-color, color-mix(in srgb, var(--uncoder-nav-m-color) 65%, transparent));
+}
+
+.uncoder-menu--main .uncoder-menu__sub .uncoder-menu__link--rich {
+  padding: var(--uncoder-nav-dd-pt, 11px) var(--uncoder-nav-dd-pr, 14px) var(--uncoder-nav-dd-pb, 11px) var(--uncoder-nav-dd-pl, 14px);
+}
+
+/* Dropdown columns: the first level of dropdowns as a grid. */
+.uncoder-nav-menu--dd-2 {
+  --uncoder-nav-dd-cols: 2;
+}
+
+.uncoder-nav-menu--dd-3 {
+  --uncoder-nav-dd-cols: 3;
+}
+
+.uncoder-nav-menu--dd-4 {
+  --uncoder-nav-dd-cols: 4;
+}
+
+.uncoder-nav-menu--dd-cols .uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__sub {
+  display: grid;
+  grid-template-columns: repeat(var(--uncoder-nav-dd-cols, 2), minmax(0, 1fr));
+  column-gap: var(--uncoder-nav-dd-col-gap, 4px);
+}
+
+/* A dropdown hangs from a narrow item, so it would only be as wide as Min width: columns and descriptions
+   size it to its content instead (descriptions wrap after 30em). */
+.uncoder-nav-menu--dd-cols .uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__sub,
+.uncoder-menu--main .uncoder-menu__sub:has(> .uncoder-menu__item > .uncoder-menu__link--rich) {
+  width: max-content;
+  max-width: calc(100vw - 32px);
+}
+
 /* ------------------------------------------------------------------ Hamburger toggle */
 
 .uncoder-nav-menu__toggle {
@@ -415,6 +605,40 @@
 
 .uncoder-nav-menu__toggle[aria-expanded="true"] .uncoder-nav-menu__toggle-icon--close {
   display: inline-flex;
+}
+
+/* Animated lines: two bars that cross into an X while the menu is open. */
+.uncoder-nav-menu__burger {
+  position: relative;
+  width: 1em;
+  height: 1em;
+}
+
+.uncoder-nav-menu__burger i {
+  position: absolute;
+  top: calc(50% - var(--uncoder-nav-burger-w, 2px) / 2);
+  left: 12.5%;
+  width: 75%;
+  height: var(--uncoder-nav-burger-w, 2px);
+  border-radius: 2px;
+  background-color: currentColor;
+  transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.uncoder-nav-menu__burger i:first-child {
+  transform: translateY(-0.17em);
+}
+
+.uncoder-nav-menu__burger i:last-child {
+  transform: translateY(0.17em);
+}
+
+.uncoder-nav-menu__toggle[aria-expanded="true"] .uncoder-nav-menu__burger i:first-child {
+  transform: rotate(45deg);
+}
+
+.uncoder-nav-menu__toggle[aria-expanded="true"] .uncoder-nav-menu__burger i:last-child {
+  transform: rotate(-45deg);
 }
 
 /* ------------------------------------------------------------------ Mobile menu (shared) */
@@ -519,6 +743,105 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   box-shadow: 0 20px 40px -20px rgb(15 23 42 / 0.3);
+}
+
+/* Panel under the header: a full-width sheet hanging from the header's bottom edge (top and height come
+   from nav-menu.ts), with airy rows instead of dividers and accordion submenus in a lighter tone. */
+.uncoder-nav-menu__panel--header {
+  top: var(--uncoder-nav-panel-top, calc(100% + var(--uncoder-nav-m-offset)));
+  transform: translateY(-8px);
+  transition: opacity 0.22s ease, transform 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.uncoder-nav-menu__panel--header .uncoder-nav-menu__inner {
+  max-height: calc(100vh - var(--uncoder-nav-panel-vtop, 0px));
+  max-height: calc(100dvh - var(--uncoder-nav-panel-vtop, 0px));
+  padding: 16px 24px 28px;
+  box-shadow: 0 16px 32px rgb(15 23 42 / 0.12);
+}
+
+.uncoder-nav-menu__panel--header .uncoder-menu--mobile > .uncoder-menu__item + .uncoder-menu__item,
+.uncoder-nav-menu__panel--header .uncoder-menu--mobile .uncoder-menu__sub > .uncoder-menu__item,
+.uncoder-nav-menu__panel--header .uncoder-menu--mobile :is(.uncoder-menu__sub, .uncoder-menu__mega) {
+  border-top: 0;
+}
+
+.uncoder-nav-menu__panel--header .uncoder-menu--mobile .uncoder-menu__link {
+  padding: var(--uncoder-nav-m-pt, 12px) var(--uncoder-nav-m-pr, 0px) var(--uncoder-nav-m-pb, 12px) var(--uncoder-nav-m-pl, 0px);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.uncoder-nav-menu__panel--header .uncoder-menu--mobile .uncoder-menu__link:hover,
+.uncoder-nav-menu__panel--header .uncoder-menu--mobile .uncoder-menu__toggle:hover {
+  background-color: transparent;
+}
+
+.uncoder-nav-menu__panel--header .uncoder-menu--mobile .uncoder-menu__toggle {
+  width: 40px;
+  margin-inline-end: -12px;
+  color: color-mix(in srgb, var(--uncoder-nav-m-color) 60%, transparent);
+}
+
+.uncoder-nav-menu__panel--header .uncoder-menu--mobile .uncoder-menu__toggle:hover {
+  color: var(--uncoder-nav-m-color-hover);
+}
+
+.uncoder-nav-menu__panel--header .uncoder-menu--mobile .uncoder-menu__indicator {
+  transition: rotate 0.25s ease;
+}
+
+.uncoder-nav-menu__panel--header .uncoder-menu--mobile .uncoder-menu__sub {
+  padding-inline-start: 12px;
+}
+
+.uncoder-nav-menu__panel--header .uncoder-menu--mobile .uncoder-menu__sub .uncoder-menu__link {
+  padding-block: 9px;
+  font-size: 0.9375rem;
+}
+
+/* :where() keeps hover and current-page colours in charge. */
+.uncoder-nav-menu__panel--header :where(.uncoder-menu--mobile .uncoder-menu__sub) .uncoder-menu__link {
+  color: color-mix(in srgb, var(--uncoder-nav-m-color) 70%, transparent);
+}
+
+.uncoder-nav-menu__panel--header .uncoder-menu--mobile .uncoder-menu__sub .uncoder-menu__sub {
+  margin-inline-start: 2px;
+  padding-inline-start: 14px;
+  border-inline-start: 1px solid color-mix(in srgb, var(--uncoder-nav-m-color) 12%, transparent);
+}
+
+.uncoder-nav-menu__panel--header .uncoder-menu--mobile .uncoder-menu__item.is-open > :is(.uncoder-menu__sub, .uncoder-menu__mega) {
+  animation: uncoder-nav-sub-in 0.24s ease both;
+}
+
+@keyframes uncoder-nav-sub-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+/* Button at the end of the mobile menu */
+.uncoder-nav-menu__cta {
+  display: flex;
+  padding: 16px var(--uncoder-nav-m-pl, 20px) 8px;
+}
+
+.uncoder-nav-menu__cta .uncoder-btn {
+  --uncoder-btn-width: 100%;
+}
+
+.uncoder-nav-menu__panel--header .uncoder-nav-menu__cta {
+  padding: 20px 0 0;
+}
+
+.uncoder-nav-menu__panel--fullscreen .uncoder-nav-menu__cta {
+  width: 100%;
+  max-width: 560px;
+  margin-inline: auto;
+  padding: 24px 0 0;
 }
 
 /* Off-canvas and full-screen panels (modal <dialog>, rendered in the top layer) */
@@ -651,11 +974,36 @@ html.uncoder-scroll-lock body {
   .uncoder-menu__indicator,
   .uncoder-menu--main .uncoder-menu__sub,
   .uncoder-menu--main .uncoder-menu__mega,
-  .uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__link::before,
   .uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__link::after,
+  .uncoder-menu__glide,
   .uncoder-nav-menu__panel--dropdown,
   .uncoder-nav-menu__overlay,
-  .uncoder-nav-menu__panel--dialog .uncoder-nav-menu__inner {
+  .uncoder-nav-menu__panel--dialog .uncoder-nav-menu__inner,
+  .uncoder-nav-menu__burger i {
     transition: none;
+  }
+
+  .uncoder-nav-menu__panel--header .uncoder-menu--mobile .uncoder-menu__item.is-open > :is(.uncoder-menu__sub, .uncoder-menu__mega) {
+    animation: none;
+  }
+
+  .uncoder-menu--main > .uncoder-menu__item > :is(.uncoder-menu__link, .uncoder-menu__toggle),
+  .uncoder-menu--main .uncoder-menu__text,
+  .uncoder-menu--main .uncoder-menu__ch {
+    transition: none;
+  }
+
+  /* Flip text: no roll, the label only changes color. */
+  .uncoder-nav-menu--fx-flip .uncoder-menu--main :is(.uncoder-menu__text, .uncoder-menu__ch) {
+    -webkit-text-fill-color: currentColor;
+    text-shadow: none;
+  }
+}
+
+/* High-contrast mode drops text shadows: show the plain label. */
+@media (forced-colors: active) {
+  .uncoder-menu--main :is(.uncoder-menu__text, .uncoder-menu__ch) {
+    -webkit-text-fill-color: currentColor;
+    text-shadow: none;
   }
 }

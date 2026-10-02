@@ -9,7 +9,9 @@
 
 namespace Uncoder\Builder\Widgets\Support;
 
+use Uncoder\Builder\Core\Icons;
 use Uncoder\Builder\Core\Utils;
+use Uncoder\Builder\Menus\Menu_Item_Extras;
 
 defined( 'ABSPATH' ) || exit;
 
@@ -141,7 +143,11 @@ class Nav_Menu_Walker extends \Walker_Nav_Menu {
 		if ( '' !== $extra ) {
 			$classes[] = 'uncoder-menu__item--mega';
 		}
-		if ( ! empty( $item->current ) ) {
+		// WordPress ignores the #fragment when it compares a link with the page, so every "/#section" link of a
+		// one-page menu would count as the current page. Section links are marked by scrollspy.ts instead.
+		$fragment = wp_parse_url( (string) ( $item->url ?? '' ), PHP_URL_FRAGMENT );
+		$current  = ! empty( $item->current ) && ( ! is_string( $fragment ) || '' === $fragment );
+		if ( $current ) {
 			$classes[] = 'uncoder-menu__item--current';
 		}
 		$ancestor = ! empty( $item->current_item_ancestor ) || ! empty( $item->current_item_parent );
@@ -169,7 +175,7 @@ class Nav_Menu_Walker extends \Walker_Nav_Menu {
 			'target'       => ! empty( $item->target ) ? $item->target : '',
 			'rel'          => trim( ( ! empty( $item->xfn ) ? $item->xfn : '' ) . ( '_blank' === ( $item->target ?? '' ) && false === strpos( (string) ( $item->xfn ?? '' ), 'noopener' ) ? ' noopener' : '' ) ),
 			'href'         => ! empty( $item->url ) ? $item->url : '',
-			'aria-current' => ! empty( $item->current ) ? 'page' : '',
+			'aria-current' => $current ? 'page' : '',
 		);
 		/** This filter is documented in wp-includes/class-walker-nav-menu.php */
 		$atts = (array) apply_filters( 'nav_menu_link_attributes', $atts, $item, $args, $depth ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- core hook.
@@ -185,9 +191,27 @@ class Nav_Menu_Walker extends \Walker_Nav_Menu {
 		$title = (string) apply_filters( 'nav_menu_item_title', $title, $item, $args, $depth ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- core hook.
 		$title = wp_kses( $title, Utils::kses_inline() );
 
+		// Icon (Appearance → Menus) before the label; the description under it, in dropdowns and the mobile menu.
+		$icon = '';
+		if ( $this->shows( 'show_icons' ) ) {
+			$name = Menu_Item_Extras::icon( $id );
+			$svg  = '' !== $name ? Icons::render( $name ) : '';
+			$icon = '' !== $svg ? '<span class="uncoder-menu__icon" aria-hidden="true">' . $svg . '</span>' : '';
+		}
+		$desc = $this->shows( 'show_descriptions' ) && ( $depth > 0 || $this->mobile ) ? Menu_Item_Extras::description( $item ) : '';
+		$text = '<span class="uncoder-menu__text">' . $title . '</span>';
+		if ( '' !== $icon ) {
+			$atts['class'] .= ' uncoder-menu__link--icon';
+		}
+		if ( '' !== $desc ) {
+			$atts['class'] .= ' uncoder-menu__link--rich';
+			$text           = '<span class="uncoder-menu__label">' . $text . '<span class="uncoder-menu__desc">' . esc_html( $desc ) . '</span></span>';
+		}
+
 		$output .= $args->before ?? '';
 		$output .= '<a' . Utils::attrs( $atts ) . '>';
-		$output .= ( $args->link_before ?? '' ) . '<span class="uncoder-menu__text">' . $title . '</span>' . ( $args->link_after ?? '' );
+		// $icon is SVG from the bundled icon data; $text is escaped above.
+		$output .= ( $args->link_before ?? '' ) . $icon . $text . ( $args->link_after ?? '' );
 		$output .= '</a>';
 		$output .= $args->after ?? '';
 
@@ -213,6 +237,13 @@ class Nav_Menu_Walker extends \Walker_Nav_Menu {
 				$this->pending_sub = $sub_id;
 			}
 		}
+	}
+
+	/**
+	 * Whether a widget switch is on (on unless turned off).
+	 */
+	private function shows( string $key ): bool {
+		return ! array_key_exists( $key, $this->settings ) || ! empty( $this->settings[ $key ] );
 	}
 
 	/**

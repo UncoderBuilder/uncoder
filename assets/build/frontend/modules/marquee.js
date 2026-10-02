@@ -1,0 +1,1 @@
+"use strict";(()=>{window.UncoderWB.register("marquee",r=>{r.querySelector(".uncoder-marquee__track")&&r.querySelectorAll('img[loading="lazy"]').forEach(e=>{let t=e.getBoundingClientRect().width;t&&(e.srcset&&(e.sizes=`${Math.ceil(t)}px`),e.loading="eager")})},{lazy:!0});})();

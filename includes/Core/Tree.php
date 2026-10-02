@@ -148,6 +148,7 @@ final class Tree {
 		$controls = $type->get_controls();
 		// The old flat display rules (_show_*) become a rule set in _conditions.
 		$settings = is_array( $settings ) ? Element_Conditions::from_legacy( $settings ) : $settings;
+		$settings = is_array( $settings ) ? $type->upgrade_settings( $settings ) : $settings;
 		$states   = is_array( $settings ) && array_key_exists( '_states', $settings ) ? $settings['_states'] : null;
 		if ( is_array( $settings ) ) {
 			unset( $settings['_states'] );
@@ -158,6 +159,10 @@ final class Tree {
 			if ( $states ) {
 				$clean['_states'] = $states;
 			}
+		}
+		// A container's link only works when the box renders as <a>: say so instead of rendering a dead box.
+		if ( 'normalize' === $this->mode && 'container' === $type->name() && ! empty( $clean['link']['url'] ) && 'a' !== ( $clean['tag'] ?? '' ) ) {
+			$errors[] = sprintf( '%s.settings.link: a container is only a link with "tag": "a"; add it to make the whole box clickable.', $path );
 		}
 		foreach ( $errors as $error ) {
 			$this->errors[] = $error;
@@ -243,6 +248,29 @@ final class Tree {
 			}
 		}
 		return $score <= 3 ? sprintf( ' Did you mean "%s"?', $best ) : ' Call list_widgets for valid types.';
+	}
+
+	/**
+	 * Brings settings saved by older versions up to date (Element_Base::upgrade_settings()).
+	 *
+	 * @param array<int, array<string,mixed>> $elements Stored tree.
+	 * @return array<int, array<string,mixed>>
+	 */
+	public static function upgrade( array $elements ): array {
+		$registry = Plugin::instance()->elements();
+		self::walk(
+			$elements,
+			static function ( &$node ) use ( $registry ) {
+				if ( ! is_array( $node ) || ! is_array( $node['settings'] ?? null ) ) {
+					return;
+				}
+				$type = $registry->get( (string) ( $node['type'] ?? '' ) );
+				if ( null !== $type ) {
+					$node['settings'] = $type->upgrade_settings( $node['settings'] );
+				}
+			}
+		);
+		return $elements;
 	}
 
 	/* ------------------------------------------------------------------ Walk helpers */

@@ -160,7 +160,48 @@ final class Custom_Icons {
 		if ( ! $dir || ! wp_mkdir_p( $dir['dir'] ) ) {
 			return new WP_Error( 'uncoder_fs', __( 'The uploads folder is not writable.', 'uncoder' ), array( 'status' => 500 ) );
 		}
-		return new WP_REST_Response( self::save( '' !== $title ? $title : __( 'My icons', 'uncoder' ), $set ) );
+		// `append`: add the icons to an existing custom set (an icon with the same name is replaced).
+		$append = (string) $request->get_param( 'append' );
+		$entry  = '' !== $append && '' !== self::path( $append ) ? self::merge( $append, $set ) : self::save( '' !== $title ? $title : __( 'My icons', 'uncoder' ), $set );
+		// The names of the icons this upload added, so a picker can select them.
+		$entry['added'] = array_keys( $set['icons'] );
+		return new WP_REST_Response( $entry );
+	}
+
+	/**
+	 * Adds a parsed upload to an existing custom set.
+	 *
+	 * @param array{viewBox:string, icons:array<string,mixed>, source:string} $set Parsed upload.
+	 * @return array<string,mixed> Index entry.
+	 */
+	private static function merge( string $id, array $set ): array {
+		$file  = self::path( $id );
+		$data  = json_decode( (string) file_get_contents( $file ), true ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+		$data  = is_array( $data ) ? $data : array();
+		$box   = (string) ( $data['viewBox'] ?? $set['viewBox'] );
+		$icons = is_array( $data['icons'] ?? null ) ? $data['icons'] : array();
+		foreach ( $set['icons'] as $name => $icon ) {
+			$body = is_array( $icon ) ? (string) $icon[0] : (string) $icon;
+			$own  = is_array( $icon ) ? (string) $icon[1] : $set['viewBox'];
+			// Each icon keeps its own viewBox when it differs from the set's.
+			$icons[ (string) $name ] = $own === $box ? $body : array( $body, $own );
+		}
+		$icons = array_slice( $icons, 0, self::MAX, true );
+		file_put_contents( $file, (string) wp_json_encode( array( 'viewBox' => $box, 'mode' => 'fill', 'icons' => $icons ) ) ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+		$list = (array) get_option( self::OPTION, array() );
+		foreach ( $list as &$entry ) {
+			if ( is_array( $entry ) && ( $entry['id'] ?? '' ) === $id ) {
+				$entry['count'] = count( $icons );
+			}
+		}
+		unset( $entry );
+		update_option( self::OPTION, array_values( $list ), false );
+		foreach ( self::index() as $entry ) {
+			if ( $entry['id'] === $id ) {
+				return $entry;
+			}
+		}
+		return array( 'id' => $id );
 	}
 
 	/**

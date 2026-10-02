@@ -1,14 +1,14 @@
 <?php
 /**
  * Plugin Name:       Uncoder – AI-Powered Website Builder
- * Plugin URI:        https://builder.uncoder.co/
+ * Plugin URI:        https://uncoderbuilder.com/
  * Description:       Visual drag & drop website builder with a full theme builder (headers, footers, single, archive, 404, popups, mega menus, loop items) and a built-in MCP server so AI assistants like Claude, ChatGPT and Cursor can design and build your site.
  * Version:           0.1.0
  * Requires at least: 6.6
  * Requires PHP:      8.0
  * Author:            Uncoder
  * Author URI:        https://uncoder.co/
- * Update URI:        https://builder.uncoder.co/
+ * Update URI:        https://github.com/UncoderBuilder/uncoder
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       uncoder

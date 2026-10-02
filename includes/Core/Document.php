@@ -80,7 +80,7 @@ final class Document {
 		if ( null === $this->elements ) {
 			$raw            = get_post_meta( $this->id, Utils::META_DATA, true );
 			$data           = is_string( $raw ) && '' !== $raw ? json_decode( $raw, true ) : null;
-			$this->elements = is_array( $data['elements'] ?? null ) ? $data['elements'] : ( is_array( $data ) && isset( $data[0] ) ? $data : array() );
+			$this->elements = Tree::upgrade( is_array( $data['elements'] ?? null ) ? $data['elements'] : ( is_array( $data ) && isset( $data[0] ) ? $data : array() ) );
 		}
 		return $this->elements;
 	}
@@ -338,7 +338,7 @@ final class Document {
 		$refs = array();
 		Tree::walk(
 			$this->elements,
-			static function ( $node ) use ( &$refs, &$scripts ) {
+			static function ( $node ) use ( &$refs, &$scripts, &$styles ) {
 				$s = $node['settings'] ?? array();
 				foreach ( array( 'template_id', 'loop_template', 'alternate_template' ) as $key ) {
 					if ( ! empty( $s[ $key ] ) && is_numeric( $s[ $key ] ) ) {
@@ -365,6 +365,13 @@ final class Document {
 				}
 				if ( ! empty( $s['bg_motion'] ) && in_array( $bg_type, array( 'classic', 'slideshow' ), true ) ) {
 					$scripts[] = 'bg-motion';
+				}
+				$animated = is_array( $s ) ? Animated_Backgrounds::name( $s ) : '';
+				if ( '' !== $animated ) {
+					$styles[] = 'bg-animated';
+					if ( Animated_Backgrounds::is_shader( $animated ) ) {
+						$scripts[] = 'bg-animated';
+					}
 				}
 				if ( is_array( $s ) && Common_Controls::motion( $s ) ) {
 					$scripts[] = 'motion';

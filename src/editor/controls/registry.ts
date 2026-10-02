@@ -9,6 +9,7 @@ import { FontControl } from './FontControl';
 import { BackgroundControl, BorderControl, FiltersControl, QueryControl, ShadowControl, TransformControl, TypographyControl } from './groups';
 import { IconControl } from './IconControl';
 import { GalleryControl, MediaControl } from './MediaControl';
+import { MenuFxControl } from './MenuFxControl';
 import { MultiSelectControl } from './MultiSelectControl';
 import { OverridesControl } from './OverridesControl';
 import { RepeaterControl } from './RepeaterControl';
@@ -57,6 +58,7 @@ export const CONTROLS: Record<string, ComponentType<any>> = {
 /** Presentation overrides by `ui` hint (the stored value keeps the control type's format). */
 const UI: Record<string, ComponentType<any>> = {
   shape: ShapeControl,
+  menu_fx: MenuFxControl,
 };
 
 export const controlComponent = (control: { type: string; ui?: string }): ComponentType<any> | undefined => (control.ui && UI[control.ui]) || CONTROLS[control.type];
@@ -64,4 +66,7 @@ export const controlComponent = (control: { type: string; ui?: string }): Compon
 export const GROUP_TYPES = new Set(['typography', 'background', 'border', 'box_shadow', 'text_shadow', 'css_filters', 'backdrop_filter', 'transform', 'query']);
 
 /** Controls that take the full inspector width (label above the input). */
+/** Presentation hints that also take the full width. */
+export const STACKED_UI = new Set(['menu_fx']);
+
 export const STACKED = new Set(['wysiwyg', 'code', 'repeater', 'gallery', 'media', 'dimensions', 'background', 'query', 'multiselect', 'select2', 'textarea', 'url', 'link', 'overrides', 'animation', 'conditions', 'interactions']);

@@ -142,6 +142,7 @@ export function WidgetsPanel() {
                         data-uncoder-ui-tile=""
                         data-uncoder-ui-row={index}
                         aria-description={s.description || undefined}
+                        onDragStart={(e) => e.preventDefault()}
                         onPointerDown={(e) => {
                           if (e.button !== 0) return;
                           // A click without moving adds at the target (dnd onUp); dragging drops anywhere.
@@ -161,12 +162,12 @@ export function WidgetsPanel() {
                       >
                         <WidgetIcon name={s.name} icon={s.icon} />
                         <span className="uncoder-ui-wrow__label">{s.title}</span>
+                        <FavoriteStar name={s.name} title={s.title} on={favorites.includes(s.name)} />
                         {s.description && (
                           <span className="uncoder-ui-wrow__info" data-tip={s.description} data-tip-force="" aria-hidden onPointerDown={(e) => e.stopPropagation()}>
                             <Icon name="info" size={14} stroke={1.7} />
                           </span>
                         )}
-                        <FavoriteStar name={s.name} title={s.title} on={favorites.includes(s.name)} />
                       </button>
                     );
                   })}

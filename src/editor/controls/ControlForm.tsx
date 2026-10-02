@@ -3,7 +3,8 @@ import type { ControlDef, Settings } from '@shared/types';
 import { readValue, visible, writeKey } from '../lib/schema';
 import { useUi } from '../store/ui';
 import { Icon } from '../ui/Icon';
-import { controlComponent, GROUP_TYPES, STACKED } from './registry';
+import { controlComponent, GROUP_TYPES, STACKED, STACKED_UI } from './registry';
+import { HelpTip, rowLayout } from './ControlRow';
 
 interface Props {
   controls: Record<string, ControlDef>;
@@ -31,21 +32,25 @@ export function ControlForm({ controls, values, onChange, only, elementId = '' }
         const read = readValue(values, key, control, device);
         const wk = writeKey(key, control, device);
         const isGroup = GROUP_TYPES.has(control.type);
-        const stacked = STACKED.has(control.type) || control.type === 'textarea';
+        const stacked = STACKED.has(control.type) || STACKED_UI.has(control.ui ?? '') || control.type === 'textarea';
+        const layout = rowLayout(control, stacked);
         return (
-          <div key={key} className={`uncoder-ui-ctl uncoder-ui-ctl--t-${control.type}${stacked ? ' uncoder-ui-ctl--stacked' : ''}`}>
+          <div key={key} className={`uncoder-ui-ctl uncoder-ui-ctl--t-${control.type} uncoder-ui-ctl--${layout}${read.own ? ' is-set' : ''}`}>
             {control.label !== undefined && (
               <div className="uncoder-ui-ctl__label">
-                <span className={`uncoder-ui-ctl__text${read.own ? ' is-set' : ''}`}>{control.label}</span>
+                {read.own ? (
+                  <button type="button" className="uncoder-ui-ctl__dot is-set" aria-label={`Reset ${control.label}`} data-tip="Set · click to reset" onClick={() => onChange(isGroup ? key : wk, undefined)} />
+                ) : (
+                  <span className="uncoder-ui-ctl__dot is-default" aria-hidden />
+                )}
+                <span className="uncoder-ui-ctl__text" title={control.label}>
+                  {control.label}
+                </span>
+                {control.description && <HelpTip text={control.description} />}
                 {control.responsive && control.type !== 'code' && device !== 'desktop' && (
                   <span className="uncoder-ui-devsw is-device is-static" aria-hidden>
                     <Icon name={device.startsWith('mobile') ? 'smartphone' : 'tablet'} size={12} />
                   </span>
-                )}
-                {!isGroup && read.own && (
-                  <button type="button" className="uncoder-ui-ctl__reset" aria-label={`Reset ${control.label}`} onClick={() => onChange(wk, undefined)}>
-                    <Icon name="rotate-ccw" size={11} />
-                  </button>
                 )}
               </div>
             )}
@@ -61,7 +66,7 @@ export function ControlForm({ controls, values, onChange, only, elementId = '' }
                 settings={eff}
               />
             </div>
-            {control.description && <p className="uncoder-ui-ctl__desc">{control.description}</p>}
+            {control.description && control.label === undefined && <p className="uncoder-ui-ctl__desc">{control.description}</p>}
           </div>
         );
       })}

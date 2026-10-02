@@ -79,10 +79,11 @@ const builds = [
     entryPoints: [resolve(src, 'editor/canvas/canvas.css')],
     outfile: resolve(out, 'editor/canvas.css'),
   },
-  // WordPress's own post editors (block + classic): Edit with Uncoder button and the built-with panel.
+  // WordPress's own screens: the post editors' Edit with Uncoder button and built-with panel (block + classic),
+  // and the front-end admin bar's Edit with Uncoder menu.
   {
     ...common,
-    entryPoints: { 'post-editor': resolve(src, 'wp/post-editor.ts') },
+    entryPoints: { 'post-editor': resolve(src, 'wp/post-editor.ts'), 'admin-bar': resolve(src, 'wp/admin-bar.ts'), 'nav-menus': resolve(src, 'wp/nav-menus.ts') },
     outdir: resolve(out, 'wp'),
     format: 'iife',
   },

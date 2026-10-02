@@ -115,6 +115,17 @@ class Loop_Filter extends Widget_Base {
 		$this->add_control( 'show_count', array( 'type' => 'switch', 'label' => __( 'Show counts', 'uncoder' ), 'condition' => array( 'filter' => 'taxonomy' ) ) );
 		$this->add_control( 'hide_empty', array( 'type' => 'switch', 'label' => __( 'Hide empty terms', 'uncoder' ), 'default' => true, 'condition' => array( 'filter' => 'taxonomy' ) ) );
 		$this->add_control( 'top_level', array( 'type' => 'switch', 'label' => __( 'Top-level terms only', 'uncoder' ), 'condition' => array( 'filter' => 'taxonomy' ) ) );
+		$this->add_control(
+			'exclude',
+			array(
+				'type'        => 'text',
+				'label'       => __( 'Exclude term IDs', 'uncoder' ),
+				'placeholder' => '1, 12',
+				'description' => __( 'Comma-separated IDs of terms to leave out, e.g. Uncategorized.', 'uncoder' ),
+				'ai'          => 'Comma-separated term IDs to hide from the filter, e.g. "1" for Uncategorized.',
+				'condition'   => array( 'filter' => 'taxonomy' ),
+			)
+		);
 		$this->add_control( 'placeholder', array( 'type' => 'text', 'label' => __( 'Placeholder', 'uncoder' ), 'placeholder' => __( 'Search…', 'uncoder' ), 'condition' => array( 'filter' => 'search' ) ) );
 		$this->add_control(
 			'sorts',
@@ -240,6 +251,10 @@ class Loop_Filter extends Widget_Base {
 		);
 		if ( ! empty( $s['top_level'] ) ) {
 			$args['parent'] = 0;
+		}
+		$exclude = array_values( array_filter( array_map( 'absint', preg_split( '/[\s,]+/', (string) ( $s['exclude'] ?? '' ), -1, PREG_SPLIT_NO_EMPTY ) ?: array() ) ) );
+		if ( $exclude ) {
+			$args['exclude'] = $exclude;
 		}
 		$terms = get_terms( $args );
 		if ( is_wp_error( $terms ) || ! $terms ) {

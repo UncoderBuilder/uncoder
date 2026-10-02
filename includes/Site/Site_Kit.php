@@ -10,6 +10,7 @@ namespace Uncoder\Builder\Site;
 use Uncoder\Builder\Core\Post_Types;
 use Uncoder\Builder\Core\Utils;
 use Uncoder\Builder\Menus\Mega_Menu;
+use Uncoder\Builder\Menus\Menu_Item_Extras;
 use Uncoder\Builder\Plugin;
 use Uncoder\Builder\Popups\Popups;
 use Uncoder\Builder\Rest\Rest;
@@ -386,6 +387,8 @@ final class Site_Kit {
 					'target'    => $item->target,
 					'classes'   => implode( ' ', array_filter( (array) $item->classes ) ),
 					'attr'      => $item->attr_title,
+					'desc'      => (string) $item->post_content,
+					'icon'      => Menu_Item_Extras::icon( (int) $item->ID ),
 					'order'     => (int) $item->menu_order,
 					'mega'      => $mega,
 				);
@@ -1099,6 +1102,7 @@ final class Site_Kit {
 					'menu-item-target'    => '_blank' === ( $item['target'] ?? '' ) ? '_blank' : '',
 					'menu-item-classes'   => sanitize_text_field( (string) ( $item['classes'] ?? '' ) ),
 					'menu-item-attr-title' => sanitize_text_field( (string) ( $item['attr'] ?? '' ) ),
+					'menu-item-description' => sanitize_textarea_field( (string) ( $item['desc'] ?? '' ) ),
 					'menu-item-position'  => (int) ( $item['order'] ?? 0 ),
 				);
 				$object_id = (int) ( $item['object_id'] ?? 0 );
@@ -1115,6 +1119,9 @@ final class Site_Kit {
 					continue;
 				}
 				$item_map[ (int) $item['id'] ] = (int) $new_item;
+				if ( ! empty( $item['icon'] ) ) {
+					Menu_Item_Extras::set_icon( (int) $new_item, (string) $item['icon'] );
+				}
 				if ( is_array( $item['mega'] ?? null ) && ! empty( $item['mega']['template'] ) && isset( $ids[ (int) $item['mega']['template'] ] ) ) {
 					update_post_meta( (int) $new_item, Mega_Menu::META, array( 'template' => $ids[ (int) $item['mega']['template'] ], 'width' => (string) ( $item['mega']['width'] ?? 'container' ) ) );
 				}

@@ -99,7 +99,8 @@ final class Frontend {
 	 * @param int    $post_id Post id.
 	 */
 	public function hide_classic_title( $title, $post_id = 0 ): string {
-		if ( wp_is_block_theme() || is_admin() || ! in_the_loop() || ! is_main_query() ) {
+		// Only the theme's title: widgets that show the title (Post Title, Breadcrumbs…) still get it.
+		if ( wp_is_block_theme() || is_admin() || ! in_the_loop() || ! is_main_query() || \Uncoder\Builder\Core\Renderer::rendering() ) {
 			return (string) $title;
 		}
 		return $this->title_hidden( (int) $post_id ) ? '' : (string) $title;

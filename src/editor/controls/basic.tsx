@@ -236,7 +236,7 @@ export function defaultRange(unit: string): { min: number; max: number; step: nu
   }
 }
 
-function optionList(options: ControlOptions | undefined): Array<{ value: string; label: string; icon?: string }> {
+export function optionList(options: ControlOptions | undefined): Array<{ value: string; label: string; icon?: string }> {
   return Object.entries(options ?? {}).map(([value, o]) => (typeof o === 'string' ? { value, label: o } : { value, label: o.label, icon: o.icon }));
 }
 

@@ -485,11 +485,36 @@
   padding: 0 6px;
 }
 .uncoder-ui-tabs--build .uncoder-ui-tabs__tab {
-  flex: 1 1 auto;
-  height: 44px;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  font-size: var(--uncoder-ui-fs-sm);
+  line-height: 15px;
+}
+/* A long fourth tab ("Template", "Settings") in a very narrow window: the label gives way. */
+.uncoder-ui-tabs--build .uncoder-ui-tabs__tab > span {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.uncoder-ui-tabs__icon {
+  flex: none;
+  color: var(--uncoder-ui-tx-4);
+  transition: color var(--uncoder-ui-t-fast) var(--uncoder-ui-ease);
+}
+.uncoder-ui-tabs__tab:hover .uncoder-ui-tabs__icon {
+  color: var(--uncoder-ui-tx-2);
+}
+.uncoder-ui-tabs__tab.is-active .uncoder-ui-tabs__icon {
+  color: var(--uncoder-ui-accent);
 }
 .uncoder-ui-panel__tool {
-  height: 44px;
+  height: 50px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -833,6 +858,89 @@
   padding: 18px;
   color: var(--uncoder-ui-tx-3);
 }
+
+/* Placement (app/InspectorDock.tsx): docked left next to the build panel (default), docked right, or a
+   floating card that can be dragged anywhere, docked again by dropping it on an edge, and made taller or
+   shorter with its corner grip. */
+.uncoder-ui-inspector.is-floating {
+  position: fixed;
+  z-index: 40;
+  top: calc(var(--uncoder-ui-topbar-h) + var(--uncoder-ui-gutter) + 16px);
+  left: calc(var(--uncoder-ui-panel-w) + var(--uncoder-ui-gutter) * 2 + 16px);
+  height: calc(100vh - var(--uncoder-ui-topbar-h) - var(--uncoder-ui-gutter) * 2 - 48px);
+  min-height: 320px;
+  max-height: calc(100vh - var(--uncoder-ui-topbar-h) - 16px);
+  border: 1px solid var(--uncoder-ui-line);
+  border-radius: var(--uncoder-ui-r-xl);
+  box-shadow: var(--uncoder-ui-shadow-dialog);
+  resize: vertical;
+  animation: uncoder-ui-lift var(--uncoder-ui-t-base) var(--uncoder-ui-ease);
+}
+.uncoder-ui-inspector.is-floating.is-moving {
+  box-shadow: 0 36px 90px -24px rgb(16 15 15 / 0.5), 0 0 0 1px var(--uncoder-ui-line);
+  opacity: 0.96;
+}
+@keyframes uncoder-ui-lift {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.985);
+  }
+}
+.uncoder-ui-inspector.is-floating .uncoder-ui-insp__head {
+  cursor: grab;
+}
+
+/* The grip: click floats the panel, drag moves it. */
+.uncoder-ui-insp__grip {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 30px;
+  margin-right: 4px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--uncoder-ui-r-sm);
+  background: none;
+  color: var(--uncoder-ui-tx-4);
+  cursor: grab;
+  touch-action: none;
+}
+.uncoder-ui-insp__grip:hover {
+  background: var(--uncoder-ui-bg-3);
+  color: var(--uncoder-ui-tx-1);
+}
+html.uncoder-ui-moving-panel,
+html.uncoder-ui-moving-panel * {
+  cursor: grabbing !important;
+  user-select: none !important;
+}
+/* The canvas iframe would swallow the pointer while the panel passes over it. */
+html.uncoder-ui-moving-panel iframe {
+  pointer-events: none !important;
+}
+
+/* Drop preview while dragging near an edge. */
+.uncoder-ui-dockghost {
+  position: fixed;
+  z-index: 39;
+  border: 2px dashed color-mix(in srgb, var(--uncoder-ui-accent) 70%, transparent);
+  border-radius: var(--uncoder-ui-r-xl);
+  background: color-mix(in srgb, var(--uncoder-ui-accent) 8%, transparent);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--uncoder-ui-t-fast) var(--uncoder-ui-ease);
+}
+.uncoder-ui-dockghost.is-on {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uncoder-ui-inspector.is-floating {
+    animation: none;
+  }
+}
 .uncoder-ui-insp {
   flex: 1;
   min-height: 0;
@@ -845,7 +953,7 @@
   display: flex;
   align-items: center;
   gap: 2px;
-  padding: 0 6px 0 16px;
+  padding: 0 6px 0 6px;
   border-bottom: 1px solid var(--uncoder-ui-line);
 }
 .uncoder-ui-insp__name {
@@ -863,6 +971,9 @@
   font-weight: 600;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+.uncoder-ui-insp__name .uncoder-ui-ctl__help {
+  margin-left: -2px;
 }
 .uncoder-ui-chip-tag {
   flex-shrink: 0;
@@ -883,7 +994,7 @@
 /* "Editing Tablet · Hover": the one place that says where a change will land. */
 .uncoder-ui-context {
   flex-shrink: 0;
-  padding: 10px 16px 9px;
+  padding: 8px 16px;
   border-bottom: 1px solid var(--uncoder-ui-line);
   background: var(--uncoder-ui-bg-3);
 }
@@ -986,12 +1097,6 @@
   overflow: auto;
   padding-bottom: 24px;
 }
-.uncoder-ui-insp__desc {
-  margin: 14px 16px;
-  color: var(--uncoder-ui-tx-3);
-  font-size: var(--uncoder-ui-fs-xs);
-  line-height: 16px;
-}
 
 /* Groups: closed groups say what is set ("M 24 · P 32", "Inter 48/56") so you rarely open them to check. */
 .uncoder-ui-sec {
@@ -1053,35 +1158,59 @@
   padding: 2px 16px 18px;
 }
 
-/* Control rows: label · value dot · (AI / dynamic) | input */
+/* Control rows. One anatomy everywhere (sections, Normal/Hover boxes, group popovers, repeater rows):
+   [● gutter dot]  Label (?)  ·· helpers  |  input
+   The dot is the only "changed" signal: it sits in the gutter left of the label, so nothing shifts when a
+   value is set, and clicking it resets. Helpers (AI, dynamic data, design variables) appear on hover or focus.
+   Layouts (rowLayout): inline = label column + input · stacked = label above a full-width input ·
+   slider = label and value on one line, the slider below · switch = label left, switch right. */
 .uncoder-ui-ctl {
   position: relative;
-  grid-template-columns: 94px minmax(0, 1fr);
+  grid-template-columns: 100px minmax(0, 1fr);
+  column-gap: 8px;
 }
 .uncoder-ui-ctl--stacked {
   grid-template-columns: minmax(0, 1fr);
+  row-gap: 6px;
 }
-/* Long labels wrap to two lines instead of being cut ("Space between items"). */
-.uncoder-ui-ctl__text {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  white-space: normal;
-  line-height: 15px;
-  overflow-wrap: anywhere;
+/* Nested boxes (Normal/Hover, pop-up editors, list items) are narrower: a slightly narrower label column. */
+:is(.uncoder-ui-ctabs, .uncoder-ui-form) .uncoder-ui-ctl--inline {
+  grid-template-columns: 92px minmax(0, 1fr);
 }
 .uncoder-ui-ctl__label {
+  position: relative;
+  min-height: 20px;
+  gap: 5px;
   color: var(--uncoder-ui-tx-2);
 }
-.uncoder-ui-ctl__text.is-set {
+.uncoder-ui-ctl__text {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  line-height: 16px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* Set here: the label darkens (no weight change, so nothing moves). */
+.uncoder-ui-ctl.is-set > .uncoder-ui-ctl__label > .uncoder-ui-ctl__text {
   color: var(--uncoder-ui-tx-strong);
-  font-weight: 500;
+}
+
+/* The set dot, in the gutter. Its offset follows the padding of what holds the row. */
+.uncoder-ui-sec__body {
+  --uncoder-ui-dot-x: -11px;
+}
+.uncoder-ui-ctabs,
+.uncoder-ui-form {
+  --uncoder-ui-dot-x: -9px;
 }
 .uncoder-ui-ctl__dot {
-  position: relative;
-  flex-shrink: 0;
-  width: 7px;
-  height: 7px;
+  position: absolute;
+  top: 50%;
+  left: var(--uncoder-ui-dot-x, -9px);
+  width: 6px;
+  height: 6px;
+  margin-top: -3px;
   padding: 0;
   border: 0;
   border-radius: 50%;
@@ -1094,14 +1223,18 @@
 .uncoder-ui-ctl__dot.is-set::after {
   content: '';
   position: absolute;
-  inset: -5px;
+  inset: -6px;
   border-radius: 50%;
 }
 .uncoder-ui-ctl__dot.is-set:hover {
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--uncoder-ui-accent) 25%, transparent);
 }
+.uncoder-ui-ctl__dot.is-set:focus-visible {
+  outline: 2px solid var(--uncoder-ui-focus);
+  outline-offset: 2px;
+}
 .uncoder-ui-ctl__dot.is-inherited {
-  box-shadow: inset 0 0 0 1.5px var(--uncoder-ui-tx-3);
+  box-shadow: inset 0 0 0 1.5px var(--uncoder-ui-tx-4);
 }
 .uncoder-ui-ctl__dot.is-default {
   display: none;
@@ -1109,18 +1242,82 @@
 .uncoder-ui-app[data-uncoder-ui-theme='dark'] .uncoder-ui-ctl__dot.is-set {
   background: var(--uncoder-ui-accent-tx);
 }
-.uncoder-ui-legend {
-  display: flex;
+
+/* (?) help: the control's description as a tooltip, by hover or keyboard focus. */
+.uncoder-ui-ctl__help {
+  flex: none;
+  display: inline-flex;
+  border-radius: 50%;
+  color: var(--uncoder-ui-tx-4);
+  cursor: help;
+}
+.uncoder-ui-ctl__help:hover,
+.uncoder-ui-ctl__help:focus-visible {
+  color: var(--uncoder-ui-tx-1);
+}
+.uncoder-ui-ctl__help:focus-visible {
+  outline: 2px solid var(--uncoder-ui-focus);
+  outline-offset: 1px;
+}
+
+/* Helpers: at the end of the label line; quiet until the row is hovered or focused, or while in use. */
+.uncoder-ui-ctl__tools {
+  flex: none;
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
-  margin: 16px;
-  color: var(--uncoder-ui-tx-3);
-  font-size: var(--uncoder-ui-fs-xs);
+  gap: 2px;
+  margin-left: auto;
 }
-.uncoder-ui-legend .uncoder-ui-ctl__dot + .uncoder-ui-ctl__dot,
-.uncoder-ui-legend .uncoder-ui-ctl__dot.is-inherited {
-  margin-left: 8px;
+.uncoder-ui-ctl__tools:empty {
+  display: none;
 }
+.uncoder-ui-ctl__tools > button {
+  opacity: 0;
+  transition: opacity var(--uncoder-ui-t-fast) var(--uncoder-ui-ease);
+}
+.uncoder-ui-ctl:hover > .uncoder-ui-ctl__label > .uncoder-ui-ctl__tools > button,
+.uncoder-ui-ctl:focus-within > .uncoder-ui-ctl__label > .uncoder-ui-ctl__tools > button,
+.uncoder-ui-ctl__tools > button:is(.is-active, .is-busy, [aria-expanded='true']) {
+  opacity: 1;
+}
+@media (hover: none) {
+  .uncoder-ui-ctl__tools > button {
+    opacity: 1;
+  }
+}
+
+/* Slider rows: "Min height ········ [600 px]" with the slider full width underneath. */
+.uncoder-ui-ctl--slider {
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: 'label value' 'field field';
+  row-gap: 4px;
+}
+.uncoder-ui-ctl--slider > .uncoder-ui-ctl__label {
+  grid-area: label;
+}
+.uncoder-ui-ctl--slider > .uncoder-ui-ctl__input,
+.uncoder-ui-ctl--slider > .uncoder-ui-ctl__input > .uncoder-ui-slider {
+  display: contents;
+}
+.uncoder-ui-ctl--slider .uncoder-ui-slider > .uncoder-ui-range,
+.uncoder-ui-ctl--slider .uncoder-ui-slider > .uncoder-ui-input {
+  grid-area: field;
+  width: 100%;
+}
+.uncoder-ui-ctl--slider .uncoder-ui-slider > :is(.uncoder-ui-num, .uncoder-ui-unit, .uncoder-ui-varchip),
+.uncoder-ui-ctl--slider > .uncoder-ui-ctl__input > .uncoder-ui-dynchip {
+  grid-area: value;
+  justify-self: end;
+}
+
+/* Switch rows: label left, switch right. */
+.uncoder-ui-ctl--switch {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+.uncoder-ui-ctl--switch > .uncoder-ui-ctl__input {
+  justify-content: flex-end;
+}
+
 .uncoder-ui-ctabs {
   background: var(--uncoder-ui-bg-3);
 }
@@ -1228,6 +1425,18 @@
 }
 .uncoder-ui-app.is-docked .uncoder-ui-inspector {
   border-left: 1px solid var(--uncoder-ui-line);
+}
+.uncoder-ui-app.is-docked .uncoder-ui-inspector.is-left {
+  border-left: 0;
+  border-right: 1px solid var(--uncoder-ui-line);
+}
+.uncoder-ui-app.is-docked .uncoder-ui-inspector.is-floating {
+  border: 1px solid var(--uncoder-ui-line);
+  border-radius: var(--uncoder-ui-r-xl);
+  box-shadow: var(--uncoder-ui-shadow-dialog);
+}
+.uncoder-ui-app.is-docked .uncoder-ui-dockghost {
+  border-radius: 0;
 }
 .uncoder-ui-app.is-docked .uncoder-ui-canvas {
   padding: 12px 12px 0;

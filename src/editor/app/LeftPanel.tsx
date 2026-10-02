@@ -2,6 +2,7 @@ import { contentOnly } from '../lib/config';
 import { tabLabel } from '../lib/docInfo';
 import { useDoc } from '../store/doc';
 import { MAIN_PANELS, useUi, type LeftPanel as PanelView } from '../store/ui';
+import { Icon } from '../ui/Icon';
 import { IconButton } from '../ui/primitives';
 import { WidgetsPanel } from '../panels/WidgetsPanel';
 import { NavigatorPanel } from '../panels/NavigatorPanel';
@@ -15,11 +16,11 @@ import { A11yPanel } from '../panels/A11yPanel';
 import { NotesPanel } from '../panels/NotesPanel';
 import { focusInsertSearch } from './smart';
 
-const TABS: Array<{ id: PanelView; label: string; design?: boolean }> = [
-  { id: 'add', label: 'Insert', design: true },
-  { id: 'layers', label: 'Layers' },
-  { id: 'kit', label: 'Styles', design: true },
-  { id: 'page', label: tabLabel(), design: true },
+const TABS: Array<{ id: PanelView; label: string; icon: string; design?: boolean }> = [
+  { id: 'add', label: 'Insert', icon: 'plus', design: true },
+  { id: 'layers', label: 'Layers', icon: 'layers' },
+  { id: 'kit', label: 'Styles', icon: 'palette', design: true },
+  { id: 'page', label: tabLabel(), icon: 'file-cog', design: true },
 ];
 const TOOL_TITLES: Partial<Record<PanelView, string>> = { history: 'History', find: 'Find & replace', a11y: 'Checks', ai: 'Ask AI', notes: 'Notes' };
 
@@ -41,7 +42,8 @@ export function LeftPanel() {
         <div className="uncoder-ui-tabs uncoder-ui-tabs--build" role="tablist" aria-label="Build panel">
           {tabs.map((t) => (
             <button key={t.id} type="button" role="tab" aria-selected={active === t.id} className={`uncoder-ui-tabs__tab${active === t.id ? ' is-active' : ''}`} onClick={() => (t.id === 'add' ? focusInsertSearch() : useUi.setState({ panel: t.id }))}>
-              {t.label}
+              <Icon name={t.icon} size={16} className="uncoder-ui-tabs__icon" />
+              <span>{t.label}</span>
             </button>
           ))}
         </div>

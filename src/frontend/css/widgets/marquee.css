@@ -1,16 +1,11 @@
 /* Marquee: CSS-only endless loop. The track holds two identical groups (the second one is
-   aria-hidden + inert) and moves by exactly one group width. The track is at least twice the
-   marquee width and the groups share it equally, so the loop is seamless even with short content.
-   Also used by the logo grid "marquee" display. */
+   aria-hidden + inert) and moves by exactly one group width (height when vertical). The track is at
+   least twice the marquee size and the groups share it equally, so the loop is seamless even with
+   short content. Also used by the logo grid "marquee" display.
+   Settings arrive as custom properties on the widget; defaults are var() fallbacks (not declarations
+   here) so the rows of a multi-row marquee, which are .uncoder-marquee elements too, inherit them. */
 
 .uncoder-marquee {
-  --uncoder-marquee-duration: 30s;
-  --uncoder-marquee-gap: 48px;
-  --uncoder-marquee-fade: 12%;
-  --uncoder-marquee-icon-size: 1em;
-  --uncoder-marquee-icon-color: currentColor;
-  --uncoder-marquee-sep-size: 0.8em;
-  --uncoder-marquee-sep-color: var(--uncoder-c-primary, #2b59ff);
   position: relative;
   overflow: hidden;
   min-width: 0;
@@ -20,7 +15,7 @@
   display: flex;
   width: max-content;
   min-width: 200%;
-  animation: uncoder-marquee-ltr var(--uncoder-marquee-duration) linear infinite;
+  animation: uncoder-marquee-ltr var(--uncoder-marquee-duration, 30s) linear infinite;
   will-change: transform;
 }
 
@@ -38,7 +33,8 @@
   animation-direction: reverse;
 }
 
-.uncoder-marquee--pause:is(:hover, :focus-within) > .uncoder-marquee__track {
+.uncoder-marquee--pause:is(:hover, :focus-within) > .uncoder-marquee__track,
+.uncoder-marquee-lanes.uncoder-marquee--pause:is(:hover, :focus-within) > .uncoder-marquee > .uncoder-marquee__track {
   animation-play-state: paused;
 }
 
@@ -47,16 +43,16 @@
   flex: 1 0 auto;
   align-items: center;
   justify-content: space-around;
-  gap: var(--uncoder-marquee-gap);
+  gap: var(--uncoder-marquee-gap, 48px);
   margin: 0;
   padding: 0;
-  padding-inline-end: var(--uncoder-marquee-gap);
+  padding-inline-end: var(--uncoder-marquee-gap, 48px);
   list-style: none;
 }
 
 .uncoder-marquee--fade {
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--uncoder-marquee-fade), #000 calc(100% - var(--uncoder-marquee-fade)), transparent);
-  mask-image: linear-gradient(to right, transparent, #000 var(--uncoder-marquee-fade), #000 calc(100% - var(--uncoder-marquee-fade)), transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--uncoder-marquee-fade, 12%), #000 calc(100% - var(--uncoder-marquee-fade, 12%)), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 var(--uncoder-marquee-fade, 12%), #000 calc(100% - var(--uncoder-marquee-fade, 12%)), transparent);
 }
 
 @keyframes uncoder-marquee-ltr {
@@ -72,6 +68,71 @@
   to {
     transform: none;
   }
+}
+
+/* ------------------------------------------------------------------ Vertical (up / down) */
+
+.uncoder-marquee--vertical {
+  height: var(--uncoder-marquee-height, 420px);
+}
+
+.uncoder-marquee--vertical > .uncoder-marquee__track,
+.uncoder-marquee--vertical:dir(rtl) > .uncoder-marquee__track {
+  flex-direction: column;
+  width: auto;
+  min-width: 0;
+  height: max-content;
+  min-height: 200%;
+  animation-name: uncoder-marquee-up;
+  animation-direction: normal;
+}
+
+.uncoder-marquee--down > .uncoder-marquee__track,
+.uncoder-marquee--down:dir(rtl) > .uncoder-marquee__track {
+  animation-direction: reverse;
+}
+
+.uncoder-marquee--vertical > .uncoder-marquee__track > .uncoder-marquee__group {
+  flex-direction: column;
+  align-items: var(--uncoder-marquee-align, center);
+  padding-inline-end: 0;
+  padding-block-end: var(--uncoder-marquee-gap, 48px);
+}
+
+.uncoder-marquee--vertical > .uncoder-marquee__track > .uncoder-marquee__group > .uncoder-marquee__item:not(.uncoder-marquee__item--image) {
+  max-width: 100%;
+  white-space: normal;
+  text-align: center;
+}
+
+.uncoder-marquee--vertical.uncoder-marquee--fade {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 var(--uncoder-marquee-fade, 12%), #000 calc(100% - var(--uncoder-marquee-fade, 12%)), transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 var(--uncoder-marquee-fade, 12%), #000 calc(100% - var(--uncoder-marquee-fade, 12%)), transparent);
+}
+
+@keyframes uncoder-marquee-up {
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+/* ------------------------------------------------------------------ Several rows / columns */
+
+.uncoder-marquee-lanes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--uncoder-marquee-lane-gap, 16px);
+  min-width: 0;
+}
+
+.uncoder-marquee-lanes--columns {
+  display: grid;
+  grid-template-columns: repeat(var(--uncoder-marquee-lanes, 2), minmax(0, 1fr));
+}
+
+/* The rows start at different points of the loop, so they never line up. */
+.uncoder-marquee__lane > .uncoder-marquee__track {
+  animation-delay: calc(var(--uncoder-marquee-duration, 30s) * var(--uncoder-marquee-lane, 0) * -0.37);
 }
 
 /* ------------------------------------------------------------------ Text items */
@@ -104,22 +165,58 @@ a.uncoder-marquee__item:focus-visible {
 }
 
 .uncoder-marquee__item > .uncoder-marquee__icon {
-  width: var(--uncoder-marquee-icon-size);
-  height: var(--uncoder-marquee-icon-size);
-  color: var(--uncoder-marquee-icon-color);
+  width: var(--uncoder-marquee-icon-size, 1em);
+  height: var(--uncoder-marquee-icon-size, 1em);
+  color: var(--uncoder-marquee-icon-color, currentColor);
 }
 
 .uncoder-marquee__group > .uncoder-marquee__sep {
   display: inline-flex;
   flex-shrink: 0;
-  color: var(--uncoder-marquee-sep-color);
+  color: var(--uncoder-marquee-sep-color, var(--uncoder-c-primary, #2b59ff));
   font-size: 1.5rem;
   line-height: 1;
 }
 
 .uncoder-marquee__sep > .uncoder-svg {
-  width: var(--uncoder-marquee-sep-size);
-  height: var(--uncoder-marquee-sep-size);
+  width: var(--uncoder-marquee-sep-size, 0.8em);
+  height: var(--uncoder-marquee-sep-size, 0.8em);
+}
+
+/* ------------------------------------------------------------------ Image items */
+
+.uncoder-marquee__group > .uncoder-marquee__item--image {
+  line-height: 0;
+}
+
+.uncoder-marquee__item--image > .uncoder-marquee__img {
+  display: block;
+  width: auto;
+  max-width: none;
+  height: var(--uncoder-marquee-img-h, 64px);
+  aspect-ratio: var(--uncoder-marquee-img-ratio, auto);
+  object-fit: cover;
+  transition: filter 0.3s, opacity 0.3s;
+}
+
+/* Up / down: images fill the column (or the chosen width) at their own or the chosen ratio. */
+.uncoder-marquee--vertical > .uncoder-marquee__track > .uncoder-marquee__group > .uncoder-marquee__item--image {
+  width: var(--uncoder-marquee-img-w, 100%);
+}
+
+.uncoder-marquee--vertical .uncoder-marquee__item--image > .uncoder-marquee__img {
+  width: 100%;
+  height: auto;
+}
+
+.uncoder-marquee--gray .uncoder-marquee__img {
+  filter: grayscale(1);
+  opacity: 0.7;
+}
+
+.uncoder-marquee--gray .uncoder-marquee__item--image:is(:hover, :focus-visible) > .uncoder-marquee__img {
+  filter: none;
+  opacity: 1;
 }
 
 .uncoder-marquee-placeholder {
@@ -147,8 +244,25 @@ a.uncoder-marquee__item:focus-visible {
     padding-inline-end: 0;
   }
 
-  .uncoder-marquee > .uncoder-marquee__track > .uncoder-marquee__group[aria-hidden="true"] {
+  .uncoder-marquee > .uncoder-marquee__track > .uncoder-marquee__group[aria-hidden="true"],
+  .uncoder-marquee-lanes > .uncoder-marquee__lane[aria-hidden="true"] {
     display: none;
+  }
+
+  .uncoder-marquee--vertical {
+    height: auto;
+    max-height: var(--uncoder-marquee-height, 420px);
+  }
+
+  /* Columns: the first column becomes a still grid of the items, as many columns wide. */
+  .uncoder-marquee-lanes--columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .uncoder-marquee-lanes--columns > .uncoder-marquee__lane > .uncoder-marquee__track > .uncoder-marquee__group {
+    display: grid;
+    grid-template-columns: repeat(var(--uncoder-marquee-lanes, 2), minmax(0, 1fr));
+    align-items: start;
   }
 
   .uncoder-marquee--fade {

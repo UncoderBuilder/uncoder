@@ -12,6 +12,7 @@ use Uncoder\Builder\Core\Utils;
 use Uncoder\Builder\Mcp\Call;
 use Uncoder\Builder\Mcp\Registry;
 use Uncoder\Builder\Menus\Mega_Menu;
+use Uncoder\Builder\Menus\Menu_Item_Extras;
 use WP_Error;
 
 defined( 'ABSPATH' ) || exit;
@@ -26,7 +27,7 @@ final class Menu_Tools {
 	public function register( Registry $r ): void {
 		$items_schema = array(
 			'type'        => 'array',
-			'description' => 'Menu items, nested with "children": [{"title":"Home","url":"/"},{"title":"Services","page_id":12,"children":[{"title":"Design","page_id":14}]},{"title":"Contact","url":"#contact"}]. Link with page_id, post_id, term_id (+ taxonomy) or url. Optional: target "_blank", classes, description.',
+			'description' => 'Menu items, nested with "children": [{"title":"Home","url":"/"},{"title":"Services","page_id":12,"children":[{"title":"Design","page_id":14}]},{"title":"Contact","url":"#contact"}]. Link with page_id, post_id, term_id (+ taxonomy) or url. Optional: target "_blank", classes, description (one short line, shown under the label in dropdowns and the mobile menu), icon (a Lucide name such as "users", or "library:name" for another library or a custom icon set, shown before the label).',
 			'items'       => array( 'type' => 'object' ),
 		);
 
@@ -345,7 +346,11 @@ final class Menu_Tools {
 				'target'      => '_blank' === ( $raw['target'] ?? '' ) || ! empty( $raw['new_tab'] ) ? '_blank' : '',
 				'classes'     => implode( ' ', array_map( 'sanitize_html_class', preg_split( '/\s+/', (string) ( $raw['classes'] ?? '' ) ) ) ),
 				'description' => sanitize_text_field( (string) ( $raw['description'] ?? '' ) ),
+				'icon'        => Menu_Item_Extras::clean( (string) ( $raw['icon'] ?? '' ) ),
 			);
+			if ( '' !== (string) ( $raw['icon'] ?? '' ) && '' === $item['icon'] ) {
+				$errors[] = sprintf( '%s.icon: unknown icon "%s" (use a Lucide name such as "users" or "library:name").', $p, (string) $raw['icon'] );
+			}
 			$object_id = absint( $raw['page_id'] ?? $raw['post_id'] ?? 0 );
 			if ( $object_id ) {
 				$post = get_post( $object_id );
@@ -435,6 +440,9 @@ final class Menu_Tools {
 				continue;
 			}
 			++$count;
+			if ( '' !== ( $item['icon'] ?? '' ) ) {
+				Menu_Item_Extras::set_icon( (int) $id, $item['icon'] );
+			}
 			if ( ! empty( $item['children'] ) ) {
 				$count += $this->insert_items( $menu_id, $item['children'], (int) $id, $errors );
 			}
@@ -469,6 +477,14 @@ final class Menu_Tools {
 				$mega = Mega_Menu::get( (int) $item->ID );
 				if ( $mega ) {
 					$node['mega_menu'] = $mega;
+				}
+				$icon = Menu_Item_Extras::icon( (int) $item->ID );
+				if ( '' !== $icon ) {
+					$node['icon'] = $icon;
+				}
+				$description = Menu_Item_Extras::description( $item );
+				if ( '' !== $description ) {
+					$node['description'] = $description;
 				}
 				$children = $build( (int) $item->ID );
 				if ( $children ) {

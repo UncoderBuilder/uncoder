@@ -8,7 +8,7 @@ import { breakpoints, useUi } from '../store/ui';
 import { Icon } from '../ui/Icon';
 import { Popover } from '../ui/Popover';
 import { IconButton } from '../ui/primitives';
-import { controlComponent, GROUP_TYPES, STACKED } from './registry';
+import { controlComponent, GROUP_TYPES, STACKED, STACKED_UI } from './registry';
 import { ControlForm } from './ControlForm';
 import { AiTextButton, aiWritable } from './AiAssist';
 import { stateValues, withStateValue } from '../lib/states';
@@ -75,38 +75,44 @@ export const ControlRow = memo(function ControlRow({ id, keyName, control, contr
         ? updateSettings(id, { _states: withStateValue(raw, stateKey, k, v) }, { mergeKey: mergeKey && `${mergeKey}@${stateKey}` })
         : updateSettings(id, { [k]: v }, { mergeKey });
   const onChange = (v: any) => write(v, `${id}:${isGroup ? keyName : wk}`);
-  const stacked = STACKED.has(control.type) || (control.type === 'textarea' && (control.rows ?? 3) > 1) || control.label === undefined;
+  const stacked = STACKED.has(control.type) || STACKED_UI.has(control.ui ?? '') || (control.type === 'textarea' && (control.rows ?? 3) > 1) || control.label === undefined;
+  const tools = !dynamic && (aiWritable(control, keyName) || !!control.dynamic);
+  const layout = rowLayout(control, stacked || (tools && control.type === 'text'));
   // Content text shows its default as editable text (not as a faded placeholder).
   const textDefault = !read.own && read.from === null && control.tab === 'content' && ['text', 'textarea', 'wysiwyg'].includes(control.type);
 
   return (
-    <div className={`uncoder-ui-ctl uncoder-ui-ctl--t-${control.type}${stacked ? ' uncoder-ui-ctl--stacked' : ''}${isGroup ? ' uncoder-ui-ctl--group' : ''}`} data-control={keyName}>
+    <div className={`uncoder-ui-ctl uncoder-ui-ctl--t-${control.type} uncoder-ui-ctl--${layout}${isGroup ? ' uncoder-ui-ctl--group' : ''}${read.own ? ' is-set' : ''}`} data-control={keyName}>
       {control.label !== undefined && (
         <div className="uncoder-ui-ctl__label">
-          <span className={`uncoder-ui-ctl__text${read.own ? ' is-set' : ''}`} title={control.label}>
+          <ValueDot own={read.own} from={read.from} device={device} onReset={() => write(undefined)} />
+          <span className="uncoder-ui-ctl__text" title={control.label}>
             {control.label}
           </span>
-          <ValueDot own={read.own} from={read.from} device={device} onReset={() => write(undefined)} />
+          {control.description && <HelpTip text={control.description} />}
           {mixed && (
             <span className="uncoder-ui-ctl__mixed" data-tip="The selected elements have different values">
               Mixed
             </span>
           )}
-          {!dynamic && aiWritable(control, keyName) && <AiTextButton control={control} value={typeof read.value === 'string' ? read.value : ''} onApply={(v) => updateSettings(id, { [wk]: v })} />}
-          {control.dynamic && !dynamic && <DynamicButton id={id} keyName={keyName} control={control} />}
-          {(control.type === 'slider' || control.type === 'dimensions') && (
-            <VarPicker
-              group={varGroup(control, keyName)}
-              current={control.type === 'slider' ? varId(read.own ? read.value?.size : null) : varId(read.own ? read.value?.top : null)}
-              onPick={(ref) =>
-                onChange(
-                  control.type === 'slider'
-                    ? { size: ref, unit: 'custom' }
-                    : { top: ref, right: ref, bottom: ref, left: ref, unit: (read.own ? read.value?.unit : undefined) ?? control.size_units?.[0] ?? 'px', linked: true },
-                )
-              }
-            />
-          )}
+          {/* Helpers (AI, dynamic data, design variables) show on hover or focus of the row, or while in use. */}
+          <span className="uncoder-ui-ctl__tools">
+            {!dynamic && aiWritable(control, keyName) && <AiTextButton control={control} value={typeof read.value === 'string' ? read.value : ''} onApply={(v) => updateSettings(id, { [wk]: v })} />}
+            {control.dynamic && !dynamic && <DynamicButton id={id} keyName={keyName} control={control} />}
+            {(control.type === 'slider' || control.type === 'dimensions') && (
+              <VarPicker
+                group={varGroup(control, keyName)}
+                current={control.type === 'slider' ? varId(read.own ? read.value?.size : null) : varId(read.own ? read.value?.top : null)}
+                onPick={(ref) =>
+                  onChange(
+                    control.type === 'slider'
+                      ? { size: ref, unit: 'custom' }
+                      : { top: ref, right: ref, bottom: ref, left: ref, unit: (read.own ? read.value?.unit : undefined) ?? control.size_units?.[0] ?? 'px', linked: true },
+                  )
+                }
+              />
+            )}
+          </span>
         </div>
       )}
       <div className="uncoder-ui-ctl__input">
@@ -125,10 +131,33 @@ export const ControlRow = memo(function ControlRow({ id, keyName, control, contr
           />
         )}
       </div>
-      {control.description && <p className="uncoder-ui-ctl__desc">{control.description}</p>}
+      {control.description && control.label === undefined && <p className="uncoder-ui-ctl__desc">{control.description}</p>}
     </div>
   );
 });
+
+/**
+ * How a row lays out its label and input:
+ * inline  — label column + input (selects, choices, colours, numbers…)
+ * stacked — label above a full-width input (rich inputs, and labels too long for the label column)
+ * slider  — label and value on one line, the slider underneath
+ * switch  — label on the left (it may wrap), the switch at the right
+ */
+export function rowLayout(control: ControlDef, stacked: boolean): 'inline' | 'stacked' | 'slider' | 'switch' {
+  if (control.type === 'switch') return 'switch';
+  if (control.type === 'slider' || (control.type === 'number' && control.min !== undefined && control.max !== undefined && control.ui !== 'input')) return 'slider';
+  if (stacked || (control.label?.length ?? 0) > 15) return 'stacked';
+  return 'inline';
+}
+
+/** The control's description, as a tooltip on a small help icon next to its label. */
+export function HelpTip({ text }: { text: string }) {
+  return (
+    <span className="uncoder-ui-ctl__help" tabIndex={0} role="img" aria-label={text} data-tip={text} data-tip-force="">
+      <Icon name="circle-help" size={12} />
+    </span>
+  );
+}
 
 /** ● value set on this device (click to reset) · ○ inherited from a larger device · faint ○ default. */
 function ValueDot({ own, from, device, onReset }: { own: boolean; from: string | null; device: string; onReset: () => void }) {
@@ -174,7 +203,7 @@ function DynamicButton({ id, keyName, control }: { id: string; keyName: string; 
   }, [q, cats]);
   return (
     <>
-      <button ref={ref} type="button" className="uncoder-ui-dynbtn" aria-label="Dynamic data" data-tip="Dynamic data" onClick={() => setOpen((o) => !o)}>
+      <button ref={ref} type="button" className="uncoder-ui-dynbtn" aria-label="Dynamic data" aria-expanded={open} data-tip="Dynamic data" onClick={() => setOpen((o) => !o)}>
         <Icon name="database" size={12} />
       </button>
       <Popover anchor={ref} open={open} onClose={() => setOpen(false)} width={250} placement="bottom-end" label="Dynamic data">

@@ -1,9 +1,12 @@
 // Text reveal (Advanced → Motion & effects on text widgets): splits the widget's text into words,
 // letters or lines and lets them fade / slide / blur in one after another when scrolled into view.
+// With the "scroll" trigger the pieces follow the scroll instead: they start faint and light up as the
+// text moves up the screen (and dim again when scrolling back).
 // Markup and links stay intact (only text nodes are wrapped). Letter mode keeps a screen-reader copy
 // of each text so the word is not spelled out; reduced motion and the editor show the text as is.
 window.UncoderWB.register('text-reveal', (el, api) => {
-  const [mode, effect] = (el.dataset.uncoderReveal || 'words fade-up').split(' ');
+  const [mode, effect, trigger] = (el.dataset.uncoderReveal || 'words fade-up').split(' ');
+  const scroll = trigger === 'scroll';
   const ready = () => el.classList.add('uncoder-reveal--ready');
   if (api.editor || api.reducedMotion() || !('IntersectionObserver' in window)) {
     ready();
@@ -82,7 +85,56 @@ window.UncoderWB.register('text-reveal', (el, api) => {
   };
   index();
   el.classList.add('uncoder-reveal', `uncoder-reveal--${effect || 'fade-up'}`);
+  if (scroll) el.classList.add('uncoder-reveal--scroll');
   ready();
+
+  if (scroll) {
+    // Order of each piece (its line in line mode) → lit once the scroll progress passes order / count.
+    let order: number[] = [];
+    let count = 1;
+    const measure = () => {
+      if (mode === 'lines') index();
+      order = items.map((item, i) => (mode === 'lines' ? Number(item.style.getPropertyValue('--i')) || 0 : i));
+      count = Math.max(1, ...order.map((o) => o + 1));
+    };
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const r = el.getBoundingClientRect();
+      const vh = window.innerHeight;
+      // 0 while the top is below 86% of the screen; 1 once the middle of the text is a little above the centre.
+      const p = Math.min(1, Math.max(0, (vh * 0.86 - r.top) / (vh * 0.38 + r.height * 0.5)));
+      items.forEach((item, i) => item.classList.toggle('is-lit', order[i] / count < p));
+    };
+    const queue = () => (raf ||= requestAnimationFrame(update));
+    const resize = () => {
+      measure();
+      queue();
+    };
+    let listening = false;
+    const listen = (on: boolean) => {
+      if (on === listening) return;
+      listening = on;
+      if (on) window.addEventListener('scroll', queue, { passive: true });
+      else window.removeEventListener('scroll', queue);
+    };
+    // Only follow the scroll while the text is near the screen.
+    const near = new IntersectionObserver((entries) => {
+      listen(entries.some((e) => e.isIntersecting));
+      queue();
+    }, { rootMargin: '25% 0px 25% 0px' });
+    measure();
+    update();
+    near.observe(el);
+    window.addEventListener('resize', resize);
+    document.fonts?.ready.then(resize);
+    return () => {
+      near.disconnect();
+      listen(false);
+      cancelAnimationFrame(raf);
+      window.removeEventListener('resize', resize);
+    };
+  }
 
   const io = new IntersectionObserver(
     (entries) => {

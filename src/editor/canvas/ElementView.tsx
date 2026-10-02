@@ -84,7 +84,7 @@ const ContainerView = memo(function ContainerView({ id, depth }: { id: string; d
     ...(s.overlay?.type ? ['uncoder-container--overlay'] : []),
     ...(fitsChildren(s) ? ['uncoder-container--fit'] : []),
     ...(s.background?.type === 'video' && s.background?.video_url ? ['uncoder-container--video'] : []),
-    ...(bgLayer(s) ? ['uncoder-container--bg'] : []),
+    ...(bgLayer(s) || animatedBg(s) ? ['uncoder-container--bg'] : []),
     ...(hasShape(s) ? ['uncoder-container--shape'] : []),
     ...common.classes,
   ];
@@ -103,6 +103,7 @@ const ContainerView = memo(function ContainerView({ id, depth }: { id: string; d
     },
     video,
     bgLayer(s) && <BgLayer s={s} />,
+    animatedBg(s) && <AnimatedBg s={s} />,
     hasShape(s) && <ShapeDividers s={s} />,
     boxed ? <div className="uncoder-container__inner">{children}</div> : children,
   );
@@ -156,6 +157,78 @@ function BgLayer({ s }: { s: Settings }) {
       <div className="uncoder-container__bg-layer">{first && <div className="uncoder-bg-slide is-active" style={{ backgroundImage: `url("${String(first).replace(/["\\\n]/g, '')}")` }} />}</div>
     </div>
   );
+}
+
+const ABG_CSS = ['style-1', 'style-2', 'style-3', 'style-4', 'style-5'];
+const ABG_SHADERS = ['fluid-gradient', 'borealis', 'gradient-mesh', 'mist', 'mystic-lake', 'noir-haze', 'void-wave', 'halftone', 'the-shining', 'phase-tunnel', 'plasma-line', 'light-strings', 'flame', 'pulse-bubble', 'neon-eclipse', 'echo-sphere', 'liquid-mask', 'liquid-image', 'bit-wave', 'flux-stripes', 'perspective-grid'];
+const ABG_DEFAULTS = { speed: 20, scale: 10, intensity: 50, noise: 20, angle: 0, frame: 10 };
+
+/** The container's animated background (twin of Animated_Backgrounds::name() and ::settings()). */
+function animatedBg(s: Settings): { name: string; settings: Record<string, unknown> | null } | null {
+  const name = String(s.bg_animation ?? '');
+  if (ABG_CSS.includes(name)) return { name, settings: null };
+  if (!ABG_SHADERS.includes(name)) return null;
+  const num = (key: string, def: keyof typeof ABG_DEFAULTS, min: number, max: number) => {
+    const v = s[key];
+    const n = v === '' || v === null || v === undefined || isNaN(Number(v)) ? ABG_DEFAULTS[def] : Number(v);
+    return Math.max(min, Math.min(max, n));
+  };
+  const offset = (key: string) => (s[key] === '' || s[key] === null || s[key] === undefined || isNaN(Number(s[key])) ? 0 : Math.max(-400, Math.min(400, Number(s[key]))));
+  const settings: Record<string, unknown> = {
+    name,
+    base: `${config.urls.assets}vendor/animated-bg/`,
+    ver: config.version,
+    speed: num('bg_anim_speed', 'speed', 1, 100),
+    scale: num('bg_anim_scale', 'scale', 0, 100),
+    intensity: num('bg_anim_intensity', 'intensity', 0, 100),
+    noise: num('bg_anim_noise', 'noise', 0, 100),
+    angle: num('bg_anim_angle', 'angle', 0, 360),
+    offsetX: offset('bg_anim_offset_x'),
+    offsetY: offset('bg_anim_offset_y'),
+    interactive: !!s.bg_anim_interactive,
+    static: !!s.bg_anim_freeze,
+    frame: num('bg_anim_frame', 'frame', 0, 1000),
+  };
+  if (name === 'liquid-mask' || name === 'liquid-image') {
+    const bg = s.background ?? {};
+    const image = s.bg_anim_image?.url || (['', 'classic', undefined].includes(bg.type) ? bg.image?.url : '') || '';
+    if (image) settings.image = image;
+  }
+  return { name, settings };
+}
+
+/** The animated layer; shaders run in the canvas through the bg-animated module, restarted when a setting changes. */
+function AnimatedBg({ s }: { s: Settings }) {
+  const abg = animatedBg(s)!;
+  const ref = useRef<HTMLDivElement>(null);
+  const json = abg.settings ? JSON.stringify(abg.settings) : '';
+  // Colours are CSS variables the shader reads once, so they restart it too.
+  const key = json + [1, 2, 3, 4].map((n) => s[`bg_anim_color_${n}`] ?? '').join('|') + '|' + (s.bg_anim_bg ?? '');
+  useEffect(() => {
+    const el = ref.current;
+    const api = frame.win?.UncoderWB;
+    if (!el || !api || !json) return;
+    try {
+      api.init(el);
+    } catch {
+      /* ignore */
+    }
+    return () => {
+      try {
+        api.destroy(el);
+      } catch {
+        /* ignore */
+      }
+    };
+  }, [key, json]);
+  if (!abg.settings) {
+    return (
+      <div className={`uncoder-abg uncoder-abg--css uncoder-abg--${abg.name}`} aria-hidden>
+        <div className="uncoder-abg__g" />
+      </div>
+    );
+  }
+  return <div key={key} ref={ref} className={`uncoder-abg uncoder-abg--${abg.name}`} data-uncoder-js="bg-animated" data-settings={json} aria-hidden />;
 }
 
 function BgVideo({ url, poster }: { url: string; poster?: string }) {

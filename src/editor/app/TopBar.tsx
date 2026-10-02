@@ -106,7 +106,7 @@ export function TopBar() {
             ...(config.user.caps.edit_theme ? [{ label: 'Theme Builder', icon: 'layout-template', onSelect: () => window.open(`${config.urls.admin}admin.php?page=uncoder-templates`, '_blank') } as MenuItem] : []),
             'separator',
             { label: theme === 'dark' ? 'Paper (light) interface' : 'Petrol night (dark) interface', icon: theme === 'dark' ? 'sun' : 'moon', onSelect: () => useUi.setState({ theme: theme === 'dark' ? 'light' : 'dark' }) },
-            { label: 'Docked panels', icon: 'panels-top-left', checked: layout === 'dock', onSelect: () => useUi.setState({ layout: layout === 'dock' ? 'float' : 'dock' }) },
+            { label: 'Edge-to-edge panels', icon: 'panels-top-left', checked: layout === 'dock', onSelect: () => useUi.setState({ layout: layout === 'dock' ? 'float' : 'dock' }) },
             { label: 'Commands & shortcuts', icon: 'command', shortcut: `${MOD}K`, onSelect: () => useUi.setState({ palette: true }) },
             { label: 'Style book', icon: 'book-open', onSelect: () => useUi.setState({ styleBook: true }), disabled: contentOnly() },
             { label: 'Preferences…', icon: 'sliders-horizontal', onSelect: () => useUi.setState({ prefsOpen: true }) },

@@ -30,7 +30,6 @@ final class Editor {
 		add_action( 'admin_action_' . self::ACTION, array( $this, 'load' ) );
 		add_filter( 'post_row_actions', array( $this, 'row_action' ), 10, 2 );
 		add_filter( 'page_row_actions', array( $this, 'row_action' ), 10, 2 );
-		add_action( 'admin_bar_menu', array( $this, 'admin_bar' ), 80 );
 		add_action( 'enqueue_block_editor_assets', array( $this, 'block_editor_button' ) );
 		add_action( 'edit_form_after_title', array( $this, 'classic_editor' ) );
 		add_action( 'admin_post_' . self::WP_EDITOR_ACTION, array( $this, 'use_wp_editor' ) );
@@ -51,7 +50,10 @@ final class Editor {
 		);
 	}
 
-	private function can_edit( int $post_id ): bool {
+	/**
+	 * Whether the current user may open a post or template in Uncoder (also used by Admin_Bar).
+	 */
+	public static function can_edit( int $post_id ): bool {
 		return $post_id > 0
 			&& current_user_can( 'edit_post', $post_id )
 			&& Plugin::instance()->documents()->is_supported( $post_id )
@@ -62,7 +64,7 @@ final class Editor {
 	 * @param array<string,string> $actions Actions.
 	 */
 	public function row_action( array $actions, \WP_Post $post ): array {
-		if ( $this->can_edit( $post->ID ) && 'trash' !== $post->post_status ) {
+		if ( self::can_edit( $post->ID ) && 'trash' !== $post->post_status ) {
 			$actions['uncoder'] = '<a href="' . esc_url( self::url( $post->ID ) ) . '">' . Brand::mark( 12, 'vertical-align:-1px;margin-right:4px' ) . esc_html__( 'Edit with Uncoder', 'uncoder' ) . '</a>';
 		}
 		return $actions;
@@ -78,30 +80,13 @@ final class Editor {
 		return $states;
 	}
 
-	public function admin_bar( \WP_Admin_Bar $bar ): void {
-		if ( is_admin() || ! is_singular() ) {
-			return;
-		}
-		$id = (int) get_queried_object_id();
-		if ( ! $this->can_edit( $id ) ) {
-			return;
-		}
-		$bar->add_node(
-			array(
-				'id'    => 'uncoder-edit',
-				'title' => Brand::mark( 15, 'vertical-align:-3px;margin-right:6px' ) . esc_html__( 'Edit with Uncoder', 'uncoder' ),
-				'href'  => self::url( $id ),
-			)
-		);
-	}
-
 	public function block_editor_button(): void {
 		$post_id = isset( $_GET['post'] ) ? absint( wp_unslash( $_GET['post'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		if ( ! $post_id && 'post-new.php' === ( $GLOBALS['pagenow'] ?? '' ) ) {
 			// A new post (e.g. a translation Polylang just created): the auto-draft is the global post.
 			$post_id = (int) get_the_ID();
 		}
-		if ( ! $post_id || ! $this->can_edit( $post_id ) ) {
+		if ( ! $post_id || ! self::can_edit( $post_id ) ) {
 			return;
 		}
 		$this->enqueue_post_editor( $post_id );
@@ -165,7 +150,7 @@ final class Editor {
 	 * Classic editor: the built-with panel instead of the content box, or the button for other posts.
 	 */
 	public function classic_editor( \WP_Post $post ): void {
-		if ( ! $this->can_edit( $post->ID ) || 'auto-draft' === $post->post_status ) {
+		if ( ! self::can_edit( $post->ID ) || 'auto-draft' === $post->post_status ) {
 			return;
 		}
 		$this->enqueue_post_editor( $post->ID );
@@ -206,7 +191,7 @@ final class Editor {
 	 */
 	public function load(): void {
 		$post_id = absint( $_GET['post'] ?? 0 ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- capability-checked navigation, no state change without the REST nonce.
-		if ( ! $this->can_edit( $post_id ) ) {
+		if ( ! self::can_edit( $post_id ) ) {
 			wp_die( esc_html__( 'Sorry, you are not allowed to edit this item with Uncoder.', 'uncoder' ), 403 );
 		}
 		$post = get_post( $post_id );

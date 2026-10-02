@@ -56,6 +56,15 @@ final class Settings_Controller {
 				'permission_callback' => $admin,
 			)
 		);
+		register_rest_route(
+			Rest::NS,
+			'/settings/clear-cache',
+			array(
+				'methods'             => 'POST',
+				'callback'            => static fn() => new WP_REST_Response( \Uncoder\Builder\Site\Cache::clear() ),
+				'permission_callback' => $admin,
+			)
+		);
 	}
 
 	/**

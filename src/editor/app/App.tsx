@@ -34,6 +34,7 @@ export function App() {
   const theme = useUi((s) => s.theme);
   const preview = useUi((s) => s.preview);
   const layout = useUi((s) => s.layout);
+  const inspectorAt = useUi((s) => s.inspectorAt);
   const ref = useRef<HTMLDivElement>(null);
   const [root, setRoot] = useState<HTMLElement | null>(null);
   const [narrow, setNarrow] = useState(() => window.innerWidth < AUTO_DOCK);
@@ -79,12 +80,16 @@ export function App() {
       <TopBar />
       {hasConditions && <TemplateConditionsDialog />}
       <div className="uncoder-ui-body">
-        {!preview && <LeftPanel />}
-        <main className="uncoder-ui-main">
-          <Canvas />
-          {!preview && <PathBar />}
-        </main>
-        {!preview && <Inspector />}
+        {/* Keyed, so moving the inspector between the sides moves it instead of rebuilding it. */}
+        {[
+          !preview && <LeftPanel key="build" />,
+          !preview && inspectorAt === 'left' && <Inspector key="inspector" />,
+          <main key="main" className="uncoder-ui-main">
+            <Canvas />
+            {!preview && <PathBar />}
+          </main>,
+          !preview && inspectorAt !== 'left' && <Inspector key="inspector" />,
+        ]}
       </div>
       <ContextMenu />
       <CommandPalette />

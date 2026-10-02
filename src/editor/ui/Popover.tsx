@@ -37,20 +37,33 @@ export function Popover({ anchor, open, onClose, children, placement = 'bottom-s
     const ph = el.offsetHeight;
     const vw = window.innerWidth;
     const vh = window.innerHeight;
+    let side = placement;
+    // Side popovers of the settings panel open next to the panel, towards the canvas (it can sit on either side).
+    let edge = { left: r.left, right: r.right };
+    if ((side === 'left-start' || side === 'right-start') && 'current' in anchor) {
+      const panel = anchor.current?.closest('.uncoder-ui-inspector')?.getBoundingClientRect();
+      if (panel) {
+        edge = { left: panel.left, right: panel.right };
+        side = panel.left + panel.width / 2 < vw / 2 ? 'right-start' : 'left-start';
+      }
+    }
+    // No room on that side: the other side.
+    if (side === 'left-start' && edge.left - pw - offset < 8 && edge.right + offset + pw <= vw - 8) side = 'right-start';
+    else if (side === 'right-start' && edge.right + offset + pw > vw - 8 && edge.left - pw - offset >= 8) side = 'left-start';
     let left = r.left;
     let top = r.bottom + offset;
-    if (placement === 'bottom-end') left = r.right - pw;
-    if (placement === 'bottom') left = r.left + r.width / 2 - pw / 2;
-    if (placement === 'top-start') top = r.top - ph - offset;
-    if (placement === 'right-start') {
-      left = r.right + offset;
+    if (side === 'bottom-end') left = r.right - pw;
+    if (side === 'bottom') left = r.left + r.width / 2 - pw / 2;
+    if (side === 'top-start') top = r.top - ph - offset;
+    if (side === 'right-start') {
+      left = edge.right + offset;
       top = r.top;
     }
-    if (placement === 'left-start') {
-      left = r.left - pw - offset;
+    if (side === 'left-start') {
+      left = edge.left - pw - offset;
       top = r.top;
     }
-    if (top + ph > vh - 8) top = Math.max(8, placement.startsWith('right') || placement.startsWith('left') ? vh - ph - 8 : r.top - ph - offset);
+    if (top + ph > vh - 8) top = Math.max(8, side.startsWith('right') || side.startsWith('left') ? vh - ph - 8 : r.top - ph - offset);
     if (top < 8) top = 8;
     if (left + pw > vw - 8) left = vw - pw - 8;
     if (left < 8) left = 8;

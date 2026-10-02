@@ -258,44 +258,23 @@ PHP;
 
 	/* ------------------------------------------------------------------ Rollback */
 
-	/** A development copy (symlinked or junctioned folder, or a git checkout) is never overwritten. */
+	/** A development copy (linked folder or git checkout) is never overwritten. */
 	private static function dev_copy(): bool {
-		$path = wp_normalize_path( untrailingslashit( UNCODER_WB_PATH ) );
-		$real = wp_normalize_path( (string) realpath( UNCODER_WB_PATH ) );
-		return is_link( untrailingslashit( UNCODER_WB_PATH ) ) || strtolower( $path ) !== strtolower( $real ) || file_exists( UNCODER_WB_PATH . '.git' ) || file_exists( dirname( UNCODER_WB_PATH ) . '/.git' );
+		return Updater::dev_copy();
 	}
 
 	/**
-	 * Earlier releases: [version => package URL], from WordPress.org when the listing is Uncoder's. Only
-	 * packages served by downloads.wordpress.org are ever offered.
+	 * Earlier releases: [version => package URL], from the GitHub releases of UncoderBuilder/uncoder. Only
+	 * zips of that repository's release downloads are ever offered (Updater::releases()).
 	 *
 	 * @return array<string,string>|WP_Error
 	 */
 	private static function available() {
-		if ( ! function_exists( 'plugins_api' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
+		$list = Updater::earlier();
+		if ( is_wp_error( $list ) ) {
+			return new WP_Error( 'uncoder_rollback', __( 'The list of versions could not be loaded from GitHub. Download an earlier version from github.com/UncoderBuilder/uncoder/releases and upload it under Plugins → Add New.', 'uncoder' ) );
 		}
-		$info = plugins_api( 'plugin_information', array( 'slug' => 'uncoder', 'fields' => array( 'versions' => true, 'sections' => false ) ) );
-		if ( is_wp_error( $info ) ) {
-			return new WP_Error( 'uncoder_rollback', __( 'Earlier versions are on builder.uncoder.co: download one and upload it under Plugins → Add New.', 'uncoder' ) );
-		}
-		// Only the real Uncoder listing (another plugin could use the same slug).
-		$home = strtolower( (string) ( $info->homepage ?? '' ) . ' ' . (string) ( $info->author ?? '' ) );
-		if ( false === strpos( $home, 'uncoderstudio.com' ) && false === strpos( $home, 'uncoder studio' ) ) {
-			return new WP_Error( 'uncoder_rollback', __( 'The WordPress.org listing with this name is not Uncoder, so no versions are offered.', 'uncoder' ) );
-		}
-		$out = array();
-		foreach ( (array) ( $info->versions ?? array() ) as $version => $url ) {
-			$url = (string) $url;
-			if ( 'trunk' === $version || ! preg_match( '/^\d+(\.\d+){1,3}$/', (string) $version ) || ! version_compare( (string) $version, UNCODER_WB_VERSION, '<' ) ) {
-				continue;
-			}
-			if ( 'https' === wp_parse_url( $url, PHP_URL_SCHEME ) && 'downloads.wordpress.org' === wp_parse_url( $url, PHP_URL_HOST ) && 0 === strpos( (string) wp_parse_url( $url, PHP_URL_PATH ), '/plugin/uncoder.' ) ) {
-				$out[ (string) $version ] = $url;
-			}
-		}
-		uksort( $out, static fn( $a, $b ) => version_compare( $b, $a ) );
-		return array_slice( $out, 0, 10, true );
+		return $list;
 	}
 
 	public function versions(): WP_REST_Response {

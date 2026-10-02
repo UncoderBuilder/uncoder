@@ -34,6 +34,9 @@ final class Audit {
 		if ( is_wp_error( $post ) ) {
 			return $post;
 		}
+		// One instance serves every call in the request (batches, WP-CLI): start each audit clean.
+		$this->issues     = array();
+		$this->kit_colors = array();
 		foreach ( Plugin::instance()->kit()->get( 'colors', array() ) as $c ) {
 			$this->kit_colors[ $c['id'] ] = $c['value'];
 		}
@@ -118,7 +121,8 @@ final class Audit {
 				if ( ! empty( $s['text_color'] ) ) {
 					$my_text = (string) $s['text_color'];
 				}
-				if ( empty( $node['children'] ) ) {
+				// A childless box with a background or border is a shape (swatch, dot, divider), not a leftover.
+				if ( empty( $node['children'] ) && ! self::is_shape( $s ) ) {
 					$this->add( 'warning', 'structure', $id, 'Empty container.', 'Add content or delete it.' );
 				}
 				$this->check_responsive_container( $id, $s, (array) ( $node['children'] ?? array() ) );
@@ -169,6 +173,10 @@ final class Audit {
 			}
 			$val = strtolower( trim( wp_strip_all_tags( (string) ( $eff[ $key ] ?? '' ) ) ) );
 			foreach ( self::DEFAULT_COPY as $placeholder ) {
+				// "Button" is only leftover copy on a Button; elsewhere it is a real word (a label, a setting name).
+				if ( 'button' === $placeholder && 'button' !== $type ) {
+					continue;
+				}
 				if ( '' !== $val && ( $val === $placeholder || 0 === strpos( $val, 'lorem ipsum' ) || ( 'add your text here' === $placeholder && 0 === strpos( $val, 'add your text here' ) ) ) ) {
 					$this->add( 'warning', 'content', $id, sprintf( '%s still has placeholder text ("%s").', $type, mb_substr( $val, 0, 40 ) ), 'Replace it with real copy.' );
 					break 2;
@@ -223,6 +231,20 @@ final class Audit {
 			}
 		}
 		return $default;
+	}
+
+	/**
+	 * Whether an empty container still shows something: a background or a border.
+	 *
+	 * @param array<string,mixed> $s Container settings.
+	 */
+	private static function is_shape( array $s ): bool {
+		$bg = (array) ( $s['background'] ?? array() );
+		if ( ! empty( $bg['color'] ) || ! empty( $bg['image']['id'] ) || ! empty( $bg['image']['url'] ) || 'gradient' === ( $bg['type'] ?? '' ) ) {
+			return true;
+		}
+		$border = (array) ( $s['border'] ?? array() );
+		return ! empty( $border['style'] ) && 'none' !== $border['style'];
 	}
 
 	/**

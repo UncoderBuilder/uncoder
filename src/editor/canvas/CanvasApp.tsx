@@ -16,7 +16,7 @@ import { Overlay } from './Overlay';
 import { focusInsertSearch, pick, revealAdded } from '../app/smart';
 import { insertImages } from '../app/actions';
 import { imageFiles } from '../lib/media';
-import { computeDrop } from './dnd';
+import { beginDrag, computeDrop } from './dnd';
 
 const INTERACTIVE = 'a, button, input, select, textarea, label, summary, [role="button"], [role="tab"]';
 
@@ -231,8 +231,42 @@ export function CanvasApp() {
       if (files.length) insertImages(files, drop ? { parent: drop.parent, index: drop.index } : undefined);
     };
     const onScroll = () => invalidateGeometry();
-    const onPointerDown = () => {
+    // Press on an element and move: drags it (or the whole selection when it is part of it), like the
+    // toolbar's Move. A click without moving still selects; text being edited inline keeps its own drag.
+    let press: { id: string; x: number; y: number } | null = null;
+    const onPointerDown = (e: PointerEvent) => {
       if (useUi.getState().contextMenu) useUi.setState({ contextMenu: null });
+      press = null;
+      if (e.button !== 0 || e.shiftKey || e.metaKey || e.ctrlKey || e.altKey || isInlineEditing()) return;
+      const target = e.target as Element;
+      if (inChrome(target) || target.closest('.uncoder-ui-inline-editing, input, select, textarea, [contenteditable="true"]')) return;
+      const id = closestId(target);
+      if (id) press = { id, x: e.clientX, y: e.clientY };
+    };
+    const onPressMove = (e: PointerEvent) => {
+      if (!press || useUi.getState().dragging) return;
+      if (Math.hypot(e.clientX - press.x, e.clientY - press.y) < 6) return;
+      const { id } = press;
+      press = null;
+      const nodes = useDoc.getState().doc.nodes;
+      const node = nodes[id];
+      const parent = node?.parent ? nodes[node.parent] : null;
+      // Items of a nested widget (slides, tabs…) and locked elements stay where they are.
+      if (!node || (parent && schemaOf(parent.type)?.nested) || lockedBy(id)) return;
+      const selected = useUi.getState().selected;
+      const ids = selected.includes(id) ? selected : [id];
+      if (!selected.includes(id)) select(id);
+      win.getSelection()?.removeAllRanges();
+      const label = node.label || schemaOf(node.type)?.title || node.type;
+      const p = toParent(e.clientX, e.clientY, viewZoom());
+      beginDrag({ clientX: p.x, clientY: p.y }, { kind: 'move', ids }, ids.length > 1 ? `${ids.length} elements` : label, schemaOf(node.type)?.icon ?? 'box');
+    };
+    const onPressEnd = () => {
+      press = null;
+    };
+    // The browser's own drag of images and links would take over the pointer: the editor drags instead.
+    const onNativeDrag = (e: DragEvent) => {
+      if (!(e.target as Element)?.closest?.('.uncoder-ui-inline-editing')) e.preventDefault();
     };
 
     doc.addEventListener('pointermove', onMove);
@@ -247,6 +281,9 @@ export function CanvasApp() {
     doc.addEventListener('dragleave', onDragLeave);
     doc.addEventListener('drop', onDrop);
     doc.addEventListener('pointerdown', onPointerDown, true);
+    doc.addEventListener('pointermove', onPressMove, true);
+    doc.addEventListener('pointerup', onPressEnd, true);
+    doc.addEventListener('dragstart', onNativeDrag, true);
     win.addEventListener('scroll', onScroll, { passive: true });
     return () => {
       doc.removeEventListener('pointermove', onMove);
@@ -261,6 +298,9 @@ export function CanvasApp() {
       doc.removeEventListener('dragleave', onDragLeave);
       doc.removeEventListener('drop', onDrop);
       doc.removeEventListener('pointerdown', onPointerDown, true);
+      doc.removeEventListener('pointermove', onPressMove, true);
+      doc.removeEventListener('pointerup', onPressEnd, true);
+      doc.removeEventListener('dragstart', onNativeDrag, true);
       win.removeEventListener('scroll', onScroll);
     };
   }, []);

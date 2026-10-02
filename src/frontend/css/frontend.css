@@ -664,16 +664,28 @@ img.uncoder-svg--img {
 .uncoder-hover-fill:hover {
   background-size: 100% 100%;
 }
-.uncoder-hover-flip {
-  overflow: hidden;
-}
+/* Text roll: the label is drawn twice as text shadows (one in place, one a line below) and clipped to its
+   own line; on hover both move up, so the text rolls out at the top while the copy rolls in from below.
+   CSS only, so it also works site-wide (button-fx.json) and on buttons inside other widgets. */
 .uncoder-hover-flip .uncoder-btn__text {
   display: inline-block;
-  text-shadow: 0 3em currentColor;
-  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+  overflow: hidden;
+  vertical-align: top;
+  padding-block: 0.15em;
+  margin-block: -0.15em;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 currentColor, 0 1.6em currentColor;
+  transition: text-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.uncoder-hover-flip:hover .uncoder-btn__text {
-  transform: translateY(-3em);
+.uncoder-hover-flip:is(:hover, :focus-visible) .uncoder-btn__text {
+  text-shadow: 0 -1.6em currentColor, 0 0 currentColor;
+}
+/* High-contrast mode drops text shadows: show the plain label (also for the site-wide text roll). */
+@media (forced-colors: active) {
+  .uncoder-btn .uncoder-btn__text {
+    -webkit-text-fill-color: currentColor;
+    text-shadow: none;
+  }
 }
 @keyframes uncoder-pulse {
   50% {
@@ -932,7 +944,7 @@ html:not(.uncoder-editing) .uncoder-ix-hidden {
 
 .uncoder-reveal .uncoder-r {
   display: inline-block;
-  opacity: 0;
+  opacity: var(--uncoder-reveal-dim, 0);
   transition-property: opacity, transform, filter;
   transition-duration: var(--uncoder-reveal-duration, 700ms);
   transition-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -944,7 +956,18 @@ html:not(.uncoder-editing) .uncoder-ix-hidden {
 }
 
 .uncoder-reveal--blur .uncoder-r {
-  filter: blur(10px);
+  filter: blur(var(--uncoder-reveal-blur, 10px));
+}
+
+/* Follow the scroll: faint until lit; the scroll position is the stagger. */
+.uncoder-reveal--scroll .uncoder-r {
+  opacity: var(--uncoder-reveal-dim, 0.2);
+  transition-duration: var(--uncoder-reveal-duration, 600ms);
+  transition-delay: 0ms;
+}
+
+.uncoder-reveal--scroll.uncoder-reveal--blur .uncoder-r {
+  filter: blur(var(--uncoder-reveal-blur, 4px));
 }
 
 .uncoder-reveal--mask .uncoder-rw {
@@ -968,7 +991,8 @@ html:not(.uncoder-editing) .uncoder-ix-hidden {
   transform-origin: 50% 100%;
 }
 
-.uncoder-reveal--in .uncoder-r {
+.uncoder-reveal--in .uncoder-r,
+.uncoder-reveal .uncoder-r.is-lit {
   opacity: 1;
   transform: none;
   filter: none;

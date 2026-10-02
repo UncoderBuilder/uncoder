@@ -46,7 +46,7 @@ export function VarPicker({ group, current, onPick }: { group: KitVariable['grou
     : [{ label: `No ${GROUP_LABEL[group].toLowerCase()} variables yet — add them…`, icon: 'plus', onSelect: manageVariables }];
   return (
     <>
-      <IconButton ref={menu.anchorRef} icon="braces" label="Use a design variable" size={12} active={!!current} onClick={menu.toggle} className="uncoder-ui-varbtn" />
+      <IconButton ref={menu.anchorRef} icon="braces" label="Use a design variable" size={12} active={!!current} aria-expanded={menu.open} onClick={menu.toggle} className="uncoder-ui-varbtn" />
       <Menu anchor={menu.anchorRef} open={menu.open} onClose={menu.close} placement="bottom-end" width={240} items={items} />
     </>
   );

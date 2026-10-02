@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import type { ControlDef, ElementSchema, SectionDef, Settings } from '@shared/types';
 import { config, contentOnly, schemaOf } from '../lib/config';
 import { deviceLabel } from '../lib/devices';
@@ -6,11 +6,12 @@ import { effectiveSettings, readValue, visible } from '../lib/schema';
 import { sectionSummary } from '../lib/summary';
 import { lockedBy, toggleLocked, useDoc } from '../store/doc';
 import { pick } from './smart';
-import { breakpoints, setDevice, useUi, type InspectorTab } from '../store/ui';
+import { breakpoints, placeInspector, setDevice, useUi, type InspectorTab } from '../store/ui';
+import { clampFloat, InspectorDockMenu, InspectorGrip, onHeadDoubleClick, onHeadPointerDown } from './InspectorDock';
 import { Icon } from '../ui/Icon';
 import { Menu, usePopover } from '../ui/Popover';
 import { Button, IconButton } from '../ui/primitives';
-import { ControlRow } from '../controls/ControlRow';
+import { ControlRow, HelpTip } from '../controls/ControlRow';
 import { ClassesBar } from './ClassesBar';
 import { elementMenuItems } from './ContextMenu';
 import { settingsTitle } from '../lib/docInfo';
@@ -46,8 +47,49 @@ export function Inspector() {
     if (!node) return undefined;
     return types.length > 1 ? sharedSchema(types) : schemaOf(node.type);
   }, [node?.type, typesKey]);
+  const at = useUi((s) => s.inspectorAt);
+  const float = useUi((s) => s.inspectorFloat);
+  const ref = useRef<HTMLElement>(null);
+  const floating = at === 'float';
+  const box = floating && float ? clampFloat(float, ref.current?.offsetWidth ?? 300) : null;
+
+  // A floating panel stays on screen when the window shrinks, and remembers its height after a resize
+  // (the corner grip).
+  useEffect(() => {
+    if (!floating) return;
+    const panel = ref.current;
+    if (!panel) return;
+    let timer = 0;
+    const save = () => {
+      const r = panel.getBoundingClientRect();
+      const cur = useUi.getState().inspectorFloat;
+      const next = clampFloat({ x: r.left, y: r.top, h: r.height }, r.width);
+      if (!cur || Math.abs(cur.h - next.h) > 2 || cur.x !== next.x || cur.y !== next.y) placeInspector('float', next);
+    };
+    const later = () => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(save, 200);
+    };
+    const ro = new ResizeObserver(() => {
+      if (!document.documentElement.classList.contains('uncoder-ui-moving-panel')) later();
+    });
+    ro.observe(panel);
+    window.addEventListener('resize', later);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', later);
+      window.clearTimeout(timer);
+    };
+  }, [floating]);
+
   return (
-    <aside className="uncoder-ui-inspector uncoder-ui-island" aria-label="Settings" data-uncoder-ui-selected={node ? node.id : ''}>
+    <aside
+      ref={ref}
+      className={`uncoder-ui-inspector uncoder-ui-island is-${floating ? 'floating' : at}`}
+      aria-label="Settings"
+      data-uncoder-ui-selected={node ? node.id : ''}
+      style={box ? { left: box.x, top: box.y, height: box.h } : undefined}
+    >
       {!node ? (
         <PageSummary />
       ) : !schema ? (
@@ -65,6 +107,14 @@ function PageSummary() {
   const count = useDoc((s) => Object.keys(s.doc.nodes).length);
   const title = useDoc((s) => s.title);
   return (
+    <>
+    <div className="uncoder-ui-insp__head uncoder-ui-insp__head--empty" onPointerDown={onHeadPointerDown} onDoubleClick={onHeadDoubleClick}>
+      <InspectorGrip />
+      <div className="uncoder-ui-insp__name">
+        <span className="uncoder-ui-insp__title">Settings</span>
+      </div>
+      <InspectorDockMenu />
+    </div>
     <div className="uncoder-ui-insp-empty">
       <p className="uncoder-ui-insp-empty__title">{title || 'Untitled'}</p>
       <p className="uncoder-ui-insp-empty__meta">
@@ -100,6 +150,7 @@ function PageSummary() {
         </div>
       </dl>
     </div>
+    </>
   );
 }
 
@@ -133,13 +184,16 @@ const ElementInspector = memo(function ElementInspector({ id, schema, multi }: {
 
   return (
     <div className="uncoder-ui-insp">
-      <div className="uncoder-ui-insp__head">
+      <div className="uncoder-ui-insp__head" onPointerDown={onHeadPointerDown} onDoubleClick={onHeadDoubleClick}>
+        <InspectorGrip />
         <div className="uncoder-ui-insp__name">
           <span className="uncoder-ui-insp__title">{multi > 1 ? (schema.name === '__shared' ? `${multi} elements` : `${multi} × ${schema.title}`) : node.label || schema.title}</span>
           {tag && /^(h[1-6]|p|div|span|section|header|footer|nav|article|aside|main)$/.test(tag) && <span className="uncoder-ui-chip-tag">{tag}</span>}
           {multi > 1 && <span className="uncoder-ui-chip-tag" data-tip="Changes apply to every selected element">all</span>}
+          {multi === 1 && schema.description && <HelpTip text={schema.description} />}
         </div>
         <IconButton icon="search" label="Search settings" size={15} active={showSearch} onClick={() => setShowSearch((v) => !v)} />
+        <InspectorDockMenu />
         <IconButton ref={menu.anchorRef} icon="ellipsis" label="Element actions" size={15} onClick={menu.toggle} />
         <Menu anchor={menu.anchorRef} open={menu.open} onClose={menu.close} placement="bottom-end" items={elementMenuItems(id)} />
       </div>
@@ -208,10 +262,13 @@ const ElementInspector = memo(function ElementInspector({ id, schema, multi }: {
               />
             </div>
           )}
-          <p className="uncoder-ui-context__hint" title={deviceLabel(device)}>
-            {scopeHint(device)}
-            {state !== 'normal' ? ` · ${stateLabel(state)} values (Normal shows faded)` : ''}
-          </p>
+          {(device !== 'desktop' || state !== 'normal') && (
+            <p className="uncoder-ui-context__hint" title={deviceLabel(device)}>
+              {device !== 'desktop' ? `Changes apply to ${scopeHint(device).replace(/^applies to /, '')}` : ''}
+              {device !== 'desktop' && state !== 'normal' ? ' · ' : ''}
+              {state !== 'normal' ? `${stateLabel(state)} values (Normal shows faded)` : ''}
+            </p>
+          )}
         </div>
       )}
       {(showSearch || search) && (
@@ -244,12 +301,6 @@ const ElementInspector = memo(function ElementInspector({ id, schema, multi }: {
         {sections.map((section, i) => (
           <SectionView key={section.id} id={id} schema={schema} section={section} index={i} search={query} changedOnly={changedOnly} />
         ))}
-        {schema.description && current === 'content' && !search && <p className="uncoder-ui-insp__desc">{schema.description}</p>}
-        {current !== 'content' && (
-          <p className="uncoder-ui-legend" aria-hidden>
-            <span className="uncoder-ui-ctl__dot is-set" /> Set here <span className="uncoder-ui-ctl__dot is-inherited" /> Inherited
-          </p>
-        )}
       </div>
     </div>
   );
