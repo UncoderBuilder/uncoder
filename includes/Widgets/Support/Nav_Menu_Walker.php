@@ -40,6 +40,9 @@ class Nav_Menu_Walker extends \Walker_Nav_Menu {
 	/** Id of the submenu opened by the next start_lvl() call. */
 	private string $pending_sub = '';
 
+	/** The current page has an item of its own on the top level (see walk()). */
+	private bool $top_current = false;
+
 	/**
 	 * @param string              $prefix    Id prefix.
 	 * @param string              $indicator Indicator SVG markup.
@@ -51,6 +54,39 @@ class Nav_Menu_Walker extends \Walker_Nav_Menu {
 		$this->indicator = $indicator;
 		$this->settings  = $settings;
 		$this->mobile    = $mobile;
+	}
+
+	/**
+	 * Notes whether the current page has its own top-level item. Then that item alone is the active one on the top
+	 * level: a dropdown that also lists the page ("Product › Build with AI" next to "Build with AI") is not marked
+	 * as its ancestor, so the menu does not show two active items and the sliding highlight rests on the page.
+	 *
+	 * @param array $elements  Menu items.
+	 * @param int   $max_depth Max depth.
+	 * @param mixed ...$args   Args.
+	 * @return string
+	 */
+	public function walk( $elements, $max_depth, ...$args ) {
+		$this->top_current = false;
+		foreach ( (array) $elements as $item ) {
+			if ( is_object( $item ) && empty( $item->menu_item_parent ) && self::is_current( $item ) ) {
+				$this->top_current = true;
+				break;
+			}
+		}
+		return parent::walk( $elements, $max_depth, ...$args );
+	}
+
+	/**
+	 * The item links to the page being viewed. WordPress ignores the #fragment when it compares a link with the
+	 * page, so every "/#section" link of a one-page menu would count as the current page; section links are
+	 * marked by scrollspy.ts instead.
+	 *
+	 * @param object $item Menu item.
+	 */
+	private static function is_current( $item ): bool {
+		$fragment = wp_parse_url( (string) ( $item->url ?? '' ), PHP_URL_FRAGMENT );
+		return ! empty( $item->current ) && ( ! is_string( $fragment ) || '' === $fragment );
 	}
 
 	/**
@@ -143,14 +179,11 @@ class Nav_Menu_Walker extends \Walker_Nav_Menu {
 		if ( '' !== $extra ) {
 			$classes[] = 'uncoder-menu__item--mega';
 		}
-		// WordPress ignores the #fragment when it compares a link with the page, so every "/#section" link of a
-		// one-page menu would count as the current page. Section links are marked by scrollspy.ts instead.
-		$fragment = wp_parse_url( (string) ( $item->url ?? '' ), PHP_URL_FRAGMENT );
-		$current  = ! empty( $item->current ) && ( ! is_string( $fragment ) || '' === $fragment );
+		$current = self::is_current( $item );
 		if ( $current ) {
 			$classes[] = 'uncoder-menu__item--current';
 		}
-		$ancestor = ! empty( $item->current_item_ancestor ) || ! empty( $item->current_item_parent );
+		$ancestor = ( ! empty( $item->current_item_ancestor ) || ! empty( $item->current_item_parent ) ) && ! ( 0 === $depth && $this->top_current );
 		if ( $ancestor ) {
 			$classes[] = 'uncoder-menu__item--ancestor';
 		}

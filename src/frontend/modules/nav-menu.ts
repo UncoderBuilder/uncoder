@@ -127,7 +127,11 @@ window.UncoderWB.register('nav-menu', (el, api) => {
   // the pointer or keyboard focus and rests on the current page (scrollspy can change it while scrolling).
   const glide = s.fx === 'highlight' && main ? document.createElement('li') : null;
   let glideTarget: HTMLElement | null = null;
-  const currentLink = () => main?.querySelector<HTMLElement>(':scope > :is(.uncoder-menu__item--current, .uncoder-menu__item--ancestor) > .uncoder-menu__link') ?? null;
+  // The current page's own item wins over a dropdown that contains it.
+  const currentLink = () =>
+    main?.querySelector<HTMLElement>(':scope > .uncoder-menu__item--current > .uncoder-menu__link') ??
+    main?.querySelector<HTMLElement>(':scope > .uncoder-menu__item--ancestor > .uncoder-menu__link') ??
+    null;
   const moveGlide = (link: HTMLElement | null) => {
     if (!glide || !main) return;
     glideTarget = link;
