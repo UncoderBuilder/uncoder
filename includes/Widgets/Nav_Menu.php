@@ -1038,6 +1038,15 @@ class Nav_Menu extends Widget_Base {
 				'selectors' => array( '{{WRAPPER}} .uncoder-nav-menu__cta .uncoder-btn' => 'background: {{VALUE}}; border-color: {{VALUE}}' ),
 			)
 		);
+		$this->add_group(
+			'm_button_shadow',
+			array(
+				'type'      => 'box_shadow',
+				'label'     => __( 'Button shadow', 'uncoder' ),
+				'selector'  => '{{WRAPPER}} .uncoder-nav-menu__cta .uncoder-btn',
+				'condition' => array( 'm_button_text!' => '' ),
+			)
+		);
 		$this->add_control(
 			'm_close_color',
 			array(
