@@ -406,6 +406,14 @@ final class Site_Kit {
 		if ( ! $is_template ) {
 			$item['template']  = (string) get_post_meta( $id, '_wp_page_template', true );
 			$item['thumbnail'] = (int) get_post_thumbnail_id( $id );
+			// The page's SEO title and description (Uncoder's own fields, or the active SEO plugin's).
+			$seo = Seo::get( $id );
+			if ( '' !== $seo['title'] || '' !== $seo['description'] ) {
+				$item['seo'] = array(
+					'title'       => $seo['title'],
+					'description' => $seo['description'],
+				);
+			}
 		}
 		$conds = get_post_meta( $id, Utils::META_CONDS, true );
 		if ( $is_template && is_array( $conds ) ) {
@@ -1149,6 +1157,10 @@ final class Site_Kit {
 		$doc->save( is_array( $item['elements'] ?? null ) ? $item['elements'] : array(), array( 'content_fallback' => ! $is_template ) );
 		if ( is_array( $item['page_settings'] ?? null ) ) {
 			$doc->save_page_settings( $item['page_settings'] );
+		}
+		$seo = ! $is_template && is_array( $item['seo'] ?? null ) ? $item['seo'] : array();
+		if ( ! empty( $seo['title'] ) || ! empty( $seo['description'] ) ) {
+			Seo::set( $id, ! empty( $seo['title'] ) ? (string) $seo['title'] : null, ! empty( $seo['description'] ) ? (string) $seo['description'] : null );
 		}
 		$report['created'][] = array(
 			'id'       => $id,
