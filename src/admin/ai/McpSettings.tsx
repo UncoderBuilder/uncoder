@@ -45,7 +45,7 @@ export function McpSettingsPanel({ status, onSaved }: { status: McpStatus | unde
         allowed_origins: current.allowed_origins,
         snapshots: current.snapshots,
         confirm_destructive: current.confirm_destructive,
-        url_token: current.url_token,
+        links: current.links,
         image_search: current.image_search,
         log_days: current.log_days,
       });
@@ -97,8 +97,8 @@ export function McpSettingsPanel({ status, onSaved }: { status: McpStatus | unde
           <SettingRow title="Allowed origins" description="Browser-based clients whose Origin header is accepted, one per line (e.g. https://app.example.com). Requests without an Origin, like desktop apps, are not affected." htmlFor="uncoder-ui-mcp-origins">
             <textarea id="uncoder-ui-mcp-origins" className="uncoder-ui-textarea uncoder-ui-textarea--code" rows={3} value={origins} placeholder="https://app.example.com" onChange={(e) => setOrigins(e.currentTarget.value)} spellCheck={false} />
           </SettingRow>
-          <SettingRow title="Keys in URLs" description="Accept an API key as ?token= in the URL for clients that cannot send headers. Keys in URLs can leak into logs; keep this off unless you need it." danger={draft.url_token}>
-            <Toggle checked={draft.url_token} onChange={(v) => set('url_token', v)} label="Accept keys in URLs" />
+          <SettingRow title="Connection links" description="One URL with its own key (?token=…), the simplest way to connect apps such as the ChatGPT desktop app. Only keys created as connection links work in a URL — never API keys or sign-ins — and only over HTTPS. Turn off to refuse every link.">
+            <Toggle checked={draft.links} onChange={(v) => set('links', v)} label="Accept connection links" />
           </SettingRow>
         </div>
       </Card>

@@ -16,13 +16,15 @@ export interface Step {
   snippet?: Snippet;
   /** Renders the endpoint URL with a copy button. */
   url?: boolean;
+  /** Renders the connection link (or the button that creates it) with a copy button. */
+  link?: boolean;
 }
 
 export interface Method {
   id: string;
   label: string;
-  /** API key or OAuth sign-in. */
-  auth: 'key' | 'oauth';
+  /** API key, connection link (one URL with its own key) or OAuth sign-in. */
+  auth: 'key' | 'link' | 'oauth';
   /** Connects from the vendor's servers (web connectors): the site must be public and use HTTPS. */
   cloud?: boolean;
   intro: string;
@@ -147,8 +149,21 @@ export function clients(c: Ctx): ClientDef[] {
       blurb: 'Desktop app and web connectors',
       methods: [
         {
+          id: 'link',
+          label: 'Desktop app · link',
+          auth: 'link',
+          intro: 'The simplest way: one URL that already carries its own key. Nothing to sign in to, nothing else to fill in.',
+          steps: [
+            { text: 'Create a connection link for ChatGPT and copy it:', link: true },
+            { text: 'In the ChatGPT desktop app, open Settings → Plugins → MCPs and click Add → Add MCP server.' },
+            { text: `Name it “${name}”, choose Streamable HTTP, paste the link into URL and click Save. Leave every other field empty.` },
+            { text: try_ },
+          ],
+          note: 'Keep the link private, like a password: anyone who has it can use these permissions. Revoke it any time under API keys, and create a new one.',
+        },
+        {
           id: 'desktop',
-          label: 'ChatGPT desktop app',
+          label: 'Desktop app · sign in',
           auth: 'oauth',
           intro: 'In the ChatGPT app for Windows and Mac. You sign in to this site; no key to copy. Works with a site on your own computer too.',
           steps: [
@@ -258,6 +273,17 @@ export function clients(c: Ctx): ClientDef[] {
       tint: '#6b7280',
       blurb: 'Any Streamable HTTP or stdio client',
       methods: [
+        {
+          id: 'link',
+          label: 'Connection link',
+          auth: 'link',
+          intro: 'For clients that take just a server URL: one link that carries its own key.',
+          steps: [
+            { text: 'Create a connection link and copy it:', link: true },
+            { text: 'Paste it as the server URL (Streamable HTTP) in your client. No headers needed.' },
+          ],
+          note: 'Keep the link private, like a password. Revoke it any time under API keys.',
+        },
         {
           id: 'http',
           label: 'Streamable HTTP',

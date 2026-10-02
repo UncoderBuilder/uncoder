@@ -90,7 +90,9 @@ final class Admin_Api {
 
 	public function create_key( WP_REST_Request $request ): WP_REST_Response {
 		$body   = (array) $request->get_json_params();
-		$name   = sanitize_text_field( (string) ( $body['name'] ?? 'API key' ) );
+		// A connection link is a key made to be pasted as one URL (?token=…); only links are accepted in URLs.
+		$link   = ! empty( $body['link'] );
+		$name   = sanitize_text_field( (string) ( $body['name'] ?? ( $link ? 'Connection link' : 'API key' ) ) );
 		$scopes = Tokens::clean_scopes( (array) ( $body['scopes'] ?? Tokens::DEFAULT_SCOPES ) );
 		if ( ! current_user_can( 'manage_options' ) ) {
 			$scopes = array_values( array_diff( $scopes, array( 'site' ) ) );
@@ -104,9 +106,9 @@ final class Admin_Api {
 		$days = min( 3650, absint( $body['expires_days'] ?? 90 ) ); // 0 = never; at most 10 years (fits a DATETIME).
 		list( $secret, $id ) = Tokens::create(
 			array(
-				'type'    => 'api_key',
+				'type'    => $link ? 'link' : 'api_key',
 				'user_id' => get_current_user_id(),
-				'name'    => '' !== $name ? $name : 'API key',
+				'name'    => '' !== $name ? $name : ( $link ? 'Connection link' : 'API key' ),
 				'scopes'  => $scopes,
 				'ttl'     => $days > 0 ? $days * DAY_IN_SECONDS : 0,
 			)
@@ -118,14 +120,15 @@ final class Admin_Api {
 			array(
 				'method'  => 'admin/key',
 				'status'  => 'ok',
-				'summary' => 'API key created: ' . $name,
+				'summary' => ( $link ? 'Connection link created: ' : 'API key created: ' ) . $name,
 			)
 		);
 		return new WP_REST_Response(
 			array(
 				'id'     => $id,
 				'secret' => $secret,
-				'note'   => 'Copy this key now: it is shown only once.',
+				'url'    => $link ? add_query_arg( 'token', $secret, rest_url( 'uncoder/v1/mcp' ) ) : '',
+				'note'   => $link ? 'Copy this link now: it is shown only once.' : 'Copy this key now: it is shown only once.',
 			),
 			201
 		);

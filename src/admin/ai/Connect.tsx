@@ -14,13 +14,24 @@ export interface FreshKey {
   secret: string;
 }
 
+/** A connection link just created: shown once, like a key. */
+export interface FreshLink {
+  id: number;
+  name: string;
+  url: string;
+}
+
 interface Props {
   status: McpStatus | undefined;
   freshKey: FreshKey | null;
+  freshLink: FreshLink | null;
+  /** Creates a connection link for this client (resolves when it is shown). */
+  onCreateLink: (name: string) => Promise<void>;
   onCreateKey: (suggestedName: string) => void;
 }
 
-export function ConnectPanel({ status, freshKey, onCreateKey }: Props) {
+export function ConnectPanel({ status, freshKey, freshLink, onCreateLink, onCreateKey }: Props) {
+  const [linking, setLinking] = useState(false);
   const [clientId, setClientId] = useState<ClientId>('claude');
   const [methodByClient, setMethodByClient] = useState<Record<string, string>>({});
   const url = status?.endpoint ?? cfg.urls.mcp;
@@ -40,7 +51,8 @@ export function ConnectPanel({ status, freshKey, onCreateKey }: Props) {
   const client = list.find((c) => c.id === clientId) ?? list[0];
   const method = client.methods.find((m) => m.id === methodByClient[client.id]) ?? client.methods[0];
   // Only web connectors connect from the vendor's servers; desktop apps and editors reach the site from this computer.
-  const needsHttps = !!method.cloud && (!status?.https || local);
+  const needsHttps = (!!method.cloud && (!status?.https || local)) || (method.auth === 'link' && !status?.https && !local);
+  const linksOff = method.auth === 'link' && status?.settings.links === false;
 
   return (
     <div className="uncoder-ui-connect">
@@ -90,15 +102,22 @@ export function ConnectPanel({ status, freshKey, onCreateKey }: Props) {
             <h3 className="uncoder-ui-connect__title">{method.label}</h3>
           )}
           <span className={cx('uncoder-ui-authtag', method.auth === 'oauth' ? 'is-oauth' : 'is-key')}>
-            <Icon name={method.auth === 'oauth' ? 'shield-check' : 'key-round'} size={13} />
-            {method.auth === 'oauth' ? 'Sign in with OAuth' : 'API key'}
+            <Icon name={method.auth === 'oauth' ? 'shield-check' : method.auth === 'link' ? 'link' : 'key-round'} size={13} />
+            {method.auth === 'oauth' ? 'Sign in with OAuth' : method.auth === 'link' ? 'Connection link' : 'API key'}
           </span>
         </div>
         <p className="uncoder-ui-connect__intro">{method.intro}</p>
 
         {needsHttps && (
           <Callout tone="warning" title={local ? 'This site is not reachable from the internet' : 'HTTPS required'}>
-            {client.name} connects from its own servers, so the URL must be public and use HTTPS. {local ? 'For a local site, use a tunnel (for example ngrok or Cloudflare Tunnel) or connect a desktop client with an API key.' : 'Enable SSL on this site first.'}
+            {method.auth === 'link'
+              ? 'Connection links carry their key in the URL, so they work only over HTTPS. Enable SSL on this site first, or sign in instead.'
+              : `${client.name} connects from its own servers, so the URL must be public and use HTTPS. ${local ? 'For a local site, use a tunnel (for example ngrok or Cloudflare Tunnel) or connect a desktop client with an API key.' : 'Enable SSL on this site first.'}`}
+          </Callout>
+        )}
+        {linksOff && (
+          <Callout tone="warning" title="Connection links are turned off">
+            Turn them on under Server settings → Connection links, or use another method.
           </Callout>
         )}
 
@@ -131,6 +150,30 @@ export function ConnectPanel({ status, freshKey, onCreateKey }: Props) {
               <div className="uncoder-ui-steps__body">
                 <p>{s.text}</p>
                 {s.url && <CopyField value={url} label="MCP server URL" what="Server URL copied" />}
+                {s.link &&
+                  (freshLink ? (
+                    <>
+                      <CopyField value={freshLink.url} label="Connection link" what="Connection link copied" secret />
+                      <p className="uncoder-ui-connect__hint">“{freshLink.name}” · copy it now: it is shown only once. Revoke it any time under API keys.</p>
+                    </>
+                  ) : (
+                    <Button
+                      variant="primary"
+                      icon="link"
+                      loading={linking}
+                      disabled={!cfg.user.caps.use_mcp || linksOff || needsHttps}
+                      onClick={async () => {
+                        setLinking(true);
+                        try {
+                          await onCreateLink(`${client.name} link`);
+                        } finally {
+                          setLinking(false);
+                        }
+                      }}
+                    >
+                      Create connection link
+                    </Button>
+                  ))}
                 {s.snippet && <CodeBlock code={s.snippet.code} lang={s.snippet.lang} file={s.snippet.file} label={s.snippet.label} />}
               </div>
             </li>

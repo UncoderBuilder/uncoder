@@ -3112,6 +3112,11 @@ body.uncoder-ui-admin-screen #wpfooter {
 .uncoder-ui-admin-root .uncoder-ui-connect__note .uncoder-ui-icon {
   margin-top: 2px;
 }
+.uncoder-ui-admin-root .uncoder-ui-connect__hint {
+  margin-top: 6px;
+  color: var(--uncoder-ui-tx-3);
+  font-size: var(--uncoder-ui-fs-sm);
+}
 .uncoder-ui-admin-root .uncoder-ui-authtag {
   display: inline-flex;
   align-items: center;

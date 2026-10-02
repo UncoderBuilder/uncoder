@@ -122,7 +122,7 @@ export function KeysPanel({ keys, onCreate, freshKey }: { keys: Resource<ApiKey[
                   <td>
                     <div className="uncoder-ui-namecell">
                       <span className="uncoder-ui-namecell__icon" aria-hidden>
-                        <Icon name="key-round" size={15} />
+                        <Icon name={k.link ? 'link' : 'key-round'} size={15} />
                       </span>
                       <div className="uncoder-ui-namecell__text">
                         <span className="uncoder-ui-namecell__title">
@@ -132,11 +132,12 @@ export function KeysPanel({ keys, onCreate, freshKey }: { keys: Resource<ApiKey[
                               New
                             </Badge>
                           )}
+                          {k.link && <Badge>Connection link</Badge>}
                           {k.revoked && <Badge tone="danger">Revoked</Badge>}
                           {!k.revoked && k.expired && <Badge tone="warning">Expired</Badge>}
                         </span>
                         <span className="uncoder-ui-namecell__meta">
-                          <code className="uncoder-ui-keyhint">uncoder_key_…{k.hint}</code>
+                          <code className="uncoder-ui-keyhint">{k.link ? 'uncoder_link_' : 'uncoder_key_'}…{k.hint}</code>
                           {k.user && <> · {k.user}</>}
                         </span>
                       </div>

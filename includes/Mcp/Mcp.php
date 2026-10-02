@@ -17,7 +17,11 @@ defined( 'ABSPATH' ) || exit;
  */
 final class Mcp {
 
+	/** A connection link's token, taken out of the request URL as early as possible (see capture_url_token()). */
+	private static string $url_token = '';
+
 	public function register(): void {
+		self::capture_url_token();
 		add_action( 'rest_api_init', array( $this, 'routes' ) );
 		add_action( 'parse_request', array( $this, 'well_known' ), 0 );
 		add_action( 'admin_init', array( OAuth::class, 'maybe_authorize' ), 0 );
@@ -49,6 +53,38 @@ final class Mcp {
 		);
 		OAuth::register_routes();
 		( new Admin_Api() )->register_routes();
+	}
+
+	/**
+	 * Moves ?token= of a request to the MCP endpoint out of $_GET, $_REQUEST, QUERY_STRING and REQUEST_URI while
+	 * plugins load, so nothing that runs later (other plugins, error or activity logs) sees the secret.
+	 */
+	private static function capture_url_token(): void {
+		$token = isset( $_GET['token'] ) && is_string( $_GET['token'] ) ? (string) wp_unslash( $_GET['token'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- a credential, checked by hash in Auth.
+		if ( '' === $token ) {
+			return;
+		}
+		$uri   = isset( $_SERVER['REQUEST_URI'] ) ? (string) wp_unslash( $_SERVER['REQUEST_URI'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$route = isset( $_GET['rest_route'] ) && is_string( $_GET['rest_route'] ) ? (string) wp_unslash( $_GET['rest_route'] ) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Recommended, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		if ( false === strpos( (string) wp_parse_url( $uri, PHP_URL_PATH ), '/uncoder/v1/mcp' ) && 0 !== strpos( $route, '/uncoder/v1/mcp' ) ) {
+			return;
+		}
+		self::$url_token = $token;
+		unset( $_GET['token'], $_REQUEST['token'] ); // phpcs:ignore WordPress.Security.NonceVerification
+		$strip = static fn( string $s ): string => trim( (string) preg_replace( '/(^|&)token=[^&]*/', '', $s ), '&' );
+		if ( isset( $_SERVER['QUERY_STRING'] ) ) {
+			$_SERVER['QUERY_STRING'] = $strip( (string) $_SERVER['QUERY_STRING'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput
+		}
+		if ( '' !== $uri && false !== strpos( $uri, '?' ) ) {
+			list( $path, $query )   = explode( '?', $uri, 2 );
+			$query                  = $strip( $query );
+			$_SERVER['REQUEST_URI'] = $path . ( '' !== $query ? '?' . $query : '' );
+		}
+	}
+
+	/** The connection link token of this request ('' when the request has none). */
+	public static function url_token(): string {
+		return self::$url_token;
 	}
 
 	/**

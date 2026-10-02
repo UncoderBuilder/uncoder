@@ -164,7 +164,8 @@ export interface McpSettings {
   allowed_origins: string[];
   snapshots: boolean;
   confirm_destructive: boolean;
-  url_token: boolean;
+  /** Connection links (keys made to be pasted as one URL) are accepted. */
+  links: boolean;
   image_search: boolean;
   access_ttl: number;
   refresh_ttl: number;
@@ -191,6 +192,8 @@ export interface McpStatus {
 export interface ApiKey {
   id: number;
   name: string;
+  /** A connection link (used as ?token= in the server URL) rather than a header key. */
+  link?: boolean;
   hint: string;
   user: string;
   scopes: string[];
@@ -228,7 +231,7 @@ export interface LogEntry {
 export const mcpApi = {
   status: (signal?: AbortSignal) => api<McpStatus>('mcp-admin/status', { signal }),
   keys: (signal?: AbortSignal) => api<ApiKey[]>('mcp-admin/keys', { signal }),
-  createKey: (body: { name: string; scopes: string[]; expires_days: number }) => api<{ id: number; secret: string; note: string }>('mcp-admin/keys', { body }),
+  createKey: (body: { name: string; scopes: string[]; expires_days: number; link?: boolean }) => api<{ id: number; secret: string; url: string; note: string }>('mcp-admin/keys', { body }),
   revokeKey: (id: number) => api<{ revoked: boolean }>(`mcp-admin/keys/${id}`, { method: 'DELETE' }),
   grants: (signal?: AbortSignal) => api<Grant[]>('mcp-admin/grants', { signal }),
   revokeGrant: (client_id: string, user_id: number) => api<{ revoked: boolean }>('mcp-admin/grants/revoke', { body: { client_id, user_id } }),

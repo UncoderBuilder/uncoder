@@ -28,7 +28,7 @@ final class Settings {
 			'allowed_origins'     => array(),
 			'snapshots'           => true,
 			'confirm_destructive' => true,
-			'url_token'           => false,
+			'links'               => true,
 			'image_search'        => true,
 			'access_ttl'          => HOUR_IN_SECONDS,
 			'refresh_ttl'         => 30 * DAY_IN_SECONDS,
@@ -59,7 +59,7 @@ final class Settings {
 		$current = self::all();
 		$roles   = array_keys( wp_roles()->roles );
 		$out     = $current;
-		foreach ( array( 'enabled', 'allow_registration', 'snapshots', 'confirm_destructive', 'url_token', 'image_search' ) as $bool ) {
+		foreach ( array( 'enabled', 'allow_registration', 'snapshots', 'confirm_destructive', 'links', 'image_search' ) as $bool ) {
 			if ( array_key_exists( $bool, $input ) ) {
 				$out[ $bool ] = (bool) $input[ $bool ];
 			}

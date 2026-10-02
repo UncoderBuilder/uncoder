@@ -12,7 +12,8 @@ use Uncoder\Builder\Core\Utils;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Token types: api_key, access, refresh, code. Secrets are never stored, only an HMAC.
+ * Token types: api_key, link (an API key made to be pasted as one URL: ?token=), access, refresh, code. Secrets
+ * are never stored, only an HMAC.
  */
 final class Tokens {
 
@@ -70,6 +71,7 @@ final class Tokens {
 		global $wpdb;
 		$prefix = array(
 			'api_key' => 'uncoder_key_',
+			'link'    => 'uncoder_link_',
 			'access'  => 'uncoder_at_',
 			'refresh' => 'uncoder_rt_',
 			'code'    => 'uncoder_ac_',
@@ -156,7 +158,7 @@ final class Tokens {
 	 */
 	public static function list_keys(): array {
 		global $wpdb;
-		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT id, name, token_hint, user_id, scopes, created_at, expires_at, last_used_at, revoked FROM %i WHERE type = 'api_key' ORDER BY id DESC LIMIT 200", self::table() ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$rows = $wpdb->get_results( $wpdb->prepare( "SELECT id, type, name, token_hint, user_id, scopes, created_at, expires_at, last_used_at, revoked FROM %i WHERE type IN ('api_key','link') ORDER BY id DESC LIMIT 200", self::table() ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 		return array_map( array( self::class, 'present' ), (array) $rows );
 	}
 
@@ -209,6 +211,7 @@ final class Tokens {
 		return array(
 			'id'         => (int) $row->id,
 			'name'       => $row->name,
+			'link'       => 'link' === ( $row->type ?? '' ),
 			'hint'       => $row->token_hint,
 			'user'       => $user ? $user->display_name : '',
 			'scopes'     => array_filter( explode( ' ', (string) $row->scopes ) ),
