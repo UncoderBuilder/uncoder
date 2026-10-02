@@ -20,7 +20,7 @@ defined( 'ABSPATH' ) || exit;
 final class Generator {
 
 	/** Bump when the generated CSS changes for the same settings: stored page and kit CSS then rebuild. */
-	public const REVISION = '5';
+	public const REVISION = '6';
 
 	private const LONGHAND = array(
 		'padding'       => array( 'padding-top', 'padding-right', 'padding-bottom', 'padding-left' ),
