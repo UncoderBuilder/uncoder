@@ -7,7 +7,7 @@
  * Requires at least: 6.6
  * Requires PHP:      8.0
  * Author:            Uncoder
- * Author URI:        https://uncoder.co/
+ * Author URI:        https://uncoderbuilder.com/
  * Update URI:        https://github.com/UncoderBuilder/uncoder
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
