@@ -80,3 +80,21 @@
   outline-offset: 2px;
   border-radius: 2px;
 }
+
+/* Terms as pills: each term its own badge (a soft tint of the text colour unless styled). */
+.uncoder-post-info__terms {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--uncoder-pinfo-term-gap, 8px);
+}
+
+.uncoder-post-info__term {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.15em 0.6em;
+  border-radius: 999px;
+  background-color: color-mix(in srgb, currentColor 10%, transparent);
+  color: inherit;
+  text-decoration: none;
+  transition: background-color 0.2s, color 0.2s;
+}

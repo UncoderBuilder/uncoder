@@ -357,6 +357,71 @@ html:not(.uncoder-js) .uncoder-carousel > .uncoder-carousel__viewport > .uncoder
   display: inline-block;
 }
 
+/* ------------------------------------------------------------------ Continuous (ticker) motion
+   The track holds every slide twice (more copies when one set is narrower than the carousel, see carousel.ts)
+   and moves by exactly half its width; the end padding equals the gap, so both halves are the same width.
+   Slides have a fixed width. In the editor (no --ticker-run) the row stays still and scrolls. */
+
+/* The layout values come from custom properties, so the per-device "Still list" setting can switch them. */
+.uncoder-carousel--ticker > .uncoder-carousel__viewport {
+  overflow: var(--uncoder-ticker-clip, hidden);
+}
+
+.uncoder-carousel--ticker > .uncoder-carousel__viewport > .uncoder-carousel__track {
+  flex-direction: var(--uncoder-ticker-dir, row);
+  width: var(--uncoder-ticker-track-w, max-content);
+  padding-inline-end: var(--uncoder-ticker-end, var(--uncoder-carousel-gap));
+  overflow: visible;
+  scroll-snap-type: none;
+}
+
+.uncoder-carousel--ticker > .uncoder-carousel__viewport > .uncoder-carousel__track > .uncoder-carousel__slide {
+  flex: 0 0 var(--uncoder-ticker-slide, var(--uncoder-carousel-slide-w, 320px));
+  scroll-snap-align: none;
+}
+
+.uncoder-carousel--ticker > .uncoder-carousel__viewport > .uncoder-carousel__track > .uncoder-carousel__slide--clone {
+  display: var(--uncoder-ticker-copy, flex);
+}
+
+.uncoder-carousel--ticker:not(.uncoder-carousel--ticker-run) > .uncoder-carousel__viewport {
+  overflow-x: auto;
+}
+
+.uncoder-carousel--ticker-run > .uncoder-carousel__viewport > .uncoder-carousel__track {
+  animation: uncoder-carousel-ticker var(--uncoder-carousel-ticker-duration, 40s) linear infinite;
+  animation-name: var(--uncoder-ticker-anim, uncoder-carousel-ticker);
+  will-change: transform;
+}
+
+.uncoder-carousel--ticker-run.uncoder-carousel--right > .uncoder-carousel__viewport > .uncoder-carousel__track {
+  animation-direction: reverse;
+}
+
+/* Right-to-left pages lay the copies out on the left of the originals. */
+.uncoder-carousel--ticker-run:dir(rtl) > .uncoder-carousel__viewport > .uncoder-carousel__track {
+  animation-name: var(--uncoder-ticker-anim-rtl, uncoder-carousel-ticker-rtl);
+}
+
+.uncoder-carousel--ticker-run.uncoder-carousel--pause:is(:hover, :focus-within) > .uncoder-carousel__viewport > .uncoder-carousel__track {
+  animation-play-state: paused;
+}
+
+@keyframes uncoder-carousel-ticker {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes uncoder-carousel-ticker-rtl {
+  from {
+    transform: translateX(50%);
+  }
+  to {
+    transform: none;
+  }
+}
+
 /* ------------------------------------------------------------------ Editor placeholder */
 
 .uncoder-carousel-placeholder {
@@ -372,5 +437,18 @@ html:not(.uncoder-js) .uncoder-carousel > .uncoder-carousel__viewport > .uncoder
   .uncoder-carousel > .uncoder-carousel__viewport > .uncoder-carousel__arrow,
   .uncoder-carousel__dots > .uncoder-carousel__dot {
     transition: none;
+  }
+
+  /* A still row that scrolls instead of the moving strip; the copies go. */
+  .uncoder-carousel--ticker-run > .uncoder-carousel__viewport {
+    overflow-x: auto;
+  }
+
+  .uncoder-carousel--ticker-run > .uncoder-carousel__viewport > .uncoder-carousel__track {
+    animation: none;
+  }
+
+  .uncoder-carousel--ticker-run > .uncoder-carousel__viewport > .uncoder-carousel__track > .uncoder-carousel__slide--clone {
+    display: none;
   }
 }

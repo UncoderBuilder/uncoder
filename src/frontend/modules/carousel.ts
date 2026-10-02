@@ -14,6 +14,67 @@ interface CarouselSettings {
   drag?: boolean;
   speed?: number;
   i18n?: { goto?: string; status?: string; pause?: string; play?: string };
+  ticker?: number; // continuous motion: speed in px per second
+}
+
+/**
+ * Continuous motion: CSS moves the track by half its width forever (the server prints every slide twice).
+ * When one set of slides is narrower than the carousel, more copies are added so the row never runs out, and the
+ * loop duration follows the set width so the speed stays the same on every screen.
+ */
+function ticker(root: HTMLElement, viewport: HTMLElement, track: HTMLElement, slides: HTMLElement[], speed: number) {
+  // "Still list" on this device (a per-device setting, so it arrives as a custom property).
+  const stacked = () => getComputedStyle(root).getPropertyValue('--uncoder-carousel-stack').trim() === '1';
+  if (!root.classList.contains('uncoder-carousel--ticker-run')) return undefined; // editor: a still row
+  const originals = slides.filter((sl) => !sl.classList.contains('uncoder-carousel__slide--clone'));
+  const added: HTMLElement[] = [];
+  let sets = 2;
+  // The copies are clipped by the viewport: lazy images there would load late and leave gaps.
+  const eager = () => track.querySelectorAll<HTMLImageElement>('img[loading="lazy"]').forEach((img) => (img.loading = 'eager'));
+  const measure = () => {
+    if (stacked()) return;
+    const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+    const set = originals.reduce((w, sl) => w + sl.getBoundingClientRect().width + gap, 0);
+    if (!set) return;
+    const need = Math.max(1, Math.ceil(viewport.clientWidth / set)) * 2;
+    while (sets < need) {
+      for (const sl of originals) {
+        const copy = sl.cloneNode(true) as HTMLElement;
+        copy.classList.add('uncoder-carousel__slide--clone');
+        copy.setAttribute('aria-hidden', 'true');
+        copy.setAttribute('inert', '');
+        copy.removeAttribute('role');
+        copy.removeAttribute('aria-roledescription');
+        copy.removeAttribute('aria-label');
+        copy.querySelectorAll('[id]').forEach((n) => n.removeAttribute('id'));
+        track.appendChild(copy);
+        added.push(copy);
+      }
+      sets++;
+    }
+    root.style.setProperty('--uncoder-carousel-ticker-duration', `${((set * sets) / 2 / speed).toFixed(2)}s`);
+    eager();
+  };
+  let frame = 0;
+  const onResize = () => {
+    if (!frame) {
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        measure();
+      });
+    }
+  };
+  const ro = 'ResizeObserver' in window ? new ResizeObserver(onResize) : null;
+  if (ro) ro.observe(viewport);
+  else window.addEventListener('resize', onResize);
+  measure();
+  return () => {
+    ro?.disconnect();
+    window.removeEventListener('resize', onResize);
+    if (frame) cancelAnimationFrame(frame);
+    added.forEach((n) => n.remove());
+    root.style.removeProperty('--uncoder-carousel-ticker-duration');
+  };
 }
 
 interface Page {
@@ -37,6 +98,7 @@ window.UncoderWB.register(
     if (!slides.length) return;
 
     const s = api.settings<CarouselSettings>(el);
+    if (root.classList.contains('uncoder-carousel--ticker')) return ticker(root, viewport, track, slides, Number(s.ticker) || 40);
     const t = {
       goto: 'Go to slide %s',
       status: 'Slide %1$s of %2$s',

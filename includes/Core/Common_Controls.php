@@ -149,6 +149,29 @@ final class Common_Controls {
 				'selectors' => array( '{{WRAPPER}}' => 'flex-shrink: {{VALUE}}' ),
 			)
 		);
+		// Inside a grid container: how many tracks the element takes (bento tiles, a tall card beside two short ones).
+		$el->add_responsive_control(
+			'_grid_column_span',
+			array(
+				'type'        => 'number',
+				'label'       => __( 'Column span', 'uncoder' ),
+				'description' => __( 'Inside a grid container: the number of columns this element takes.', 'uncoder' ),
+				'min'         => 1,
+				'max'         => 12,
+				'selectors'   => array( '{{WRAPPER}}' => 'grid-column: span {{VALUE}}' ),
+			)
+		);
+		$el->add_responsive_control(
+			'_grid_row_span',
+			array(
+				'type'        => 'number',
+				'label'       => __( 'Row span', 'uncoder' ),
+				'description' => __( 'Inside a grid container: the number of rows this element takes.', 'uncoder' ),
+				'min'         => 1,
+				'max'         => 12,
+				'selectors'   => array( '{{WRAPPER}}' => 'grid-row: span {{VALUE}}' ),
+			)
+		);
 		$el->add_responsive_control(
 			'_position',
 			array(

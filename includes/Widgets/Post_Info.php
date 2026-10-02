@@ -206,11 +206,25 @@ class Post_Info extends Widget_Base {
 			)
 		);
 		$this->add_control(
+			'term_style',
+			array(
+				'type'    => 'select',
+				'label'   => __( 'Terms style', 'uncoder' ),
+				'default' => '',
+				'options' => array(
+					''      => __( 'Text', 'uncoder' ),
+					'pills' => __( 'Pills', 'uncoder' ),
+				),
+				'ai'      => '"pills": every category / tag / term is its own small badge (style it with term_bg, term_color, term_radius, term_padding, term_gap, term_typography).',
+			)
+		);
+		$this->add_control(
 			'term_separator',
 			array(
-				'type'    => 'text',
-				'label'   => __( 'Terms separator', 'uncoder' ),
-				'default' => ', ',
+				'type'      => 'text',
+				'label'     => __( 'Terms separator', 'uncoder' ),
+				'default'   => ', ',
+				'condition' => array( 'term_style!' => 'pills' ),
 			)
 		);
 		$this->add_responsive_control(
@@ -337,10 +351,29 @@ class Post_Info extends Widget_Base {
 			)
 		);
 		$this->end_section();
+
+		$this->start_section(
+			'style_terms',
+			array(
+				'label'     => __( 'Term pills', 'uncoder' ),
+				'tab'       => 'style',
+				'condition' => array( 'term_style' => 'pills' ),
+			)
+		);
+		$term = '{{WRAPPER}} .uncoder-post-info__term';
+		$this->add_group( 'term_typography', array( 'type' => 'typography', 'label' => __( 'Typography', 'uncoder' ), 'selector' => $term ) );
+		$this->add_control( 'term_color', array( 'type' => 'color', 'label' => __( 'Text color', 'uncoder' ), 'selectors' => array( $term => 'color: {{VALUE}}' ) ) );
+		$this->add_control( 'term_bg', array( 'type' => 'color', 'label' => __( 'Background', 'uncoder' ), 'selectors' => array( $term => 'background-color: {{VALUE}}' ) ) );
+		$this->add_control( 'term_hover_color', array( 'type' => 'color', 'label' => __( 'Hover text color', 'uncoder' ), 'selectors' => array( '{{WRAPPER}} a.uncoder-post-info__term:is(:hover, :focus-visible)' => 'color: {{VALUE}}' ) ) );
+		$this->add_control( 'term_hover_bg', array( 'type' => 'color', 'label' => __( 'Hover background', 'uncoder' ), 'selectors' => array( '{{WRAPPER}} a.uncoder-post-info__term:is(:hover, :focus-visible)' => 'background-color: {{VALUE}}' ) ) );
+		$this->add_control( 'term_padding', array( 'type' => 'dimensions', 'label' => __( 'Padding', 'uncoder' ), 'size_units' => array( 'px', 'em' ), 'selectors' => array( $term => 'padding: {{VALUE}}' ) ) );
+		$this->add_control( 'term_radius', array( 'type' => 'dimensions', 'label' => __( 'Radius', 'uncoder' ), 'size_units' => array( 'px', '%' ), 'selectors' => array( $term => 'border-radius: {{VALUE}}' ) ) );
+		$this->add_control( 'term_gap', array( 'type' => 'slider', 'label' => __( 'Gap', 'uncoder' ), 'size_units' => array( 'px' ), 'range' => array( 'px' => array( 'min' => 0, 'max' => 40 ) ), 'selectors' => array( '{{WRAPPER}}' => '--uncoder-pinfo-term-gap: {{VALUE}}' ) ) );
+		$this->end_section();
 	}
 
 	/**
-	 * Linked (or plain) list of terms.
+	 * Linked (or plain) list of terms; pills wrap each term in its own badge (no separator).
 	 */
 	private function terms( \WP_Post $post, string $taxonomy, bool $link, string $sep ): string {
 		$terms = get_the_terms( $post, $taxonomy );
@@ -350,11 +383,20 @@ class Post_Info extends Widget_Base {
 		$out = array();
 		foreach ( $terms as $term ) {
 			$url   = $link ? get_term_link( $term ) : '';
-			$out[] = $link && is_string( $url )
-				? '<a href="' . esc_url( $url ) . '" rel="tag">' . esc_html( $term->name ) . '</a>'
-				: esc_html( $term->name );
+			$out[] = $this->term_html( $term->name, $link && is_string( $url ) ? $url : '' );
 		}
-		return implode( esc_html( $sep ), $out );
+		return $this->pills ? '<span class="uncoder-post-info__terms">' . implode( '', $out ) . '</span>' : implode( esc_html( $sep ), $out );
+	}
+
+	/** Terms are pills (set by render()). */
+	private bool $pills = false;
+
+	private function term_html( string $name, string $url ): string {
+		$class = $this->pills ? ' class="uncoder-post-info__term"' : '';
+		if ( '' !== $url ) {
+			return '<a' . $class . ' href="' . esc_url( $url ) . '" rel="tag">' . esc_html( $name ) . '</a>';
+		}
+		return $this->pills ? '<span' . $class . '>' . esc_html( $name ) . '</span>' : esc_html( $name );
 	}
 
 	/**
@@ -397,7 +439,8 @@ class Post_Info extends Widget_Base {
 				$taxonomy = 'categories' === $type ? 'category' : ( 'tags' === $type ? 'post_tag' : sanitize_key( (string) ( $row['taxonomy'] ?? '' ) ) );
 				if ( $sample ) {
 					$name = 'post_tag' === $taxonomy ? $demo['tag'] : $demo['category'];
-					return $link ? '<a href="#">' . esc_html( $name ) . '</a>' : esc_html( $name );
+					$html = $this->term_html( $name, $link ? '#' : '' );
+					return $this->pills ? '<span class="uncoder-post-info__terms">' . $html . '</span>' : $html;
 				}
 				if ( '' === $taxonomy || ! taxonomy_exists( $taxonomy ) || ! is_taxonomy_viewable( $taxonomy ) ) {
 					return '';
@@ -443,8 +486,9 @@ class Post_Info extends Widget_Base {
 		if ( $sample && ! $ctx->editor ) {
 			return;
 		}
-		$rows     = is_array( $s['items'] ?? null ) ? $s['items'] : array();
-		$inline   = 'list' !== ( $s['layout'] ?? 'inline' );
+		$rows        = is_array( $s['items'] ?? null ) ? $s['items'] : array();
+		$inline      = 'list' !== ( $s['layout'] ?? 'inline' );
+		$this->pills = 'pills' === ( $s['term_style'] ?? '' );
 		$sep      = (string) ( $s['separator'] ?? '·' );
 		// Text controls are trimmed on save: add the spacing back around the terms separator.
 		$term_sep = trim( (string) ( $s['term_separator'] ?? ',' ) );

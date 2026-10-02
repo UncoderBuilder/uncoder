@@ -81,7 +81,7 @@ final class Design_Tools {
 						),
 						'buttons'    => array(
 							'type'        => 'object',
-							'description' => 'Default button style: color, background, hover_color, hover_background, padding ("14px 28px"), radius ("999px"), border, hover_border_color, shadow, typography ({"preset":"button"}), hover_effect (site-wide hover animation for buttons without their own: "" | "lift" | "grow" | "shrink" | "pulse" | "shine" | "arrow" | "fill" | "underline" | "flip" = text roll).',
+							'description' => 'Default button style: color, background, hover_color, hover_background, padding ("14px 28px"), radius ("999px"), border, hover_border_color, shadow, typography ({"preset":"button"}), hover_effect (site-wide hover animation for buttons without their own: "" | "lift" | "grow" | "shrink" | "pulse" | "shine" | "arrow" | "fill" | "fill-up" | "underline" | "flip" = text roll), hover_fill (colour of the fill effects).',
 						),
 						'layout'     => array(
 							'type'        => 'object',

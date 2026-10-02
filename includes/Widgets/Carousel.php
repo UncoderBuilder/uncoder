@@ -51,6 +51,10 @@ class Carousel extends Widget_Base {
 		return array( 'items' => 'slides' );
 	}
 
+	protected function supports_ticker(): bool {
+		return true;
+	}
+
 	public function frontend_scripts(): array {
 		return array( 'carousel' );
 	}
@@ -143,6 +147,16 @@ class Carousel extends Widget_Base {
 			echo $this->carousel_slide_start( $i, $total, '' !== $rid ? array( 'uncoder-ri-' . $rid ) : array() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built with Utils::attrs().
 			echo $ctx->render_child( $i ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- rendered child container.
 			echo '</div>';
+		}
+		// Continuous motion: a second copy of every slide makes the loop seamless (the module adds more copies
+		// when one set is narrower than the screen).
+		if ( $this->is_ticker( $s ) && ! $ctx->editor ) {
+			foreach ( $rows as $i => $row ) {
+				$rid = sanitize_html_class( (string) ( $row['_id'] ?? '' ) );
+				echo $this->carousel_slide_start( $i, $total, '' !== $rid ? array( 'uncoder-ri-' . $rid ) : array(), true ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- built with Utils::attrs().
+				echo $ctx->render_child( $i ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- rendered child container.
+				echo '</div>';
+			}
 		}
 		echo $this->carousel_end( $s, $ctx, $total ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped parts.
 	}

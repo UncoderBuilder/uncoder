@@ -340,6 +340,42 @@ class Accordion extends Widget_Base {
 			)
 		);
 		$this->add_control(
+			'icon_box',
+			array(
+				'type'        => 'slider',
+				'label'       => __( 'Icon box size', 'uncoder' ),
+				'description' => __( 'Puts the icon in a tile of this size (with the background and radius below).', 'uncoder' ),
+				'size_units'  => array( 'px' ),
+				'range'       => array( 'px' => array( 'min' => 16, 'max' => 80 ) ),
+				'selectors'   => array( self::ROOT => '--uncoder-acc-icon-box: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'icon_background',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Icon background', 'uncoder' ),
+				'selectors' => array( self::ROOT => '--uncoder-acc-icon-bg: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'active_icon_background',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Open icon background', 'uncoder' ),
+				'selectors' => array( self::ROOT => '--uncoder-acc-icon-bg-active: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'icon_radius',
+			array(
+				'type'       => 'dimensions',
+				'label'      => __( 'Icon radius', 'uncoder' ),
+				'size_units' => array( 'px', '%' ),
+				'selectors'  => array( self::ROOT => '--uncoder-acc-icon-radius: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
 			'item_icon_heading',
 			array(
 				'type'  => 'heading',

@@ -33,12 +33,111 @@ trait Carousel_Engine {
 	}
 
 	/**
+	 * Whether the widget offers the "Continuous (ticker)" motion: its render() prints the slides a second time
+	 * with carousel_slide_start( …, true ) after the real ones (see Carousel).
+	 */
+	protected function supports_ticker(): bool {
+		return false;
+	}
+
+	/**
+	 * @param array<string,mixed> $s Effective settings.
+	 */
+	protected function is_ticker( array $s ): bool {
+		return $this->supports_ticker() && 'continuous' === ( $s['motion'] ?? '' );
+	}
+
+	/**
 	 * "Carousel" behaviour section (content tab).
 	 */
 	protected function register_carousel_settings(): void {
 		$root = $this->carousel_root();
 
 		$this->start_section( 'carousel', array( 'label' => __( 'Carousel', 'uncoder' ) ) );
+		$slides = array();
+		if ( $this->supports_ticker() ) {
+			$slides = array( 'motion!' => 'continuous' );
+			$this->add_control(
+				'motion',
+				array(
+					'type'    => 'select',
+					'label'   => __( 'Motion', 'uncoder' ),
+					'default' => '',
+					'options' => array(
+						''           => __( 'Slide by slide', 'uncoder' ),
+						'continuous' => __( 'Continuous (ticker)', 'uncoder' ),
+					),
+					'ai'      => '"continuous": the slides glide by endlessly at a steady speed, like a marquee of cards (testimonial walls, logo strips); no arrows, dots or autoplay. Set slide_width (each card\'s width), ticker_speed (px per second) and ticker_direction.',
+				)
+			);
+			$this->add_responsive_control(
+				'slide_width',
+				array(
+					'type'       => 'slider',
+					'label'      => __( 'Slide width', 'uncoder' ),
+					'size_units' => array( 'px', 'rem', 'vw' ),
+					'range'      => array( 'px' => array( 'min' => 80, 'max' => 1200 ) ),
+					'condition'  => array( 'motion' => 'continuous' ),
+					'selectors'  => array( $root => '--uncoder-carousel-slide-w: {{VALUE}}' ),
+				)
+			);
+			$this->add_control(
+				'ticker_speed',
+				array(
+					'type'      => 'number',
+					'label'     => __( 'Speed (px per second)', 'uncoder' ),
+					'min'       => 5,
+					'max'       => 500,
+					'step'      => 5,
+					'default'   => 40,
+					'condition' => array( 'motion' => 'continuous' ),
+				)
+			);
+			$this->add_control(
+				'ticker_direction',
+				array(
+					'type'      => 'choose',
+					'label'     => __( 'Direction', 'uncoder' ),
+					'default'   => 'left',
+					'options'   => array(
+						'left'  => array( 'label' => __( 'To the left', 'uncoder' ), 'icon' => 'arrow-left' ),
+						'right' => array( 'label' => __( 'To the right', 'uncoder' ), 'icon' => 'arrow-right' ),
+					),
+					'condition' => array( 'motion' => 'continuous' ),
+				)
+			);
+			$this->add_responsive_control(
+				'ticker_layout',
+				array(
+					'type'                 => 'select',
+					'label'                => __( 'Layout', 'uncoder' ),
+					'default'              => 'row',
+					'options'              => array(
+						'row'   => __( 'Moving row', 'uncoder' ),
+						'stack' => __( 'Still list', 'uncoder' ),
+					),
+					'description'          => __( 'Set "Still list" on phones to show the slides one under another.', 'uncoder' ),
+					'condition'            => array( 'motion' => 'continuous' ),
+					// Custom properties read by the ticker rules in carousel.css (no script needed per device).
+					'selectors_dictionary' => array(
+						'row'   => '--uncoder-carousel-stack:0;--uncoder-ticker-dir:row;--uncoder-ticker-anim:uncoder-carousel-ticker;--uncoder-ticker-anim-rtl:uncoder-carousel-ticker-rtl;--uncoder-ticker-track-w:max-content;--uncoder-ticker-end:var(--uncoder-carousel-gap);--uncoder-ticker-slide:var(--uncoder-carousel-slide-w, 320px);--uncoder-ticker-copy:flex;--uncoder-ticker-clip:hidden',
+						'stack' => '--uncoder-carousel-stack:1;--uncoder-ticker-dir:column;--uncoder-ticker-anim:none;--uncoder-ticker-anim-rtl:none;--uncoder-ticker-track-w:auto;--uncoder-ticker-end:0px;--uncoder-ticker-slide:auto;--uncoder-ticker-copy:none;--uncoder-ticker-clip:visible',
+					),
+					'selectors'            => array( $root => '{{VALUE}}' ),
+					'ai'                   => 'Continuous motion only: "stack" (usually ticker_layout_mobile) turns the moving row into a still list, every slide full width.',
+				)
+			);
+			$this->add_control(
+				'ticker_pause',
+				array(
+					'type'        => 'switch',
+					'label'       => __( 'Pause on hover', 'uncoder' ),
+					'description' => __( 'Also while a link inside has keyboard focus. Visitors who prefer reduced motion get a still row they can scroll.', 'uncoder' ),
+					'default'     => true,
+					'condition'   => array( 'motion' => 'continuous' ),
+				)
+			);
+		}
 		$this->add_responsive_control(
 			'slides_per_view',
 			array(
@@ -47,6 +146,7 @@ trait Carousel_Engine {
 				'min'       => 1,
 				'max'       => 10,
 				'step'      => 0.1,
+				'condition' => $slides,
 				'selectors' => array( $root => '--uncoder-carousel-spv: {{VALUE}}' ),
 				'ai'        => 'Decimals reveal part of the next slide, e.g. 1.2. Set slides_per_view_tablet / slides_per_view_mobile for smaller screens.',
 			)
@@ -59,6 +159,7 @@ trait Carousel_Engine {
 				'min'       => 1,
 				'max'       => 10,
 				'step'      => 1,
+				'condition' => $slides,
 				'selectors' => array( $root => '--uncoder-carousel-sts: {{VALUE}}' ),
 			)
 		);
@@ -92,13 +193,14 @@ trait Carousel_Engine {
 				'selectors'            => array( $root => '--uncoder-carousel-align: {{VALUE}}' ),
 			)
 		);
-		$this->add_control( 'nav_heading', array( 'type' => 'heading', 'label' => __( 'Navigation', 'uncoder' ) ) );
+		$this->add_control( 'nav_heading', array( 'type' => 'heading', 'label' => __( 'Navigation', 'uncoder' ), 'condition' => $slides ) );
 		$this->add_control(
 			'arrows',
 			array(
-				'type'    => 'switch',
-				'label'   => __( 'Arrows', 'uncoder' ),
-				'default' => true,
+				'type'      => 'switch',
+				'label'     => __( 'Arrows', 'uncoder' ),
+				'default'   => true,
+				'condition' => $slides,
 			)
 		);
 		$this->add_control(
@@ -138,8 +240,9 @@ trait Carousel_Engine {
 			array(
 				'type'    => 'select',
 				'label'   => __( 'Pagination', 'uncoder' ),
-				'default' => 'dots',
-				'options' => array(
+				'default'   => 'dots',
+				'condition' => $slides,
+				'options'   => array(
 					''         => __( 'None', 'uncoder' ),
 					'dots'     => __( 'Dots', 'uncoder' ),
 					'fraction' => __( 'Fraction (2 / 5)', 'uncoder' ),
@@ -153,6 +256,7 @@ trait Carousel_Engine {
 				'type'        => 'switch',
 				'label'       => __( 'Rewind', 'uncoder' ),
 				'description' => __( 'Next on the last slide goes back to the first one.', 'uncoder' ),
+				'condition'   => $slides,
 			)
 		);
 		$this->add_control(
@@ -162,26 +266,29 @@ trait Carousel_Engine {
 				'label'       => __( 'Mouse drag', 'uncoder' ),
 				'description' => __( 'Touch swipe and trackpads always work.', 'uncoder' ),
 				'default'     => true,
+				'condition'   => $slides,
 			)
 		);
 		$this->add_control(
 			'speed',
 			array(
 				'type'    => 'number',
-				'label'   => __( 'Transition duration (ms)', 'uncoder' ),
-				'min'     => 0,
-				'max'     => 3000,
-				'step'    => 50,
-				'default' => 500,
+				'label'     => __( 'Transition duration (ms)', 'uncoder' ),
+				'min'       => 0,
+				'max'       => 3000,
+				'step'      => 50,
+				'default'   => 500,
+				'condition' => $slides,
 			)
 		);
-		$this->add_control( 'autoplay_heading', array( 'type' => 'heading', 'label' => __( 'Autoplay', 'uncoder' ) ) );
+		$this->add_control( 'autoplay_heading', array( 'type' => 'heading', 'label' => __( 'Autoplay', 'uncoder' ), 'condition' => $slides ) );
 		$this->add_control(
 			'autoplay',
 			array(
 				'type'        => 'switch',
 				'label'       => __( 'Autoplay', 'uncoder' ),
 				'description' => __( 'Never starts for visitors who prefer reduced motion; pauses while hovered or focused.', 'uncoder' ),
+				'condition'   => $slides,
 			)
 		);
 		$this->add_control(
@@ -487,6 +594,9 @@ trait Carousel_Engine {
 	 * @return array<string,mixed>
 	 */
 	protected function carousel_data( array $s ): array {
+		if ( $this->is_ticker( $s ) ) {
+			return array( 'ticker' => (int) self::carousel_number( $s['ticker_speed'] ?? '', 40, 5, 500 ) );
+		}
 		return array(
 			'autoplay'     => ! empty( $s['autoplay'] ),
 			'delay'        => (int) self::carousel_number( $s['autoplay_delay'] ?? '', 5000, 1000, 30000 ),
@@ -513,7 +623,19 @@ trait Carousel_Engine {
 	 */
 	protected function carousel_start( array $s, Render_Context $ctx, array $classes = array() ): string {
 		$classes = array_merge( array( 'uncoder-carousel' ), $classes );
-		if ( ! empty( $s['arrows'] ) ) {
+		if ( $this->is_ticker( $s ) ) {
+			$classes[] = 'uncoder-carousel--ticker';
+			// In the editor the row stays still, so every slide can be selected and edited.
+			if ( ! $ctx->editor ) {
+				$classes[] = 'uncoder-carousel--ticker-run';
+			}
+			if ( 'right' === ( $s['ticker_direction'] ?? 'left' ) ) {
+				$classes[] = 'uncoder-carousel--right';
+			}
+			if ( ! array_key_exists( 'ticker_pause', $s ) || ! empty( $s['ticker_pause'] ) ) {
+				$classes[] = 'uncoder-carousel--pause';
+			}
+		} elseif ( ! empty( $s['arrows'] ) ) {
 			$position  = in_array( $s['arrows_position'] ?? 'inside', array( 'inside', 'outside', 'bottom' ), true ) ? $s['arrows_position'] : 'inside';
 			$classes[] = 'uncoder-carousel--arrows-' . $position;
 		}
@@ -529,12 +651,22 @@ trait Carousel_Engine {
 	}
 
 	/**
-	 * Opens one slide.
+	 * Opens one slide. A clone (the ticker's second copy) is hidden from assistive tech and inert.
 	 *
 	 * @param string[] $classes Extra slide classes.
 	 */
-	protected function carousel_slide_start( int $index, int $total, array $classes = array() ): string {
+	protected function carousel_slide_start( int $index, int $total, array $classes = array(), bool $clone = false ): string {
 		array_unshift( $classes, 'uncoder-carousel__slide' );
+		if ( $clone ) {
+			$classes[] = 'uncoder-carousel__slide--clone';
+			return '<div' . Utils::attrs(
+				array(
+					'class'       => $classes,
+					'aria-hidden' => 'true',
+					'inert'       => true,
+				)
+			) . '>';
+		}
 		return '<div' . Utils::attrs(
 			array(
 				'class'                => $classes,
@@ -552,6 +684,9 @@ trait Carousel_Engine {
 	 * @param array<string,mixed> $s Effective settings.
 	 */
 	protected function carousel_end( array $s, Render_Context $ctx, int $total ): string {
+		if ( $this->is_ticker( $s ) ) {
+			return '</div></div></div>';
+		}
 		$track = $this->carousel_track_id( $ctx );
 		$out   = '</div>';
 		if ( ! empty( $s['arrows'] ) ) {

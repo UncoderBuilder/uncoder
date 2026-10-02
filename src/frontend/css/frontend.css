@@ -668,6 +668,17 @@ img.uncoder-svg--img {
 .uncoder-hover-fill:hover {
   background-size: 100% 100%;
 }
+/* Fill from bottom: the fill colour rises from the bottom edge (a dark tint unless --uncoder-btn-fill is set). */
+.uncoder-hover-fill-up {
+  background-image: linear-gradient(var(--uncoder-btn-fill, rgb(0 0 0 / 0.18)), var(--uncoder-btn-fill, rgb(0 0 0 / 0.18)));
+  background-position: 50% 100%;
+  background-size: 100% 0;
+  background-repeat: no-repeat;
+  transition: background-size 0.35s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+.uncoder-hover-fill-up:is(:hover, :focus-visible) {
+  background-size: 100% 100%;
+}
 /* Text roll: the label is drawn twice as text shadows (one in place, one a line below) and clipped to its
    own line; on hover both move up, so the text rolls out at the top while the copy rolls in from below.
    CSS only, so it also works site-wide (button-fx.json) and on buttons inside other widgets. */

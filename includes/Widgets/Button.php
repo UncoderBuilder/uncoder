@@ -27,6 +27,7 @@ class Button extends Widget_Base {
 		'shine'    => 'Shine',
 		'arrow'    => 'Nudge icon',
 		'fill'     => 'Fill from left',
+		'fill-up'  => 'Fill from bottom',
 		'underline' => 'Underline',
 		'flip'     => 'Text roll',
 	);
@@ -197,6 +198,16 @@ class Button extends Widget_Base {
 			)
 		);
 		$this->add_group( 'hover_shadow', array( 'type' => 'box_shadow', 'label' => __( 'Shadow', 'uncoder' ), 'selector' => '{{WRAPPER}} .uncoder-btn:hover' ) );
+		$this->add_control(
+			'hover_fill',
+			array(
+				'type'        => 'color',
+				'label'       => __( 'Fill color', 'uncoder' ),
+				'description' => __( 'The color that sweeps in with the Fill hover effects.', 'uncoder' ),
+				'selectors'   => array( '{{WRAPPER}} .uncoder-btn' => '--uncoder-btn-fill: {{VALUE}}' ),
+				'ai'          => 'With hover_effect "fill" or "fill-up": the colour that sweeps over the button (default a light tint for fill, a dark tint for fill-up). Set hover_text_color to keep the label readable on it.',
+			)
+		);
 		$this->end_tab();
 		$this->end_tabs();
 		$this->add_responsive_control(
