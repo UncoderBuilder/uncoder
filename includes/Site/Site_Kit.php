@@ -1090,7 +1090,9 @@ final class Site_Kit {
 		foreach ( array_keys( $created_docs ) as $new ) {
 			$doc      = Plugin::instance()->documents()->get( $new );
 			$elements = self::relink( $doc->elements(), $state, $ids, $old_home, $menu_map );
-			$doc->save( $elements );
+			// The plain HTML copy (post_content) is rewritten too: the first save still had the kit's old
+			// image and link addresses, and SEO plugins read their images from it. Templates have none.
+			$doc->save( $elements, array( 'content_fallback' => true ) );
 			$settings = $doc->page_settings();
 			if ( $settings ) {
 				$doc->save_page_settings( self::relink( $settings, $state, $ids, $old_home ) );
