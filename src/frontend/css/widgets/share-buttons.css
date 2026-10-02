@@ -1,0 +1,211 @@
+/* Share Buttons — .uncoder-share. Each item carries its brand colour in --uncoder-share-brand;
+   skins derive background / foreground / border from it. */
+
+.uncoder-share {
+  --uncoder-share-h: 40px;
+  --uncoder-share-icon: 18px;
+  --uncoder-share-bw: 1.5px;
+  --uncoder-share-radius: 10px;
+  --uncoder-share-grow: 0;
+  font-size: 14px;
+}
+.uncoder-share--sm {
+  --uncoder-share-h: 32px;
+  --uncoder-share-icon: 15px;
+  --uncoder-share-radius: 8px;
+  font-size: 13px;
+}
+.uncoder-share--lg {
+  --uncoder-share-h: 50px;
+  --uncoder-share-icon: 22px;
+  --uncoder-share-radius: 12px;
+  font-size: 16px;
+}
+.uncoder-share--square {
+  --uncoder-share-radius: 0;
+}
+.uncoder-share--circle {
+  --uncoder-share-radius: 999px;
+}
+
+.uncoder-share-buttons .uncoder-share__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.uncoder-share-buttons .uncoder-share__item {
+  display: flex;
+  flex-grow: var(--uncoder-share-grow);
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+.uncoder-share-buttons .uncoder-share__item[hidden] {
+  display: none;
+}
+
+/* Brand colours. */
+.uncoder-share__item--facebook { --uncoder-share-brand: #1877f2; }
+.uncoder-share__item--x { --uncoder-share-brand: #0f1419; }
+.uncoder-share__item--linkedin { --uncoder-share-brand: #0a66c2; }
+.uncoder-share__item--whatsapp { --uncoder-share-brand: #1fae54; }
+.uncoder-share__item--telegram { --uncoder-share-brand: #229ed9; }
+.uncoder-share__item--pinterest { --uncoder-share-brand: #e60023; }
+.uncoder-share__item--reddit { --uncoder-share-brand: #ff4500; }
+.uncoder-share__item--email { --uncoder-share-brand: #52606d; }
+.uncoder-share__item--copy { --uncoder-share-brand: #475569; }
+.uncoder-share__item--native { --uncoder-share-brand: var(--uncoder-c-primary, #2b59ff); }
+.uncoder-share--custom .uncoder-share__item {
+  --uncoder-share-brand: var(--uncoder-share-custom, var(--uncoder-c-primary, #2b59ff));
+}
+
+/* Button. */
+.uncoder-share a.uncoder-share__btn,
+.uncoder-share button.uncoder-share__btn {
+  position: relative;
+  display: inline-flex;
+  flex-grow: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  min-width: var(--uncoder-share-h);
+  height: var(--uncoder-share-h);
+  margin: 0;
+  padding: 0 1.1em;
+  border: var(--uncoder-share-bw) solid var(--uncoder-share-bc, transparent);
+  border-radius: var(--uncoder-share-radius);
+  background-color: var(--uncoder-share-bg, var(--uncoder-share-brand, #4b5563));
+  color: var(--uncoder-share-fg, #fff);
+  font: inherit;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: none;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.uncoder-share__btn:focus {
+  outline: none;
+}
+.uncoder-share__btn:focus-visible {
+  outline: 2px solid var(--uncoder-share-brand, currentColor);
+  outline-offset: 2px;
+}
+.uncoder-share__icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  font-size: var(--uncoder-share-icon);
+  line-height: 1;
+}
+.uncoder-share__icon .uncoder-svg {
+  width: 1em;
+  height: 1em;
+}
+.uncoder-share__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Skins. */
+.uncoder-share--solid .uncoder-share__btn:is(:hover, :focus-visible) {
+  --uncoder-share-bg: color-mix(in srgb, var(--uncoder-share-brand) 84%, #000);
+}
+.uncoder-share--soft .uncoder-share__btn {
+  --uncoder-share-bg: color-mix(in srgb, var(--uncoder-share-brand) 11%, transparent);
+  --uncoder-share-fg: var(--uncoder-share-brand);
+}
+.uncoder-share--soft .uncoder-share__btn:is(:hover, :focus-visible) {
+  --uncoder-share-bg: color-mix(in srgb, var(--uncoder-share-brand) 20%, transparent);
+}
+.uncoder-share--outline .uncoder-share__btn {
+  --uncoder-share-bg: transparent;
+  --uncoder-share-fg: var(--uncoder-share-brand);
+  --uncoder-share-bc: var(--uncoder-share-brand);
+}
+.uncoder-share--outline .uncoder-share__btn:is(:hover, :focus-visible) {
+  --uncoder-share-bg: var(--uncoder-share-brand);
+  --uncoder-share-fg: #fff;
+}
+.uncoder-share--minimal .uncoder-share__btn {
+  --uncoder-share-bg: transparent;
+  --uncoder-share-fg: var(--uncoder-share-brand);
+}
+.uncoder-share--minimal.uncoder-share--view-icon .uncoder-share__btn {
+  min-width: calc(var(--uncoder-share-icon) + 12px);
+}
+/* Padding modifiers keep the base specificity (0,2,1) so the Padding control still wins. */
+.uncoder-share--minimal a.uncoder-share__btn,
+.uncoder-share--minimal button.uncoder-share__btn {
+  padding-inline: 0.4em;
+}
+.uncoder-share--view-icon a.uncoder-share__btn,
+.uncoder-share--view-icon button.uncoder-share__btn {
+  padding-inline: 0;
+}
+.uncoder-share--minimal .uncoder-share__btn:is(:hover, :focus-visible) {
+  --uncoder-share-bg: color-mix(in srgb, var(--uncoder-share-brand) 10%, transparent);
+}
+
+/* Hover motion. */
+.uncoder-share--hover-lift .uncoder-share__btn:hover {
+  transform: translateY(-2px);
+}
+.uncoder-share--hover-grow .uncoder-share__btn:hover {
+  transform: scale(1.06);
+}
+
+/* "Copied" bubble set by the share module. */
+.uncoder-share__btn[data-uncoder-copied]::after {
+  content: attr(data-uncoder-copied);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  z-index: 5;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background-color: var(--uncoder-c-heading, #0f172a);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  transform: translateX(-50%);
+  pointer-events: none;
+  animation: uncoder-share-pop 0.18s ease-out;
+}
+@keyframes uncoder-share-pop {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 4px);
+  }
+}
+
+.uncoder-share__empty {
+  margin: 0;
+  padding: 12px;
+  border: 1px dashed var(--uncoder-c-border, #e5e7eb);
+  border-radius: 8px;
+  color: var(--uncoder-c-muted, #6b7280);
+  font-size: 14px;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uncoder-share a.uncoder-share__btn,
+  .uncoder-share button.uncoder-share__btn {
+    transition: none;
+  }
+  .uncoder-share--hover-lift .uncoder-share__btn:hover,
+  .uncoder-share--hover-grow .uncoder-share__btn:hover {
+    transform: none;
+  }
+  .uncoder-share__btn[data-uncoder-copied]::after {
+    animation: none;
+  }
+}

@@ -1,0 +1,267 @@
+<?php
+/**
+ * Font catalog and delivery.
+ *
+ * @package Uncoder\Builder
+ */
+
+namespace Uncoder\Builder\Core;
+
+use Uncoder\Builder\Plugin;
+
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Knows the Google Fonts catalog (bundled JSON), custom fonts and how to load them.
+ */
+final class Fonts {
+
+	public const SYSTEM = array(
+		'system-ui'  => 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+		'sans-serif' => 'ui-sans-serif, system-ui, sans-serif',
+		'serif'      => 'ui-serif, Georgia, Cambria, "Times New Roman", serif',
+		'monospace'  => 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
+	);
+
+	/** @var array<string, array{c:string,w:string[]}>|null */
+	private static ?array $catalog = null;
+
+	/**
+	 * @return array<string, array{c:string,w:string[]}> family => [category, weights]
+	 */
+	public static function catalog(): array {
+		if ( null === self::$catalog ) {
+			self::$catalog = array();
+			$file          = UNCODER_WB_PATH . 'assets/data/google-fonts.json';
+			if ( is_readable( $file ) ) {
+				$data = json_decode( (string) file_get_contents( $file ), true ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+				if ( is_array( $data ) ) {
+					self::$catalog = $data;
+				}
+			}
+		}
+		return self::$catalog;
+	}
+
+	public static function is_google( string $family ): bool {
+		return isset( self::catalog()[ $family ] );
+	}
+
+	/**
+	 * Family => category for every known font (Google + custom), as the TS engine needs it.
+	 *
+	 * @return array<string, array{c:string}>
+	 */
+	public static function categories(): array {
+		$out = array();
+		foreach ( self::catalog() + \Uncoder\Builder\Site\Custom_Fonts::catalog() + \Uncoder\Builder\Site\Adobe_Fonts::catalog() as $family => $data ) {
+			$out[ $family ] = array( 'c' => $data['c'] );
+		}
+		return $out;
+	}
+
+	public static function category( string $family ): string {
+		$custom = \Uncoder\Builder\Site\Custom_Fonts::get( $family );
+		$c      = $custom ? $custom['c'] : ( self::catalog()[ $family ]['c'] ?? ( \Uncoder\Builder\Site\Adobe_Fonts::catalog()[ $family ]['c'] ?? '' ) );
+		switch ( $c ) {
+			case 'serif':
+				return 'serif';
+			case 'monospace':
+				return 'monospace';
+			case 'handwriting':
+				return 'cursive';
+			default:
+				return 'sans-serif';
+		}
+	}
+
+	/**
+	 * CSS font-family value for a family name.
+	 */
+	public static function css_stack( string $family ): string {
+		$family = trim( $family );
+		if ( 0 === strpos( $family, 'var(' ) ) {
+			return Utils::css_value( $family );
+		}
+		if ( isset( self::SYSTEM[ $family ] ) ) {
+			return self::SYSTEM[ $family ];
+		}
+		$clean = preg_replace( '/[^A-Za-z0-9 \-_.]/', '', $family );
+		return '"' . $clean . '", ' . self::category( $clean );
+	}
+
+	/**
+	 * One css2 `family=` parameter. Families with an optical-size axis also load it (browsers then use the
+	 * display cut for big headings, e.g. Inter Display) — `family=Inter:opsz,wght@14..32,400;14..32,600`.
+	 *
+	 * @param string          $family  Family.
+	 * @param string|string[] $weights Weight list or a "min..max" range.
+	 */
+	public static function family_param( string $family, $weights ): string {
+		$name = str_replace( ' ', '+', $family );
+		$opsz = self::catalog()[ $family ]['o'] ?? null;
+		$list = is_string( $weights ) ? array( $weights ) : $weights;
+		if ( is_array( $opsz ) && 2 === count( $opsz ) ) {
+			$range = (int) $opsz[0] . '..' . (int) $opsz[1];
+			return 'family=' . $name . ':opsz,wght@' . implode( ';', array_map( static fn( $w ) => $range . ',' . $w, $list ) );
+		}
+		return 'family=' . $name . ':wght@' . implode( ';', $list );
+	}
+
+	/**
+	 * Enqueues fonts collected from generated CSS (family => weights).
+	 *
+	 * @param array<string, string[]> $fonts Fonts.
+	 */
+	public static function enqueue( array $fonts ): void {
+		$delivery = Plugin::instance()->kit()->setting( 'font_delivery', 'google' );
+		if ( 'none' === $delivery || ! $fonts ) {
+			return;
+		}
+		// Adobe Fonts project families: Adobe's stylesheet (they are not Google fonts, so skipped below).
+		\Uncoder\Builder\Site\Adobe_Fonts::enqueue_for( array_map( 'strval', array_keys( $fonts ) ) );
+		$families = array();
+		foreach ( $fonts as $family => $weights ) {
+			// An uploaded font with the same name replaces the Google one.
+			if ( ! self::is_google( $family ) || \Uncoder\Builder\Site\Custom_Fonts::get( $family ) ) {
+				continue;
+			}
+			$available = self::catalog()[ $family ]['w'] ?? array( '400' );
+			$requested = array_map( 'strval', $weights ? $weights : array( '400' ) );
+			$axis      = self::catalog()[ $family ]['v'] ?? null;
+			// Variable fonts: in-between weights (e.g. 650, 750) need the axis range, not static instances.
+			if ( is_array( $axis ) && array_diff( $requested, $available ) ) {
+				$families[ $family ] = (int) $axis[0] . '..' . (int) $axis[1];
+				continue;
+			}
+			$wanted = array_values( array_intersect( $requested, $available ) );
+			if ( ! $wanted ) {
+				$wanted = in_array( '400', $available, true ) ? array( '400' ) : array( $available[0] );
+			}
+			sort( $wanted );
+			$families[ $family ] = $wanted;
+		}
+		if ( ! $families ) {
+			return;
+		}
+		ksort( $families );
+		$parts = array();
+		foreach ( $families as $family => $weights ) {
+			$parts[] = self::family_param( $family, $weights );
+		}
+		$url    = 'https://fonts.googleapis.com/css2?' . implode( '&', $parts ) . '&display=swap';
+		$handle = 'uncoder-fonts-' . substr( md5( $url ), 0, 8 );
+		if ( 'local' === $delivery ) {
+			// Self-hosted copies: visitors' browsers never contact Google.
+			$local = self::local_css( $url );
+			if ( $local ) {
+				wp_enqueue_style( $handle, $local, array(), null ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- the file name is a content hash.
+			}
+			return;
+		}
+		wp_enqueue_style( $handle, $url, array(), null ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
+	}
+
+	/**
+	 * URL of a locally stored copy of a Google Fonts stylesheet, downloading it (and its WOFF2 files)
+	 * on first use. Returns null while the download is not available; the page then uses the
+	 * fallback font stack and the download is retried after ten minutes.
+	 */
+	public static function local_css( string $google_url ): ?string {
+		$uploads = Utils::uploads();
+		if ( ! $uploads ) {
+			return null;
+		}
+		$hash = substr( md5( $google_url ), 0, 16 );
+		$file = $uploads['dir'] . '/fonts/' . $hash . '.css';
+		if ( file_exists( $file ) ) {
+			return $uploads['url'] . '/fonts/' . $hash . '.css';
+		}
+		$lock = 'uncoder_wb_font_dl_' . $hash;
+		if ( get_transient( $lock ) ) {
+			return null;
+		}
+		set_transient( $lock, 1, 10 * MINUTE_IN_SECONDS );
+		if ( ! self::download( $google_url, $uploads['dir'] . '/fonts', $file ) ) {
+			return null;
+		}
+		delete_transient( $lock );
+		return $uploads['url'] . '/fonts/' . $hash . '.css';
+	}
+
+	private static function download( string $google_url, string $dir, string $css_file ): bool {
+		$started = microtime( true );
+		// A current browser user agent makes Google serve WOFF2 with unicode-range subsets.
+		$ua       = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36';
+		$response = wp_safe_remote_get(
+			$google_url,
+			array(
+				'timeout'    => 8,
+				'user-agent' => $ua,
+			)
+		);
+		if ( is_wp_error( $response ) || 200 !== (int) wp_remote_retrieve_response_code( $response ) ) {
+			return false;
+		}
+		$css = (string) wp_remote_retrieve_body( $response );
+		if ( ! preg_match_all( '#url\((https://fonts\.gstatic\.com/[^)\s\'"]+\.woff2)\)#', $css, $m ) ) {
+			return false;
+		}
+		if ( ! wp_mkdir_p( $dir . '/files' ) ) {
+			return false;
+		}
+		foreach ( array_unique( $m[1] ) as $font_url ) {
+			if ( microtime( true ) - $started > 20 ) {
+				return false; // Finish on a later request; files already fetched are kept.
+			}
+			$name   = md5( $font_url ) . '.woff2';
+			$target = $dir . '/files/' . $name;
+			if ( ! file_exists( $target ) ) {
+				$font = wp_safe_remote_get(
+					$font_url,
+					array(
+						'timeout'             => 8,
+						'stream'              => true,
+						'filename'            => $target . '.part',
+						'limit_response_size' => 2 * MB_IN_BYTES,
+						'user-agent'          => $ua,
+					)
+				);
+				if ( is_wp_error( $font ) || 200 !== (int) wp_remote_retrieve_response_code( $font ) || ! filesize( $target . '.part' ) ) {
+					wp_delete_file( $target . '.part' );
+					return false;
+				}
+				rename( $target . '.part', $target ); // phpcs:ignore WordPress.WP.AlternativeFunctions.rename_rename
+			}
+			$css = str_replace( $font_url, 'files/' . $name, $css );
+		}
+		$css = "/* Google Fonts, self-hosted by Uncoder. Licenses: https://fonts.google.com/attribution */\n" . $css;
+		return false !== file_put_contents( $css_file, $css ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+	}
+
+	/**
+	 * Searches the catalog (used by the editor and MCP).
+	 *
+	 * @return array<int, array{family:string,category:string,weights:string[]}>
+	 */
+	public static function search( string $query, int $limit = 30, string $category = '' ): array {
+		$query = strtolower( trim( $query ) );
+		$out   = array();
+		foreach ( self::catalog() as $family => $data ) {
+			if ( '' !== $category && $data['c'] !== $category ) {
+				continue;
+			}
+			if ( '' === $query || false !== strpos( strtolower( $family ), $query ) ) {
+				$out[] = array(
+					'family'   => $family,
+					'category' => $data['c'],
+					'weights'  => $data['w'],
+				);
+				if ( count( $out ) >= $limit ) {
+					break;
+				}
+			}
+		}
+		return $out;
+	}
+}

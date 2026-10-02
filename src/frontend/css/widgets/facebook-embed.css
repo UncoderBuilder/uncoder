@@ -1,0 +1,243 @@
+/* Facebook Embed — the box has the plugin's size (page / post: width + height, video: aspect ratio);
+   Facebook draws pages at most 500px wide and posts at most 750px, so the box never grows beyond.
+   The facade (a button drawn locally) fills it until the "embed-facade" module loads the plugin. */
+
+.uncoder-facebook-embed {
+  --uncoder-fb-accent: #1877f2;
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  isolation: isolate;
+}
+.uncoder-facebook-embed--page {
+  max-width: min(var(--uncoder-fb-w, 500px), 500px);
+  height: var(--uncoder-fb-h, 500px);
+}
+.uncoder-facebook-embed--post {
+  max-width: min(var(--uncoder-fb-w, 500px), 750px);
+  height: var(--uncoder-fb-h, 600px);
+}
+.uncoder-facebook-embed--video {
+  max-width: var(--uncoder-fb-w, 100%);
+  aspect-ratio: var(--uncoder-fb-ratio, 16 / 9);
+  background-color: #000;
+}
+
+.uncoder-facebook-embed__iframe {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  overflow: hidden;
+}
+
+/* ------------------------------------------------------------------ Facade */
+
+/* ".uncoder" keeps theme button styles out. */
+.uncoder .uncoder-facebook-embed__facade {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0 0 14px;
+  overflow: hidden;
+  border: 0;
+  border-radius: inherit;
+  background: var(--uncoder-fb-bg, #fff);
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.1);
+  color: var(--uncoder-fb-fg, #1c1e21);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.35;
+  text-align: start;
+  text-transform: none;
+  letter-spacing: normal;
+  cursor: pointer;
+}
+.uncoder .uncoder-facebook-embed__facade[hidden] {
+  display: none;
+}
+.uncoder-facebook-embed__facade:focus-visible {
+  outline: 3px solid var(--uncoder-fb-accent);
+  outline-offset: -3px;
+}
+
+.uncoder-facebook-embed__cover {
+  flex: 0 0 auto;
+  height: min(32%, 130px);
+  background:
+    radial-gradient(90% 140% at 85% 0%, rgb(255 255 255 / 0.28), transparent 60%),
+    linear-gradient(135deg, var(--uncoder-fb-accent), color-mix(in srgb, var(--uncoder-fb-accent) 55%, #0b1e3f));
+}
+.uncoder-facebook-embed--no-cover .uncoder-facebook-embed__cover {
+  display: none;
+}
+
+.uncoder-facebook-embed__identity {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 14px 16px 10px;
+}
+.uncoder-facebook-embed__cover + .uncoder-facebook-embed__identity {
+  align-items: flex-end;
+  margin-top: -30px;
+}
+.uncoder-facebook-embed__logo {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: var(--uncoder-fb-accent);
+  color: #fff;
+}
+.uncoder-facebook-embed__cover + .uncoder-facebook-embed__identity .uncoder-facebook-embed__logo {
+  width: 60px;
+  height: 60px;
+  box-shadow: 0 0 0 4px var(--uncoder-fb-bg, #fff);
+}
+.uncoder-facebook-embed__logo .uncoder-svg {
+  width: 62%;
+  height: 62%;
+}
+.uncoder-facebook-embed__name {
+  overflow: hidden;
+  padding-bottom: 2px;
+  font-size: 15px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* A sketch of the content that will load. */
+.uncoder-facebook-embed__lines {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+  padding: 4px 16px 0;
+  overflow: hidden;
+}
+.uncoder-facebook-embed__lines > span {
+  flex: 0 0 10px;
+  width: 85%;
+  border-radius: 5px;
+  background-color: color-mix(in srgb, currentColor 9%, transparent);
+}
+.uncoder-facebook-embed__lines > span:first-child {
+  width: 55%;
+}
+.uncoder-facebook-embed__lines > span:last-child {
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0;
+  margin-top: 4px;
+  border-radius: 8px;
+  background-color: color-mix(in srgb, currentColor 6%, transparent);
+}
+
+.uncoder-facebook-embed__cta {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  align-self: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 10px 18px;
+  border-radius: 6px;
+  background-color: var(--uncoder-fb-accent);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  transition: filter 0.2s, transform 0.2s;
+}
+.uncoder-facebook-embed__cta .uncoder-svg {
+  width: 16px;
+  height: 16px;
+}
+.uncoder-facebook-embed__facade:is(:hover, :focus-visible) .uncoder-facebook-embed__cta {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.uncoder-facebook-embed__note {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 0 16px;
+  color: color-mix(in srgb, currentColor 62%, transparent);
+  font-size: 12px;
+  text-align: center;
+}
+.uncoder-facebook-embed__note .uncoder-svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Video: a dark stage with the button in the middle. */
+.uncoder-facebook-embed--video .uncoder-facebook-embed__facade {
+  justify-content: space-between;
+  padding-bottom: 12px;
+  background: var(--uncoder-fb-bg, radial-gradient(80% 90% at 50% 45%, #26324a, #0c0f16));
+  box-shadow: none;
+  color: var(--uncoder-fb-fg, #fff);
+}
+.uncoder-facebook-embed--video .uncoder-facebook-embed__cta {
+  margin-top: 0;
+  padding: 12px 20px;
+  border-radius: 999px;
+}
+.uncoder-facebook-embed--video .uncoder-facebook-embed__cta .uncoder-svg {
+  fill: currentColor;
+}
+.uncoder-facebook-embed--video .uncoder-facebook-embed__note {
+  margin-top: 0;
+}
+
+/* Editor placeholder */
+.uncoder-facebook-embed--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  max-width: none;
+  height: auto;
+  min-height: 140px;
+  padding: 24px;
+  border: 1px dashed #c3c9d4;
+  background-color: #f3f4f6;
+  color: #5b6474;
+  font: 500 13px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif;
+  text-align: center;
+}
+.uncoder-facebook-embed--empty .uncoder-svg {
+  width: 20px;
+  height: 20px;
+  color: #1877f2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uncoder-facebook-embed__cta {
+    transition: none;
+  }
+  .uncoder-facebook-embed__facade:is(:hover, :focus-visible) .uncoder-facebook-embed__cta {
+    transform: none;
+  }
+}

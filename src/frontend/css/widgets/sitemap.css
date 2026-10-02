@@ -1,0 +1,76 @@
+/* Sitemap — nav.uncoder-sitemap (grid of columns) > div.__section > .__title + ul.__list > li.__item > a.__link
+   (+ span.__count, ul.__list--sub). Controls set --uncoder-sitemap-{bullet|indent|gap} on the root. */
+
+.uncoder-sitemap {
+  --uncoder-sitemap-bullet: disc;
+  --uncoder-sitemap-indent: 1.25em;
+  --uncoder-sitemap-gap: 0.45em;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr));
+  gap: 40px;
+  align-items: start;
+}
+
+.uncoder-sitemap__section {
+  min-width: 0;
+}
+
+/* Section titles default to the Design System's Heading 5 size whatever their tag. */
+.uncoder .uncoder-sitemap__title {
+  margin: 0 0 0.85em;
+  font-size: var(--uncoder-t-h5-fs, 1.15em);
+  font-weight: var(--uncoder-t-h5-fw, 600);
+  line-height: var(--uncoder-t-h5-lh, 1.4);
+}
+
+/* Resets win over theme rules such as ".entry-content ul". */
+.uncoder ul.uncoder-sitemap__list {
+  margin: 0;
+  padding: 0;
+  padding-inline-start: var(--uncoder-sitemap-indent-top, var(--uncoder-sitemap-indent));
+  list-style-type: var(--uncoder-sitemap-bullet);
+  list-style-position: outside;
+}
+.uncoder ul.uncoder-sitemap__list--sub {
+  margin-top: var(--uncoder-sitemap-gap);
+  padding-inline-start: var(--uncoder-sitemap-indent);
+}
+.uncoder .uncoder-sitemap__item {
+  margin: 0;
+  padding: 0;
+}
+.uncoder .uncoder-sitemap__item + .uncoder-sitemap__item {
+  margin-top: var(--uncoder-sitemap-gap);
+}
+.uncoder-sitemap__item::marker {
+  color: color-mix(in srgb, currentColor 45%, transparent);
+}
+
+.uncoder a.uncoder-sitemap__link {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.uncoder a.uncoder-sitemap__link:hover {
+  color: var(--uncoder-c-primary, #2b59ff);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+.uncoder a.uncoder-sitemap__link[aria-current='page'] {
+  color: var(--uncoder-c-primary, #2b59ff);
+  font-weight: 600;
+}
+
+.uncoder-sitemap__count {
+  color: var(--uncoder-c-muted, #6b7280);
+  font-size: 0.875em;
+}
+
+.uncoder-sitemap__placeholder {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px dashed var(--uncoder-c-border, #d1d5db);
+  border-radius: 8px;
+  font: 13px/1.4 system-ui, sans-serif;
+  opacity: 0.75;
+}

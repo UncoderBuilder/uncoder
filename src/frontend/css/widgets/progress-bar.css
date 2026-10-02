@@ -1,0 +1,106 @@
+/* Progress Bar — .uncoder-progress: header (title + percentage) above a track with a filled bar.
+   The fill width comes from --uncoder-progress-value (generated from the "percentage" control). */
+
+.uncoder-progress {
+  --uncoder-progress-h: 10px;
+  --uncoder-progress-gap: 8px;
+  --uncoder-progress-duration: 1200ms;
+  display: flex;
+  flex-direction: column;
+  gap: var(--uncoder-progress-gap);
+}
+.uncoder-progress--has-inner {
+  --uncoder-progress-h: 28px;
+}
+
+.uncoder-progress__header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.uncoder-progress__title {
+  font-weight: 600;
+  overflow-wrap: break-word;
+}
+.uncoder .uncoder-progress__title {
+  margin: 0;
+  padding: 0;
+}
+.uncoder-progress__percent {
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.uncoder-progress__track {
+  position: relative;
+  height: var(--uncoder-progress-h);
+  overflow: hidden;
+  border-radius: 999px;
+  background-color: color-mix(in srgb, currentColor 12%, transparent);
+}
+
+.uncoder-progress__bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: var(--uncoder-progress-value, 0%);
+  max-width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: inherit;
+  background-color: var(--uncoder-c-primary, #2b59ff);
+  color: #fff;
+  font-size: 0.8125em;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  transition: width var(--uncoder-progress-duration) cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.uncoder-progress--has-inner .uncoder-progress__bar {
+  padding-inline: 0.85em;
+}
+.uncoder-progress__percent--inside {
+  margin-inline-start: auto;
+}
+
+/* Set by the "progress" module until the bar scrolls into view. */
+.uncoder-progress--pending .uncoder-progress__bar {
+  width: 0;
+  transition: none;
+}
+
+/* Stripes */
+.uncoder-progress--striped .uncoder-progress__bar {
+  background-image: linear-gradient(
+    45deg,
+    rgb(255 255 255 / 0.2) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgb(255 255 255 / 0.2) 50%,
+    rgb(255 255 255 / 0.2) 75%,
+    transparent 75%,
+    transparent
+  );
+  background-size: 1rem 1rem;
+}
+.uncoder-progress--stripes-move .uncoder-progress__bar {
+  animation: uncoder-progress-stripes 1s linear infinite;
+}
+@keyframes uncoder-progress-stripes {
+  from {
+    background-position: 1rem 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uncoder-progress__bar {
+    transition: none;
+  }
+  .uncoder-progress--stripes-move .uncoder-progress__bar {
+    animation: none;
+  }
+}

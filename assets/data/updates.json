@@ -1,0 +1,82 @@
+{
+  "changelog": [
+    {
+      "version": "0.1.0",
+      "date": "2026-09-28",
+      "title": "First release",
+      "groups": [
+        {
+          "label": "Editor",
+          "items": [
+            "Visual drag and drop editor with a live canvas, the Insert, Layers, Styles and Page panels, and an inspector with Content, Design and Behaviour tabs.",
+            "Desktop, tablet and mobile editing, hover and other states, classes, copy and paste of elements and styles, history with saved versions, command palette, find and replace, notes and accessibility checks.",
+            "Flexbox and grid containers, 80 widgets, 40 ready-made section patterns, shape dividers, masks, motion effects, interactions, visibility and display conditions per element."
+          ]
+        },
+        {
+          "label": "Design System",
+          "items": [
+            "Global colors, fonts, text styles, sizes, buttons and layout, with dark mode, a style book and site-wide behaviour such as smooth scrolling, page transitions and a lightbox.",
+            "Custom fonts, Adobe Fonts and custom icon sets."
+          ]
+        },
+        {
+          "label": "Theme Builder and popups",
+          "items": [
+            "Headers, footers, single and archive layouts, search results, 404 pages, loop items, mega menus and reusable sections, shown with display conditions.",
+            "Popups with layouts, triggers, frequency and visitor targeting."
+          ]
+        },
+        {
+          "label": "Dynamic content and forms",
+          "items": [
+            "Dynamic tags, query loop containers, loop grids and carousels with filters, custom fields (including ACF and Meta Box).",
+            "Forms with multi-step layouts, email notifications, auto-replies, webhooks, Slack and Discord, Mailchimp, MailerLite, Brevo and ActiveCampaign, spam protection with optional CAPTCHA, and stored submissions."
+          ]
+        },
+        {
+          "label": "AI",
+          "items": [
+            "Built-in MCP server so Claude, ChatGPT, Cursor, VS Code, Windsurf and other AI apps can build and edit the site, with OAuth sign-in, API keys with permissions, an activity log and one-click undo.",
+            "AI writing and AI images in the editor with your own API keys."
+          ]
+        },
+        {
+          "label": "Site",
+          "items": [
+            "Starter sites, site kits, template export and import, and Import from Elementor.",
+            "Cookie consent with Google Consent Mode v2, custom code snippets, business structured data, maintenance and coming soon mode, role access levels and an element manager.",
+            "Multilingual sites with WPML and Polylang.",
+            "Performance options, safe mode, version rollback and system info."
+          ]
+        }
+      ]
+    }
+  ],
+  "news": [
+    {
+      "id": "2026-09-ai-connect",
+      "date": "2026-09-28",
+      "tag": "guide",
+      "title": "Let your AI build with you",
+      "body": "Connect Claude, ChatGPT, Cursor or another AI app in a few clicks. It edits the same elements you do, and every change can be undone.",
+      "link": { "label": "Connect an AI app", "screen": "uncoder-ai" }
+    },
+    {
+      "id": "2026-09-patterns",
+      "date": "2026-09-28",
+      "tag": "tip",
+      "title": "Start from a pattern",
+      "body": "Insert → Sections has 40 ready-made patterns. In a header or footer template, the matching category is already selected.",
+      "link": { "label": "How patterns work", "docs": "editor/library/" }
+    },
+    {
+      "id": "2026-09-release-0-1-0",
+      "date": "2026-09-28",
+      "tag": "release",
+      "title": "Uncoder 0.1.0 is here",
+      "body": "The first public version: a visual builder, a full Theme Builder, forms, popups and a built-in MCP server. Free, with no account.",
+      "link": { "label": "Read the launch post", "url": "https://builder.uncoder.co/" }
+    }
+  ]
+}

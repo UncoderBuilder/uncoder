@@ -1,0 +1,143 @@
+/* Accordion (nested): <details class="uncoder-accordion__item"> + <summary class="uncoder-accordion__header">.
+   ".is-closing" is set by the accordion module while a closing item animates (it is still [open]).
+   Child combinators keep accordions nested inside a panel independent. */
+
+.uncoder-accordion {
+  --uncoder-acc-gap: 0px;
+  --uncoder-acc-icon-size: 18px;
+  --uncoder-acc-icon-gap: 14px;
+  --uncoder-acc-icon-color: currentColor;
+  --uncoder-acc-icon-color-active: var(--uncoder-c-primary, #2b59ff);
+  --uncoder-acc-item-icon-size: 1.2em;
+  --uncoder-acc-item-icon-color: currentColor;
+  display: flex;
+  flex-direction: column;
+  gap: var(--uncoder-acc-gap);
+  min-width: 0;
+}
+
+.uncoder-accordion > .uncoder-accordion__item {
+  margin: 0;
+  padding: 0;
+  border: 0 solid var(--uncoder-c-border, #e5e7eb);
+  border-bottom-width: 1px;
+  transition: border-color 0.2s;
+}
+
+.uncoder-accordion > .uncoder-accordion__item > .uncoder-accordion__header {
+  display: flex;
+  align-items: center;
+  gap: var(--uncoder-acc-icon-gap);
+  margin: 0;
+  padding: 18px 0;
+  list-style: none;
+  color: var(--uncoder-c-heading, #111827);
+  font-weight: 600;
+  line-height: 1.4;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.2s, background-color 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.uncoder-accordion > .uncoder-accordion__item > .uncoder-accordion__header::-webkit-details-marker {
+  display: none;
+}
+
+.uncoder-accordion > .uncoder-accordion__item > .uncoder-accordion__header::marker {
+  content: "";
+}
+
+.uncoder-accordion > .uncoder-accordion__item > .uncoder-accordion__header:focus-visible {
+  outline: 2px solid var(--uncoder-c-primary, #2b59ff);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.uncoder-accordion__header > .uncoder-accordion__title {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+}
+
+.uncoder-accordion__header > .uncoder-accordion__item-icon {
+  flex-shrink: 0;
+  width: var(--uncoder-acc-item-icon-size);
+  height: var(--uncoder-acc-item-icon-size);
+  color: var(--uncoder-acc-item-icon-color);
+}
+
+.uncoder-accordion__header > .uncoder-accordion__icon {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: var(--uncoder-acc-icon-size);
+  height: var(--uncoder-acc-icon-size);
+  color: var(--uncoder-acc-icon-color);
+  transition: color 0.2s, transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.uncoder-accordion--icon-start > .uncoder-accordion__item > .uncoder-accordion__header > .uncoder-accordion__icon {
+  order: -1;
+}
+
+.uncoder-accordion__icon > .uncoder-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.uncoder-accordion__icon > .uncoder-accordion__icon-open {
+  display: none;
+}
+
+/* Open state */
+.uncoder-accordion > .uncoder-accordion__item[open]:not(.is-closing) > .uncoder-accordion__header > .uncoder-accordion__icon {
+  color: var(--uncoder-acc-icon-color-active);
+}
+
+.uncoder-accordion > .uncoder-accordion__item[open]:not(.is-closing) > .uncoder-accordion__header > .uncoder-accordion__icon > .uncoder-accordion__icon-closed {
+  display: none;
+}
+
+.uncoder-accordion > .uncoder-accordion__item[open]:not(.is-closing) > .uncoder-accordion__header > .uncoder-accordion__icon > .uncoder-accordion__icon-open {
+  display: inline-block;
+}
+
+.uncoder-accordion--rotate > .uncoder-accordion__item[open]:not(.is-closing) > .uncoder-accordion__header > .uncoder-accordion__icon {
+  transform: rotate(180deg);
+}
+
+/* Panel (the module animates its height) */
+.uncoder-accordion > .uncoder-accordion__item > .uncoder-accordion__panel {
+  min-width: 0;
+}
+
+.uncoder-accordion__panel > .uncoder-accordion__content {
+  padding: 0 0 20px;
+}
+
+/* ------------------------------------------------------------------ Editor placeholder */
+
+.uncoder-accordion-placeholder {
+  padding: 32px 20px;
+  border: 1px dashed var(--uncoder-c-border, #d1d5db);
+  border-radius: 8px;
+  color: var(--uncoder-c-muted, #6b7280);
+  font: 14px/1.4 system-ui, sans-serif;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uncoder-accordion > .uncoder-accordion__item,
+  .uncoder-accordion > .uncoder-accordion__item > .uncoder-accordion__header,
+  .uncoder-accordion__header > .uncoder-accordion__icon {
+    transition: none;
+  }
+}

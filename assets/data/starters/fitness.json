@@ -1,0 +1,33 @@
+{
+	"id": "fitness",
+	"title": "Gym & coaching",
+	"description": "For gyms, fitness studios and personal trainers: an energetic photo hero, what members get, results, memberships, classes with prices, coaches, member reviews and opening hours.",
+	"kit": {
+		"colors": [
+			{ "id": "primary", "value": "#c2410c" },
+			{ "id": "secondary", "value": "#111827" },
+			{ "id": "accent", "value": "#facc15" },
+			{ "id": "heading", "value": "#0b0f19" },
+			{ "id": "text", "value": "#374151" },
+			{ "id": "muted", "value": "#6b7280" },
+			{ "id": "surface", "value": "#f3f4f6" },
+			{ "id": "border", "value": "#e5e7eb" }
+		],
+		"fonts": [
+			{ "id": "heading", "family": "Oswald" },
+			{ "id": "body", "family": "Barlow" }
+		],
+		"buttons": {
+			"radius": { "top": 4, "right": 4, "bottom": 4, "left": 4, "unit": "px", "linked": true },
+			"hover_effect": "lift"
+		}
+	},
+	"header": "header-sticky",
+	"footer": "footer-columns-dark",
+	"pages": [
+		{ "title": "Home", "front": true, "sections": ["hero-background-image", "features-numbers-grid", "features-checklist-split", "stats-band", "pricing-two-plans", "testimonials-logos-rating", "cta-banner-gradient"] },
+		{ "title": "Classes", "sections": ["hero-minimal-text", "content-menu-list", "content-gallery-grid", "faq-accordion-centered", "cta-banner-gradient"] },
+		{ "title": "Coaches", "sections": ["team-grid", "stats-band", "reviews-masonry", "cta-newsletter-signup"] },
+		{ "title": "Join", "sections": ["pricing-two-plans", "contact-cards-hours", "contact-details-form"] }
+	]
+}

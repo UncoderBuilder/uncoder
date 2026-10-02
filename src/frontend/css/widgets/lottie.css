@@ -1,0 +1,70 @@
+/* Lottie widget. The SVG keeps the animation's own aspect ratio. */
+.uncoder-lottie {
+  display: flex;
+  align-items: flex-start;
+  justify-content: var(--uncoder-lottie-align, center);
+}
+
+.uncoder-lottie__link {
+  display: flex;
+  justify-content: var(--uncoder-lottie-align, center);
+  width: 100%;
+  color: inherit;
+}
+
+.uncoder-lottie {
+  width: 100%;
+  max-width: 100%;
+  line-height: 0;
+}
+
+/* Reserve a square until the animation loads (only a configured player has data-settings). */
+.uncoder-lottie[data-settings]:not(.is-ready) {
+  aspect-ratio: 1;
+}
+
+/* No animation chosen: the widget prints nothing but its empty element, which takes no space. */
+.uncoder-lottie:not([data-settings]):empty {
+  display: none;
+}
+
+.uncoder-lottie svg {
+  display: block;
+  width: 100% !important;
+  height: auto !important;
+}
+
+.uncoder-lottie--click {
+  cursor: pointer;
+}
+
+.uncoder-lottie--click:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.uncoder-lottie--click:focus-visible {
+  outline: 2px solid var(--uncoder-c-primary, #2b59ff);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.uncoder-lottie.is-failed {
+  aspect-ratio: auto;
+}
+
+.uncoder-lottie--empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 160px;
+  padding: 24px;
+  border: 1px dashed rgb(0 0 0 / 0.2);
+  border-radius: 8px;
+  color: rgb(0 0 0 / 0.55);
+  font-size: 13px;
+  line-height: 1.4;
+  text-align: center;
+  aspect-ratio: auto;
+}

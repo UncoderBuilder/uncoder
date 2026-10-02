@@ -1,0 +1,566 @@
+{
+	"id": "features-icon-cards",
+	"title": "Features: 3-column icon cards",
+	"category": "features",
+	"description": "Centered intro followed by six feature cards (icon, h3, short description) in a 3-column grid — 2 columns on tablets, 1 on phones. White cards on a surface background.",
+	"keywords": [
+		"features",
+		"benefits",
+		"services",
+		"cards",
+		"icons",
+		"grid",
+		"why us"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "Features",
+			"settings": {
+				"gap": {
+					"size": 56,
+					"unit": "px"
+				},
+				"gap_mobile": {
+					"size": 40,
+					"unit": "px"
+				},
+				"background": {
+					"type": "classic",
+					"color": "var(--uncoder-c-surface)"
+				}
+			},
+			"children": [
+				{
+					"type": "container",
+					"settings": {
+						"gap": {
+							"size": 16,
+							"unit": "px"
+						},
+						"align": "center"
+					},
+					"children": [
+						{
+							"type": "heading",
+							"settings": {
+								"title": "Features",
+								"tag": "p",
+								"typography": {
+									"preset": "eyebrow"
+								},
+								"color": "var(--uncoder-c-primary)",
+								"align": "center"
+							}
+						},
+						{
+							"type": "heading",
+							"settings": {
+								"title": "Everything you need, nothing you don’t",
+								"tag": "h2",
+								"typography": {
+									"preset": "h2"
+								},
+								"align": "center",
+								"max_width": {
+									"size": 20,
+									"unit": "ch"
+								},
+								"text_wrap": "balance"
+							}
+						},
+						{
+							"type": "text-editor",
+							"settings": {
+								"content": "<p>A focused set of tools that work well together, so your team can move faster with less effort.</p>",
+								"typography": {
+									"preset": "lead"
+								},
+								"align": "center",
+								"max_width": {
+									"size": 58,
+									"unit": "ch"
+								}
+							}
+						}
+					]
+				},
+				{
+					"type": "container",
+					"settings": {
+						"layout": "grid",
+						"grid_columns": 3,
+						"grid_columns_tablet": 2,
+						"grid_columns_mobile": 1,
+						"gap": {
+							"size": 24,
+							"unit": "px"
+						},
+						"gap_mobile": {
+							"size": 16,
+							"unit": "px"
+						}
+					},
+					"children": [
+						{
+							"type": "icon-box",
+							"settings": {
+								"icon": {
+									"library": "lucide",
+									"value": "zap"
+								},
+								"view": "stacked",
+								"shape": "rounded",
+								"icon_size": {
+									"size": 22,
+									"unit": "px"
+								},
+								"icon_padding": {
+									"size": 13,
+									"unit": "px"
+								},
+								"icon_spacing": {
+									"size": 20,
+									"unit": "px"
+								},
+								"title": "Quick to set up",
+								"description": "Bring in what you already have and get going the same day, without a long onboarding.",
+								"title_tag": "h3",
+								"title_typography": {
+									"preset": "h4"
+								},
+								"_background": {
+									"type": "classic",
+									"color": "var(--uncoder-c-white)"
+								},
+								"_border": {
+									"style": "solid",
+									"width": {
+										"top": 1,
+										"right": 1,
+										"bottom": 1,
+										"left": 1,
+										"unit": "px",
+										"linked": true
+									},
+									"color": "var(--uncoder-c-border)"
+								},
+								"_radius": {
+									"top": 16,
+									"right": 16,
+									"bottom": 16,
+									"left": 16,
+									"unit": "px",
+									"linked": true
+								},
+								"_padding": {
+									"top": 32,
+									"right": 32,
+									"bottom": 32,
+									"left": 32,
+									"unit": "px",
+									"linked": true
+								},
+								"_padding_mobile": {
+									"top": 24,
+									"right": 24,
+									"bottom": 24,
+									"left": 24,
+									"unit": "px",
+									"linked": true
+								},
+								"_transform_hover": {
+									"translate_y": {
+										"size": -4,
+										"unit": "px"
+									}
+								},
+								"_transition": 250
+							}
+						},
+						{
+							"type": "icon-box",
+							"settings": {
+								"icon": {
+									"library": "lucide",
+									"value": "shield-check"
+								},
+								"view": "stacked",
+								"shape": "rounded",
+								"icon_size": {
+									"size": 22,
+									"unit": "px"
+								},
+								"icon_padding": {
+									"size": 13,
+									"unit": "px"
+								},
+								"icon_spacing": {
+									"size": 20,
+									"unit": "px"
+								},
+								"title": "Secure by default",
+								"description": "Access controls and regular backups keep your information safe without extra work.",
+								"title_tag": "h3",
+								"title_typography": {
+									"preset": "h4"
+								},
+								"_background": {
+									"type": "classic",
+									"color": "var(--uncoder-c-white)"
+								},
+								"_border": {
+									"style": "solid",
+									"width": {
+										"top": 1,
+										"right": 1,
+										"bottom": 1,
+										"left": 1,
+										"unit": "px",
+										"linked": true
+									},
+									"color": "var(--uncoder-c-border)"
+								},
+								"_radius": {
+									"top": 16,
+									"right": 16,
+									"bottom": 16,
+									"left": 16,
+									"unit": "px",
+									"linked": true
+								},
+								"_padding": {
+									"top": 32,
+									"right": 32,
+									"bottom": 32,
+									"left": 32,
+									"unit": "px",
+									"linked": true
+								},
+								"_padding_mobile": {
+									"top": 24,
+									"right": 24,
+									"bottom": 24,
+									"left": 24,
+									"unit": "px",
+									"linked": true
+								},
+								"_transform_hover": {
+									"translate_y": {
+										"size": -4,
+										"unit": "px"
+									}
+								},
+								"_transition": 250
+							}
+						},
+						{
+							"type": "icon-box",
+							"settings": {
+								"icon": {
+									"library": "lucide",
+									"value": "plug"
+								},
+								"view": "stacked",
+								"shape": "rounded",
+								"icon_size": {
+									"size": 22,
+									"unit": "px"
+								},
+								"icon_padding": {
+									"size": 13,
+									"unit": "px"
+								},
+								"icon_spacing": {
+									"size": 20,
+									"unit": "px"
+								},
+								"title": "Works with your tools",
+								"description": "Connect the apps your team already uses, so information flows without copy and paste.",
+								"title_tag": "h3",
+								"title_typography": {
+									"preset": "h4"
+								},
+								"_background": {
+									"type": "classic",
+									"color": "var(--uncoder-c-white)"
+								},
+								"_border": {
+									"style": "solid",
+									"width": {
+										"top": 1,
+										"right": 1,
+										"bottom": 1,
+										"left": 1,
+										"unit": "px",
+										"linked": true
+									},
+									"color": "var(--uncoder-c-border)"
+								},
+								"_radius": {
+									"top": 16,
+									"right": 16,
+									"bottom": 16,
+									"left": 16,
+									"unit": "px",
+									"linked": true
+								},
+								"_padding": {
+									"top": 32,
+									"right": 32,
+									"bottom": 32,
+									"left": 32,
+									"unit": "px",
+									"linked": true
+								},
+								"_padding_mobile": {
+									"top": 24,
+									"right": 24,
+									"bottom": 24,
+									"left": 24,
+									"unit": "px",
+									"linked": true
+								},
+								"_transform_hover": {
+									"translate_y": {
+										"size": -4,
+										"unit": "px"
+									}
+								},
+								"_transition": 250
+							}
+						},
+						{
+							"type": "icon-box",
+							"settings": {
+								"icon": {
+									"library": "lucide",
+									"value": "chart-line"
+								},
+								"view": "stacked",
+								"shape": "rounded",
+								"icon_size": {
+									"size": 22,
+									"unit": "px"
+								},
+								"icon_padding": {
+									"size": 13,
+									"unit": "px"
+								},
+								"icon_spacing": {
+									"size": 20,
+									"unit": "px"
+								},
+								"title": "Clear reporting",
+								"description": "See what is working at a glance with dashboards that stay up to date on their own.",
+								"title_tag": "h3",
+								"title_typography": {
+									"preset": "h4"
+								},
+								"_background": {
+									"type": "classic",
+									"color": "var(--uncoder-c-white)"
+								},
+								"_border": {
+									"style": "solid",
+									"width": {
+										"top": 1,
+										"right": 1,
+										"bottom": 1,
+										"left": 1,
+										"unit": "px",
+										"linked": true
+									},
+									"color": "var(--uncoder-c-border)"
+								},
+								"_radius": {
+									"top": 16,
+									"right": 16,
+									"bottom": 16,
+									"left": 16,
+									"unit": "px",
+									"linked": true
+								},
+								"_padding": {
+									"top": 32,
+									"right": 32,
+									"bottom": 32,
+									"left": 32,
+									"unit": "px",
+									"linked": true
+								},
+								"_padding_mobile": {
+									"top": 24,
+									"right": 24,
+									"bottom": 24,
+									"left": 24,
+									"unit": "px",
+									"linked": true
+								},
+								"_transform_hover": {
+									"translate_y": {
+										"size": -4,
+										"unit": "px"
+									}
+								},
+								"_transition": 250
+							}
+						},
+						{
+							"type": "icon-box",
+							"settings": {
+								"icon": {
+									"library": "lucide",
+									"value": "users"
+								},
+								"view": "stacked",
+								"shape": "rounded",
+								"icon_size": {
+									"size": 22,
+									"unit": "px"
+								},
+								"icon_padding": {
+									"size": 13,
+									"unit": "px"
+								},
+								"icon_spacing": {
+									"size": 20,
+									"unit": "px"
+								},
+								"title": "Built for teams",
+								"description": "Share, comment and assign work in one place, with permissions that fit how you work.",
+								"title_tag": "h3",
+								"title_typography": {
+									"preset": "h4"
+								},
+								"_background": {
+									"type": "classic",
+									"color": "var(--uncoder-c-white)"
+								},
+								"_border": {
+									"style": "solid",
+									"width": {
+										"top": 1,
+										"right": 1,
+										"bottom": 1,
+										"left": 1,
+										"unit": "px",
+										"linked": true
+									},
+									"color": "var(--uncoder-c-border)"
+								},
+								"_radius": {
+									"top": 16,
+									"right": 16,
+									"bottom": 16,
+									"left": 16,
+									"unit": "px",
+									"linked": true
+								},
+								"_padding": {
+									"top": 32,
+									"right": 32,
+									"bottom": 32,
+									"left": 32,
+									"unit": "px",
+									"linked": true
+								},
+								"_padding_mobile": {
+									"top": 24,
+									"right": 24,
+									"bottom": 24,
+									"left": 24,
+									"unit": "px",
+									"linked": true
+								},
+								"_transform_hover": {
+									"translate_y": {
+										"size": -4,
+										"unit": "px"
+									}
+								},
+								"_transition": 250
+							}
+						},
+						{
+							"type": "icon-box",
+							"settings": {
+								"icon": {
+									"library": "lucide",
+									"value": "life-buoy"
+								},
+								"view": "stacked",
+								"shape": "rounded",
+								"icon_size": {
+									"size": 22,
+									"unit": "px"
+								},
+								"icon_padding": {
+									"size": 13,
+									"unit": "px"
+								},
+								"icon_spacing": {
+									"size": 20,
+									"unit": "px"
+								},
+								"title": "Help when you need it",
+								"description": "Reach people who know the product inside out, by chat or email, whenever you are stuck.",
+								"title_tag": "h3",
+								"title_typography": {
+									"preset": "h4"
+								},
+								"_background": {
+									"type": "classic",
+									"color": "var(--uncoder-c-white)"
+								},
+								"_border": {
+									"style": "solid",
+									"width": {
+										"top": 1,
+										"right": 1,
+										"bottom": 1,
+										"left": 1,
+										"unit": "px",
+										"linked": true
+									},
+									"color": "var(--uncoder-c-border)"
+								},
+								"_radius": {
+									"top": 16,
+									"right": 16,
+									"bottom": 16,
+									"left": 16,
+									"unit": "px",
+									"linked": true
+								},
+								"_padding": {
+									"top": 32,
+									"right": 32,
+									"bottom": 32,
+									"left": 32,
+									"unit": "px",
+									"linked": true
+								},
+								"_padding_mobile": {
+									"top": 24,
+									"right": 24,
+									"bottom": 24,
+									"left": 24,
+									"unit": "px",
+									"linked": true
+								},
+								"_transform_hover": {
+									"translate_y": {
+										"size": -4,
+										"unit": "px"
+									}
+								},
+								"_transition": 250
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

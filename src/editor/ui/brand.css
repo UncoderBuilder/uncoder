@@ -1,0 +1,178 @@
+/* Brand mark and loader, shared by the editor and the admin screens (and the editor's boot screen,
+   which is plain HTML from Brand::loader() before any script runs — so the fallbacks below matter). */
+
+.uncoder-ui-brandmark {
+  display: block;
+  flex: none;
+}
+
+/* App icon (Brand.tsx AppIcon): petrol circle, white symbol; reversed in the dark interface. */
+.uncoder-ui-appicon {
+  display: block;
+  flex: none;
+}
+.uncoder-ui-appicon__disc {
+  fill: #083241;
+}
+.uncoder-ui-appicon__mark {
+  fill: #ffffff;
+}
+[data-uncoder-ui-theme='dark'] .uncoder-ui-appicon__disc {
+  fill: #f1eae7;
+}
+[data-uncoder-ui-theme='dark'] .uncoder-ui-appicon__mark {
+  fill: #083241;
+}
+
+/* ------------------------------------------------------------------ Loader
+   Black and white. The U holds still. The bolt cut strikes top to bottom in white light, flickers
+   twice while its glow spills over the U and the disc brightens, holds, then fades back into the
+   cut. One loop is 1.9 s. Fixed colors in every theme, like an app badge. */
+
+.uncoder-ui-loader {
+  --uncoder-ui-loader-size: 88px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+}
+.uncoder-ui-loader--sm {
+  --uncoder-ui-loader-size: 52px;
+}
+.uncoder-ui-loader--lg {
+  --uncoder-ui-loader-size: 128px;
+}
+
+.uncoder-ui-loader__disc {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: var(--uncoder-ui-loader-size);
+  height: var(--uncoder-ui-loader-size);
+  overflow: hidden;
+  border-radius: 50%;
+  background: #e2e2e2;
+}
+/* The light of the strike across the disc. */
+.uncoder-ui-loader__disc::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at 50% 46%, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.35) 45%, transparent 72%);
+  opacity: 0;
+  animation: uncoder-ui-loader-sky 1.9s linear infinite;
+  pointer-events: none;
+}
+.uncoder-ui-loader__mark {
+  position: relative;
+  z-index: 1;
+  width: calc(var(--uncoder-ui-loader-size) * 0.46);
+  height: auto;
+  overflow: visible;
+}
+.uncoder-ui-loader__u {
+  fill: #111111;
+}
+.uncoder-ui-loader__bolt {
+  fill: #ffffff;
+  /* A hairline of the same color covers anti-aliasing seams against the U. */
+  stroke: #ffffff;
+  stroke-width: 0.6;
+  stroke-linejoin: round;
+  transform-box: fill-box;
+  opacity: 0;
+  animation: uncoder-ui-loader-bolt 1.9s linear infinite;
+}
+.uncoder-ui-loader__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@keyframes uncoder-ui-loader-bolt {
+  0% {
+    clip-path: inset(-25% -25% 100% -25%);
+    opacity: 1;
+    filter: drop-shadow(0 0 2px #fff) drop-shadow(0 0 6px rgba(255, 255, 255, 0.9));
+  }
+  8% {
+    clip-path: inset(-25%);
+    opacity: 1;
+    filter: drop-shadow(0 0 3px #fff) drop-shadow(0 0 9px rgba(255, 255, 255, 0.95));
+  }
+  11% {
+    opacity: 0.15;
+  }
+  14% {
+    opacity: 1;
+    filter: drop-shadow(0 0 3px #fff) drop-shadow(0 0 8px rgba(255, 255, 255, 0.9));
+  }
+  17% {
+    opacity: 0.4;
+  }
+  22% {
+    opacity: 1;
+    filter: drop-shadow(0 0 2px #fff) drop-shadow(0 0 5px rgba(255, 255, 255, 0.7));
+  }
+  58% {
+    clip-path: inset(-25%);
+    opacity: 1;
+    filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.6));
+  }
+  76% {
+    clip-path: inset(-25%);
+    opacity: 0;
+    filter: none;
+  }
+  100% {
+    clip-path: inset(-25% -25% 100% -25%);
+    opacity: 0;
+  }
+}
+
+@keyframes uncoder-ui-loader-sky {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  7% {
+    opacity: 1;
+  }
+  11% {
+    opacity: 0.15;
+  }
+  14% {
+    opacity: 0.8;
+  }
+  17% {
+    opacity: 0.2;
+  }
+  22% {
+    opacity: 0.45;
+  }
+  48% {
+    opacity: 0;
+  }
+}
+
+@keyframes uncoder-ui-loader-glow {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uncoder-ui-loader__bolt {
+    animation: uncoder-ui-loader-glow 2.4s ease-in-out infinite;
+  }
+  .uncoder-ui-loader__disc::after {
+    animation: none;
+  }
+}

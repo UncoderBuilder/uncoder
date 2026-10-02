@@ -1,0 +1,33 @@
+{
+	"id": "clinic",
+	"title": "Clinic & wellness",
+	"description": "For clinics, therapists and wellness practices: a calm split hero, care areas, your story, patient reviews, FAQ and an appointment form.",
+	"kit": {
+		"colors": [
+			{ "id": "primary", "value": "#0f766e" },
+			{ "id": "secondary", "value": "#134e4a" },
+			{ "id": "accent", "value": "#f08a73" },
+			{ "id": "heading", "value": "#102a28" },
+			{ "id": "text", "value": "#3d4f4d" },
+			{ "id": "muted", "value": "#667977" },
+			{ "id": "surface", "value": "#eef6f4" },
+			{ "id": "border", "value": "#d8e6e2" }
+		],
+		"fonts": [
+			{ "id": "heading", "family": "Fraunces" },
+			{ "id": "body", "family": "DM Sans" }
+		],
+		"buttons": {
+			"radius": { "top": 10, "right": 10, "bottom": 10, "left": 10, "unit": "px", "linked": true },
+			"hover_effect": "grow"
+		}
+	},
+	"header": "header-sticky",
+	"footer": "footer-columns-dark",
+	"pages": [
+		{ "title": "Home", "front": true, "sections": ["hero-split-image", "features-icon-cards", "about-story-image", "testimonials-cards", "faq-two-column", "cta-split-image"] },
+		{ "title": "Treatments", "sections": ["features-alternating-rows", "pricing-three-tiers", "faq-two-column", "cta-dark-band"] },
+		{ "title": "About", "sections": ["about-story-image", "team-grid", "stats-band"] },
+		{ "title": "Contact", "sections": ["contact-details-form"] }
+	]
+}

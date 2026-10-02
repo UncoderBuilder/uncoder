@@ -1,0 +1,454 @@
+{
+	"id": "services-image-cards",
+	"title": "Services: image cards with links",
+	"category": "features",
+	"description": "Centered intro and three linked service cards (image, h3, description, “Learn more”). Three columns on desktop, horizontal cards on tablets, stacked cards on phones.",
+	"keywords": [
+		"services",
+		"offerings",
+		"cards",
+		"image",
+		"links",
+		"what we do"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "Services",
+			"settings": {
+				"gap": {
+					"size": 56,
+					"unit": "px"
+				},
+				"gap_mobile": {
+					"size": 40,
+					"unit": "px"
+				},
+				"background": {
+					"type": "classic",
+					"color": "var(--uncoder-c-surface)"
+				}
+			},
+			"children": [
+				{
+					"type": "container",
+					"settings": {
+						"gap": {
+							"size": 16,
+							"unit": "px"
+						},
+						"align": "center"
+					},
+					"children": [
+						{
+							"type": "heading",
+							"settings": {
+								"title": "Services",
+								"tag": "p",
+								"typography": {
+									"preset": "eyebrow"
+								},
+								"color": "var(--uncoder-c-primary)",
+								"align": "center"
+							}
+						},
+						{
+							"type": "heading",
+							"settings": {
+								"title": "How we can help",
+								"tag": "h2",
+								"typography": {
+									"preset": "h2"
+								},
+								"align": "center",
+								"max_width": {
+									"size": 20,
+									"unit": "ch"
+								},
+								"text_wrap": "balance"
+							}
+						},
+						{
+							"type": "text-editor",
+							"settings": {
+								"content": "<p>Pick a single service or combine them — every engagement starts with a conversation about your goals.</p>",
+								"typography": {
+									"preset": "lead"
+								},
+								"align": "center",
+								"max_width": {
+									"size": 58,
+									"unit": "ch"
+								}
+							}
+						}
+					]
+				},
+				{
+					"type": "container",
+					"settings": {
+						"layout": "grid",
+						"grid_columns": 3,
+						"grid_columns_tablet": 1,
+						"grid_columns_mobile": 1,
+						"gap": {
+							"size": 24,
+							"unit": "px"
+						},
+						"gap_mobile": {
+							"size": 16,
+							"unit": "px"
+						}
+					},
+					"children": [
+						{
+							"type": "image-box",
+							"settings": {
+								"image": {
+									"id": 0,
+									"url": "{{placeholder_image}}"
+								},
+								"alt": "",
+								"title": "Strategy",
+								"description": "We learn how your business works and turn it into a clear, prioritised plan.",
+								"title_tag": "h3",
+								"link": {
+									"url": "/services"
+								},
+								"link_click": "box",
+								"link_text": "Learn more",
+								"image_ratio": "4/3",
+								"image_ratio_mobile": "16/9",
+								"image_radius": {
+									"top": 12,
+									"right": 12,
+									"bottom": 12,
+									"left": 12,
+									"unit": "px",
+									"linked": true
+								},
+								"box_padding": {
+									"top": 12,
+									"right": 12,
+									"bottom": 12,
+									"left": 12,
+									"unit": "px",
+									"linked": true
+								},
+								"content_padding": {
+									"top": 20,
+									"right": 12,
+									"bottom": 12,
+									"left": 12,
+									"unit": "px",
+									"linked": false
+								},
+								"content_padding_tablet": {
+									"top": 12,
+									"right": 12,
+									"bottom": 12,
+									"left": 16,
+									"unit": "px",
+									"linked": false
+								},
+								"content_padding_mobile": {
+									"top": 20,
+									"right": 8,
+									"bottom": 8,
+									"left": 8,
+									"unit": "px",
+									"linked": false
+								},
+								"position_tablet": "left",
+								"position_mobile": "top",
+								"vertical_align_tablet": "middle",
+								"image_width_tablet": {
+									"size": 42,
+									"unit": "%"
+								},
+								"image_width_mobile": {
+									"size": 100,
+									"unit": "%"
+								},
+								"title_typography": {
+									"preset": "h4"
+								},
+								"_background": {
+									"type": "classic",
+									"color": "var(--uncoder-c-white)"
+								},
+								"_border": {
+									"style": "solid",
+									"width": {
+										"top": 1,
+										"right": 1,
+										"bottom": 1,
+										"left": 1,
+										"unit": "px",
+										"linked": true
+									},
+									"color": "var(--uncoder-c-border)"
+								},
+								"_radius": {
+									"top": 16,
+									"right": 16,
+									"bottom": 16,
+									"left": 16,
+									"unit": "px",
+									"linked": true
+								},
+								"_padding": {
+									"top": 0,
+									"right": 0,
+									"bottom": 0,
+									"left": 0,
+									"unit": "px",
+									"linked": true
+								},
+								"_padding_mobile": {
+									"top": 0,
+									"right": 0,
+									"bottom": 0,
+									"left": 0,
+									"unit": "px",
+									"linked": true
+								},
+								"hover_effect": "lift"
+							}
+						},
+						{
+							"type": "image-box",
+							"settings": {
+								"image": {
+									"id": 0,
+									"url": "{{placeholder_image}}"
+								},
+								"alt": "",
+								"title": "Design",
+								"description": "Thoughtful, on-brand design that makes the next step obvious for your customers.",
+								"title_tag": "h3",
+								"link": {
+									"url": "/services"
+								},
+								"link_click": "box",
+								"link_text": "Learn more",
+								"image_ratio": "4/3",
+								"image_ratio_mobile": "16/9",
+								"image_radius": {
+									"top": 12,
+									"right": 12,
+									"bottom": 12,
+									"left": 12,
+									"unit": "px",
+									"linked": true
+								},
+								"box_padding": {
+									"top": 12,
+									"right": 12,
+									"bottom": 12,
+									"left": 12,
+									"unit": "px",
+									"linked": true
+								},
+								"content_padding": {
+									"top": 20,
+									"right": 12,
+									"bottom": 12,
+									"left": 12,
+									"unit": "px",
+									"linked": false
+								},
+								"content_padding_tablet": {
+									"top": 12,
+									"right": 12,
+									"bottom": 12,
+									"left": 16,
+									"unit": "px",
+									"linked": false
+								},
+								"content_padding_mobile": {
+									"top": 20,
+									"right": 8,
+									"bottom": 8,
+									"left": 8,
+									"unit": "px",
+									"linked": false
+								},
+								"position_tablet": "left",
+								"position_mobile": "top",
+								"vertical_align_tablet": "middle",
+								"image_width_tablet": {
+									"size": 42,
+									"unit": "%"
+								},
+								"image_width_mobile": {
+									"size": 100,
+									"unit": "%"
+								},
+								"title_typography": {
+									"preset": "h4"
+								},
+								"_background": {
+									"type": "classic",
+									"color": "var(--uncoder-c-white)"
+								},
+								"_border": {
+									"style": "solid",
+									"width": {
+										"top": 1,
+										"right": 1,
+										"bottom": 1,
+										"left": 1,
+										"unit": "px",
+										"linked": true
+									},
+									"color": "var(--uncoder-c-border)"
+								},
+								"_radius": {
+									"top": 16,
+									"right": 16,
+									"bottom": 16,
+									"left": 16,
+									"unit": "px",
+									"linked": true
+								},
+								"_padding": {
+									"top": 0,
+									"right": 0,
+									"bottom": 0,
+									"left": 0,
+									"unit": "px",
+									"linked": true
+								},
+								"_padding_mobile": {
+									"top": 0,
+									"right": 0,
+									"bottom": 0,
+									"left": 0,
+									"unit": "px",
+									"linked": true
+								},
+								"hover_effect": "lift"
+							}
+						},
+						{
+							"type": "image-box",
+							"settings": {
+								"image": {
+									"id": 0,
+									"url": "{{placeholder_image}}"
+								},
+								"alt": "",
+								"title": "Delivery",
+								"description": "We build, test and launch — then stay close to measure and improve what we shipped.",
+								"title_tag": "h3",
+								"link": {
+									"url": "/services"
+								},
+								"link_click": "box",
+								"link_text": "Learn more",
+								"image_ratio": "4/3",
+								"image_ratio_mobile": "16/9",
+								"image_radius": {
+									"top": 12,
+									"right": 12,
+									"bottom": 12,
+									"left": 12,
+									"unit": "px",
+									"linked": true
+								},
+								"box_padding": {
+									"top": 12,
+									"right": 12,
+									"bottom": 12,
+									"left": 12,
+									"unit": "px",
+									"linked": true
+								},
+								"content_padding": {
+									"top": 20,
+									"right": 12,
+									"bottom": 12,
+									"left": 12,
+									"unit": "px",
+									"linked": false
+								},
+								"content_padding_tablet": {
+									"top": 12,
+									"right": 12,
+									"bottom": 12,
+									"left": 16,
+									"unit": "px",
+									"linked": false
+								},
+								"content_padding_mobile": {
+									"top": 20,
+									"right": 8,
+									"bottom": 8,
+									"left": 8,
+									"unit": "px",
+									"linked": false
+								},
+								"position_tablet": "left",
+								"position_mobile": "top",
+								"vertical_align_tablet": "middle",
+								"image_width_tablet": {
+									"size": 42,
+									"unit": "%"
+								},
+								"image_width_mobile": {
+									"size": 100,
+									"unit": "%"
+								},
+								"title_typography": {
+									"preset": "h4"
+								},
+								"_background": {
+									"type": "classic",
+									"color": "var(--uncoder-c-white)"
+								},
+								"_border": {
+									"style": "solid",
+									"width": {
+										"top": 1,
+										"right": 1,
+										"bottom": 1,
+										"left": 1,
+										"unit": "px",
+										"linked": true
+									},
+									"color": "var(--uncoder-c-border)"
+								},
+								"_radius": {
+									"top": 16,
+									"right": 16,
+									"bottom": 16,
+									"left": 16,
+									"unit": "px",
+									"linked": true
+								},
+								"_padding": {
+									"top": 0,
+									"right": 0,
+									"bottom": 0,
+									"left": 0,
+									"unit": "px",
+									"linked": true
+								},
+								"_padding_mobile": {
+									"top": 0,
+									"right": 0,
+									"bottom": 0,
+									"left": 0,
+									"unit": "px",
+									"linked": true
+								},
+								"hover_effect": "lift"
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

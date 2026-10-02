@@ -1,0 +1,376 @@
+/* Video Playlist — a player and a list in a grid. The list position (right / left / below, per
+   breakpoint) arrives as custom properties (Video_Playlist::POSITIONS). Beside the player the panel
+   is taken out of the flow and fills the row, so the player's aspect ratio sets the height and the
+   list scrolls; below the player the panel is in the flow, capped at the list height. */
+
+.uncoder-video-playlist {
+  --uncoder-vpl-cols: minmax(0, 1fr) var(--uncoder-vpl-list-width);
+  --uncoder-vpl-list-order: 0;
+  --uncoder-vpl-list-pos: absolute;
+  --uncoder-vpl-list-max: none;
+  --uncoder-vpl-list-width: min(360px, 40%);
+  --uncoder-vpl-list-height: 420px;
+  --uncoder-vpl-thumb: 112px;
+  --uncoder-vpl-play: 68px;
+  --uncoder-vpl-accent: var(--uncoder-c-primary, #2b59ff);
+  display: grid;
+  grid-template-columns: var(--uncoder-vpl-cols);
+  align-items: start;
+  gap: 16px;
+}
+
+/* ------------------------------------------------------------------ Player */
+
+.uncoder-video-playlist__player {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 12px;
+  background-color: #0b0d12;
+  line-height: 0;
+  isolation: isolate;
+}
+
+.uncoder-video-playlist__iframe,
+.uncoder-video-playlist__video {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.uncoder-video-playlist__video {
+  background-color: #000;
+  object-fit: contain;
+}
+
+/* Facade (".uncoder" keeps theme button styles out). */
+.uncoder .uncoder-video-playlist__facade {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  color: inherit;
+  cursor: pointer;
+}
+.uncoder-video-playlist__facade:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: -6px;
+}
+.uncoder .uncoder-video-playlist__facade--no-poster {
+  background: linear-gradient(135deg, #262b36, #0b0d12);
+}
+
+.uncoder-video-playlist__poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.uncoder-video-playlist__facade:hover .uncoder-video-playlist__poster {
+  transform: scale(1.03);
+}
+
+.uncoder-video-playlist__play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--uncoder-vpl-play);
+  height: var(--uncoder-vpl-play);
+  border-radius: 50%;
+  background-color: rgb(15 17 23 / 0.72);
+  color: #fff;
+  transform: translate(-50%, -50%);
+  transition: background-color 0.2s, transform 0.2s;
+}
+:where(.uncoder-video-playlist__facade:is(:hover, :focus-visible)) .uncoder-video-playlist__play {
+  background-color: var(--uncoder-vpl-accent);
+  transform: translate(-50%, -50%) scale(1.06);
+}
+.uncoder-video-playlist__play .uncoder-svg {
+  width: 40%;
+  height: 40%;
+  margin-left: 6%;
+  fill: currentColor;
+}
+
+/* ------------------------------------------------------------------ List */
+
+.uncoder-video-playlist__aside {
+  position: relative;
+  order: var(--uncoder-vpl-list-order);
+  align-self: stretch;
+  min-width: 0;
+}
+
+.uncoder-video-playlist__panel {
+  position: var(--uncoder-vpl-list-pos);
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: var(--uncoder-vpl-list-max);
+  padding: 10px;
+  overflow: hidden;
+  border-radius: 12px;
+  background-color: var(--uncoder-c-surface, #f5f7fb);
+  color: var(--uncoder-c-text, #1f2937);
+}
+
+.uncoder-video-playlist__header {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 8px 2px;
+  color: var(--uncoder-c-heading, #111827);
+}
+.uncoder-video-playlist__heading {
+  font-weight: 600;
+  line-height: 1.35;
+}
+.uncoder-video-playlist__count {
+  flex: 0 0 auto;
+  font-size: 0.85em;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, currentColor 60%, transparent);
+}
+
+.uncoder .uncoder-video-playlist__list {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  list-style: none;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, currentColor 25%, transparent) transparent;
+}
+.uncoder .uncoder-video-playlist__item {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0;
+}
+.uncoder .uncoder-video-playlist__item::before,
+.uncoder .uncoder-video-playlist__item::marker {
+  content: none;
+}
+
+.uncoder .uncoder-video-playlist__button {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  margin: 0;
+  padding: 8px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  box-shadow: none;
+  color: inherit;
+  font: inherit;
+  text-align: start;
+  text-transform: none;
+  letter-spacing: inherit;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+.uncoder .uncoder-video-playlist__button:is(:hover, :focus-visible) {
+  background-color: color-mix(in srgb, currentColor 7%, transparent);
+}
+.uncoder .uncoder-video-playlist__button.is-active {
+  background-color: color-mix(in srgb, var(--uncoder-vpl-accent) 12%, transparent);
+}
+.uncoder-video-playlist__button:focus-visible {
+  outline: 2px solid var(--uncoder-vpl-accent);
+  outline-offset: -2px;
+}
+/* Active indicator. */
+.uncoder-video-playlist__button::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 0;
+  width: 3px;
+  border-radius: 3px;
+  background-color: var(--uncoder-vpl-accent);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.uncoder-video-playlist__button.is-active::before {
+  opacity: 1;
+}
+
+/* Thumbnail with the duration badge and a play mark (active / hover). */
+.uncoder-video-playlist__thumb {
+  position: relative;
+  flex: 0 0 var(--uncoder-vpl-thumb);
+  width: var(--uncoder-vpl-thumb);
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: 6px;
+  background-color: #1f232b;
+  line-height: 0;
+}
+.uncoder-video-playlist__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  object-fit: cover;
+}
+.uncoder-video-playlist__thumb--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #2b303b, #12151b);
+  color: rgb(255 255 255 / 0.55);
+}
+.uncoder-video-playlist__thumb--empty > .uncoder-svg {
+  width: 30%;
+  height: 30%;
+}
+.uncoder-video-playlist__now {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(8 10 14 / 0.45);
+  color: #fff;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.uncoder-video-playlist__now .uncoder-svg {
+  width: 26%;
+  height: 26%;
+  max-width: 28px;
+  max-height: 28px;
+  fill: currentColor;
+}
+.uncoder-video-playlist__button:is(:hover, .is-active) .uncoder-video-playlist__now {
+  opacity: 1;
+}
+.uncoder-video-playlist__thumb .uncoder-video-playlist__duration {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  z-index: 1;
+  padding: 2px 5px;
+  border-radius: 4px;
+  background-color: rgb(0 0 0 / 0.78);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.3;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Without thumbnails: a number. */
+.uncoder-video-playlist__index {
+  display: flex;
+  flex: 0 0 1.9em;
+  align-items: center;
+  justify-content: center;
+  height: 1.9em;
+  border-radius: 50%;
+  background-color: color-mix(in srgb, currentColor 9%, transparent);
+  font-size: 0.8em;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.uncoder-video-playlist__button.is-active .uncoder-video-playlist__index {
+  background-color: var(--uncoder-vpl-accent);
+  color: #fff;
+}
+
+.uncoder-video-playlist__text {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  padding-top: 1px;
+}
+.uncoder-video-playlist__title,
+.uncoder-video-playlist__desc {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow-wrap: anywhere;
+}
+.uncoder-video-playlist__title {
+  font-size: 0.95em;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.uncoder-video-playlist__desc {
+  color: color-mix(in srgb, currentColor 72%, transparent);
+  font-size: 0.84em;
+  line-height: 1.4;
+}
+.uncoder-video-playlist__text .uncoder-video-playlist__duration {
+  align-self: flex-start;
+  color: color-mix(in srgb, currentColor 65%, transparent);
+  font-size: 0.8em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.4;
+}
+
+/* Editor placeholder */
+.uncoder-video-playlist--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 220px;
+  padding: 24px;
+  border: 1px dashed #c3c9d4;
+  background-color: #f3f4f6;
+  color: #5b6474;
+  font: 500 13px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif;
+  text-align: center;
+}
+.uncoder-video-playlist--empty .uncoder-svg {
+  width: 20px;
+  height: 20px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uncoder-video-playlist__poster,
+  .uncoder-video-playlist__play,
+  .uncoder .uncoder-video-playlist__button,
+  .uncoder-video-playlist__button::before,
+  .uncoder-video-playlist__now {
+    transition: none;
+  }
+  .uncoder-video-playlist__facade:hover .uncoder-video-playlist__poster {
+    transform: none;
+  }
+}

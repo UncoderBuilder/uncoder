@@ -1,0 +1,109 @@
+/* Loop Filter widget (and the filtering state of its grid). */
+.uncoder-loop-filter {
+  --uncoder-lf-color: inherit;
+  --uncoder-lf-bg: transparent;
+  --uncoder-lf-border: color-mix(in srgb, currentColor 22%, transparent);
+  --uncoder-lf-active-color: #fff;
+  --uncoder-lf-active-bg: var(--uncoder-c-primary, #2b59ff);
+  --uncoder-lf-radius: 999px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.uncoder-loop-filter__label {
+  margin-right: 4px;
+  font-weight: 600;
+}
+
+.uncoder-loop-filter__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: 1px solid var(--uncoder-lf-border);
+  border-radius: var(--uncoder-lf-radius);
+  background: var(--uncoder-lf-bg);
+  color: var(--uncoder-lf-color);
+  font: inherit;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.uncoder-loop-filter__pill:hover {
+  border-color: var(--uncoder-lf-active-bg);
+}
+
+.uncoder-loop-filter__pill.is-active {
+  border-color: var(--uncoder-lf-active-bg);
+  background: var(--uncoder-lf-active-bg);
+  color: var(--uncoder-lf-active-color);
+}
+
+.uncoder-loop-filter__pill:focus-visible,
+.uncoder-loop-filter__field:focus-visible {
+  outline: 2px solid var(--uncoder-lf-active-bg);
+  outline-offset: 2px;
+}
+
+.uncoder-loop-filter__count {
+  font-size: 0.8em;
+  opacity: 0.7;
+}
+
+.uncoder-loop-filter__field {
+  min-width: 180px;
+  padding: 8px 14px;
+  border: 1px solid var(--uncoder-lf-border);
+  border-radius: calc(min(var(--uncoder-lf-radius), 12px));
+  background: var(--uncoder-lf-bg);
+  color: var(--uncoder-lf-color);
+  font: inherit;
+}
+
+.uncoder-loop-filter--search {
+  flex-wrap: nowrap;
+}
+
+.uncoder-loop-filter--search .uncoder-loop-filter__field {
+  flex: 1;
+}
+
+.uncoder-loop-filter__submit {
+  padding: 8px 12px;
+}
+
+.uncoder-loop-filter__submit svg {
+  width: 16px;
+  height: 16px;
+}
+
+.uncoder-loop-filter fieldset {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.uncoder-loop-filter__check {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.uncoder-loop-filter__empty {
+  opacity: 0.6;
+}
+
+[data-uncoder-filter-key].is-filtering {
+  opacity: 0.45;
+  transition: opacity 0.15s ease;
+  pointer-events: none;
+}

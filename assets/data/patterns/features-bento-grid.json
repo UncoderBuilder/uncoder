@@ -1,0 +1,729 @@
+{
+	"id": "features-bento-grid",
+	"title": "Features: bento grid",
+	"category": "features",
+	"description": "Split intro (title left, text right) and a bento grid: a large image tile beside two stacked colored tiles, then three compact Icon Box tiles. Stacks on phones.",
+	"keywords": [
+		"features",
+		"bento",
+		"grid",
+		"tiles",
+		"showcase",
+		"modern"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "Features",
+			"settings": {
+				"gap": {
+					"size": 56,
+					"unit": "px"
+				},
+				"gap_mobile": {
+					"size": 40,
+					"unit": "px"
+				}
+			},
+			"children": [
+				{
+					"type": "container",
+					"settings": {
+						"direction": "row",
+						"direction_mobile": "column",
+						"justify": "space-between",
+						"align": "flex-end",
+						"align_mobile": "flex-start",
+						"gap": {
+							"size": 48,
+							"unit": "px"
+						},
+						"gap_mobile": {
+							"size": 16,
+							"unit": "px"
+						}
+					},
+					"children": [
+						{
+							"type": "container",
+							"settings": {
+								"width": {
+									"size": 56,
+									"unit": "%"
+								},
+								"width_mobile": {
+									"size": 100,
+									"unit": "%"
+								},
+								"gap": {
+									"size": 16,
+									"unit": "px"
+								}
+							},
+							"children": [
+								{
+									"type": "heading",
+									"settings": {
+										"title": "Why teams choose us",
+										"tag": "p",
+										"typography": {
+											"preset": "eyebrow"
+										},
+										"color": "var(--uncoder-c-primary)"
+									}
+								},
+								{
+									"type": "heading",
+									"settings": {
+										"title": "Powerful on the inside, simple on the surface",
+										"tag": "h2",
+										"typography": {
+											"preset": "h2"
+										},
+										"text_wrap": "balance"
+									}
+								}
+							]
+						},
+						{
+							"type": "container",
+							"settings": {
+								"width": {
+									"size": 38,
+									"unit": "%"
+								},
+								"width_mobile": {
+									"size": 100,
+									"unit": "%"
+								}
+							},
+							"children": [
+								{
+									"type": "text-editor",
+									"settings": {
+										"content": "<p>Every feature is designed to save a step, remove a meeting or answer a question before it is asked.</p>",
+										"typography": {
+											"preset": "lead"
+										}
+									}
+								}
+							]
+						}
+					]
+				},
+				{
+					"type": "container",
+					"settings": {
+						"gap": {
+							"size": 20,
+							"unit": "px"
+						},
+						"gap_mobile": {
+							"size": 16,
+							"unit": "px"
+						}
+					},
+					"children": [
+						{
+							"type": "container",
+							"settings": {
+								"layout": "grid",
+								"grid_template": "3fr 2fr",
+								"grid_template_tablet": "1fr 1fr",
+								"grid_template_mobile": "1fr",
+								"grid_columns_mobile": 1,
+								"gap": {
+									"size": 20,
+									"unit": "px"
+								},
+								"gap_mobile": {
+									"size": 16,
+									"unit": "px"
+								}
+							},
+							"children": [
+								{
+									"type": "container",
+									"settings": {
+										"gap": {
+											"size": 12,
+											"unit": "px"
+										},
+										"justify": "space-between",
+										"radius": {
+											"top": 24,
+											"right": 24,
+											"bottom": 24,
+											"left": 24,
+											"unit": "px",
+											"linked": true
+										},
+										"radius_mobile": {
+											"top": 20,
+											"right": 20,
+											"bottom": 20,
+											"left": 20,
+											"unit": "px",
+											"linked": true
+										},
+										"_padding": {
+											"top": 36,
+											"right": 36,
+											"bottom": 36,
+											"left": 36,
+											"unit": "px",
+											"linked": true
+										},
+										"_padding_mobile": {
+											"top": 24,
+											"right": 24,
+											"bottom": 24,
+											"left": 24,
+											"unit": "px",
+											"linked": true
+										},
+										"background": {
+											"type": "classic",
+											"color": "var(--uncoder-c-surface)"
+										}
+									},
+									"children": [
+										{
+											"type": "container",
+											"settings": {
+												"gap": {
+													"size": 10,
+													"unit": "px"
+												}
+											},
+											"children": [
+												{
+													"type": "heading",
+													"settings": {
+														"title": "All your work in one place",
+														"tag": "h3",
+														"typography": {
+															"preset": "h4"
+														}
+													}
+												},
+												{
+													"type": "text-editor",
+													"settings": {
+														"content": "<p>Projects, files and conversations live side by side, so nothing gets lost between tools.</p>",
+														"max_width": {
+															"size": 46,
+															"unit": "ch"
+														}
+													}
+												}
+											]
+										},
+										{
+											"type": "image",
+											"settings": {
+												"image": {
+													"id": 0,
+													"url": "{{placeholder_image}}"
+												},
+												"alt": "[Describe the workspace screenshot]",
+												"object_fit": "cover",
+												"aspect_ratio": "16/9",
+												"width": {
+													"size": 100,
+													"unit": "%"
+												},
+												"radius": {
+													"top": 14,
+													"right": 14,
+													"bottom": 14,
+													"left": 14,
+													"unit": "px",
+													"linked": true
+												},
+												"_margin": {
+													"top": 16,
+													"right": "",
+													"bottom": "",
+													"left": "",
+													"unit": "px",
+													"linked": false
+												}
+											}
+										}
+									]
+								},
+								{
+									"type": "container",
+									"settings": {
+										"gap": {
+											"size": 20,
+											"unit": "px"
+										},
+										"gap_mobile": {
+											"size": 16,
+											"unit": "px"
+										}
+									},
+									"children": [
+										{
+											"type": "container",
+											"settings": {
+												"gap": {
+													"size": 12,
+													"unit": "px"
+												},
+												"justify": "space-between",
+												"radius": {
+													"top": 24,
+													"right": 24,
+													"bottom": 24,
+													"left": 24,
+													"unit": "px",
+													"linked": true
+												},
+												"radius_mobile": {
+													"top": 20,
+													"right": 20,
+													"bottom": 20,
+													"left": 20,
+													"unit": "px",
+													"linked": true
+												},
+												"_padding": {
+													"top": 36,
+													"right": 36,
+													"bottom": 36,
+													"left": 36,
+													"unit": "px",
+													"linked": true
+												},
+												"_padding_mobile": {
+													"top": 24,
+													"right": 24,
+													"bottom": 24,
+													"left": 24,
+													"unit": "px",
+													"linked": true
+												},
+												"background": {
+													"type": "classic",
+													"color": "var(--uncoder-c-primary)"
+												},
+												"text_color": "var(--uncoder-c-white)",
+												"_flex_grow": 1
+											},
+											"children": [
+												{
+													"type": "icon",
+													"settings": {
+														"icon": {
+															"library": "lucide",
+															"value": "clock"
+														},
+														"view": "stacked",
+														"shape": "rounded",
+														"size": {
+															"size": 22,
+															"unit": "px"
+														},
+														"padding": {
+															"size": 13,
+															"unit": "px"
+														},
+														"color": "var(--uncoder-c-white)",
+														"shape_color": "color-mix(in srgb, var(--uncoder-c-white) 14%, transparent)",
+														"_align_self": "flex-start"
+													}
+												},
+												{
+													"type": "container",
+													"settings": {
+														"gap": {
+															"size": 10,
+															"unit": "px"
+														}
+													},
+													"children": [
+														{
+															"type": "heading",
+															"settings": {
+																"title": "Hours back every week",
+																"tag": "h3",
+																"typography": {
+																	"preset": "h4"
+																}
+															}
+														},
+														{
+															"type": "text-editor",
+															"settings": {
+																"content": "<p>Automations take care of the repetitive steps, so your team can focus on the work that matters.</p>",
+																"color": "color-mix(in srgb, var(--uncoder-c-white) 82%, transparent)"
+															}
+														}
+													]
+												}
+											]
+										},
+										{
+											"type": "container",
+											"settings": {
+												"gap": {
+													"size": 12,
+													"unit": "px"
+												},
+												"justify": "space-between",
+												"radius": {
+													"top": 24,
+													"right": 24,
+													"bottom": 24,
+													"left": 24,
+													"unit": "px",
+													"linked": true
+												},
+												"radius_mobile": {
+													"top": 20,
+													"right": 20,
+													"bottom": 20,
+													"left": 20,
+													"unit": "px",
+													"linked": true
+												},
+												"_padding": {
+													"top": 36,
+													"right": 36,
+													"bottom": 36,
+													"left": 36,
+													"unit": "px",
+													"linked": true
+												},
+												"_padding_mobile": {
+													"top": 24,
+													"right": 24,
+													"bottom": 24,
+													"left": 24,
+													"unit": "px",
+													"linked": true
+												},
+												"background": {
+													"type": "classic",
+													"color": "var(--uncoder-c-secondary)"
+												},
+												"text_color": "var(--uncoder-c-white)",
+												"_flex_grow": 1
+											},
+											"children": [
+												{
+													"type": "icon",
+													"settings": {
+														"icon": {
+															"library": "lucide",
+															"value": "lock"
+														},
+														"view": "stacked",
+														"shape": "rounded",
+														"size": {
+															"size": 22,
+															"unit": "px"
+														},
+														"padding": {
+															"size": 13,
+															"unit": "px"
+														},
+														"color": "var(--uncoder-c-white)",
+														"shape_color": "color-mix(in srgb, var(--uncoder-c-white) 14%, transparent)",
+														"_align_self": "flex-start"
+													}
+												},
+												{
+													"type": "container",
+													"settings": {
+														"gap": {
+															"size": 10,
+															"unit": "px"
+														}
+													},
+													"children": [
+														{
+															"type": "heading",
+															"settings": {
+																"title": "Private by design",
+																"tag": "h3",
+																"typography": {
+																	"preset": "h4"
+																}
+															}
+														},
+														{
+															"type": "text-editor",
+															"settings": {
+																"content": "<p>Granular permissions and audit history give you control over who sees what.</p>",
+																"color": "color-mix(in srgb, var(--uncoder-c-white) 82%, transparent)"
+															}
+														}
+													]
+												}
+											]
+										}
+									]
+								}
+							]
+						},
+						{
+							"type": "container",
+							"settings": {
+								"layout": "grid",
+								"grid_columns": 3,
+								"grid_columns_tablet": 3,
+								"grid_columns_mobile": 1,
+								"gap": {
+									"size": 20,
+									"unit": "px"
+								},
+								"gap_tablet": {
+									"size": 16,
+									"unit": "px"
+								},
+								"gap_mobile": {
+									"size": 16,
+									"unit": "px"
+								}
+							},
+							"children": [
+								{
+									"type": "icon-box",
+									"settings": {
+										"icon": {
+											"library": "lucide",
+											"value": "smartphone"
+										},
+										"view": "stacked",
+										"shape": "rounded",
+										"icon_color": "var(--uncoder-c-primary)",
+										"icon_size": {
+											"size": 22,
+											"unit": "px"
+										},
+										"icon_padding": {
+											"size": 13,
+											"unit": "px"
+										},
+										"icon_spacing": {
+											"size": 20,
+											"unit": "px"
+										},
+										"title": "Works on any device",
+										"description": "Pick up where you left off on desktop, tablet or phone.",
+										"title_tag": "h3",
+										"title_typography": {
+											"preset": "h4"
+										},
+										"title_spacing": {
+											"size": 10,
+											"unit": "px"
+										},
+										"description_color": "var(--uncoder-c-text)",
+										"description_max_width": {
+											"size": 46,
+											"unit": "ch"
+										},
+										"position": "top",
+										"box_background": {
+											"type": "classic",
+											"color": "var(--uncoder-c-surface)"
+										},
+										"box_radius": {
+											"top": 24,
+											"right": 24,
+											"bottom": 24,
+											"left": 24,
+											"unit": "px",
+											"linked": true
+										},
+										"box_radius_mobile": {
+											"top": 20,
+											"right": 20,
+											"bottom": 20,
+											"left": 20,
+											"unit": "px",
+											"linked": true
+										},
+										"box_padding": {
+											"top": 36,
+											"right": 36,
+											"bottom": 36,
+											"left": 36,
+											"unit": "px",
+											"linked": true
+										},
+										"box_padding_mobile": {
+											"top": 24,
+											"right": 24,
+											"bottom": 24,
+											"left": 24,
+											"unit": "px",
+											"linked": true
+										}
+									}
+								},
+								{
+									"type": "icon-box",
+									"settings": {
+										"icon": {
+											"library": "lucide",
+											"value": "plug"
+										},
+										"view": "stacked",
+										"shape": "rounded",
+										"icon_color": "var(--uncoder-c-primary)",
+										"icon_size": {
+											"size": 22,
+											"unit": "px"
+										},
+										"icon_padding": {
+											"size": 13,
+											"unit": "px"
+										},
+										"icon_spacing": {
+											"size": 20,
+											"unit": "px"
+										},
+										"title": "Connects your tools",
+										"description": "Bring your calendar, files and chat into the same flow.",
+										"title_tag": "h3",
+										"title_typography": {
+											"preset": "h4"
+										},
+										"title_spacing": {
+											"size": 10,
+											"unit": "px"
+										},
+										"description_color": "var(--uncoder-c-text)",
+										"description_max_width": {
+											"size": 46,
+											"unit": "ch"
+										},
+										"position": "top",
+										"box_background": {
+											"type": "classic",
+											"color": "var(--uncoder-c-surface)"
+										},
+										"box_radius": {
+											"top": 24,
+											"right": 24,
+											"bottom": 24,
+											"left": 24,
+											"unit": "px",
+											"linked": true
+										},
+										"box_radius_mobile": {
+											"top": 20,
+											"right": 20,
+											"bottom": 20,
+											"left": 20,
+											"unit": "px",
+											"linked": true
+										},
+										"box_padding": {
+											"top": 36,
+											"right": 36,
+											"bottom": 36,
+											"left": 36,
+											"unit": "px",
+											"linked": true
+										},
+										"box_padding_mobile": {
+											"top": 24,
+											"right": 24,
+											"bottom": 24,
+											"left": 24,
+											"unit": "px",
+											"linked": true
+										}
+									}
+								},
+								{
+									"type": "icon-box",
+									"settings": {
+										"icon": {
+											"library": "lucide",
+											"value": "life-buoy"
+										},
+										"view": "stacked",
+										"shape": "rounded",
+										"icon_color": "var(--uncoder-c-primary)",
+										"icon_size": {
+											"size": 22,
+											"unit": "px"
+										},
+										"icon_padding": {
+											"size": 13,
+											"unit": "px"
+										},
+										"icon_spacing": {
+											"size": 20,
+											"unit": "px"
+										},
+										"title": "Help when you need it",
+										"description": "Real people answer your questions, usually within hours.",
+										"title_tag": "h3",
+										"title_typography": {
+											"preset": "h4"
+										},
+										"title_spacing": {
+											"size": 10,
+											"unit": "px"
+										},
+										"description_color": "var(--uncoder-c-text)",
+										"description_max_width": {
+											"size": 46,
+											"unit": "ch"
+										},
+										"position": "top",
+										"box_background": {
+											"type": "classic",
+											"color": "var(--uncoder-c-surface)"
+										},
+										"box_radius": {
+											"top": 24,
+											"right": 24,
+											"bottom": 24,
+											"left": 24,
+											"unit": "px",
+											"linked": true
+										},
+										"box_radius_mobile": {
+											"top": 20,
+											"right": 20,
+											"bottom": 20,
+											"left": 20,
+											"unit": "px",
+											"linked": true
+										},
+										"box_padding": {
+											"top": 36,
+											"right": 36,
+											"bottom": 36,
+											"left": 36,
+											"unit": "px",
+											"linked": true
+										},
+										"box_padding_mobile": {
+											"top": 24,
+											"right": 24,
+											"bottom": 24,
+											"left": 24,
+											"unit": "px",
+											"linked": true
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+}

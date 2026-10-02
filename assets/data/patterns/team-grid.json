@@ -1,0 +1,281 @@
+{
+	"id": "team-grid",
+	"title": "Team: four people",
+	"category": "content",
+	"description": "Centered intro and a grid of four team members (photo, name, role): 4 columns on desktop and tablets, 2 on phones. Add real names, roles and portrait photos.",
+	"keywords": [
+		"team",
+		"people",
+		"staff",
+		"about",
+		"members",
+		"founders"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "Team",
+			"settings": {
+				"gap": {
+					"size": 56,
+					"unit": "px"
+				},
+				"gap_mobile": {
+					"size": 40,
+					"unit": "px"
+				}
+			},
+			"children": [
+				{
+					"type": "container",
+					"settings": {
+						"gap": {
+							"size": 16,
+							"unit": "px"
+						},
+						"align": "center"
+					},
+					"children": [
+						{
+							"type": "heading",
+							"settings": {
+								"title": "Team",
+								"tag": "p",
+								"typography": {
+									"preset": "eyebrow"
+								},
+								"color": "var(--uncoder-c-primary)",
+								"align": "center"
+							}
+						},
+						{
+							"type": "heading",
+							"settings": {
+								"title": "The people behind the work",
+								"tag": "h2",
+								"typography": {
+									"preset": "h2"
+								},
+								"align": "center",
+								"max_width": {
+									"size": 20,
+									"unit": "ch"
+								},
+								"text_wrap": "balance"
+							}
+						},
+						{
+							"type": "text-editor",
+							"settings": {
+								"content": "<p>A small, senior team — you will work directly with the people doing the work.</p>",
+								"typography": {
+									"preset": "lead"
+								},
+								"align": "center",
+								"max_width": {
+									"size": 58,
+									"unit": "ch"
+								}
+							}
+						}
+					]
+				},
+				{
+					"type": "container",
+					"settings": {
+						"layout": "grid",
+						"grid_columns": 4,
+						"grid_columns_tablet": 4,
+						"grid_columns_mobile": 2,
+						"gap": {
+							"size": 32,
+							"unit": "px"
+						},
+						"gap_tablet": {
+							"size": 20,
+							"unit": "px"
+						},
+						"gap_mobile": {
+							"size": 16,
+							"unit": "px"
+						},
+						"row_gap_mobile": {
+							"size": 28,
+							"unit": "px"
+						}
+					},
+					"children": [
+						{
+							"type": "team-member",
+							"settings": {
+								"image": {
+									"id": 0,
+									"url": "{{placeholder_image}}"
+								},
+								"name": "[Full name]",
+								"role": "Founder & CEO",
+								"bio": "",
+								"social": [],
+								"layout": "card",
+								"image_ratio": "3/4",
+								"image_radius": {
+									"top": 16,
+									"right": 16,
+									"bottom": 16,
+									"left": 16,
+									"unit": "px",
+									"linked": true
+								},
+								"name_typography": {
+									"preset": "h5"
+								},
+								"role_typography": {
+									"preset": "small"
+								},
+								"role_color": "var(--uncoder-c-muted)",
+								"text_gap": {
+									"size": 4,
+									"unit": "px"
+								},
+								"content_padding": {
+									"top": 16,
+									"right": 0,
+									"bottom": 0,
+									"left": 0,
+									"unit": "px",
+									"linked": false
+								}
+							}
+						},
+						{
+							"type": "team-member",
+							"settings": {
+								"image": {
+									"id": 0,
+									"url": "{{placeholder_image}}"
+								},
+								"name": "[Full name]",
+								"role": "Head of Design",
+								"bio": "",
+								"social": [],
+								"layout": "card",
+								"image_ratio": "3/4",
+								"image_radius": {
+									"top": 16,
+									"right": 16,
+									"bottom": 16,
+									"left": 16,
+									"unit": "px",
+									"linked": true
+								},
+								"name_typography": {
+									"preset": "h5"
+								},
+								"role_typography": {
+									"preset": "small"
+								},
+								"role_color": "var(--uncoder-c-muted)",
+								"text_gap": {
+									"size": 4,
+									"unit": "px"
+								},
+								"content_padding": {
+									"top": 16,
+									"right": 0,
+									"bottom": 0,
+									"left": 0,
+									"unit": "px",
+									"linked": false
+								}
+							}
+						},
+						{
+							"type": "team-member",
+							"settings": {
+								"image": {
+									"id": 0,
+									"url": "{{placeholder_image}}"
+								},
+								"name": "[Full name]",
+								"role": "Lead Engineer",
+								"bio": "",
+								"social": [],
+								"layout": "card",
+								"image_ratio": "3/4",
+								"image_radius": {
+									"top": 16,
+									"right": 16,
+									"bottom": 16,
+									"left": 16,
+									"unit": "px",
+									"linked": true
+								},
+								"name_typography": {
+									"preset": "h5"
+								},
+								"role_typography": {
+									"preset": "small"
+								},
+								"role_color": "var(--uncoder-c-muted)",
+								"text_gap": {
+									"size": 4,
+									"unit": "px"
+								},
+								"content_padding": {
+									"top": 16,
+									"right": 0,
+									"bottom": 0,
+									"left": 0,
+									"unit": "px",
+									"linked": false
+								}
+							}
+						},
+						{
+							"type": "team-member",
+							"settings": {
+								"image": {
+									"id": 0,
+									"url": "{{placeholder_image}}"
+								},
+								"name": "[Full name]",
+								"role": "Customer Success",
+								"bio": "",
+								"social": [],
+								"layout": "card",
+								"image_ratio": "3/4",
+								"image_radius": {
+									"top": 16,
+									"right": 16,
+									"bottom": 16,
+									"left": 16,
+									"unit": "px",
+									"linked": true
+								},
+								"name_typography": {
+									"preset": "h5"
+								},
+								"role_typography": {
+									"preset": "small"
+								},
+								"role_color": "var(--uncoder-c-muted)",
+								"text_gap": {
+									"size": 4,
+									"unit": "px"
+								},
+								"content_padding": {
+									"top": 16,
+									"right": 0,
+									"bottom": 0,
+									"left": 0,
+									"unit": "px",
+									"linked": false
+								}
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

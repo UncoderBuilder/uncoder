@@ -1,0 +1,34 @@
+/* Mega menu panels (content comes from a "mega-menu" template). */
+
+.uncoder-menu--main .uncoder-menu__mega:has(> .uncoder-mega--full),
+.uncoder-menu--main .uncoder-menu__mega:has(> .uncoder-mega--container) {
+  left: var(--uncoder-mega-x, 0);
+  right: auto;
+  width: var(--uncoder-mega-w, min(100vw, var(--uncoder-container, 1200px)));
+}
+
+.uncoder-menu--main .uncoder-menu__mega:has(> .uncoder-mega--auto) {
+  width: max-content;
+  max-width: min(90vw, var(--uncoder-container, 1200px));
+}
+
+.uncoder-menu--main .uncoder-mega {
+  overflow: hidden;
+  border-radius: 12px;
+  background-color: var(--uncoder-nav-dd-bg, #fff);
+  box-shadow: 0 24px 48px -16px rgb(15 23 42 / 0.28), 0 2px 8px rgb(15 23 42 / 0.06);
+  text-align: start;
+}
+
+.uncoder-menu--main .uncoder-mega--full {
+  border-radius: 0;
+}
+
+.uncoder-menu--mobile .uncoder-mega {
+  padding-block: 8px;
+}
+
+/* Default breathing room inside the panel; the template's own padding settings override it. */
+:where(.uncoder--mega-menu) > .uncoder-container {
+  padding: 24px;
+}

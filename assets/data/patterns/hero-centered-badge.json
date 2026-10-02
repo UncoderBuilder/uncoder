@@ -1,0 +1,231 @@
+{
+	"id": "hero-centered-badge",
+	"title": "Hero: centered with badge and two buttons",
+	"category": "hero",
+	"description": "Centered hero with an announcement badge, a large h1, a lead paragraph, primary and secondary buttons and a wide product image underneath. Soft surface-to-white gradient.",
+	"keywords": [
+		"hero",
+		"centered",
+		"badge",
+		"announcement",
+		"saas",
+		"product",
+		"screenshot"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "Hero",
+			"settings": {
+				"align": "center",
+				"gap": {
+					"size": 24,
+					"unit": "px"
+				},
+				"background": {
+					"type": "gradient",
+					"color": "var(--uncoder-c-surface)",
+					"color_b": "var(--uncoder-c-white)",
+					"gradient_angle": {
+						"size": 180,
+						"unit": "deg"
+					}
+				}
+			},
+			"children": [
+				{
+					"type": "heading",
+					"settings": {
+						"title": "<strong>New</strong> · Introducing [your latest feature]",
+						"tag": "p",
+						"typography": {
+							"preset": "small"
+						},
+						"align": "center",
+						"color": "var(--uncoder-c-text)",
+						"highlight_color": "var(--uncoder-c-primary)",
+						"_background": {
+							"type": "classic",
+							"color": "var(--uncoder-c-white)"
+						},
+						"_border": {
+							"style": "solid",
+							"width": {
+								"top": 1,
+								"right": 1,
+								"bottom": 1,
+								"left": 1,
+								"unit": "px",
+								"linked": true
+							},
+							"color": "var(--uncoder-c-border)"
+						},
+						"_radius": {
+							"top": 999,
+							"right": 999,
+							"bottom": 999,
+							"left": 999,
+							"unit": "px",
+							"linked": true
+						},
+						"_padding": {
+							"top": 6,
+							"right": 16,
+							"bottom": 6,
+							"left": 16,
+							"unit": "px",
+							"linked": false
+						}
+					}
+				},
+				{
+					"type": "heading",
+					"settings": {
+						"title": "The simple way to plan, build and launch together",
+						"tag": "h1",
+						"typography": {
+							"preset": "display"
+						},
+						"align": "center",
+						"max_width": {
+							"size": 18,
+							"unit": "ch"
+						},
+						"text_wrap": "balance"
+					}
+				},
+				{
+					"type": "text-editor",
+					"settings": {
+						"content": "<p>One place for your team to share ideas, track progress and ship on time. Set up in minutes and grow at your own pace.</p>",
+						"typography": {
+							"preset": "lead"
+						},
+						"align": "center",
+						"max_width": {
+							"size": 56,
+							"unit": "ch"
+						}
+					}
+				},
+				{
+					"type": "container",
+					"settings": {
+						"direction": "row",
+						"direction_mobile": "column",
+						"gap": {
+							"size": 12,
+							"unit": "px"
+						},
+						"wrap": "wrap",
+						"justify": "center",
+						"_align_self": "center",
+						"_align_self_mobile": "stretch",
+						"_margin": {
+							"top": 8,
+							"right": "",
+							"bottom": 16,
+							"left": "",
+							"unit": "px",
+							"linked": false
+						}
+					},
+					"children": [
+						{
+							"type": "button",
+							"settings": {
+								"text": "Start for free",
+								"link": {
+									"url": "/contact"
+								},
+								"size": "lg",
+								"align_mobile": "stretch"
+							}
+						},
+						{
+							"type": "button",
+							"settings": {
+								"text": "Book a demo",
+								"link": {
+									"url": "/contact"
+								},
+								"size": "lg",
+								"variant": "outline",
+								"align_mobile": "stretch"
+							}
+						}
+					]
+				},
+				{
+					"type": "image",
+					"settings": {
+						"image": {
+							"id": 0,
+							"url": "{{placeholder_image}}"
+						},
+						"alt": "[Describe the product screenshot]",
+						"object_fit": "cover",
+						"loading": "eager",
+						"aspect_ratio": "16/9",
+						"radius": {
+							"top": 20,
+							"right": 20,
+							"bottom": 20,
+							"left": 20,
+							"unit": "px",
+							"linked": true
+						},
+						"radius_mobile": {
+							"top": 12,
+							"right": 12,
+							"bottom": 12,
+							"left": 12,
+							"unit": "px",
+							"linked": true
+						},
+						"border": {
+							"style": "solid",
+							"width": {
+								"top": 1,
+								"right": 1,
+								"bottom": 1,
+								"left": 1,
+								"unit": "px",
+								"linked": true
+							},
+							"color": "var(--uncoder-c-border)"
+						},
+						"shadow": {
+							"x": 0,
+							"y": 32,
+							"blur": 64,
+							"spread": -24,
+							"color": "color-mix(in srgb, var(--uncoder-c-heading) 22%, transparent)"
+						},
+						"width": {
+							"size": 100,
+							"unit": "%"
+						},
+						"_align_self": "stretch",
+						"_margin": {
+							"top": 32,
+							"right": "",
+							"bottom": "",
+							"left": "",
+							"unit": "px",
+							"linked": false
+						},
+						"_margin_mobile": {
+							"top": 16,
+							"right": "",
+							"bottom": "",
+							"left": "",
+							"unit": "px",
+							"linked": false
+						}
+					}
+				}
+			]
+		}
+	]
+}

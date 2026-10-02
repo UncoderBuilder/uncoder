@@ -1,0 +1,197 @@
+{
+	"id": "content-gallery-grid",
+	"title": "Content: photo gallery grid",
+	"category": "content",
+	"description": "Split header (eyebrow and h2 on the left, a short line and an outline button on the right) above an Image Gallery widget: six square rounded photos in a 3-column grid that open in a lightbox — three columns on tablets, two on phones. Use it to show your space, products, food, projects or events; replace every placeholder with a real photo and alt text, and add or remove photos in the gallery’s Images setting.",
+	"keywords": [
+		"gallery",
+		"photos",
+		"images",
+		"grid",
+		"portfolio",
+		"showcase",
+		"instagram"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "Gallery",
+			"settings": {
+				"gap": {
+					"size": 48,
+					"unit": "px"
+				},
+				"gap_mobile": {
+					"size": 32,
+					"unit": "px"
+				}
+			},
+			"children": [
+				{
+					"type": "container",
+					"settings": {
+						"direction": "row",
+						"direction_mobile": "column",
+						"justify": "space-between",
+						"align": "flex-end",
+						"align_mobile": "flex-start",
+						"gap": {
+							"size": 48,
+							"unit": "px"
+						},
+						"gap_mobile": {
+							"size": 16,
+							"unit": "px"
+						}
+					},
+					"children": [
+						{
+							"type": "container",
+							"settings": {
+								"width": {
+									"size": 56,
+									"unit": "%"
+								},
+								"width_mobile": {
+									"size": 100,
+									"unit": "%"
+								},
+								"gap": {
+									"size": 16,
+									"unit": "px"
+								}
+							},
+							"children": [
+								{
+									"type": "heading",
+									"settings": {
+										"title": "Gallery",
+										"tag": "p",
+										"typography": {
+											"preset": "eyebrow"
+										},
+										"color": "var(--uncoder-c-primary)"
+									}
+								},
+								{
+									"type": "heading",
+									"settings": {
+										"title": "A look inside",
+										"tag": "h2",
+										"typography": {
+											"preset": "h2"
+										},
+										"text_wrap": "balance"
+									}
+								}
+							]
+						},
+						{
+							"type": "container",
+							"settings": {
+								"width": {
+									"size": 38,
+									"unit": "%"
+								},
+								"width_mobile": {
+									"size": 100,
+									"unit": "%"
+								},
+								"gap": {
+									"size": 16,
+									"unit": "px"
+								},
+								"align": "flex-start"
+							},
+							"children": [
+								{
+									"type": "text-editor",
+									"settings": {
+										"content": "<p>[One line about what these photos show — your space, your work, your team or your food.]</p>"
+									}
+								},
+								{
+									"type": "button",
+									"settings": {
+										"text": "See more photos",
+										"link": {
+											"url": "/gallery"
+										},
+										"variant": "outline"
+									}
+								}
+							]
+						}
+					]
+				},
+				{
+					"type": "image-gallery",
+					"settings": {
+						"gallery": [
+							{
+								"id": 0,
+								"url": "{{placeholder_image}}",
+								"alt": "[Describe photo 1]"
+							},
+							{
+								"id": 0,
+								"url": "{{placeholder_image}}",
+								"alt": "[Describe photo 2]"
+							},
+							{
+								"id": 0,
+								"url": "{{placeholder_image}}",
+								"alt": "[Describe photo 3]"
+							},
+							{
+								"id": 0,
+								"url": "{{placeholder_image}}",
+								"alt": "[Describe photo 4]"
+							},
+							{
+								"id": 0,
+								"url": "{{placeholder_image}}",
+								"alt": "[Describe photo 5]"
+							},
+							{
+								"id": 0,
+								"url": "{{placeholder_image}}",
+								"alt": "[Describe photo 6]"
+							}
+						],
+						"layout": "grid",
+						"columns": 3,
+						"columns_tablet": 3,
+						"columns_mobile": 2,
+						"ratio": "1/1",
+						"gap": {
+							"size": 16,
+							"unit": "px"
+						},
+						"gap_mobile": {
+							"size": 10,
+							"unit": "px"
+						},
+						"link_to": "lightbox",
+						"radius": {
+							"top": 16,
+							"right": 16,
+							"bottom": 16,
+							"left": 16,
+							"unit": "px",
+							"linked": true
+						},
+						"radius_mobile": {
+							"top": 12,
+							"right": 12,
+							"bottom": 12,
+							"left": 12,
+							"unit": "px",
+							"linked": true
+						}
+					}
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,292 @@
+{
+	"id": "faq-two-column",
+	"title": "FAQ: intro and accordion in two columns",
+	"category": "faq",
+	"description": "Two-column FAQ: title, short text and a contact button on the left; an accordion with five questions (h3) on the right. Stacks on phones. Edit each answer inside its accordion item container.",
+	"keywords": [
+		"faq",
+		"questions",
+		"answers",
+		"accordion",
+		"help",
+		"support"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "FAQ",
+			"settings": {
+				"direction": "row",
+				"direction_tablet": "column",
+				"direction_mobile": "column",
+				"gap": {
+					"size": 80,
+					"unit": "px"
+				},
+				"gap_tablet": {
+					"size": 40,
+					"unit": "px"
+				},
+				"gap_mobile": {
+					"size": 32,
+					"unit": "px"
+				}
+			},
+			"children": [
+				{
+					"type": "container",
+					"settings": {
+						"width": {
+							"size": 36,
+							"unit": "%"
+						},
+						"width_tablet": {
+							"size": 100,
+							"unit": "%"
+						},
+						"gap": {
+							"size": 16,
+							"unit": "px"
+						},
+						"align": "flex-start"
+					},
+					"children": [
+						{
+							"type": "heading",
+							"settings": {
+								"title": "FAQ",
+								"tag": "p",
+								"typography": {
+									"preset": "eyebrow"
+								},
+								"color": "var(--uncoder-c-primary)"
+							}
+						},
+						{
+							"type": "heading",
+							"settings": {
+								"title": "Questions, answered",
+								"tag": "h2",
+								"typography": {
+									"preset": "h2"
+								},
+								"text_wrap": "balance"
+							}
+						},
+						{
+							"type": "text-editor",
+							"settings": {
+								"content": "<p>Can’t find what you are looking for? Our team is happy to help with anything else.</p>",
+								"max_width": {
+									"size": 40,
+									"unit": "ch"
+								}
+							}
+						},
+						{
+							"type": "button",
+							"settings": {
+								"text": "Contact us",
+								"link": {
+									"url": "/contact"
+								},
+								"variant": "outline",
+								"_margin": {
+									"top": 8,
+									"right": "",
+									"bottom": "",
+									"left": "",
+									"unit": "px",
+									"linked": false
+								}
+							}
+						}
+					]
+				},
+				{
+					"type": "container",
+					"settings": {
+						"width": {
+							"size": 64,
+							"unit": "%"
+						},
+						"width_tablet": {
+							"size": 100,
+							"unit": "%"
+						}
+					},
+					"children": [
+						{
+							"type": "accordion",
+							"settings": {
+								"items": [
+									{
+										"title": "How long does it take to get started?"
+									},
+									{
+										"title": "Can I change my plan later?"
+									},
+									{
+										"title": "Do you offer a free trial?"
+									},
+									{
+										"title": "How is my data kept safe?"
+									},
+									{
+										"title": "What kind of support do you offer?"
+									}
+								],
+								"title_tag": "h3",
+								"first_open": true,
+								"icon": {
+									"library": "lucide",
+									"value": "plus"
+								},
+								"active_icon": {
+									"library": "lucide",
+									"value": "minus"
+								},
+								"gap": {
+									"size": 12,
+									"unit": "px"
+								},
+								"item_background": {
+									"type": "classic",
+									"color": "var(--uncoder-c-white)"
+								},
+								"item_border": {
+									"style": "solid",
+									"width": {
+										"top": 1,
+										"right": 1,
+										"bottom": 1,
+										"left": 1,
+										"unit": "px",
+										"linked": true
+									},
+									"color": "var(--uncoder-c-border)"
+								},
+								"active_item_border_color": "var(--uncoder-c-primary)",
+								"item_radius": {
+									"top": 14,
+									"right": 14,
+									"bottom": 14,
+									"left": 14,
+									"unit": "px",
+									"linked": true
+								},
+								"header_padding": {
+									"top": 20,
+									"right": 24,
+									"bottom": 20,
+									"left": 24,
+									"unit": "px",
+									"linked": false
+								},
+								"header_padding_mobile": {
+									"top": 16,
+									"right": 18,
+									"bottom": 16,
+									"left": 18,
+									"unit": "px",
+									"linked": false
+								},
+								"content_padding": {
+									"top": 0,
+									"right": 24,
+									"bottom": 20,
+									"left": 24,
+									"unit": "px",
+									"linked": false
+								},
+								"content_padding_mobile": {
+									"top": 0,
+									"right": 18,
+									"bottom": 16,
+									"left": 18,
+									"unit": "px",
+									"linked": false
+								},
+								"title_typography": {
+									"preset": "h6",
+									"size": {
+										"size": 17,
+										"unit": "px"
+									},
+									"line_height": {
+										"size": 1.4,
+										"unit": ""
+									}
+								},
+								"icon_color": "var(--uncoder-c-primary)",
+								"active_icon_color": "var(--uncoder-c-primary)"
+							},
+							"children": [
+								{
+									"type": "container",
+									"settings": {},
+									"children": [
+										{
+											"type": "text-editor",
+											"settings": {
+												"content": "<p>Most teams are up and running in [a day]. We guide you through the setup and help you bring in what you already have.</p>"
+											}
+										}
+									]
+								},
+								{
+									"type": "container",
+									"settings": {},
+									"children": [
+										{
+											"type": "text-editor",
+											"settings": {
+												"content": "<p>Yes. You can upgrade, downgrade or cancel at any time from your account settings; changes apply from the next billing period.</p>"
+											}
+										}
+									]
+								},
+								{
+									"type": "container",
+									"settings": {},
+									"children": [
+										{
+											"type": "text-editor",
+											"settings": {
+												"content": "<p>[Describe your trial or money-back policy here, including how long it lasts and what happens when it ends.]</p>"
+											}
+										}
+									]
+								},
+								{
+									"type": "container",
+									"settings": {},
+									"children": [
+										{
+											"type": "text-editor",
+											"settings": {
+												"content": "<p>[Explain where data is stored, who can access it and how it is protected — link to your privacy policy for details.]</p>"
+											}
+										}
+									]
+								},
+								{
+									"type": "container",
+									"settings": {},
+									"children": [
+										{
+											"type": "text-editor",
+											"settings": {
+												"content": "<p>You can reach our team by email or chat [on weekdays from 9am to 5pm]. Every plan includes help getting set up.</p>"
+											}
+										}
+									]
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,372 @@
+{
+	"id": "features-numbers-grid",
+	"title": "Features: numbered grid",
+	"category": "features",
+	"description": "Split intro (title left, text right) and four numbered points (large 01–04 number, h3, short text) with a colored top rule, on a surface background. Four columns on desktop, two on tablets, one on phones. Use it for reasons to choose you, key benefits or a simple method.",
+	"keywords": [
+		"features",
+		"numbered",
+		"benefits",
+		"reasons",
+		"grid",
+		"minimal"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "Features",
+			"settings": {
+				"gap": {
+					"size": 56,
+					"unit": "px"
+				},
+				"gap_mobile": {
+					"size": 40,
+					"unit": "px"
+				},
+				"background": {
+					"type": "classic",
+					"color": "var(--uncoder-c-surface)"
+				}
+			},
+			"children": [
+				{
+					"type": "container",
+					"settings": {
+						"direction": "row",
+						"direction_mobile": "column",
+						"justify": "space-between",
+						"align": "flex-end",
+						"align_mobile": "flex-start",
+						"gap": {
+							"size": 48,
+							"unit": "px"
+						},
+						"gap_mobile": {
+							"size": 16,
+							"unit": "px"
+						}
+					},
+					"children": [
+						{
+							"type": "container",
+							"settings": {
+								"width": {
+									"size": 56,
+									"unit": "%"
+								},
+								"width_mobile": {
+									"size": 100,
+									"unit": "%"
+								},
+								"gap": {
+									"size": 16,
+									"unit": "px"
+								}
+							},
+							"children": [
+								{
+									"type": "heading",
+									"settings": {
+										"title": "How we help",
+										"tag": "p",
+										"typography": {
+											"preset": "eyebrow"
+										},
+										"color": "var(--uncoder-c-primary)"
+									}
+								},
+								{
+									"type": "heading",
+									"settings": {
+										"title": "Four reasons people choose to work with us",
+										"tag": "h2",
+										"typography": {
+											"preset": "h2"
+										},
+										"text_wrap": "balance"
+									}
+								}
+							]
+						},
+						{
+							"type": "container",
+							"settings": {
+								"width": {
+									"size": 38,
+									"unit": "%"
+								},
+								"width_mobile": {
+									"size": 100,
+									"unit": "%"
+								}
+							},
+							"children": [
+								{
+									"type": "text-editor",
+									"settings": {
+										"content": "<p>Keep each point short and concrete. The numbers guide the eye, so put your most convincing reason first.</p>",
+										"typography": {
+											"preset": "lead"
+										}
+									}
+								}
+							]
+						}
+					]
+				},
+				{
+					"type": "container",
+					"settings": {
+						"layout": "grid",
+						"grid_columns": 4,
+						"grid_columns_tablet": 2,
+						"grid_columns_mobile": 1,
+						"gap": {
+							"size": 32,
+							"unit": "px"
+						},
+						"gap_mobile": {
+							"size": 28,
+							"unit": "px"
+						}
+					},
+					"children": [
+						{
+							"type": "container",
+							"settings": {
+								"gap": {
+									"size": 12,
+									"unit": "px"
+								},
+								"border": {
+									"style": "solid",
+									"width": {
+										"top": 2,
+										"right": 0,
+										"bottom": 0,
+										"left": 0,
+										"unit": "px",
+										"linked": false
+									},
+									"color": "var(--uncoder-c-primary)"
+								},
+								"_padding": {
+									"top": 24,
+									"right": "",
+									"bottom": "",
+									"left": "",
+									"unit": "px",
+									"linked": false
+								}
+							},
+							"children": [
+								{
+									"type": "heading",
+									"settings": {
+										"title": "01",
+										"tag": "p",
+										"typography": {
+											"preset": "h2"
+										},
+										"color": "var(--uncoder-c-primary)"
+									}
+								},
+								{
+									"type": "heading",
+									"settings": {
+										"title": "Expert guidance",
+										"tag": "h3",
+										"typography": {
+											"preset": "h5"
+										}
+									}
+								},
+								{
+									"type": "text-editor",
+									"settings": {
+										"content": "<p>Advice from people who have solved this problem many times before, explained in plain language.</p>"
+									}
+								}
+							]
+						},
+						{
+							"type": "container",
+							"settings": {
+								"gap": {
+									"size": 12,
+									"unit": "px"
+								},
+								"border": {
+									"style": "solid",
+									"width": {
+										"top": 2,
+										"right": 0,
+										"bottom": 0,
+										"left": 0,
+										"unit": "px",
+										"linked": false
+									},
+									"color": "var(--uncoder-c-primary)"
+								},
+								"_padding": {
+									"top": 24,
+									"right": "",
+									"bottom": "",
+									"left": "",
+									"unit": "px",
+									"linked": false
+								}
+							},
+							"children": [
+								{
+									"type": "heading",
+									"settings": {
+										"title": "02",
+										"tag": "p",
+										"typography": {
+											"preset": "h2"
+										},
+										"color": "var(--uncoder-c-primary)"
+									}
+								},
+								{
+									"type": "heading",
+									"settings": {
+										"title": "An open process",
+										"tag": "h3",
+										"typography": {
+											"preset": "h5"
+										}
+									}
+								},
+								{
+									"type": "text-editor",
+									"settings": {
+										"content": "<p>You always know what is happening, what comes next and what it will cost.</p>"
+									}
+								}
+							]
+						},
+						{
+							"type": "container",
+							"settings": {
+								"gap": {
+									"size": 12,
+									"unit": "px"
+								},
+								"border": {
+									"style": "solid",
+									"width": {
+										"top": 2,
+										"right": 0,
+										"bottom": 0,
+										"left": 0,
+										"unit": "px",
+										"linked": false
+									},
+									"color": "var(--uncoder-c-primary)"
+								},
+								"_padding": {
+									"top": 24,
+									"right": "",
+									"bottom": "",
+									"left": "",
+									"unit": "px",
+									"linked": false
+								}
+							},
+							"children": [
+								{
+									"type": "heading",
+									"settings": {
+										"title": "03",
+										"tag": "p",
+										"typography": {
+											"preset": "h2"
+										},
+										"color": "var(--uncoder-c-primary)"
+									}
+								},
+								{
+									"type": "heading",
+									"settings": {
+										"title": "Results you can measure",
+										"tag": "h3",
+										"typography": {
+											"preset": "h5"
+										}
+									}
+								},
+								{
+									"type": "text-editor",
+									"settings": {
+										"content": "<p>We agree on clear goals at the start and report on them honestly along the way.</p>"
+									}
+								}
+							]
+						},
+						{
+							"type": "container",
+							"settings": {
+								"gap": {
+									"size": 12,
+									"unit": "px"
+								},
+								"border": {
+									"style": "solid",
+									"width": {
+										"top": 2,
+										"right": 0,
+										"bottom": 0,
+										"left": 0,
+										"unit": "px",
+										"linked": false
+									},
+									"color": "var(--uncoder-c-primary)"
+								},
+								"_padding": {
+									"top": 24,
+									"right": "",
+									"bottom": "",
+									"left": "",
+									"unit": "px",
+									"linked": false
+								}
+							},
+							"children": [
+								{
+									"type": "heading",
+									"settings": {
+										"title": "04",
+										"tag": "p",
+										"typography": {
+											"preset": "h2"
+										},
+										"color": "var(--uncoder-c-primary)"
+									}
+								},
+								{
+									"type": "heading",
+									"settings": {
+										"title": "Support that lasts",
+										"tag": "h3",
+										"typography": {
+											"preset": "h5"
+										}
+									}
+								},
+								{
+									"type": "text-editor",
+									"settings": {
+										"content": "<p>We stay available after the work is delivered, so small questions never become big problems.</p>"
+									}
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+}

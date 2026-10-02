@@ -1,0 +1,376 @@
+/* Shared scroll-snap carousel engine (carousel, image-carousel, testimonial-carousel).
+   .uncoder-carousel > .uncoder-carousel__viewport > .uncoder-carousel__track > .uncoder-carousel__slide
+   Settings arrive as custom properties on .uncoder-carousel; every structural rule uses child
+   combinators so a carousel nested inside a slide keeps its own layout. */
+
+.uncoder-carousel {
+  --uncoder-carousel-spv: 1;
+  --uncoder-carousel-sts: 1;
+  --uncoder-carousel-gap: 20px;
+  --uncoder-carousel-align: stretch;
+  --uncoder-carousel-bleed: 0px;
+  --uncoder-carousel-arrow-size: 44px;
+  --uncoder-carousel-arrow-icon: 20px;
+  --uncoder-carousel-arrow-offset: 12px;
+  --uncoder-carousel-arrow-color: var(--uncoder-c-heading, #111827);
+  --uncoder-carousel-arrow-bg: var(--uncoder-c-surface, #fff);
+  --uncoder-carousel-arrow-color-hover: #fff;
+  --uncoder-carousel-arrow-bg-hover: var(--uncoder-c-primary, #2b59ff);
+  --uncoder-carousel-pag-spacing: 24px;
+  --uncoder-carousel-pag-justify: center;
+  --uncoder-carousel-dot-size: 8px;
+  --uncoder-carousel-dot-gap: 8px;
+  --uncoder-carousel-dot-active-width: 24px;
+  --uncoder-carousel-dot-color: color-mix(in srgb, currentColor 22%, transparent);
+  --uncoder-carousel-dot-active: var(--uncoder-c-primary, #2b59ff);
+  --uncoder-carousel-progress-h: 3px;
+  --uncoder-carousel-progress-color: var(--uncoder-c-primary, #2b59ff);
+  --uncoder-carousel-progress-track: color-mix(in srgb, currentColor 12%, transparent);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--uncoder-carousel-pag-spacing);
+  min-width: 0;
+}
+
+.uncoder-carousel > .uncoder-carousel__viewport {
+  position: relative;
+  min-width: 0;
+}
+
+.uncoder-carousel > .uncoder-carousel__viewport > .uncoder-carousel__track {
+  display: flex;
+  align-items: var(--uncoder-carousel-align);
+  gap: var(--uncoder-carousel-gap);
+  margin: calc(-1 * var(--uncoder-carousel-bleed)) 0;
+  padding: var(--uncoder-carousel-bleed) 0;
+  list-style: none;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.uncoder-carousel > .uncoder-carousel__viewport > .uncoder-carousel__track::-webkit-scrollbar {
+  display: none;
+}
+
+/* Without the runtime the track stays usable with a visible scrollbar. */
+html:not(.uncoder-js) .uncoder-carousel > .uncoder-carousel__viewport > .uncoder-carousel__track {
+  scrollbar-width: thin;
+}
+
+.uncoder-carousel > .uncoder-carousel__viewport > .uncoder-carousel__track > .uncoder-carousel__slide {
+  position: relative;
+  flex: 0 0 calc((100% - (var(--uncoder-carousel-spv) - 1) * var(--uncoder-carousel-gap)) / var(--uncoder-carousel-spv));
+  min-width: 0;
+  scroll-snap-align: start;
+}
+
+/* Equal-height slides: the child container (or the editor slot around it) fills the slide. */
+.uncoder-carousel__slide > .uncoder-container,
+.uncoder-carousel__slide > .uncoder-slot,
+.uncoder-carousel__slide > .uncoder-slot > .uncoder-container {
+  height: 100%;
+}
+
+.uncoder-carousel.is-animating > .uncoder-carousel__viewport > .uncoder-carousel__track,
+.uncoder-carousel.is-dragging > .uncoder-carousel__viewport > .uncoder-carousel__track {
+  scroll-snap-type: none;
+}
+
+.uncoder-carousel.is-dragging > .uncoder-carousel__viewport > .uncoder-carousel__track {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.uncoder-carousel.is-dragging > .uncoder-carousel__viewport > .uncoder-carousel__track * {
+  pointer-events: none;
+}
+
+.uncoder-carousel__slide img {
+  -webkit-user-drag: none;
+}
+
+/* ------------------------------------------------------------------ Arrows */
+
+.uncoder-carousel > .uncoder-carousel__viewport > .uncoder-carousel__arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--uncoder-carousel-arrow-size);
+  height: var(--uncoder-carousel-arrow-size);
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0 solid transparent;
+  border-radius: 50%;
+  background: var(--uncoder-carousel-arrow-bg);
+  color: var(--uncoder-carousel-arrow-color);
+  font: inherit;
+  font-size: var(--uncoder-carousel-arrow-icon);
+  line-height: 1;
+  text-transform: none;
+  box-shadow: 0 6px 18px -8px rgb(15 23 42 / 0.35), 0 0 0 1px rgb(15 23 42 / 0.06);
+  cursor: pointer;
+  transform: translateY(-50%);
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, opacity 0.2s, box-shadow 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.uncoder-carousel > .uncoder-carousel__viewport > .uncoder-carousel__arrow:is(:hover, :focus-visible) {
+  background: var(--uncoder-carousel-arrow-bg-hover);
+  color: var(--uncoder-carousel-arrow-color-hover);
+}
+
+.uncoder-carousel > .uncoder-carousel__viewport > .uncoder-carousel__arrow:focus-visible {
+  outline: 2px solid var(--uncoder-c-primary, #2b59ff);
+  outline-offset: 2px;
+}
+
+.uncoder-carousel > .uncoder-carousel__viewport > .uncoder-carousel__arrow.is-disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.uncoder-carousel > .uncoder-carousel__viewport > .uncoder-carousel__arrow.is-disabled:hover {
+  background: var(--uncoder-carousel-arrow-bg);
+  color: var(--uncoder-carousel-arrow-color);
+}
+
+.uncoder-carousel__arrow .uncoder-svg {
+  width: 1em;
+  height: 1em;
+}
+
+.uncoder-carousel__arrow:dir(rtl) .uncoder-svg {
+  transform: scaleX(-1);
+}
+
+.uncoder-carousel > .uncoder-carousel__viewport > .uncoder-carousel__arrow--prev {
+  inset-inline-start: var(--uncoder-carousel-arrow-offset);
+}
+
+.uncoder-carousel > .uncoder-carousel__viewport > .uncoder-carousel__arrow--next {
+  inset-inline-end: var(--uncoder-carousel-arrow-offset);
+}
+
+/* Outside: room is kept on both sides of the slides. */
+.uncoder-carousel--arrows-outside {
+  padding-inline: calc(var(--uncoder-carousel-arrow-size) + var(--uncoder-carousel-arrow-offset));
+}
+
+.uncoder-carousel--arrows-outside > .uncoder-carousel__viewport > .uncoder-carousel__arrow--prev {
+  inset-inline-start: calc(-1 * (var(--uncoder-carousel-arrow-size) + var(--uncoder-carousel-arrow-offset)));
+}
+
+.uncoder-carousel--arrows-outside > .uncoder-carousel__viewport > .uncoder-carousel__arrow--next {
+  inset-inline-end: calc(-1 * (var(--uncoder-carousel-arrow-size) + var(--uncoder-carousel-arrow-offset)));
+}
+
+/* Below: pagination on the start side, arrows on the end side of one row. */
+.uncoder-carousel--arrows-bottom {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-areas:
+    "track track track"
+    "pag prev next";
+  align-items: center;
+  column-gap: max(0px, var(--uncoder-carousel-arrow-offset));
+  row-gap: var(--uncoder-carousel-pag-spacing);
+}
+
+.uncoder-carousel--arrows-bottom > .uncoder-carousel__viewport {
+  display: contents;
+}
+
+.uncoder-carousel--arrows-bottom > .uncoder-carousel__viewport > .uncoder-carousel__track {
+  grid-area: track;
+}
+
+.uncoder-carousel--arrows-bottom > .uncoder-carousel__viewport > .uncoder-carousel__arrow {
+  position: relative;
+  top: auto;
+  inset-inline: auto;
+  transform: none;
+}
+
+.uncoder-carousel--arrows-bottom > .uncoder-carousel__viewport > .uncoder-carousel__arrow--prev {
+  grid-area: prev;
+}
+
+.uncoder-carousel--arrows-bottom > .uncoder-carousel__viewport > .uncoder-carousel__arrow--next {
+  grid-area: next;
+}
+
+.uncoder-carousel--arrows-bottom > .uncoder-carousel__pagination {
+  grid-area: pag;
+}
+
+/* A single page: nothing to navigate. */
+.uncoder-carousel.is-static > .uncoder-carousel__viewport > .uncoder-carousel__arrow,
+.uncoder-carousel.is-static > .uncoder-carousel__pagination {
+  display: none;
+}
+
+.uncoder-carousel--arrows-outside.is-static {
+  padding-inline: 0;
+}
+
+/* ------------------------------------------------------------------ Pagination */
+
+.uncoder-carousel > .uncoder-carousel__pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: var(--uncoder-carousel-pag-justify);
+  gap: 12px;
+  min-width: 0;
+}
+
+.uncoder-carousel__pagination > .uncoder-carousel__dots {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--uncoder-carousel-dot-gap);
+}
+
+.uncoder-carousel__dots > .uncoder-carousel__dot {
+  position: relative;
+  display: block;
+  width: var(--uncoder-carousel-dot-size);
+  height: var(--uncoder-carousel-dot-size);
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--uncoder-carousel-dot-color);
+  color: inherit;
+  font: inherit;
+  box-shadow: none;
+  cursor: pointer;
+  transition: width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.3s;
+}
+
+/* 24px hit area without changing the layout. */
+.uncoder-carousel__dots > .uncoder-carousel__dot::after {
+  content: "";
+  position: absolute;
+  inset: calc((24px - var(--uncoder-carousel-dot-size)) / -2) calc(var(--uncoder-carousel-dot-gap) / -2);
+}
+
+.uncoder-carousel__dots > .uncoder-carousel__dot:hover {
+  background: color-mix(in srgb, var(--uncoder-carousel-dot-active) 55%, transparent);
+}
+
+.uncoder-carousel__dots > .uncoder-carousel__dot.is-active {
+  width: var(--uncoder-carousel-dot-active-width);
+  background: var(--uncoder-carousel-dot-active);
+}
+
+.uncoder-carousel__dots > .uncoder-carousel__dot:focus-visible {
+  outline: 2px solid var(--uncoder-carousel-dot-active);
+  outline-offset: 3px;
+}
+
+.uncoder-carousel__pagination > .uncoder-carousel__fraction {
+  display: inline-flex;
+  gap: 0.35em;
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+
+.uncoder-carousel__fraction > .uncoder-carousel__sep {
+  opacity: 0.5;
+}
+
+.uncoder-carousel__pagination > .uncoder-carousel__progress {
+  position: relative;
+  flex: 1 1 auto;
+  width: 100%;
+  max-width: 100%;
+  height: var(--uncoder-carousel-progress-h);
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--uncoder-carousel-progress-track);
+}
+
+.uncoder-carousel__progress > .uncoder-carousel__progress-bar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  inset-inline-start: calc(var(--uncoder-carousel-progress-start, 0) * 100%);
+  width: calc(var(--uncoder-carousel-progress-size, 1) * 100%);
+  border-radius: inherit;
+  background: var(--uncoder-carousel-progress-color);
+}
+
+.uncoder-carousel__pagination > .uncoder-carousel__toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.uncoder-carousel__toggle:hover {
+  border-color: currentColor;
+}
+
+.uncoder-carousel__toggle:focus-visible {
+  outline: 2px solid var(--uncoder-c-primary, #2b59ff);
+  outline-offset: 2px;
+}
+
+.uncoder-carousel__toggle > .uncoder-svg {
+  width: 1em;
+  height: 1em;
+}
+
+.uncoder-carousel__toggle > .uncoder-carousel__play,
+.uncoder-carousel__toggle.is-paused > .uncoder-carousel__pause {
+  display: none;
+}
+
+.uncoder-carousel__toggle.is-paused > .uncoder-carousel__play {
+  display: inline-block;
+}
+
+/* ------------------------------------------------------------------ Editor placeholder */
+
+.uncoder-carousel-placeholder {
+  padding: 32px 20px;
+  border: 1px dashed var(--uncoder-c-border, #d1d5db);
+  border-radius: 8px;
+  color: var(--uncoder-c-muted, #6b7280);
+  font: 14px/1.4 system-ui, sans-serif;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uncoder-carousel > .uncoder-carousel__viewport > .uncoder-carousel__arrow,
+  .uncoder-carousel__dots > .uncoder-carousel__dot {
+    transition: none;
+  }
+}

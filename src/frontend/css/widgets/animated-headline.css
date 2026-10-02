@@ -1,0 +1,170 @@
+/* Animated Headline — .uncoder-ah. Static by default (shape drawn, first word shown); the
+   animated-headline module adds .uncoder-ah--js / .uncoder-ah--ready to animate. */
+
+.uncoder-ah {
+  --uncoder-ah-shape: var(--uncoder-c-accent, #ff7a45);
+  --uncoder-ah-stroke: 12;
+  --uncoder-ah-draw: 1200ms;
+  --uncoder-ah-cursor: currentColor;
+}
+.uncoder .uncoder-ah {
+  margin: 0;
+  padding: 0;
+  overflow-wrap: break-word;
+}
+.uncoder-ah a.uncoder-ah__link {
+  color: inherit;
+  text-decoration: none;
+}
+.uncoder-ah__dynamic {
+  position: relative;
+  display: inline-block;
+  color: var(--uncoder-c-primary, #2b59ff);
+}
+
+/* ---------------------------------------------------------------- Highlight */
+
+.uncoder-ah--highlight .uncoder-ah__dynamic {
+  z-index: 0;
+  white-space: nowrap;
+}
+.uncoder-ah__text {
+  position: relative;
+  z-index: 1;
+}
+.uncoder-ah__svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 0;
+  width: calc(100% + 0.5em);
+  height: calc(100% + 0.5em);
+  overflow: visible;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.uncoder-ah--shape-front .uncoder-ah__svg {
+  z-index: 2;
+}
+.uncoder-ah__svg path {
+  fill: none;
+  stroke: var(--uncoder-ah-shape);
+  stroke-width: calc(var(--uncoder-ah-stroke) * 1px);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: opacity 0.4s;
+}
+.uncoder-ah--shape-strike .uncoder-ah__svg path,
+.uncoder-ah--shape-cross .uncoder-ah__svg path {
+  stroke-width: calc(var(--uncoder-ah-stroke) * 0.75px);
+}
+.uncoder-ah--js .uncoder-ah__svg path {
+  stroke-dasharray: var(--uncoder-ah-len, 1000) var(--uncoder-ah-len, 1000);
+  stroke-dashoffset: var(--uncoder-ah-len, 1000);
+}
+.uncoder-ah--js.uncoder-ah--drawn .uncoder-ah__svg path {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset var(--uncoder-ah-draw) cubic-bezier(0.65, 0, 0.35, 1), opacity 0.4s;
+}
+.uncoder-ah--js.uncoder-ah--drawn .uncoder-ah__svg path + path {
+  transition-delay: calc(var(--uncoder-ah-draw) * 0.45), 0s;
+}
+.uncoder-ah--js.uncoder-ah--fading .uncoder-ah__svg path {
+  opacity: 0;
+}
+
+/* ---------------------------------------------------------------- Rotating */
+
+.uncoder-ah__words {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+.uncoder-ah__word {
+  display: none;
+}
+.uncoder-ah__word--active {
+  display: inline;
+}
+
+/* Grid stack for flip / slide / fade / clip: every word sits in the same cell. */
+.uncoder-ah--ready:not(.uncoder-ah--fx-typing) .uncoder-ah__words {
+  display: inline-grid;
+  justify-items: start;
+  width: var(--uncoder-ah-w, auto);
+  transition: width 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+}
+.uncoder-ah--ready:not(.uncoder-ah--fx-typing) .uncoder-ah__word {
+  display: inline-block;
+  grid-area: 1 / 1;
+  opacity: 0;
+  transition: opacity 0.45s, transform 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.uncoder-ah--ready:not(.uncoder-ah--fx-typing) .uncoder-ah__word.uncoder-ah__word--active {
+  opacity: 1;
+  transform: none;
+}
+
+/* Slide up. */
+.uncoder-ah--ready.uncoder-ah--fx-slide .uncoder-ah__words {
+  clip-path: inset(0 -0.3em);
+}
+.uncoder-ah--ready.uncoder-ah--fx-slide .uncoder-ah__word {
+  transform: translateY(90%);
+}
+.uncoder-ah--ready.uncoder-ah--fx-slide .uncoder-ah__word--out {
+  transform: translateY(-90%);
+}
+
+/* Flip. */
+.uncoder-ah--ready.uncoder-ah--fx-flip .uncoder-ah__words {
+  perspective: 400px;
+}
+.uncoder-ah--ready.uncoder-ah--fx-flip .uncoder-ah__word {
+  transform: rotateX(-90deg);
+  transform-origin: 50% 50% -0.4em;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.uncoder-ah--ready.uncoder-ah--fx-flip .uncoder-ah__word--out {
+  transform: rotateX(90deg);
+}
+
+/* Clip: the box closes, the word changes, the box opens again. */
+.uncoder-ah--ready.uncoder-ah--fx-clip .uncoder-ah__words {
+  clip-path: inset(-0.2em 0);
+  border-inline-end: 2px solid var(--uncoder-ah-cursor);
+  transition-duration: 0.6s;
+}
+.uncoder-ah--ready.uncoder-ah--fx-clip .uncoder-ah__word {
+  transition: none;
+}
+
+/* Typing: one word at a time, letters added/removed by the module. */
+.uncoder-ah--ready.uncoder-ah--fx-typing .uncoder-ah__words::after {
+  content: "";
+  display: inline-block;
+  width: 0.08em;
+  min-width: 2px;
+  height: 0.95em;
+  margin-inline-start: 0.06em;
+  vertical-align: -0.1em;
+  background-color: var(--uncoder-ah-cursor);
+  animation: uncoder-ah-blink 1s steps(1) infinite;
+}
+@keyframes uncoder-ah-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uncoder-ah__svg path,
+  .uncoder-ah--ready .uncoder-ah__words,
+  .uncoder-ah--ready .uncoder-ah__word {
+    transition: none;
+  }
+  .uncoder-ah--ready.uncoder-ah--fx-typing .uncoder-ah__words::after {
+    animation: none;
+  }
+}

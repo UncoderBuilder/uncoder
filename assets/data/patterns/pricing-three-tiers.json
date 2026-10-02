@@ -1,0 +1,269 @@
+{
+	"id": "pricing-three-tiers",
+	"title": "Pricing: three plans, middle highlighted",
+	"category": "pricing",
+	"description": "Centered intro and three pricing plans with the same feature rows; the middle plan is highlighted with a “Most popular” badge. Stacked (centered, max 560px) on tablets and phones.",
+	"keywords": [
+		"pricing",
+		"plans",
+		"tiers",
+		"price table",
+		"subscription",
+		"packages"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "Pricing",
+			"settings": {
+				"gap": {
+					"size": 56,
+					"unit": "px"
+				},
+				"gap_mobile": {
+					"size": 40,
+					"unit": "px"
+				},
+				"align_tablet": "center"
+			},
+			"children": [
+				{
+					"type": "container",
+					"settings": {
+						"gap": {
+							"size": 16,
+							"unit": "px"
+						},
+						"align": "center"
+					},
+					"children": [
+						{
+							"type": "heading",
+							"settings": {
+								"title": "Pricing",
+								"tag": "p",
+								"typography": {
+									"preset": "eyebrow"
+								},
+								"color": "var(--uncoder-c-primary)",
+								"align": "center"
+							}
+						},
+						{
+							"type": "heading",
+							"settings": {
+								"title": "Simple, transparent pricing",
+								"tag": "h2",
+								"typography": {
+									"preset": "h2"
+								},
+								"align": "center",
+								"max_width": {
+									"size": 20,
+									"unit": "ch"
+								},
+								"text_wrap": "balance"
+							}
+						},
+						{
+							"type": "text-editor",
+							"settings": {
+								"content": "<p>Choose the plan that fits your team today and change it whenever you need to.</p>",
+								"typography": {
+									"preset": "lead"
+								},
+								"align": "center",
+								"max_width": {
+									"size": 58,
+									"unit": "ch"
+								}
+							}
+						}
+					]
+				},
+				{
+					"type": "container",
+					"settings": {
+						"layout": "grid",
+						"grid_columns": 3,
+						"grid_columns_tablet": 1,
+						"grid_columns_mobile": 1,
+						"gap": {
+							"size": 24,
+							"unit": "px"
+						},
+						"gap_mobile": {
+							"size": 16,
+							"unit": "px"
+						},
+						"align": "stretch",
+						"width_tablet": {
+							"size": 560,
+							"unit": "px"
+						},
+						"width_mobile": {
+							"size": 100,
+							"unit": "%"
+						}
+					},
+					"children": [
+						{
+							"type": "price-table",
+							"settings": {
+								"title": "Starter",
+								"subtitle": "For individuals getting started",
+								"currency": "$",
+								"price": "19",
+								"period": "/month",
+								"features": [
+									{
+										"text": "3 projects",
+										"included": true
+									},
+									{
+										"text": "1 team member",
+										"included": true
+									},
+									{
+										"text": "Basic integrations",
+										"included": true
+									},
+									{
+										"text": "Standard reporting",
+										"included": true
+									},
+									{
+										"text": "Priority support",
+										"included": false
+									},
+									{
+										"text": "Dedicated success manager",
+										"included": false
+									}
+								],
+								"button_text": "Get started",
+								"link": {
+									"url": "/signup"
+								},
+								"button_variant": "outline",
+								"footer_note": "",
+								"highlighted": false,
+								"align": "left",
+								"features_align": "left",
+								"title_typography": {
+									"preset": "h4"
+								},
+								"price_typography": {
+									"preset": "h1"
+								}
+							}
+						},
+						{
+							"type": "price-table",
+							"settings": {
+								"title": "Growth",
+								"subtitle": "For growing teams",
+								"currency": "$",
+								"price": "49",
+								"period": "/month",
+								"features": [
+									{
+										"text": "Unlimited projects",
+										"included": true
+									},
+									{
+										"text": "Up to 10 team members",
+										"included": true
+									},
+									{
+										"text": "All integrations",
+										"included": true
+									},
+									{
+										"text": "Advanced reporting",
+										"included": true
+									},
+									{
+										"text": "Priority support",
+										"included": true
+									},
+									{
+										"text": "Dedicated success manager",
+										"included": false
+									}
+								],
+								"button_text": "Start free trial",
+								"link": {
+									"url": "/signup"
+								},
+								"button_variant": "primary",
+								"footer_note": "",
+								"highlighted": true,
+								"badge_text": "Most popular",
+								"align": "left",
+								"features_align": "left",
+								"title_typography": {
+									"preset": "h4"
+								},
+								"price_typography": {
+									"preset": "h1"
+								}
+							}
+						},
+						{
+							"type": "price-table",
+							"settings": {
+								"title": "Scale",
+								"subtitle": "For larger organisations",
+								"currency": "$",
+								"price": "99",
+								"period": "/month",
+								"features": [
+									{
+										"text": "Unlimited projects",
+										"included": true
+									},
+									{
+										"text": "Unlimited team members",
+										"included": true
+									},
+									{
+										"text": "All integrations",
+										"included": true
+									},
+									{
+										"text": "Advanced reporting",
+										"included": true
+									},
+									{
+										"text": "Priority support",
+										"included": true
+									},
+									{
+										"text": "Dedicated success manager",
+										"included": true
+									}
+								],
+								"button_text": "Talk to sales",
+								"link": {
+									"url": "/contact"
+								},
+								"button_variant": "outline",
+								"footer_note": "",
+								"highlighted": false,
+								"align": "left",
+								"features_align": "left",
+								"title_typography": {
+									"preset": "h4"
+								},
+								"price_typography": {
+									"preset": "h1"
+								}
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

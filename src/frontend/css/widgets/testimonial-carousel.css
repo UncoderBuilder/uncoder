@@ -1,0 +1,167 @@
+/* Testimonial carousel: cards inside the shared carousel engine (widgets/carousel.css). */
+
+.uncoder-carousel.uncoder-testimonial-carousel {
+  --uncoder-carousel-bleed: 16px;
+}
+
+.uncoder-testimonial-carousel__card {
+  --uncoder-tcar-avatar: 48px;
+  --uncoder-tcar-justify: flex-start;
+  --uncoder-tcar-star: #f5a524;
+  --uncoder-tcar-star-empty: color-mix(in srgb, currentColor 18%, transparent);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 100%;
+  margin: 0;
+  padding: 32px;
+  border: 1px solid var(--uncoder-c-border, #e5e7eb);
+  border-radius: 16px;
+  background: var(--uncoder-c-surface, #fff);
+  color: var(--uncoder-c-text, #374151);
+  text-align: left;
+}
+
+.uncoder-testimonial-carousel__card > .uncoder-testimonial-carousel__mark {
+  display: inline-flex;
+  align-self: var(--uncoder-tcar-justify);
+  color: var(--uncoder-c-primary, #2b59ff);
+  font-size: 32px;
+  line-height: 1;
+}
+
+.uncoder-testimonial-carousel__mark > .uncoder-svg {
+  width: 1em;
+  height: 1em;
+}
+
+.uncoder-testimonial-carousel__card > .uncoder-testimonial-carousel__rating {
+  display: flex;
+  justify-content: var(--uncoder-tcar-justify);
+  gap: 2px;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.uncoder-testimonial-carousel__star-wrap {
+  position: relative;
+  display: inline-flex;
+  width: 1em;
+  height: 1em;
+  color: var(--uncoder-tcar-star-empty);
+}
+
+.uncoder-testimonial-carousel__star-wrap > .uncoder-svg {
+  width: 1em;
+  height: 1em;
+  stroke-width: 1.5;
+}
+
+.uncoder-testimonial-carousel__star-wrap > .uncoder-testimonial-carousel__star {
+  fill: currentColor;
+}
+
+.uncoder-testimonial-carousel__star-wrap.is-full {
+  color: var(--uncoder-tcar-star);
+}
+
+.uncoder-testimonial-carousel__star-wrap > .uncoder-testimonial-carousel__star-half {
+  position: absolute;
+  inset: 0;
+  color: var(--uncoder-tcar-star);
+  fill: currentColor;
+}
+
+.uncoder-testimonial-carousel__card > .uncoder-testimonial-carousel__quote {
+  flex: 1 1 auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--uncoder-c-heading, #111827);
+  font-size: 1.0625rem;
+  font-style: normal;
+  line-height: 1.6;
+  quotes: none;
+}
+
+.uncoder-testimonial-carousel__quote::before,
+.uncoder-testimonial-carousel__quote::after {
+  content: none;
+}
+
+.uncoder-testimonial-carousel__quote > p {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+}
+
+.uncoder-testimonial-carousel__card > .uncoder-testimonial-carousel__author {
+  display: flex;
+  align-items: center;
+  justify-content: var(--uncoder-tcar-justify);
+  gap: 14px;
+  margin: 0;
+}
+
+.uncoder-testimonial-carousel__author > .uncoder-testimonial-carousel__avatar {
+  flex-shrink: 0;
+  width: var(--uncoder-tcar-avatar);
+  height: var(--uncoder-tcar-avatar);
+  max-width: none;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.uncoder-testimonial-carousel__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.uncoder-testimonial-carousel__meta > .uncoder-testimonial-carousel__name {
+  margin: 0;
+  color: var(--uncoder-c-heading, #111827);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.uncoder-testimonial-carousel__meta > .uncoder-testimonial-carousel__role {
+  color: var(--uncoder-c-muted, #6b7280);
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+
+/* Centered layout: photo above the name. */
+.uncoder-testimonial-carousel--centered .uncoder-testimonial-carousel__card {
+  --uncoder-tcar-justify: center;
+  align-items: stretch;
+  text-align: center;
+}
+
+.uncoder-testimonial-carousel--centered .uncoder-testimonial-carousel__card > .uncoder-testimonial-carousel__author {
+  flex-direction: column;
+  align-items: var(--uncoder-tcar-justify);
+  gap: 12px;
+}
+
+.uncoder-testimonial-carousel--centered .uncoder-testimonial-carousel__meta {
+  align-items: var(--uncoder-tcar-justify);
+}
+
+/* Author-first layout: the quote fills the rest of the card. */
+.uncoder-testimonial-carousel--author .uncoder-testimonial-carousel__card > .uncoder-testimonial-carousel__author {
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--uncoder-c-border, #e5e7eb);
+}
+
+.uncoder-testimonial-carousel-placeholder {
+  padding: 32px 20px;
+  border: 1px dashed var(--uncoder-c-border, #d1d5db);
+  border-radius: 8px;
+  color: var(--uncoder-c-muted, #6b7280);
+  font: 14px/1.4 system-ui, sans-serif;
+  text-align: center;
+}

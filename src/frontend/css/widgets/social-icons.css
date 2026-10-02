@@ -1,0 +1,167 @@
+/* Social Icons — ul.uncoder-social-icons.--{stacked|framed|minimal}.--{brand|custom}.--{circle|rounded|square}.
+   Each item sets --uncoder-si-brand; the view/colour classes map it onto --uncoder-si-bg / -fg / -bd. */
+
+.uncoder-social-icons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+/* Resets win over theme rules such as ".entry-content ul". */
+.uncoder ul.uncoder-social-icons {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.uncoder .uncoder-social-icons__item {
+  margin: 0;
+  padding: 0;
+}
+
+.uncoder-social-icons__item {
+  display: flex;
+  --uncoder-si-brand: var(--uncoder-c-primary, #2b59ff);
+}
+.uncoder-social-icons__item--facebook { --uncoder-si-brand: #1877f2; }
+.uncoder-social-icons__item--x { --uncoder-si-brand: #000; }
+.uncoder-social-icons__item--instagram { --uncoder-si-brand: #e4405f; }
+.uncoder-social-icons__item--linkedin { --uncoder-si-brand: #0a66c2; }
+.uncoder-social-icons__item--youtube { --uncoder-si-brand: #f00; }
+.uncoder-social-icons__item--tiktok { --uncoder-si-brand: #000; }
+.uncoder-social-icons__item--pinterest { --uncoder-si-brand: #bd081c; }
+.uncoder-social-icons__item--github { --uncoder-si-brand: #181717; }
+.uncoder-social-icons__item--dribbble { --uncoder-si-brand: #ea4c89; }
+.uncoder-social-icons__item--behance { --uncoder-si-brand: #1769ff; }
+.uncoder-social-icons__item--whatsapp { --uncoder-si-brand: #25d366; }
+.uncoder-social-icons__item--telegram { --uncoder-si-brand: #26a5e4; }
+.uncoder-social-icons__item--discord { --uncoder-si-brand: #5865f2; }
+.uncoder-social-icons__item--threads { --uncoder-si-brand: #000; }
+.uncoder-social-icons__item--mastodon { --uncoder-si-brand: #6364ff; }
+.uncoder-social-icons__item--reddit { --uncoder-si-brand: #ff4500; }
+.uncoder-social-icons__item--email { --uncoder-si-brand: #ea4335; }
+.uncoder-social-icons__item--phone { --uncoder-si-brand: #16a34a; }
+.uncoder-social-icons__item--website { --uncoder-si-brand: #475569; }
+.uncoder-social-icons__item--rss { --uncoder-si-brand: #f26522; }
+
+.uncoder-social-icons__link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  padding: var(--uncoder-si-pad, 0.6em);
+  border: 0 solid var(--uncoder-si-bd, transparent);
+  background-color: var(--uncoder-si-bg, transparent);
+  color: var(--uncoder-si-fg, inherit);
+  line-height: 1;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, transform 0.2s, opacity 0.2s, box-shadow 0.2s;
+}
+.uncoder a.uncoder-social-icons__link {
+  text-decoration: none;
+}
+.uncoder-social-icons__link:focus-visible {
+  outline: 2px solid var(--uncoder-si-accent, currentColor);
+  outline-offset: 2px;
+}
+.uncoder-social-icons__svg {
+  width: var(--uncoder-si-size, 18px);
+  height: var(--uncoder-si-size, 18px);
+}
+
+/* Colour source */
+.uncoder-social-icons--brand .uncoder-social-icons__link {
+  --uncoder-si-accent: var(--uncoder-si-brand);
+}
+.uncoder-social-icons--custom .uncoder-social-icons__link {
+  --uncoder-si-accent: var(--uncoder-si-color, var(--uncoder-c-primary, #2b59ff));
+}
+
+/* Views */
+.uncoder-social-icons--stacked .uncoder-social-icons__link {
+  --uncoder-si-bg: var(--uncoder-si-accent);
+  --uncoder-si-bd: var(--uncoder-si-accent);
+  --uncoder-si-fg: var(--uncoder-si-icon, #fff);
+}
+.uncoder-social-icons--stacked .uncoder-social-icons__link:is(:hover, :focus-visible) {
+  --uncoder-si-bg: color-mix(in srgb, var(--uncoder-si-accent) 82%, #000);
+  --uncoder-si-bd: color-mix(in srgb, var(--uncoder-si-accent) 82%, #000);
+}
+.uncoder-social-icons--framed .uncoder-social-icons__link {
+  --uncoder-si-bg: transparent;
+  --uncoder-si-bd: var(--uncoder-si-accent);
+  --uncoder-si-fg: var(--uncoder-si-accent);
+  border-width: var(--uncoder-si-border, 2px);
+}
+.uncoder-social-icons--framed .uncoder-social-icons__link:is(:hover, :focus-visible) {
+  --uncoder-si-bg: var(--uncoder-si-accent);
+  --uncoder-si-fg: var(--uncoder-si-icon, #fff);
+}
+.uncoder-social-icons--minimal .uncoder-social-icons__link {
+  --uncoder-si-bg: transparent;
+  --uncoder-si-fg: var(--uncoder-si-accent);
+  padding: 0;
+}
+.uncoder-social-icons--minimal .uncoder-social-icons__link:is(:hover, :focus-visible) {
+  opacity: 0.75;
+}
+
+/* Shapes */
+.uncoder-social-icons--circle .uncoder-social-icons__link {
+  border-radius: 50%;
+}
+.uncoder-social-icons--rounded .uncoder-social-icons__link {
+  border-radius: 0.45em;
+}
+.uncoder-social-icons--square .uncoder-social-icons__link {
+  border-radius: 0;
+}
+.uncoder-social-icons--labels .uncoder-social-icons__link {
+  padding-inline: calc(var(--uncoder-si-pad, 0.6em) * 1.6);
+}
+.uncoder-social-icons--labels:where(.uncoder-social-icons--circle) .uncoder-social-icons__link {
+  border-radius: 999px;
+}
+.uncoder-social-icons--labels:where(.uncoder-social-icons--minimal) .uncoder-social-icons__link {
+  padding: 0;
+}
+.uncoder-social-icons__label {
+  font-size: 0.9375em;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Hover animations */
+.uncoder-social-icons--hover-grow .uncoder-social-icons__link:hover {
+  transform: scale(1.12);
+}
+.uncoder-social-icons--hover-lift .uncoder-social-icons__link:hover {
+  transform: translateY(-3px);
+}
+.uncoder-social-icons--hover-shrink .uncoder-social-icons__link:hover {
+  transform: scale(0.9);
+}
+.uncoder-social-icons--hover-rotate .uncoder-social-icons__link:hover .uncoder-social-icons__svg {
+  transform: rotate(-12deg);
+}
+.uncoder-social-icons__svg {
+  transition: transform 0.2s;
+}
+
+.uncoder-social-icons__placeholder {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px dashed var(--uncoder-c-border, #d1d5db);
+  border-radius: 8px;
+  font: 13px/1.4 system-ui, sans-serif;
+  opacity: 0.75;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uncoder-social-icons__link,
+  .uncoder-social-icons__svg {
+    transition: none;
+  }
+  .uncoder-social-icons__link:hover,
+  .uncoder-social-icons__link:hover .uncoder-social-icons__svg {
+    transform: none;
+  }
+}

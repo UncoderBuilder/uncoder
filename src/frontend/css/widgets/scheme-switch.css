@@ -1,0 +1,108 @@
+/* Color Scheme Switch widget. */
+.uncoder-scheme-switch {
+  --uncoder-ss-size: 20px;
+  --uncoder-ss-bg: transparent;
+  --uncoder-ss-on: var(--uncoder-c-primary, #2b59ff);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.uncoder-scheme-switch:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+  border-radius: 999px;
+}
+
+.uncoder-scheme-switch__icon {
+  width: var(--uncoder-ss-size);
+  height: var(--uncoder-ss-size);
+  flex: none;
+}
+
+/* Icon button: one round button, the icon of the scheme you would switch to. */
+.uncoder-scheme-switch--icon {
+  width: calc(var(--uncoder-ss-size) * 2);
+  height: calc(var(--uncoder-ss-size) * 2);
+  border-radius: 999px;
+  background: var(--uncoder-ss-bg);
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.uncoder-scheme-switch--icon:hover {
+  transform: rotate(-12deg);
+}
+
+.uncoder-scheme-switch--icon .uncoder-scheme-switch__icon--sun,
+html[data-uncoder-scheme="dark"] .uncoder-scheme-switch--icon .uncoder-scheme-switch__icon--moon {
+  display: none;
+}
+
+html[data-uncoder-scheme="dark"] .uncoder-scheme-switch--icon .uncoder-scheme-switch__icon--sun {
+  display: block;
+}
+
+/* Switch: sun · track · moon. */
+.uncoder-scheme-switch__track {
+  position: relative;
+  width: calc(var(--uncoder-ss-size) * 2.2);
+  height: calc(var(--uncoder-ss-size) * 1.2);
+  border-radius: 999px;
+  background: var(--uncoder-ss-bg, rgb(0 0 0 / 0.15));
+  box-shadow: inset 0 0 0 1px rgb(127 127 127 / 0.35);
+  transition: background-color 0.2s ease;
+}
+
+.uncoder-scheme-switch--switch {
+  --uncoder-ss-bg: rgb(127 127 127 / 0.25);
+}
+
+.uncoder-scheme-switch__thumb {
+  position: absolute;
+  top: calc(var(--uncoder-ss-size) * 0.1);
+  left: calc(var(--uncoder-ss-size) * 0.1);
+  width: var(--uncoder-ss-size);
+  height: var(--uncoder-ss-size);
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.3);
+  transition: translate 0.2s ease;
+}
+
+html[data-uncoder-scheme="dark"] .uncoder-scheme-switch__track {
+  background: var(--uncoder-ss-on);
+}
+
+html[data-uncoder-scheme="dark"] .uncoder-scheme-switch__thumb {
+  translate: calc(var(--uncoder-ss-size) * 1) 0;
+}
+
+.uncoder-scheme-switch--switch .uncoder-scheme-switch__icon {
+  width: calc(var(--uncoder-ss-size) * 0.8);
+  height: calc(var(--uncoder-ss-size) * 0.8);
+  opacity: 0.55;
+}
+
+.uncoder-scheme-switch__off {
+  padding: 8px 12px;
+  border: 1px dashed currentColor;
+  border-radius: 8px;
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uncoder-scheme-switch--icon,
+  .uncoder-scheme-switch__thumb,
+  .uncoder-scheme-switch__track {
+    transition: none;
+  }
+}

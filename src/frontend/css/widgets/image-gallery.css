@@ -1,0 +1,282 @@
+/* Image gallery: grid, masonry (CSS columns) or justified rows (flex, pure CSS). */
+
+.uncoder-image-gallery {
+  --uncoder-gallery-cols: 3;
+  --uncoder-gallery-gap: 16px;
+  --uncoder-gallery-ratio: 1 / 1;
+  --uncoder-gallery-row-h: 240px;
+  --uncoder-gallery-overlay: rgb(15 23 42 / 0.45);
+  --uncoder-gallery-overlay-icon: #fff;
+  --uncoder-gallery-overlay-size: 28px;
+  min-width: 0;
+}
+
+.uncoder-image-gallery__item {
+  position: relative;
+  min-width: 0;
+  margin: 0;
+}
+
+.uncoder-image-gallery__item > .uncoder-image-gallery__media {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  border-radius: inherit;
+  background: var(--uncoder-c-surface, #f3f4f6);
+  line-height: 0;
+}
+
+/* The rounded "box" is the image when captions sit below it, the whole item when they overlay it
+   (so overlay captions are clipped by the same corners). */
+.uncoder-image-gallery--caption-below > .uncoder-image-gallery__item > .uncoder-image-gallery__media,
+.uncoder-image-gallery:not(.uncoder-image-gallery--caption-below) > .uncoder-image-gallery__item {
+  border-radius: 8px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.uncoder-image-gallery:not(.uncoder-image-gallery--caption-below) > .uncoder-image-gallery__item {
+  overflow: hidden;
+  isolation: isolate;
+}
+
+a.uncoder-image-gallery__media:focus-visible {
+  outline: 2px solid var(--uncoder-c-primary, #2b59ff);
+  outline-offset: 2px;
+}
+
+.uncoder-image-gallery__media > .uncoder-image-gallery__img {
+  display: block;
+  width: 100%;
+  max-width: none;
+  height: auto;
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.4s, opacity 0.3s;
+}
+
+/* ------------------------------------------------------------------ Layouts */
+
+.uncoder-image-gallery--grid {
+  display: grid;
+  grid-template-columns: repeat(var(--uncoder-gallery-cols), minmax(0, 1fr));
+  gap: var(--uncoder-gallery-gap);
+}
+
+.uncoder-image-gallery--grid .uncoder-image-gallery__img {
+  aspect-ratio: var(--uncoder-gallery-ratio);
+  object-fit: cover;
+}
+
+.uncoder-image-gallery--masonry {
+  column-count: var(--uncoder-gallery-cols);
+  column-gap: var(--uncoder-gallery-gap);
+}
+
+.uncoder-image-gallery--masonry > .uncoder-image-gallery__item {
+  display: block;
+  margin-bottom: var(--uncoder-gallery-gap);
+  break-inside: avoid;
+}
+
+/* Justified: every image starts at the row height with its natural width, rows then grow to fill. */
+.uncoder-image-gallery--justified {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--uncoder-gallery-gap);
+}
+
+.uncoder-image-gallery--justified::after {
+  content: "";
+  flex-grow: 999;
+}
+
+.uncoder-image-gallery--justified > .uncoder-image-gallery__item {
+  flex: 1 1 auto;
+  height: var(--uncoder-gallery-row-h);
+}
+
+.uncoder-image-gallery--justified .uncoder-image-gallery__media {
+  height: 100%;
+}
+
+.uncoder-image-gallery--justified .uncoder-image-gallery__img {
+  width: auto;
+  min-width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ------------------------------------------------------------------ Captions */
+
+.uncoder-image-gallery__item > .uncoder-image-gallery__caption {
+  margin-top: 0.6em;
+  color: var(--uncoder-c-muted, #6b7280);
+  font-size: 0.875em;
+  line-height: 1.45;
+}
+
+.uncoder-image-gallery--caption-overlay .uncoder-image-gallery__item > .uncoder-image-gallery__caption,
+.uncoder-image-gallery--caption-hover .uncoder-image-gallery__item > .uncoder-image-gallery__caption {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 1;
+  margin: 0;
+  padding: 28px 14px 12px;
+  border-bottom-left-radius: inherit;
+  border-bottom-right-radius: inherit;
+  background: linear-gradient(to top, rgb(0 0 0 / 0.65), transparent);
+  color: #fff;
+  pointer-events: none;
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.uncoder-image-gallery--caption-hover .uncoder-image-gallery__item > .uncoder-image-gallery__caption {
+  opacity: 0;
+  transform: translateY(6px);
+}
+
+.uncoder-image-gallery--caption-hover .uncoder-image-gallery__item:is(:hover, :focus-within) > .uncoder-image-gallery__caption {
+  opacity: 1;
+  transform: none;
+}
+
+/* ------------------------------------------------------------------ Overlay + hover effects */
+
+.uncoder-image-gallery__media > .uncoder-image-gallery__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--uncoder-gallery-overlay);
+  color: var(--uncoder-gallery-overlay-icon);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.uncoder-image-gallery__overlay > .uncoder-svg {
+  width: var(--uncoder-gallery-overlay-size);
+  height: var(--uncoder-gallery-overlay-size);
+  transform: scale(0.85);
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.uncoder-image-gallery__media:is(:hover, :focus-visible) > .uncoder-image-gallery__overlay {
+  opacity: 1;
+}
+
+.uncoder-image-gallery__media:is(:hover, :focus-visible) > .uncoder-image-gallery__overlay > .uncoder-svg {
+  transform: none;
+}
+
+.uncoder-image-gallery--hover-zoom .uncoder-image-gallery__media:hover > .uncoder-image-gallery__img {
+  transform: scale(1.06);
+}
+
+.uncoder-image-gallery--hover-lift.uncoder-image-gallery--caption-below > .uncoder-image-gallery__item > .uncoder-image-gallery__media:hover,
+.uncoder-image-gallery--hover-lift:not(.uncoder-image-gallery--caption-below) > .uncoder-image-gallery__item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px -18px rgb(0 0 0 / 0.45);
+}
+
+.uncoder-image-gallery--hover-grayscale .uncoder-image-gallery__img {
+  filter: grayscale(1);
+}
+
+.uncoder-image-gallery--hover-grayscale .uncoder-image-gallery__media:is(:hover, :focus-visible) > .uncoder-image-gallery__img {
+  filter: none;
+}
+
+.uncoder-image-gallery--hover-dim:hover .uncoder-image-gallery__item:not(:hover) .uncoder-image-gallery__img {
+  opacity: 0.45;
+}
+
+.uncoder-image-gallery-placeholder {
+  padding: 32px 20px;
+  border: 1px dashed var(--uncoder-c-border, #d1d5db);
+  border-radius: 8px;
+  color: var(--uncoder-c-muted, #6b7280);
+  font: 14px/1.4 system-ui, sans-serif;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uncoder-image-gallery__item,
+  .uncoder-image-gallery__item > .uncoder-image-gallery__media,
+  .uncoder-image-gallery__media > .uncoder-image-gallery__img,
+  .uncoder-image-gallery__media > .uncoder-image-gallery__overlay,
+  .uncoder-image-gallery__overlay > .uncoder-svg,
+  .uncoder-image-gallery__item > .uncoder-image-gallery__caption {
+    transition: none !important;
+  }
+
+  .uncoder-image-gallery--hover-zoom .uncoder-image-gallery__media:hover > .uncoder-image-gallery__img,
+  .uncoder-image-gallery--hover-lift .uncoder-image-gallery__item:hover,
+  .uncoder-image-gallery--hover-lift .uncoder-image-gallery__media:hover {
+    transform: none !important;
+  }
+}
+
+/* Filterable gallery: the filter bar is the gallery's first, full-width row in every layout. */
+.uncoder-image-gallery__filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: var(--uncoder-gallery-filter-align, center);
+  gap: 8px;
+  grid-column: 1 / -1;
+  column-span: all;
+  flex: 0 0 100%;
+  width: 100%;
+  margin-bottom: max(0px, calc(24px - var(--uncoder-gallery-gap, 16px)));
+}
+.uncoder-image-gallery--masonry > .uncoder-image-gallery__filters {
+  margin-bottom: 24px;
+}
+
+.uncoder-image-gallery__filters[hidden] {
+  display: none;
+}
+
+.uncoder-image-gallery__filter {
+  padding: 8px 18px;
+  border: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  border-radius: 999px;
+  background: none;
+  color: inherit;
+  font: inherit;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.uncoder-image-gallery__filter:hover {
+  border-color: var(--uncoder-gallery-filter-active, var(--uncoder-c-primary, #2b59ff));
+}
+
+.uncoder-image-gallery__filter.is-active {
+  border-color: var(--uncoder-gallery-filter-active, var(--uncoder-c-primary, #2b59ff));
+  background: var(--uncoder-gallery-filter-active, var(--uncoder-c-primary, #2b59ff));
+  color: #fff;
+}
+
+.uncoder-image-gallery__filter:focus-visible {
+  outline: 2px solid var(--uncoder-gallery-filter-active, var(--uncoder-c-primary, #2b59ff));
+  outline-offset: 2px;
+}
+
+.uncoder-image-gallery__item {
+  transition: opacity 0.22s ease, scale 0.22s ease;
+}
+
+.uncoder-image-gallery__item.is-out {
+  opacity: 0;
+  scale: 0.94;
+}
+
+.uncoder-image-gallery__item[hidden] {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uncoder-image-gallery__item {
+    transition: none;
+  }
+}

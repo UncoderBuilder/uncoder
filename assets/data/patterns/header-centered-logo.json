@@ -1,0 +1,117 @@
+{
+	"id": "header-centered-logo",
+	"title": "Header: centered logo",
+	"category": "header",
+	"description": "Sticky header with the logo in the center, the main menu on the left and a call-to-action button on the right. On tablets the logo moves to the left and the menu becomes a hamburger; the button is hidden on phones. Use it in a header template for brand-led sites such as restaurants, cafés, boutiques, hotels and studios. Best with a short menu (about five items); for longer menus use header-sticky.",
+	"keywords": [
+		"header",
+		"centered logo",
+		"navigation",
+		"menu",
+		"sticky",
+		"restaurant",
+		"boutique"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "Header",
+			"settings": {
+				"tag": "header",
+				"layout": "grid",
+				"grid_template": "1fr auto 1fr",
+				"grid_template_tablet": "auto 1fr auto",
+				"grid_template_mobile": "auto 1fr",
+				"align": "center",
+				"gap": {
+					"size": 24,
+					"unit": "px"
+				},
+				"gap_tablet": {
+					"size": 16,
+					"unit": "px"
+				},
+				"gap_mobile": {
+					"size": 12,
+					"unit": "px"
+				},
+				"background": {
+					"type": "classic",
+					"color": "var(--uncoder-c-white)"
+				},
+				"border": {
+					"style": "solid",
+					"width": {
+						"top": 0,
+						"right": 0,
+						"bottom": 1,
+						"left": 0,
+						"unit": "px",
+						"linked": false
+					},
+					"color": "var(--uncoder-c-border)"
+				},
+				"_padding": {
+					"top": 16,
+					"right": "",
+					"bottom": 16,
+					"left": "",
+					"unit": "px",
+					"linked": false
+				},
+				"_padding_mobile": {
+					"top": 10,
+					"right": "",
+					"bottom": 10,
+					"left": "",
+					"unit": "px",
+					"linked": false
+				},
+				"_sticky": "top",
+				"_z_index": 100
+			},
+			"children": [
+				{
+					"type": "nav-menu",
+					"settings": {
+						"align": "start",
+						"toggle_align": "end",
+						"_order_tablet": 3
+					}
+				},
+				{
+					"type": "site-logo",
+					"settings": {
+						"max_height": {
+							"size": 40,
+							"unit": "px"
+						},
+						"width": {
+							"size": "auto",
+							"unit": "custom"
+						},
+						"align": "center",
+						"title_typography": {
+							"preset": "h5"
+						},
+						"title_color": "var(--uncoder-c-heading)",
+						"_order_tablet": 1
+					}
+				},
+				{
+					"type": "button",
+					"settings": {
+						"text": "Book now",
+						"link": {
+							"url": "/contact"
+						},
+						"size": "sm",
+						"align": "right",
+						"_order_tablet": 2,
+						"_hide_mobile": true
+					}
+				}
+			]
+		}
+	]
+}

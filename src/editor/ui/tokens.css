@@ -1,0 +1,163 @@
+/* Uncoder Studio tokens — "Paper" (light) and "Petrol night" (dark).
+   Palette from concurrence.com: warm sand greys, petrol ink for structure, terracotta as the one accent
+   (primary action and selection), lavender for "linked to something global", forest for "live".
+   Type is Geist only (bundled Geist + Geist Mono files): no request leaves the site. */
+
+@font-face {
+  font-family: 'Geist UC';
+  src: url('../../fonts/Geist-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Geist Mono UC';
+  src: url('../../fonts/GeistMono-Variable.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+.uncoder-ui-app,
+.uncoder-ui-portal {
+  /* Type */
+  --uncoder-ui-font: 'Geist UC', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --uncoder-ui-mono: 'Geist Mono UC', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --uncoder-ui-fs-2xs: 10px;
+  --uncoder-ui-fs-xs: 11px;
+  --uncoder-ui-fs-sm: 12px;
+  --uncoder-ui-fs-md: 13px;
+  --uncoder-ui-fs-lg: 14px;
+  --uncoder-ui-fs-xl: 16px;
+  --uncoder-ui-fs-2xl: 18px;
+
+  /* Space (4px grid) */
+  --uncoder-ui-s-1: 4px;
+  --uncoder-ui-s-2: 8px;
+  --uncoder-ui-s-3: 12px;
+  --uncoder-ui-s-4: 16px;
+  --uncoder-ui-s-5: 20px;
+  --uncoder-ui-s-6: 24px;
+  --uncoder-ui-s-8: 32px;
+
+  /* Radius */
+  --uncoder-ui-r-xs: 3px;
+  --uncoder-ui-r-sm: 5px;
+  --uncoder-ui-r-md: 6px;
+  --uncoder-ui-r-lg: 8px;
+  --uncoder-ui-r-xl: 12px;
+
+  /* Sizes */
+  --uncoder-ui-topbar-h: 52px;
+  --uncoder-ui-gutter: 10px;
+  --uncoder-ui-panel-w: 252px;
+  --uncoder-ui-inspector-w: 300px;
+  --uncoder-ui-control-h: 28px;
+
+  /* Motion */
+  --uncoder-ui-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --uncoder-ui-t-fast: 100ms;
+  --uncoder-ui-t-base: 160ms;
+  --uncoder-ui-t-slow: 240ms;
+
+  /* Brand constants (same in both themes) */
+  --uncoder-ui-brand: #083241;
+  --uncoder-ui-terra: #aa412a;
+  --uncoder-ui-drop: #aa412a;
+  --uncoder-ui-info: #1e4555;
+}
+
+.uncoder-ui-app[data-uncoder-ui-theme='light'],
+.uncoder-ui-portal[data-uncoder-ui-theme='light'] {
+  color-scheme: light;
+  /* bg-0 around the canvas · bg-1 islands · bg-2 inputs · bg-3 hover / subtle fill · bg-4 pressed */
+  --uncoder-ui-bg-0: #e9e3e0;
+  --uncoder-ui-bg-1: #ffffff;
+  --uncoder-ui-bg-2: #ffffff;
+  --uncoder-ui-bg-3: #f8f4f2;
+  --uncoder-ui-bg-4: #f1eae7;
+  --uncoder-ui-bg-inset: #f8f4f2;
+  --uncoder-ui-line: #e4dedb;
+  --uncoder-ui-line-2: #d7d2d0;
+  --uncoder-ui-line-3: #b3aeac;
+  --uncoder-ui-tx-strong: #100f0f;
+  --uncoder-ui-tx-1: #3b3837;
+  --uncoder-ui-tx-2: #575452;
+  --uncoder-ui-tx-3: #6f6b69;
+  --uncoder-ui-tx-4: #969290;
+  --uncoder-ui-accent: #aa412a;
+  --uncoder-ui-accent-strong: #95331d;
+  --uncoder-ui-accent-hover: #95331d;
+  --uncoder-ui-accent-soft: #ffefeb;
+  --uncoder-ui-accent-tx: #7c2714;
+  --uncoder-ui-on-accent: #ffffff;
+  --uncoder-ui-sel-fill: #083241;
+  --uncoder-ui-on-sel-fill: #ffffff;
+  --uncoder-ui-focus: #1e4555;
+  --uncoder-ui-danger: #b42335;
+  --uncoder-ui-danger-soft: rgb(180 35 53 / 0.08);
+  --uncoder-ui-danger-tx: #b42335;
+  --uncoder-ui-global: #615669;
+  --uncoder-ui-global-soft: #f1eaf6;
+  --uncoder-ui-dynamic: #1e4555;
+  --uncoder-ui-dynamic-soft: #e1eef3;
+  --uncoder-ui-dynamic-tx: #1e4555;
+  --uncoder-ui-success: #2c3827;
+  --uncoder-ui-success-soft: #e3ebe0;
+  --uncoder-ui-warning: #8a5a12;
+  --uncoder-ui-warning-soft: #fbf0dc;
+  --uncoder-ui-tip-bg: #083241;
+  --uncoder-ui-tip-tx: #ffffff;
+  --uncoder-ui-scrim: rgb(16 15 15 / 0.32);
+  --uncoder-ui-shadow-island: 0 1px 0 rgb(16 15 15 / 0.03), 0 10px 28px -16px rgb(16 15 15 / 0.32);
+  --uncoder-ui-shadow-pop: 0 14px 36px -12px rgb(16 15 15 / 0.32), 0 0 0 1px var(--uncoder-ui-line);
+  --uncoder-ui-shadow-dialog: 0 28px 80px -24px rgb(16 15 15 / 0.4), 0 0 0 1px var(--uncoder-ui-line);
+  --uncoder-ui-canvas-bg: #e9e3e0;
+}
+
+.uncoder-ui-app[data-uncoder-ui-theme='dark'],
+.uncoder-ui-portal[data-uncoder-ui-theme='dark'] {
+  color-scheme: dark;
+  --uncoder-ui-bg-0: #06141a;
+  --uncoder-ui-bg-1: #0c1e25;
+  --uncoder-ui-bg-2: #0f242c;
+  --uncoder-ui-bg-3: #12282f;
+  --uncoder-ui-bg-4: #1e3c47;
+  --uncoder-ui-bg-inset: #12282f;
+  --uncoder-ui-line: #1d3842;
+  --uncoder-ui-line-2: #2a4a56;
+  --uncoder-ui-line-3: #3a5e6b;
+  --uncoder-ui-tx-strong: #f8f4f2;
+  --uncoder-ui-tx-1: #e4dedb;
+  --uncoder-ui-tx-2: #c9c3c0;
+  --uncoder-ui-tx-3: #a8a3a1;
+  --uncoder-ui-tx-4: #767270;
+  --uncoder-ui-accent: #aa412a;
+  --uncoder-ui-accent-strong: #ce6c56;
+  --uncoder-ui-accent-hover: #ce6c56;
+  --uncoder-ui-accent-soft: #2a1914;
+  --uncoder-ui-accent-tx: #e69c8a;
+  --uncoder-ui-on-accent: #ffffff;
+  --uncoder-ui-sel-fill: #1e4555;
+  --uncoder-ui-on-sel-fill: #ffffff;
+  --uncoder-ui-focus: #9db6c1;
+  --uncoder-ui-danger: #f08a95;
+  --uncoder-ui-danger-soft: rgb(240 138 149 / 0.14);
+  --uncoder-ui-danger-tx: #f08a95;
+  --uncoder-ui-global: #c5bace;
+  --uncoder-ui-global-soft: #231d29;
+  --uncoder-ui-dynamic: #9db6c1;
+  --uncoder-ui-dynamic-soft: #12282f;
+  --uncoder-ui-dynamic-tx: #9db6c1;
+  --uncoder-ui-success: #a9b5a5;
+  --uncoder-ui-success-soft: #16211a;
+  --uncoder-ui-warning: #f5c46b;
+  --uncoder-ui-warning-soft: rgb(245 196 107 / 0.12);
+  --uncoder-ui-tip-bg: #f8f4f2;
+  --uncoder-ui-tip-tx: #100f0f;
+  --uncoder-ui-scrim: rgb(0 0 0 / 0.6);
+  --uncoder-ui-shadow-island: 0 10px 28px -14px rgb(0 0 0 / 0.9);
+  --uncoder-ui-shadow-pop: 0 14px 36px -12px rgb(0 0 0 / 0.9), 0 0 0 1px var(--uncoder-ui-line-2);
+  --uncoder-ui-shadow-dialog: 0 28px 80px -18px rgb(0 0 0 / 0.9), 0 0 0 1px var(--uncoder-ui-line-2);
+  --uncoder-ui-canvas-bg: #06141a;
+}

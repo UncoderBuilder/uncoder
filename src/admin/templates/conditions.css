@@ -1,0 +1,206 @@
+/* Display conditions: rows, chips and the async lookup. Shared by the admin Theme Builder and the
+   editor's template settings (scope class .uncoder-ui-condscope). */
+
+:is(.uncoder-ui-admin-root, .uncoder-ui-condscope) .uncoder-ui-condchips {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  min-width: 0;
+}
+:is(.uncoder-ui-admin-root, .uncoder-ui-condscope) .uncoder-ui-condchip {
+  display: inline-flex;
+  align-items: center;
+  max-width: 260px;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 6px;
+  background: #e3ebe0;
+  color: #2f5a26;
+  font-size: var(--uncoder-ui-fs-sm);
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+:is(.uncoder-ui-admin-root, .uncoder-ui-condscope) .uncoder-ui-condchip.is-exclude {
+  background: #fdecee;
+  color: var(--uncoder-ui-danger-tx);
+}
+:is(.uncoder-ui-admin-root, .uncoder-ui-condscope) .uncoder-ui-condchip.is-more {
+  background: var(--uncoder-ui-bg-3);
+  color: var(--uncoder-ui-tx-2);
+}
+:is(.uncoder-ui-admin-root, .uncoder-ui-condscope) tr.is-draft .uncoder-ui-condchip {
+  background: var(--uncoder-ui-bg-3);
+  color: var(--uncoder-ui-tx-2);
+}
+
+/* Conditions */
+:is(.uncoder-ui-admin-root, .uncoder-ui-condscope) .uncoder-ui-conds {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+:is(.uncoder-ui-admin-root, .uncoder-ui-condscope) .uncoder-ui-cond {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--uncoder-ui-line);
+  border-radius: var(--uncoder-ui-r-lg);
+  background: var(--uncoder-ui-bg-1);
+}
+:is(.uncoder-ui-admin-root, .uncoder-ui-condscope) .uncoder-ui-cond--exclude {
+  border-color: color-mix(in srgb, var(--uncoder-ui-danger) 22%, var(--uncoder-ui-line));
+  background: #fffafa;
+}
+:is(.uncoder-ui-admin-root, .uncoder-ui-condscope) .uncoder-ui-cond__main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+:is(.uncoder-ui-admin-root, .uncoder-ui-condscope) .uncoder-ui-cond__main .uncoder-ui-seg {
+  flex-shrink: 0;
+}
+:is(.uncoder-ui-admin-root, .uncoder-ui-condscope) .uncoder-ui-cond__rule {
+  flex: 1;
+}
+:is(.uncoder-ui-admin-root, .uncoder-ui-condscope) .uncoder-ui-cond__detail {
+  display: grid;
+  grid-template-columns: minmax(150px, 200px) minmax(0, 1fr);
+  gap: 8px;
+  padding-left: 2px;
+}
+:is(.uncoder-ui-admin-root, .uncoder-ui-condscope) .uncoder-ui-cond__detail > :only-child {
+  grid-column: 1 / -1;
+}
+
+/* Lookup (async multi-select) */
+:is(.uncoder-ui-admin-root, .uncoder-ui-condscope) .uncoder-ui-lookup {
+  position: relative;
+  min-width: 0;
+}
+:is(.uncoder-ui-admin-root, .uncoder-ui-condscope) .uncoder-ui-lookup__field {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  min-height: 32px;
+  padding: 3px 8px 3px 4px;
+  border: 1px solid var(--uncoder-ui-line-2);
+  border-radius: var(--uncoder-ui-r-md);
+  background: var(--uncoder-ui-bg-1);
+  box-shadow: 0 1px 2px rgb(16 15 15 / 0.04);
+  cursor: text;
+  transition: border-color var(--uncoder-ui-t-fast), box-shadow var(--uncoder-ui-t-fast);
+}
+:is(.uncoder-ui-admin-root, .uncoder-ui-condscope) .uncoder-ui-lookup__field:hover {
+  border-color: var(--uncoder-ui-line-3);
+}
+:is(.uncoder-ui-admin-root, .uncoder-ui-condscope) .uncoder-ui-lookup.is-open .uncoder-ui-lookup__field,
+:is(.uncoder-ui-admin-root, .uncoder-ui-condscope) .uncoder-ui-lookup__field:focus-within {
+  border-color: var(--uncoder-ui-accent);
+  box-shadow: 0 0 0 3px var(--uncoder-ui-accent-soft);
+}
+:is(.uncoder-ui-admin-root, .uncoder-ui-condscope) .uncoder-ui-lookup__input,
+:is(.uncoder-ui-admin-root, .uncoder-ui-condscope) .uncoder-ui-lookup__input:focus {
+  flex: 1;
+  min-width: 120px;
+  height: 24px;
+  min-height: 0;
+  margin: 0;
+  padding: 0 4px;
+  border: 0;
+  outline: none;
+  box-shadow: none;
+  background: transparent;
+  color: var(--uncoder-ui-tx-1);
+  font-size: var(--uncoder-ui-fs-md);
+}
+:is(.uncoder-ui-admin-root, .uncoder-ui-condscope) .uncoder-ui-lookup__input::placeholder {
+  color: var(--uncoder-ui-tx-4);
+}
+:is(.uncoder-ui-admin-root, .uncoder-ui-condscope) .uncoder-ui-lookup__list {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 10;
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 4px;
+  border-radius: var(--uncoder-ui-r-lg);
+  background: var(--uncoder-ui-bg-1);
+  box-shadow: var(--uncoder-ui-shadow-pop);
+  animation: uncoder-ui-pop-in var(--uncoder-ui-t-base) var(--uncoder-ui-ease);
+}
+:is(.uncoder-ui-admin-root, .uncoder-ui-condscope) .uncoder-ui-lookup__opt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 30px;
+  padding: 4px 8px;
+  border-radius: var(--uncoder-ui-r-md);
+  cursor: pointer;
+}
+:is(.uncoder-ui-admin-root, .uncoder-ui-condscope) .uncoder-ui-lookup__opt.is-active {
+  background: var(--uncoder-ui-bg-3);
+}
+:is(.uncoder-ui-admin-root, .uncoder-ui-condscope) .uncoder-ui-lookup__optlabel {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+:is(.uncoder-ui-admin-root, .uncoder-ui-condscope) .uncoder-ui-lookup__optid {
+  font-family: var(--uncoder-ui-mono);
+  font-size: var(--uncoder-ui-fs-xs);
+  color: var(--uncoder-ui-tx-4);
+}
+:is(.uncoder-ui-admin-root, .uncoder-ui-condscope) .uncoder-ui-lookup__none {
+  padding: 8px;
+  color: var(--uncoder-ui-tx-3);
+}
+:is(.uncoder-ui-admin-root, .uncoder-ui-condscope) .uncoder-ui-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  max-width: 220px;
+  height: 24px;
+  padding: 0 2px 0 8px;
+  border-radius: 5px;
+  background: var(--uncoder-ui-bg-3);
+  color: var(--uncoder-ui-tx-1);
+  font-size: var(--uncoder-ui-fs-sm);
+}
+:is(.uncoder-ui-admin-root, .uncoder-ui-condscope) .uncoder-ui-chip__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+:is(.uncoder-ui-admin-root, .uncoder-ui-condscope) .uncoder-ui-chip__x {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--uncoder-ui-tx-3);
+}
+:is(.uncoder-ui-admin-root, .uncoder-ui-condscope) .uncoder-ui-chip__x:hover {
+  background: var(--uncoder-ui-bg-4);
+  color: var(--uncoder-ui-tx-1);
+}
+
+@media (max-width: 782px) {
+  :is(.uncoder-ui-admin-root, .uncoder-ui-condscope) .uncoder-ui-cond__detail {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  :is(.uncoder-ui-admin-root, .uncoder-ui-condscope) .uncoder-ui-cond__main {
+    flex-wrap: wrap;
+  }
+}

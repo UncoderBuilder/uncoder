@@ -1,0 +1,250 @@
+{
+	"id": "cta-split-image",
+	"title": "Call to action: card with image",
+	"category": "cta",
+	"description": "Rounded surface-colored card with an h2, a short paragraph and two buttons on one side and an image on the other. Stacks on phones.",
+	"keywords": [
+		"cta",
+		"call to action",
+		"split",
+		"image",
+		"card",
+		"banner"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "Call to action",
+			"settings": {},
+			"children": [
+				{
+					"type": "container",
+					"settings": {
+						"direction": "row",
+						"direction_mobile": "column-reverse",
+						"align": "center",
+						"align_mobile": "stretch",
+						"gap": {
+							"size": 16,
+							"unit": "px"
+						},
+						"background": {
+							"type": "classic",
+							"color": "var(--uncoder-c-surface)"
+						},
+						"radius": {
+							"top": 28,
+							"right": 28,
+							"bottom": 28,
+							"left": 28,
+							"unit": "px",
+							"linked": true
+						},
+						"radius_mobile": {
+							"top": 20,
+							"right": 20,
+							"bottom": 20,
+							"left": 20,
+							"unit": "px",
+							"linked": true
+						},
+						"_padding": {
+							"top": 12,
+							"right": 12,
+							"bottom": 12,
+							"left": 12,
+							"unit": "px",
+							"linked": true
+						},
+						"_padding_mobile": {
+							"top": 10,
+							"right": 10,
+							"bottom": 10,
+							"left": 10,
+							"unit": "px",
+							"linked": true
+						}
+					},
+					"children": [
+						{
+							"type": "container",
+							"settings": {
+								"width": {
+									"size": 54,
+									"unit": "%"
+								},
+								"width_mobile": {
+									"size": 100,
+									"unit": "%"
+								},
+								"gap": {
+									"size": 20,
+									"unit": "px"
+								},
+								"_padding": {
+									"top": 52,
+									"right": 44,
+									"bottom": 52,
+									"left": 44,
+									"unit": "px",
+									"linked": false
+								},
+								"_padding_tablet": {
+									"top": 40,
+									"right": 28,
+									"bottom": 40,
+									"left": 28,
+									"unit": "px",
+									"linked": false
+								},
+								"_padding_mobile": {
+									"top": 24,
+									"right": 14,
+									"bottom": 30,
+									"left": 14,
+									"unit": "px",
+									"linked": false
+								}
+							},
+							"children": [
+								{
+									"type": "heading",
+									"settings": {
+										"title": "Get started",
+										"tag": "p",
+										"typography": {
+											"preset": "eyebrow"
+										},
+										"color": "var(--uncoder-c-primary)"
+									}
+								},
+								{
+									"type": "heading",
+									"settings": {
+										"title": "Let’s build something great together",
+										"tag": "h2",
+										"typography": {
+											"preset": "h2"
+										},
+										"text_wrap": "balance"
+									}
+								},
+								{
+									"type": "text-editor",
+									"settings": {
+										"content": "<p>Book a free intro call. We will listen, ask a few questions and suggest a clear next step — whether or not you work with us.</p>",
+										"max_width": {
+											"size": 48,
+											"unit": "ch"
+										}
+									}
+								},
+								{
+									"type": "container",
+									"settings": {
+										"direction": "row",
+										"direction_mobile": "column",
+										"gap": {
+											"size": 12,
+											"unit": "px"
+										},
+										"wrap": "wrap",
+										"align": "center",
+										"align_mobile": "stretch",
+										"_margin": {
+											"top": 8,
+											"right": "",
+											"bottom": "",
+											"left": "",
+											"unit": "px",
+											"linked": false
+										}
+									},
+									"children": [
+										{
+											"type": "button",
+											"settings": {
+												"text": "Book a call",
+												"link": {
+													"url": "/contact"
+												},
+												"size": "lg",
+												"align_mobile": "stretch"
+											}
+										},
+										{
+											"type": "button",
+											"settings": {
+												"text": "See pricing",
+												"link": {
+													"url": "/pricing"
+												},
+												"size": "lg",
+												"variant": "link",
+												"icon": {
+													"library": "lucide",
+													"value": "arrow-right"
+												},
+												"hover_effect": "arrow",
+												"align_mobile": "stretch"
+											}
+										}
+									]
+								}
+							]
+						},
+						{
+							"type": "container",
+							"settings": {
+								"width": {
+									"size": 46,
+									"unit": "%"
+								},
+								"width_mobile": {
+									"size": 100,
+									"unit": "%"
+								}
+							},
+							"children": [
+								{
+									"type": "image",
+									"settings": {
+										"image": {
+											"id": 0,
+											"url": "{{placeholder_image}}"
+										},
+										"alt": "[Describe the image]",
+										"object_fit": "cover",
+										"aspect_ratio": "4/3",
+										"aspect_ratio_tablet": "1/1",
+										"aspect_ratio_mobile": "16/9",
+										"width": {
+											"size": 100,
+											"unit": "%"
+										},
+										"radius": {
+											"top": 20,
+											"right": 20,
+											"bottom": 20,
+											"left": 20,
+											"unit": "px",
+											"linked": true
+										},
+										"radius_mobile": {
+											"top": 14,
+											"right": 14,
+											"bottom": 14,
+											"left": 14,
+											"unit": "px",
+											"linked": true
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+}

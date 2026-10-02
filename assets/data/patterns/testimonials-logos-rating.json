@@ -1,0 +1,348 @@
+{
+	"id": "testimonials-logos-rating",
+	"title": "Testimonials: rating summary with logos",
+	"category": "social-proof",
+	"description": "Surface band with a rating summary on the left (h2 with your average score, a Star Rating widget, the number of reviews and three review-site or press logos) and two testimonial cards with photos on the right. Stacks on tablets and phones. Use it when you have public ratings to point to; keep the score in the heading, the stars and the review count accurate.",
+	"keywords": [
+		"testimonials",
+		"rating",
+		"reviews",
+		"stars",
+		"logos",
+		"social proof",
+		"trust"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "Testimonials",
+			"settings": {
+				"direction": "row",
+				"direction_tablet": "column",
+				"direction_mobile": "column",
+				"align": "center",
+				"gap": {
+					"size": 64,
+					"unit": "px"
+				},
+				"gap_tablet": {
+					"size": 40,
+					"unit": "px"
+				},
+				"gap_mobile": {
+					"size": 32,
+					"unit": "px"
+				},
+				"background": {
+					"type": "classic",
+					"color": "var(--uncoder-c-surface)"
+				}
+			},
+			"children": [
+				{
+					"type": "container",
+					"settings": {
+						"width": {
+							"size": 38,
+							"unit": "%"
+						},
+						"width_tablet": {
+							"size": 100,
+							"unit": "%"
+						},
+						"gap": {
+							"size": 16,
+							"unit": "px"
+						},
+						"align": "flex-start"
+					},
+					"children": [
+						{
+							"type": "heading",
+							"settings": {
+								"title": "Reviews",
+								"tag": "p",
+								"typography": {
+									"preset": "eyebrow"
+								},
+								"color": "var(--uncoder-c-primary)"
+							}
+						},
+						{
+							"type": "heading",
+							"settings": {
+								"title": "Rated [4.9] out of 5 by our customers",
+								"tag": "h2",
+								"typography": {
+									"preset": "h2"
+								},
+								"text_wrap": "balance"
+							}
+						},
+						{
+							"type": "star-rating",
+							"settings": {
+								"rating": 4.9,
+								"marked_color": "var(--uncoder-c-accent)",
+								"icon_size": {
+									"size": 24,
+									"unit": "px"
+								},
+								"icon_gap": {
+									"size": 4,
+									"unit": "px"
+								}
+							}
+						},
+						{
+							"type": "text-editor",
+							"settings": {
+								"content": "<p>[Average rating from 250+ reviews on the sites below. Update the score and the count whenever they change.]</p>",
+								"typography": {
+									"preset": "small"
+								},
+								"color": "var(--uncoder-c-muted)",
+								"max_width": {
+									"size": 44,
+									"unit": "ch"
+								}
+							}
+						},
+						{
+							"type": "logo-grid",
+							"settings": {
+								"logos": [
+									{
+										"id": 0,
+										"url": "{{placeholder_image}}",
+										"alt": "[Review site or publication]"
+									},
+									{
+										"id": 0,
+										"url": "{{placeholder_image}}",
+										"alt": "[Review site or publication]"
+									},
+									{
+										"id": 0,
+										"url": "{{placeholder_image}}",
+										"alt": "[Review site or publication]"
+									}
+								],
+								"columns": 3,
+								"columns_tablet": 3,
+								"columns_mobile": 3,
+								"logo_height": {
+									"size": 28,
+									"unit": "px"
+								},
+								"logo_height_mobile": {
+									"size": 24,
+									"unit": "px"
+								},
+								"gap": {
+									"size": 28,
+									"unit": "px"
+								},
+								"gap_mobile": {
+									"size": 20,
+									"unit": "px"
+								},
+								"grayscale": true,
+								"opacity": 0.7,
+								"hover_opacity": 1,
+								"_align_self": "stretch",
+								"_margin": {
+									"top": 12,
+									"right": "",
+									"bottom": "",
+									"left": "",
+									"unit": "px",
+									"linked": false
+								}
+							}
+						}
+					]
+				},
+				{
+					"type": "container",
+					"settings": {
+						"width": {
+							"size": 62,
+							"unit": "%"
+						},
+						"width_tablet": {
+							"size": 100,
+							"unit": "%"
+						},
+						"layout": "grid",
+						"grid_columns": 2,
+						"grid_columns_tablet": 2,
+						"grid_columns_mobile": 1,
+						"gap": {
+							"size": 20,
+							"unit": "px"
+						},
+						"gap_mobile": {
+							"size": 16,
+							"unit": "px"
+						}
+					},
+					"children": [
+						{
+							"type": "testimonial",
+							"settings": {
+								"quote": "<p>“[What changed for this customer after working with you. A specific result reads better than general praise.]”</p>",
+								"name": "[Customer name]",
+								"role": "[Role, Company]",
+								"show_rating": true,
+								"rating": 5,
+								"layout": "left",
+								"star_color": "var(--uncoder-c-accent)",
+								"star_size": {
+									"size": 16,
+									"unit": "px"
+								},
+								"quote_typography": {
+									"preset": "body"
+								},
+								"quote_color": "var(--uncoder-c-heading)",
+								"name_typography": {
+									"preset": "body",
+									"weight": "600"
+								},
+								"role_typography": {
+									"preset": "small"
+								},
+								"role_color": "var(--uncoder-c-muted)",
+								"_background": {
+									"type": "classic",
+									"color": "var(--uncoder-c-white)"
+								},
+								"_border": {
+									"style": "solid",
+									"width": {
+										"top": 1,
+										"right": 1,
+										"bottom": 1,
+										"left": 1,
+										"unit": "px",
+										"linked": true
+									},
+									"color": "var(--uncoder-c-border)"
+								},
+								"_radius": {
+									"top": 16,
+									"right": 16,
+									"bottom": 16,
+									"left": 16,
+									"unit": "px",
+									"linked": true
+								},
+								"_padding": {
+									"top": 32,
+									"right": 32,
+									"bottom": 32,
+									"left": 32,
+									"unit": "px",
+									"linked": true
+								},
+								"_padding_mobile": {
+									"top": 24,
+									"right": 24,
+									"bottom": 24,
+									"left": 24,
+									"unit": "px",
+									"linked": true
+								},
+								"image": {
+									"id": 0,
+									"url": "{{placeholder_image}}"
+								},
+								"image_width": {
+									"size": 44,
+									"unit": "px"
+								}
+							}
+						},
+						{
+							"type": "testimonial",
+							"settings": {
+								"quote": "<p>“[A few words about the experience itself: how easy it was, how quickly you replied, how it felt to work together.]”</p>",
+								"name": "[Customer name]",
+								"role": "[Role, Company]",
+								"show_rating": true,
+								"rating": 5,
+								"layout": "left",
+								"star_color": "var(--uncoder-c-accent)",
+								"star_size": {
+									"size": 16,
+									"unit": "px"
+								},
+								"quote_typography": {
+									"preset": "body"
+								},
+								"quote_color": "var(--uncoder-c-heading)",
+								"name_typography": {
+									"preset": "body",
+									"weight": "600"
+								},
+								"role_typography": {
+									"preset": "small"
+								},
+								"role_color": "var(--uncoder-c-muted)",
+								"_background": {
+									"type": "classic",
+									"color": "var(--uncoder-c-white)"
+								},
+								"_border": {
+									"style": "solid",
+									"width": {
+										"top": 1,
+										"right": 1,
+										"bottom": 1,
+										"left": 1,
+										"unit": "px",
+										"linked": true
+									},
+									"color": "var(--uncoder-c-border)"
+								},
+								"_radius": {
+									"top": 16,
+									"right": 16,
+									"bottom": 16,
+									"left": 16,
+									"unit": "px",
+									"linked": true
+								},
+								"_padding": {
+									"top": 32,
+									"right": 32,
+									"bottom": 32,
+									"left": 32,
+									"unit": "px",
+									"linked": true
+								},
+								"_padding_mobile": {
+									"top": 24,
+									"right": 24,
+									"bottom": 24,
+									"left": 24,
+									"unit": "px",
+									"linked": true
+								},
+								"image": {
+									"id": 0,
+									"url": "{{placeholder_image}}"
+								},
+								"image_width": {
+									"size": 44,
+									"unit": "px"
+								}
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

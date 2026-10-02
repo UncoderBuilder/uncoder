@@ -1,0 +1,135 @@
+/* Alert — .uncoder-alert.uncoder-alert--{type}.uncoder-alert--{variant}: icon, content and a dismiss button.
+   Every variant is derived from one accent colour (--uncoder-alert-accent). */
+
+.uncoder-alert {
+  --uncoder-alert-accent: #2563eb;
+  --uncoder-alert-icon-size: 1.25em;
+  --uncoder-alert-bar: 4px;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  column-gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  line-height: 1.5;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.uncoder-alert--info {
+  --uncoder-alert-accent: #2563eb;
+}
+.uncoder-alert--success {
+  --uncoder-alert-accent: #16a34a;
+}
+.uncoder-alert--warning {
+  --uncoder-alert-accent: #d97706;
+}
+.uncoder-alert--danger {
+  --uncoder-alert-accent: #dc2626;
+}
+
+/* Variants */
+.uncoder-alert--soft,
+.uncoder-alert--accent {
+  border-color: color-mix(in srgb, var(--uncoder-alert-accent) 22%, transparent);
+  background-color: color-mix(in srgb, var(--uncoder-alert-accent) 9%, #fff);
+  color: #1f2937;
+}
+.uncoder-alert--accent {
+  border-inline-start: var(--uncoder-alert-bar) solid var(--uncoder-alert-accent);
+  border-radius: 6px;
+}
+.uncoder-alert--outline {
+  border: 1.5px solid var(--uncoder-alert-accent);
+  background-color: transparent;
+}
+.uncoder-alert--solid {
+  border-color: var(--uncoder-alert-accent);
+  background-color: var(--uncoder-alert-accent);
+  color: #fff;
+}
+
+.uncoder-alert__icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  height: 1.5em;
+  height: 1lh;
+  color: var(--uncoder-alert-accent);
+}
+.uncoder-alert--solid .uncoder-alert__icon {
+  color: inherit;
+}
+.uncoder-alert__icon .uncoder-svg {
+  width: var(--uncoder-alert-icon-size);
+  height: var(--uncoder-alert-icon-size);
+}
+
+.uncoder-alert__content {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+.uncoder-alert__title {
+  font-weight: 600;
+}
+.uncoder .uncoder-alert__title {
+  margin: 0 0 2px;
+  padding: 0;
+}
+.uncoder .uncoder-alert__title:last-child {
+  margin-bottom: 0;
+}
+.uncoder .uncoder-alert__description {
+  margin: 0;
+  padding: 0;
+}
+.uncoder-alert__description {
+  opacity: 0.9;
+}
+
+/* Dismiss button (".uncoder" keeps theme button styles out). */
+.uncoder .uncoder-alert__dismiss {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 2em;
+  height: 2em;
+  margin: -0.3em -0.45em -0.3em 0;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  box-shadow: none;
+  color: inherit;
+  font-size: 16px;
+  line-height: 1;
+  opacity: 0.7;
+  cursor: pointer;
+  transition: opacity 0.2s, background-color 0.2s, color 0.2s;
+}
+.uncoder .uncoder-alert__dismiss:is(:hover, :focus-visible) {
+  opacity: 1;
+  background-color: color-mix(in srgb, currentColor 10%, transparent);
+}
+.uncoder-alert__dismiss:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 1px;
+}
+.uncoder-alert__dismiss .uncoder-svg {
+  width: 1em;
+  height: 1em;
+}
+
+/* Set by the "alert" module while it fades out. */
+.uncoder-alert--leaving {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uncoder-alert {
+    transition: none;
+  }
+}

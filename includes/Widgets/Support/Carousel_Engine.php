@@ -1,0 +1,622 @@
+<?php
+/**
+ * Shared controls and markup of the scroll-snap carousel engine.
+ *
+ * Not a widget: the widget registry only scans includes/Widgets/*.php.
+ *
+ * @package Uncoder\Builder
+ */
+
+namespace Uncoder\Builder\Widgets\Support;
+
+use Uncoder\Builder\Core\Icons;
+use Uncoder\Builder\Core\Render_Context;
+use Uncoder\Builder\Core\Utils;
+
+defined( 'ABSPATH' ) || exit;
+
+/**
+ * Used by the carousel, image-carousel and testimonial-carousel widgets.
+ *
+ * Markup: .uncoder-carousel > .uncoder-carousel__viewport > .uncoder-carousel__track > .uncoder-carousel__slide,
+ * arrows inside the viewport, pagination after it. Behaviour: front-end module "carousel".
+ * Styles: widgets/carousel.css (declare frontend_styles() => [ 'carousel' ] when the widget is not "carousel").
+ * Every selector uses child combinators so carousels nested inside slides keep their own settings.
+ */
+trait Carousel_Engine {
+
+	/**
+	 * Selector of the carousel root: the widget's own element (its single root merges with the wrapper).
+	 */
+	protected function carousel_root(): string {
+		return '{{WRAPPER}}';
+	}
+
+	/**
+	 * "Carousel" behaviour section (content tab).
+	 */
+	protected function register_carousel_settings(): void {
+		$root = $this->carousel_root();
+
+		$this->start_section( 'carousel', array( 'label' => __( 'Carousel', 'uncoder' ) ) );
+		$this->add_responsive_control(
+			'slides_per_view',
+			array(
+				'type'      => 'number',
+				'label'     => __( 'Slides per view', 'uncoder' ),
+				'min'       => 1,
+				'max'       => 10,
+				'step'      => 0.1,
+				'selectors' => array( $root => '--uncoder-carousel-spv: {{VALUE}}' ),
+				'ai'        => 'Decimals reveal part of the next slide, e.g. 1.2. Set slides_per_view_tablet / slides_per_view_mobile for smaller screens.',
+			)
+		);
+		$this->add_responsive_control(
+			'slides_to_scroll',
+			array(
+				'type'      => 'number',
+				'label'     => __( 'Slides to scroll', 'uncoder' ),
+				'min'       => 1,
+				'max'       => 10,
+				'step'      => 1,
+				'selectors' => array( $root => '--uncoder-carousel-sts: {{VALUE}}' ),
+			)
+		);
+		$this->add_responsive_control(
+			'gap',
+			array(
+				'type'       => 'slider',
+				'label'      => __( 'Gap', 'uncoder' ),
+				'size_units' => array( 'px', 'rem', 'em', '%' ),
+				'range'      => array( 'px' => array( 'min' => 0, 'max' => 120 ) ),
+				'selectors'  => array( $root => '--uncoder-carousel-gap: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'slides_align',
+			array(
+				'type'                 => 'choose',
+				'label'                => __( 'Vertical alignment', 'uncoder' ),
+				'options'              => array(
+					'stretch' => array( 'label' => __( 'Equal height', 'uncoder' ), 'icon' => 'stretch-vertical' ),
+					'start'   => array( 'label' => __( 'Top', 'uncoder' ), 'icon' => 'align-start-horizontal' ),
+					'center'  => array( 'label' => __( 'Middle', 'uncoder' ), 'icon' => 'align-center-horizontal' ),
+					'end'     => array( 'label' => __( 'Bottom', 'uncoder' ), 'icon' => 'align-end-horizontal' ),
+				),
+				'selectors_dictionary' => array(
+					'stretch' => 'stretch',
+					'start'   => 'flex-start',
+					'center'  => 'center',
+					'end'     => 'flex-end',
+				),
+				'selectors'            => array( $root => '--uncoder-carousel-align: {{VALUE}}' ),
+			)
+		);
+		$this->add_control( 'nav_heading', array( 'type' => 'heading', 'label' => __( 'Navigation', 'uncoder' ) ) );
+		$this->add_control(
+			'arrows',
+			array(
+				'type'    => 'switch',
+				'label'   => __( 'Arrows', 'uncoder' ),
+				'default' => true,
+			)
+		);
+		$this->add_control(
+			'arrows_position',
+			array(
+				'type'      => 'select',
+				'label'     => __( 'Arrows position', 'uncoder' ),
+				'default'   => 'inside',
+				'options'   => array(
+					'inside'  => __( 'Inside, over the slides', 'uncoder' ),
+					'outside' => __( 'Outside the slides', 'uncoder' ),
+					'bottom'  => __( 'Below, next to the pagination', 'uncoder' ),
+				),
+				'condition' => array( 'arrows' => 'yes' ),
+			)
+		);
+		$this->add_control(
+			'prev_icon',
+			array(
+				'type'      => 'icon',
+				'label'     => __( 'Previous icon', 'uncoder' ),
+				'default'   => array( 'library' => 'lucide', 'value' => 'chevron-left' ),
+				'condition' => array( 'arrows' => 'yes' ),
+			)
+		);
+		$this->add_control(
+			'next_icon',
+			array(
+				'type'      => 'icon',
+				'label'     => __( 'Next icon', 'uncoder' ),
+				'default'   => array( 'library' => 'lucide', 'value' => 'chevron-right' ),
+				'condition' => array( 'arrows' => 'yes' ),
+			)
+		);
+		$this->add_control(
+			'pagination',
+			array(
+				'type'    => 'select',
+				'label'   => __( 'Pagination', 'uncoder' ),
+				'default' => 'dots',
+				'options' => array(
+					''         => __( 'None', 'uncoder' ),
+					'dots'     => __( 'Dots', 'uncoder' ),
+					'fraction' => __( 'Fraction (2 / 5)', 'uncoder' ),
+					'progress' => __( 'Progress bar', 'uncoder' ),
+				),
+			)
+		);
+		$this->add_control(
+			'loop',
+			array(
+				'type'        => 'switch',
+				'label'       => __( 'Rewind', 'uncoder' ),
+				'description' => __( 'Next on the last slide goes back to the first one.', 'uncoder' ),
+			)
+		);
+		$this->add_control(
+			'drag',
+			array(
+				'type'        => 'switch',
+				'label'       => __( 'Mouse drag', 'uncoder' ),
+				'description' => __( 'Touch swipe and trackpads always work.', 'uncoder' ),
+				'default'     => true,
+			)
+		);
+		$this->add_control(
+			'speed',
+			array(
+				'type'    => 'number',
+				'label'   => __( 'Transition duration (ms)', 'uncoder' ),
+				'min'     => 0,
+				'max'     => 3000,
+				'step'    => 50,
+				'default' => 500,
+			)
+		);
+		$this->add_control( 'autoplay_heading', array( 'type' => 'heading', 'label' => __( 'Autoplay', 'uncoder' ) ) );
+		$this->add_control(
+			'autoplay',
+			array(
+				'type'        => 'switch',
+				'label'       => __( 'Autoplay', 'uncoder' ),
+				'description' => __( 'Never starts for visitors who prefer reduced motion; pauses while hovered or focused.', 'uncoder' ),
+			)
+		);
+		$this->add_control(
+			'autoplay_delay',
+			array(
+				'type'      => 'number',
+				'label'     => __( 'Delay (ms)', 'uncoder' ),
+				'min'       => 1000,
+				'max'       => 30000,
+				'step'      => 500,
+				'default'   => 5000,
+				'condition' => array( 'autoplay' => 'yes' ),
+			)
+		);
+		$this->add_control(
+			'pause_on_hover',
+			array(
+				'type'      => 'switch',
+				'label'     => __( 'Pause on hover', 'uncoder' ),
+				'default'   => true,
+				'condition' => array( 'autoplay' => 'yes' ),
+			)
+		);
+		$this->add_control(
+			'pause_button',
+			array(
+				'type'        => 'switch',
+				'label'       => __( 'Pause button', 'uncoder' ),
+				'description' => __( 'Required by WCAG 2.2.2 for content that moves on its own.', 'uncoder' ),
+				'default'     => true,
+				'condition'   => array( 'autoplay' => 'yes' ),
+			)
+		);
+		$this->add_control(
+			'carousel_label',
+			array(
+				'type'        => 'text',
+				'label'       => __( 'Accessible name', 'uncoder' ),
+				'placeholder' => __( 'Carousel', 'uncoder' ),
+				'description' => __( 'Announced by screen readers, e.g. "Customer stories".', 'uncoder' ),
+			)
+		);
+		$this->end_section();
+	}
+
+	/**
+	 * "Arrows" and "Pagination" style sections.
+	 */
+	protected function register_carousel_style(): void {
+		$root  = $this->carousel_root();
+		$arrow = $root . ' > .uncoder-carousel__viewport > .uncoder-carousel__arrow';
+		$pag   = $root . ' > .uncoder-carousel__pagination';
+
+		$this->start_section(
+			'style_arrows',
+			array(
+				'label'     => __( 'Arrows', 'uncoder' ),
+				'tab'       => 'style',
+				'condition' => array( 'arrows' => 'yes' ),
+			)
+		);
+		$this->add_responsive_control(
+			'arrow_size',
+			array(
+				'type'       => 'slider',
+				'label'      => __( 'Button size', 'uncoder' ),
+				'size_units' => array( 'px', 'rem' ),
+				'range'      => array( 'px' => array( 'min' => 20, 'max' => 120 ) ),
+				'selectors'  => array( $root => '--uncoder-carousel-arrow-size: {{VALUE}}' ),
+			)
+		);
+		$this->add_responsive_control(
+			'arrow_icon_size',
+			array(
+				'type'       => 'slider',
+				'label'      => __( 'Icon size', 'uncoder' ),
+				'size_units' => array( 'px', 'rem' ),
+				'range'      => array( 'px' => array( 'min' => 8, 'max' => 80 ) ),
+				'selectors'  => array( $root => '--uncoder-carousel-arrow-icon: {{VALUE}}' ),
+			)
+		);
+		$this->add_responsive_control(
+			'arrow_offset',
+			array(
+				'type'        => 'slider',
+				'label'       => __( 'Offset', 'uncoder' ),
+				'description' => __( 'Distance from the slides edge (inside / outside) or between the two arrows (below).', 'uncoder' ),
+				'size_units'  => array( 'px', 'rem' ),
+				'range'       => array( 'px' => array( 'min' => -40, 'max' => 100 ) ),
+				'selectors'   => array( $root => '--uncoder-carousel-arrow-offset: {{VALUE}}' ),
+			)
+		);
+		$this->start_tabs( 'arrow_tabs' );
+		$this->start_tab( 'normal', __( 'Normal', 'uncoder' ) );
+		$this->add_control(
+			'arrow_color',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Icon color', 'uncoder' ),
+				'selectors' => array( $root => '--uncoder-carousel-arrow-color: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'arrow_background',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Background', 'uncoder' ),
+				'selectors' => array( $root => '--uncoder-carousel-arrow-bg: {{VALUE}}' ),
+			)
+		);
+		$this->add_group( 'arrow_border', array( 'type' => 'border', 'label' => __( 'Border', 'uncoder' ), 'selector' => $arrow ) );
+		$this->add_group( 'arrow_shadow', array( 'type' => 'box_shadow', 'label' => __( 'Shadow', 'uncoder' ), 'selector' => $arrow ) );
+		$this->end_tab();
+		$this->start_tab( 'hover', __( 'Hover', 'uncoder' ) );
+		$this->add_control(
+			'arrow_hover_color',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Icon color', 'uncoder' ),
+				'selectors' => array( $root => '--uncoder-carousel-arrow-color-hover: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'arrow_hover_background',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Background', 'uncoder' ),
+				'selectors' => array( $root => '--uncoder-carousel-arrow-bg-hover: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'arrow_hover_border_color',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Border color', 'uncoder' ),
+				'selectors' => array( $arrow . ':is(:hover, :focus-visible)' => 'border-color: {{VALUE}}' ),
+			)
+		);
+		$this->end_tab();
+		$this->end_tabs();
+		$this->add_responsive_control(
+			'arrow_radius',
+			array(
+				'type'       => 'dimensions',
+				'label'      => __( 'Border radius', 'uncoder' ),
+				'size_units' => array( 'px', '%' ),
+				'selectors'  => array( $arrow => 'border-radius: {{VALUE}}' ),
+			)
+		);
+		$this->end_section();
+
+		$this->start_section(
+			'style_pagination',
+			array(
+				'label'     => __( 'Pagination', 'uncoder' ),
+				'tab'       => 'style',
+				'condition' => array( 'pagination!' => '' ),
+			)
+		);
+		$this->add_responsive_control(
+			'pagination_spacing',
+			array(
+				'type'       => 'slider',
+				'label'      => __( 'Distance from slides', 'uncoder' ),
+				'size_units' => array( 'px', 'rem' ),
+				'range'      => array( 'px' => array( 'min' => 0, 'max' => 100 ) ),
+				'selectors'  => array( $root => '--uncoder-carousel-pag-spacing: {{VALUE}}' ),
+			)
+		);
+		$this->add_responsive_control(
+			'pagination_align',
+			array(
+				'type'                 => 'choose',
+				'label'                => __( 'Alignment', 'uncoder' ),
+				'options'              => array(
+					'left'   => array( 'label' => __( 'Left', 'uncoder' ), 'icon' => 'align-left' ),
+					'center' => array( 'label' => __( 'Center', 'uncoder' ), 'icon' => 'align-center' ),
+					'right'  => array( 'label' => __( 'Right', 'uncoder' ), 'icon' => 'align-right' ),
+				),
+				'selectors_dictionary' => array(
+					'left'   => 'flex-start',
+					'center' => 'center',
+					'right'  => 'flex-end',
+				),
+				'selectors'            => array( $root => '--uncoder-carousel-pag-justify: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'dots_size',
+			array(
+				'type'       => 'slider',
+				'label'      => __( 'Dot size', 'uncoder' ),
+				'size_units' => array( 'px' ),
+				'range'      => array( 'px' => array( 'min' => 4, 'max' => 30 ) ),
+				'condition'  => array( 'pagination' => 'dots' ),
+				'selectors'  => array( $root => '--uncoder-carousel-dot-size: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'dots_active_width',
+			array(
+				'type'        => 'slider',
+				'label'       => __( 'Active dot width', 'uncoder' ),
+				'description' => __( 'Same as the dot size for round dots, wider for a pill.', 'uncoder' ),
+				'size_units'  => array( 'px' ),
+				'range'       => array( 'px' => array( 'min' => 4, 'max' => 80 ) ),
+				'condition'   => array( 'pagination' => 'dots' ),
+				'selectors'   => array( $root => '--uncoder-carousel-dot-active-width: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'dots_gap',
+			array(
+				'type'       => 'slider',
+				'label'      => __( 'Space between dots', 'uncoder' ),
+				'size_units' => array( 'px' ),
+				'range'      => array( 'px' => array( 'min' => 0, 'max' => 40 ) ),
+				'condition'  => array( 'pagination' => 'dots' ),
+				'selectors'  => array( $root => '--uncoder-carousel-dot-gap: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'dots_color',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Dot color', 'uncoder' ),
+				'condition' => array( 'pagination' => 'dots' ),
+				'selectors' => array( $root => '--uncoder-carousel-dot-color: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'dots_active_color',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Active dot color', 'uncoder' ),
+				'condition' => array( 'pagination' => 'dots' ),
+				'selectors' => array( $root => '--uncoder-carousel-dot-active: {{VALUE}}' ),
+			)
+		);
+		$this->add_group(
+			'fraction_typography',
+			array(
+				'type'      => 'typography',
+				'label'     => __( 'Typography', 'uncoder' ),
+				'condition' => array( 'pagination' => 'fraction' ),
+				'selector'  => $pag . ' > .uncoder-carousel__fraction',
+			)
+		);
+		$this->add_control(
+			'fraction_color',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Color', 'uncoder' ),
+				'condition' => array( 'pagination' => 'fraction' ),
+				'selectors' => array( $pag . ' > .uncoder-carousel__fraction' => 'color: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'progress_height',
+			array(
+				'type'       => 'slider',
+				'label'      => __( 'Bar height', 'uncoder' ),
+				'size_units' => array( 'px' ),
+				'range'      => array( 'px' => array( 'min' => 1, 'max' => 12 ) ),
+				'condition'  => array( 'pagination' => 'progress' ),
+				'selectors'  => array( $root => '--uncoder-carousel-progress-h: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'progress_color',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Bar color', 'uncoder' ),
+				'condition' => array( 'pagination' => 'progress' ),
+				'selectors' => array( $root => '--uncoder-carousel-progress-color: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'progress_track_color',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Track color', 'uncoder' ),
+				'condition' => array( 'pagination' => 'progress' ),
+				'selectors' => array( $root => '--uncoder-carousel-progress-track: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'toggle_color',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Pause button color', 'uncoder' ),
+				'condition' => array( 'autoplay' => 'yes' ),
+				'selectors' => array( $pag . ' > .uncoder-carousel__toggle' => 'color: {{VALUE}}' ),
+			)
+		);
+		$this->end_section();
+	}
+
+	/**
+	 * Settings consumed by the "carousel" module (data-settings on the widget wrapper).
+	 *
+	 * @param array<string,mixed> $s Effective settings.
+	 * @return array<string,mixed>
+	 */
+	protected function carousel_data( array $s ): array {
+		return array(
+			'autoplay'     => ! empty( $s['autoplay'] ),
+			'delay'        => (int) self::carousel_number( $s['autoplay_delay'] ?? '', 5000, 1000, 30000 ),
+			'pauseOnHover' => ! empty( $s['pause_on_hover'] ),
+			'loop'         => ! empty( $s['loop'] ),
+			'drag'         => ! empty( $s['drag'] ),
+			'speed'        => (int) self::carousel_number( $s['speed'] ?? '', 500, 0, 3000 ),
+			'i18n'         => array(
+				/* translators: %s: slide number. */
+				'goto'   => __( 'Go to slide %s', 'uncoder' ),
+				/* translators: 1: slide number, 2: number of slides. */
+				'status' => __( 'Slide %1$s of %2$s', 'uncoder' ),
+				'pause'  => __( 'Pause autoplay', 'uncoder' ),
+				'play'   => __( 'Start autoplay', 'uncoder' ),
+			),
+		);
+	}
+
+	/**
+	 * Opens the carousel root, viewport and track.
+	 *
+	 * @param array<string,mixed> $s       Effective settings.
+	 * @param string[]            $classes Extra root classes.
+	 */
+	protected function carousel_start( array $s, Render_Context $ctx, array $classes = array() ): string {
+		$classes = array_merge( array( 'uncoder-carousel' ), $classes );
+		if ( ! empty( $s['arrows'] ) ) {
+			$position  = in_array( $s['arrows_position'] ?? 'inside', array( 'inside', 'outside', 'bottom' ), true ) ? $s['arrows_position'] : 'inside';
+			$classes[] = 'uncoder-carousel--arrows-' . $position;
+		}
+		$label = trim( (string) ( $s['carousel_label'] ?? '' ) );
+		return '<div' . Utils::attrs(
+			array(
+				'class'                => $classes,
+				'role'                 => 'region',
+				'aria-roledescription' => __( 'carousel', 'uncoder' ),
+				'aria-label'           => '' !== $label ? $label : __( 'Carousel', 'uncoder' ),
+			)
+		) . '><div class="uncoder-carousel__viewport"><div class="uncoder-carousel__track" id="' . esc_attr( $this->carousel_track_id( $ctx ) ) . '">';
+	}
+
+	/**
+	 * Opens one slide.
+	 *
+	 * @param string[] $classes Extra slide classes.
+	 */
+	protected function carousel_slide_start( int $index, int $total, array $classes = array() ): string {
+		array_unshift( $classes, 'uncoder-carousel__slide' );
+		return '<div' . Utils::attrs(
+			array(
+				'class'                => $classes,
+				'role'                 => 'group',
+				'aria-roledescription' => __( 'slide', 'uncoder' ),
+				/* translators: 1: slide number, 2: number of slides. */
+				'aria-label'           => sprintf( __( '%1$d of %2$d', 'uncoder' ), $index + 1, $total ),
+			)
+		) . '>';
+	}
+
+	/**
+	 * Closes the track, prints arrows, pagination and the live region, closes the root.
+	 *
+	 * @param array<string,mixed> $s Effective settings.
+	 */
+	protected function carousel_end( array $s, Render_Context $ctx, int $total ): string {
+		$track = $this->carousel_track_id( $ctx );
+		$out   = '</div>';
+		if ( ! empty( $s['arrows'] ) ) {
+			$prev = $this->has_icon( $s['prev_icon'] ?? null ) ? $s['prev_icon'] : 'chevron-left';
+			$next = $this->has_icon( $s['next_icon'] ?? null ) ? $s['next_icon'] : 'chevron-right';
+			$out .= '<button' . Utils::attrs(
+				array(
+					'type'          => 'button',
+					'class'         => 'uncoder-carousel__arrow uncoder-carousel__arrow--prev',
+					'aria-controls' => $track,
+					'aria-label'    => __( 'Previous slide', 'uncoder' ),
+				)
+			) . '>' . $this->render_icon( $prev, array( 'class' => 'uncoder-carousel__arrow-icon' ) ) . '</button>';
+			$out .= '<button' . Utils::attrs(
+				array(
+					'type'          => 'button',
+					'class'         => 'uncoder-carousel__arrow uncoder-carousel__arrow--next',
+					'aria-controls' => $track,
+					'aria-label'    => __( 'Next slide', 'uncoder' ),
+				)
+			) . '>' . $this->render_icon( $next, array( 'class' => 'uncoder-carousel__arrow-icon' ) ) . '</button>';
+		}
+		$out .= '</div>';
+
+		$pagination = in_array( $s['pagination'] ?? 'dots', array( 'dots', 'fraction', 'progress' ), true ) ? (string) $s['pagination'] : '';
+		$toggle     = ! empty( $s['autoplay'] ) && ! empty( $s['pause_button'] );
+		if ( '' !== $pagination || $toggle ) {
+			$out .= '<div class="uncoder-carousel__pagination uncoder-carousel__pagination--' . esc_attr( '' !== $pagination ? $pagination : 'none' ) . '">';
+			if ( $toggle ) {
+				$out .= '<button' . Utils::attrs(
+					array(
+						'type'          => 'button',
+						'class'         => 'uncoder-carousel__toggle',
+						'aria-controls' => $track,
+						'aria-label'    => __( 'Pause autoplay', 'uncoder' ),
+					)
+				) . '>' . Icons::render( 'pause', array( 'class' => 'uncoder-carousel__pause' ) ) . Icons::render( 'play', array( 'class' => 'uncoder-carousel__play' ) ) . '</button>';
+			}
+			if ( 'dots' === $pagination ) {
+				$out .= '<div class="uncoder-carousel__dots" role="group" aria-label="' . esc_attr__( 'Choose slide', 'uncoder' ) . '"></div>';
+			} elseif ( 'fraction' === $pagination ) {
+				$out .= '<div class="uncoder-carousel__fraction" aria-hidden="true"><span class="uncoder-carousel__current">1</span><span class="uncoder-carousel__sep">/</span><span class="uncoder-carousel__total">' . (int) $total . '</span></div>';
+			} elseif ( 'progress' === $pagination ) {
+				$out .= '<div class="uncoder-carousel__progress" aria-hidden="true"><span class="uncoder-carousel__progress-bar"></span></div>';
+			}
+			$out .= '</div>';
+		}
+		$out .= '<div class="uncoder-carousel__status uncoder-sr-only" aria-live="polite" aria-atomic="true"></div>';
+		return $out . '</div>';
+	}
+
+	private function carousel_track_id( Render_Context $ctx ): string {
+		return 'uncoder-carousel-' . sanitize_html_class( $ctx->element_id ) . '-track';
+	}
+
+	/**
+	 * Number setting with a fallback for empty values, clamped.
+	 *
+	 * @param mixed $value Raw value.
+	 * @return int|float
+	 */
+	private static function carousel_number( $value, $fallback, $min, $max ) {
+		if ( '' === $value || null === $value || ! is_numeric( $value ) ) {
+			return $fallback;
+		}
+		return min( max( $value + 0, $min ), $max );
+	}
+}

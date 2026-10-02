@@ -1,0 +1,329 @@
+{
+	"id": "faq-accordion-centered",
+	"title": "FAQ: centered accordion",
+	"category": "faq",
+	"description": "Centered FAQ on a surface background: eyebrow, h2 and lead, a single accordion of six questions (h3) in a narrow centered column (max 760px), and a “Still have questions?” line with a contact button. Full width on phones. Use it on pricing, service or product pages; edit each answer inside its accordion item container.",
+	"keywords": [
+		"faq",
+		"questions",
+		"answers",
+		"accordion",
+		"centered",
+		"help"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "FAQ",
+			"settings": {
+				"gap": {
+					"size": 48,
+					"unit": "px"
+				},
+				"gap_mobile": {
+					"size": 32,
+					"unit": "px"
+				},
+				"align": "center",
+				"background": {
+					"type": "classic",
+					"color": "var(--uncoder-c-surface)"
+				}
+			},
+			"children": [
+				{
+					"type": "container",
+					"settings": {
+						"gap": {
+							"size": 16,
+							"unit": "px"
+						},
+						"align": "center"
+					},
+					"children": [
+						{
+							"type": "heading",
+							"settings": {
+								"title": "FAQ",
+								"tag": "p",
+								"typography": {
+									"preset": "eyebrow"
+								},
+								"color": "var(--uncoder-c-primary)",
+								"align": "center"
+							}
+						},
+						{
+							"type": "heading",
+							"settings": {
+								"title": "Frequently asked questions",
+								"tag": "h2",
+								"typography": {
+									"preset": "h2"
+								},
+								"align": "center",
+								"max_width": {
+									"size": 20,
+									"unit": "ch"
+								},
+								"text_wrap": "balance"
+							}
+						},
+						{
+							"type": "text-editor",
+							"settings": {
+								"content": "<p>Quick answers to the questions we hear most often.</p>",
+								"typography": {
+									"preset": "lead"
+								},
+								"align": "center",
+								"max_width": {
+									"size": 58,
+									"unit": "ch"
+								}
+							}
+						}
+					]
+				},
+				{
+					"type": "container",
+					"settings": {
+						"width": {
+							"size": 760,
+							"unit": "px"
+						},
+						"width_tablet": {
+							"size": 100,
+							"unit": "%"
+						},
+						"width_mobile": {
+							"size": 100,
+							"unit": "%"
+						}
+					},
+					"children": [
+						{
+							"type": "accordion",
+							"settings": {
+								"items": [
+									{
+										"title": "How do I get started?"
+									},
+									{
+										"title": "How much does it cost?"
+									},
+									{
+										"title": "How long does it take?"
+									},
+									{
+										"title": "Can I make changes along the way?"
+									},
+									{
+										"title": "Where are you based?"
+									},
+									{
+										"title": "What if I am not happy with the result?"
+									}
+								],
+								"title_tag": "h3",
+								"first_open": true,
+								"icon": {
+									"library": "lucide",
+									"value": "plus"
+								},
+								"active_icon": {
+									"library": "lucide",
+									"value": "minus"
+								},
+								"gap": {
+									"size": 12,
+									"unit": "px"
+								},
+								"item_background": {
+									"type": "classic",
+									"color": "var(--uncoder-c-white)"
+								},
+								"item_border": {
+									"style": "solid",
+									"width": {
+										"top": 1,
+										"right": 1,
+										"bottom": 1,
+										"left": 1,
+										"unit": "px",
+										"linked": true
+									},
+									"color": "var(--uncoder-c-border)"
+								},
+								"active_item_border_color": "var(--uncoder-c-primary)",
+								"item_radius": {
+									"top": 14,
+									"right": 14,
+									"bottom": 14,
+									"left": 14,
+									"unit": "px",
+									"linked": true
+								},
+								"header_padding": {
+									"top": 20,
+									"right": 24,
+									"bottom": 20,
+									"left": 24,
+									"unit": "px",
+									"linked": false
+								},
+								"header_padding_mobile": {
+									"top": 16,
+									"right": 18,
+									"bottom": 16,
+									"left": 18,
+									"unit": "px",
+									"linked": false
+								},
+								"content_padding": {
+									"top": 0,
+									"right": 24,
+									"bottom": 20,
+									"left": 24,
+									"unit": "px",
+									"linked": false
+								},
+								"content_padding_mobile": {
+									"top": 0,
+									"right": 18,
+									"bottom": 16,
+									"left": 18,
+									"unit": "px",
+									"linked": false
+								},
+								"title_typography": {
+									"preset": "h6",
+									"size": {
+										"size": 17,
+										"unit": "px"
+									},
+									"line_height": {
+										"size": 1.4,
+										"unit": ""
+									}
+								},
+								"icon_color": "var(--uncoder-c-primary)",
+								"active_icon_color": "var(--uncoder-c-primary)"
+							},
+							"children": [
+								{
+									"type": "container",
+									"settings": {},
+									"children": [
+										{
+											"type": "text-editor",
+											"settings": {
+												"content": "<p>[Explain the first step — for example booking a call, filling in a form or visiting in person — and what happens right after.]</p>"
+											}
+										}
+									]
+								},
+								{
+									"type": "container",
+									"settings": {},
+									"children": [
+										{
+											"type": "text-editor",
+											"settings": {
+												"content": "<p>[Give a price range or explain how you price your work, and link to your pricing page if you have one.]</p>"
+											}
+										}
+									]
+								},
+								{
+									"type": "container",
+									"settings": {},
+									"children": [
+										{
+											"type": "text-editor",
+											"settings": {
+												"content": "<p>[Share a typical timeline and the things that can make it shorter or longer.]</p>"
+											}
+										}
+									]
+								},
+								{
+									"type": "container",
+									"settings": {},
+									"children": [
+										{
+											"type": "text-editor",
+											"settings": {
+												"content": "<p>Yes. [Describe how changes are handled and whether they affect the price or the timeline.]</p>"
+											}
+										}
+									]
+								},
+								{
+									"type": "container",
+									"settings": {},
+									"children": [
+										{
+											"type": "text-editor",
+											"settings": {
+												"content": "<p>[Your location and the areas you serve — or say that you work remotely with customers everywhere.]</p>"
+											}
+										}
+									]
+								},
+								{
+									"type": "container",
+									"settings": {},
+									"children": [
+										{
+											"type": "text-editor",
+											"settings": {
+												"content": "<p>[Describe your guarantee, refund or revision policy in plain words.]</p>"
+											}
+										}
+									]
+								}
+							]
+						}
+					]
+				},
+				{
+					"type": "container",
+					"settings": {
+						"direction": "row",
+						"direction_mobile": "column",
+						"align": "center",
+						"justify": "center",
+						"gap": {
+							"size": 16,
+							"unit": "px"
+						},
+						"gap_mobile": {
+							"size": 12,
+							"unit": "px"
+						}
+					},
+					"children": [
+						{
+							"type": "text-editor",
+							"settings": {
+								"content": "<p>Still have a question? We are happy to help.</p>",
+								"align": "center"
+							}
+						},
+						{
+							"type": "button",
+							"settings": {
+								"text": "Contact us",
+								"link": {
+									"url": "/contact"
+								},
+								"variant": "outline"
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

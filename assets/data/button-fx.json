@@ -1,0 +1,11 @@
+{
+  "lift": [["&:hover", "transform:translateY(-2px);box-shadow:0 10px 24px -10px rgb(0 0 0/.35)"]],
+  "grow": [["&:hover", "transform:scale(1.04)"]],
+  "shrink": [["&:hover", "transform:scale(.96)"]],
+  "pulse": [["&:hover", "animation:uncoder-pulse 1s ease-in-out infinite"]],
+  "arrow": [["& .uncoder-svg", "transition:transform .25s"], ["&:hover .uncoder-svg", "transform:translateX(4px)"]],
+  "shine": [["&", "position:relative;overflow:hidden"], ["&::after", "content:\"\";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgb(255 255 255/.35) 50%,transparent 70%);transform:translateX(-120%);transition:transform .6s;pointer-events:none"], ["&:hover::after", "transform:translateX(120%)"]],
+  "fill": [["&", "background-image:linear-gradient(rgb(255 255 255/.18),rgb(255 255 255/.18));background-size:0 100%;background-repeat:no-repeat;transition:background-size .35s,background-color .2s,color .2s,border-color .2s,box-shadow .2s,transform .2s"], ["&:hover", "background-size:100% 100%"]],
+  "underline": [["& .uncoder-btn__text", "background:linear-gradient(currentColor,currentColor) 0 100%/0 1.5px no-repeat;transition:background-size .25s"], ["&:hover .uncoder-btn__text", "background-size:100% 1.5px"]],
+  "flip": [["&", "overflow:hidden"], ["& .uncoder-btn__text", "display:inline-block;text-shadow:0 3em currentColor;transition:transform .4s cubic-bezier(.2,.8,.2,1)"], ["&:hover .uncoder-btn__text", "transform:translateY(-3em)"]]
+}

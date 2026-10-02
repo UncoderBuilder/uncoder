@@ -1,0 +1,213 @@
+/* Off-canvas */
+.uncoder-offcanvas {
+  --uncoder-oc-w: 400px;
+  --uncoder-oc-h: auto;
+  --uncoder-oc-overlay: rgb(15 23 42 / 0.55);
+  --uncoder-oc-blur: 0px;
+  --uncoder-oc-duration: 350ms;
+}
+
+.uncoder-offcanvas__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  margin: 0;
+  padding: 10px 14px;
+  border: 0 solid currentColor;
+  border-radius: 8px;
+  background-color: transparent;
+  color: var(--uncoder-c-heading, currentColor);
+  font: inherit;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s;
+}
+
+.uncoder-offcanvas__trigger:hover {
+  background-color: color-mix(in srgb, currentColor 8%, transparent);
+}
+
+.uncoder-offcanvas__trigger .uncoder-svg {
+  width: 1.25em;
+  height: 1.25em;
+}
+
+.uncoder-offcanvas__trigger:focus-visible,
+.uncoder-offcanvas__close:focus-visible {
+  outline: 2px solid var(--uncoder-c-primary, #2b59ff);
+  outline-offset: 2px;
+}
+
+/* Modal dialog covering the viewport; the panel slides inside it */
+.uncoder-offcanvas__dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: start;
+  overflow: hidden;
+}
+
+.uncoder-offcanvas__dialog::backdrop {
+  background: transparent;
+}
+
+.uncoder-offcanvas__overlay {
+  position: absolute;
+  inset: 0;
+  background-color: var(--uncoder-oc-overlay);
+  backdrop-filter: blur(var(--uncoder-oc-blur));
+  opacity: 0;
+  transition: opacity var(--uncoder-oc-duration) ease;
+}
+
+.uncoder-offcanvas__panel {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background-color: var(--uncoder-c-surface, #fff);
+  color: var(--uncoder-c-text, #1f2937);
+  box-shadow: 0 0 48px -12px rgb(15 23 42 / 0.35);
+  transition: transform var(--uncoder-oc-duration) cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.uncoder-offcanvas--left .uncoder-offcanvas__panel,
+.uncoder-offcanvas--right .uncoder-offcanvas__panel {
+  top: 0;
+  bottom: 0;
+  width: var(--uncoder-oc-w);
+  max-width: 100%;
+}
+
+.uncoder-offcanvas--right .uncoder-offcanvas__panel {
+  right: 0;
+  transform: translateX(100%);
+}
+
+.uncoder-offcanvas--left .uncoder-offcanvas__panel {
+  left: 0;
+  transform: translateX(-100%);
+}
+
+.uncoder-offcanvas--top .uncoder-offcanvas__panel,
+.uncoder-offcanvas--bottom .uncoder-offcanvas__panel {
+  left: 0;
+  right: 0;
+  height: var(--uncoder-oc-h);
+  max-height: 100%;
+}
+
+.uncoder-offcanvas--top .uncoder-offcanvas__panel {
+  top: 0;
+  transform: translateY(-100%);
+}
+
+.uncoder-offcanvas--bottom .uncoder-offcanvas__panel {
+  bottom: 0;
+  transform: translateY(100%);
+}
+
+.uncoder-offcanvas__dialog.is-open .uncoder-offcanvas__overlay {
+  opacity: 1;
+}
+
+.uncoder-offcanvas__dialog.is-open .uncoder-offcanvas__panel {
+  transform: none;
+}
+
+.uncoder-offcanvas__content {
+  flex: 1 1 auto;
+  padding: 56px 28px 32px;
+}
+
+.uncoder-offcanvas__close {
+  --uncoder-oc-close-size: 22px;
+  position: absolute;
+  top: 12px;
+  inset-inline-end: 12px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(var(--uncoder-oc-close-size) + 18px);
+  height: calc(var(--uncoder-oc-close-size) + 18px);
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background-color: transparent;
+  color: inherit;
+  font-size: var(--uncoder-oc-close-size);
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.uncoder-offcanvas__close:hover {
+  background-color: color-mix(in srgb, currentColor 8%, transparent);
+}
+
+.uncoder-offcanvas__close .uncoder-svg {
+  width: 1em;
+  height: 1em;
+}
+
+/* Editor: the panel is shown inline so its container can be edited */
+.uncoder-offcanvas__dialog--preview {
+  position: relative;
+  inset: auto;
+  z-index: auto;
+  display: block;
+  width: auto;
+  height: auto;
+  margin-top: 12px;
+  overflow: visible;
+}
+
+.uncoder-offcanvas__dialog--preview .uncoder-offcanvas__panel {
+  position: relative;
+  inset: auto;
+  width: min(var(--uncoder-oc-w), 100%);
+  height: auto;
+  max-height: none;
+  transform: none;
+  outline: 1px dashed color-mix(in srgb, var(--uncoder-c-primary, #2b59ff) 55%, transparent);
+  outline-offset: -1px;
+}
+
+.uncoder-offcanvas--top .uncoder-offcanvas__dialog--preview .uncoder-offcanvas__panel,
+.uncoder-offcanvas--bottom .uncoder-offcanvas__dialog--preview .uncoder-offcanvas__panel {
+  width: 100%;
+}
+
+.uncoder-offcanvas__preview-label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--uncoder-c-muted, #64748b);
+  font: 12px/1.4 system-ui, sans-serif;
+}
+
+html.uncoder-scroll-lock {
+  overflow: hidden;
+}
+
+html.uncoder-scroll-lock body {
+  padding-right: var(--uncoder-scrollbar-w, 0px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uncoder-offcanvas__overlay,
+  .uncoder-offcanvas__panel {
+    transition: none;
+  }
+}

@@ -1,0 +1,277 @@
+/* Timeline — .uncoder-timeline (alternate | left | right). Every item is a small grid:
+   marker column + date + card. The connecting line is drawn per item, from its marker
+   to the next one, so it starts and ends exactly on the first and last markers. */
+
+.uncoder .uncoder-timeline {
+  --uncoder-tl-marker: 18px;
+  --uncoder-tl-accent: var(--uncoder-c-primary, #2b59ff);
+  --uncoder-tl-line: var(--uncoder-c-border, #e5e7eb);
+  --uncoder-tl-line-w: 2px;
+  --uncoder-tl-line-style: solid;
+  --uncoder-tl-row-gap: 40px;
+  --uncoder-tl-col-gap: 28px;
+  --uncoder-tl-card-bg: var(--uncoder-c-surface, #f5f7fb);
+  --uncoder-tl-anchor: max(26px, calc(var(--uncoder-tl-marker) / 2));
+  --uncoder-tl-line-x: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--uncoder-tl-row-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.uncoder .uncoder-timeline--marker-ring {
+  --uncoder-tl-marker: 20px;
+}
+.uncoder .uncoder-timeline--marker-number {
+  --uncoder-tl-marker: 40px;
+}
+.uncoder .uncoder-timeline--marker-icon {
+  --uncoder-tl-marker: 44px;
+}
+
+.uncoder-timeline .uncoder-timeline__item {
+  position: relative;
+  display: grid;
+  align-items: start;
+  column-gap: var(--uncoder-tl-col-gap);
+  margin: 0;
+  padding: 0;
+}
+.uncoder-timeline__item::before {
+  content: "";
+  position: absolute;
+  top: var(--uncoder-tl-anchor);
+  bottom: calc(-1 * (var(--uncoder-tl-row-gap) + var(--uncoder-tl-anchor)));
+  left: var(--uncoder-tl-line-x);
+  border-left: var(--uncoder-tl-line-w) var(--uncoder-tl-line-style) var(--uncoder-tl-line);
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.uncoder-timeline__item:last-child::before {
+  content: none;
+}
+
+/* Marker. */
+.uncoder-timeline__marker {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  grid-row: 1;
+  align-items: center;
+  justify-content: center;
+  width: var(--uncoder-tl-marker);
+  height: var(--uncoder-tl-marker);
+  margin-top: calc(var(--uncoder-tl-anchor) - var(--uncoder-tl-marker) / 2);
+  border-radius: 50%;
+  background-color: var(--uncoder-tl-accent);
+  color: #fff;
+  box-shadow: 0 0 0 5px var(--uncoder-tl-halo, color-mix(in srgb, var(--uncoder-tl-accent) 16%, transparent));
+  font-size: calc(var(--uncoder-tl-marker) * 0.4);
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.uncoder-timeline--marker-ring .uncoder-timeline__marker {
+  border: 3px solid var(--uncoder-tl-accent);
+  background-color: var(--uncoder-c-white, #fff);
+}
+.uncoder-timeline__marker .uncoder-svg {
+  width: 46%;
+  height: 46%;
+}
+
+/* Date and card. */
+.uncoder-timeline .uncoder-timeline__date {
+  margin: calc(var(--uncoder-tl-anchor) - 0.7em) 0 0;
+  color: var(--uncoder-tl-accent);
+  font-size: 0.9375em;
+  font-weight: 700;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+}
+.uncoder-timeline__card {
+  position: relative;
+  padding: 20px 24px;
+  border-radius: 14px;
+  background-color: var(--uncoder-tl-card-bg);
+}
+.uncoder-timeline .uncoder-timeline__title {
+  margin: 0 0 6px;
+  font-size: var(--uncoder-t-h5-fs, 1.2rem);
+  line-height: 1.35;
+}
+.uncoder-timeline__title:last-child {
+  margin-bottom: 0;
+}
+.uncoder-timeline .uncoder-timeline__description {
+  margin: 0;
+  line-height: 1.6;
+}
+.uncoder-timeline--arrow .uncoder-timeline__card::before {
+  content: "";
+  position: absolute;
+  top: calc(var(--uncoder-tl-anchor) - 7px);
+  width: 14px;
+  height: 14px;
+  background: inherit;
+  transform: rotate(45deg);
+}
+
+/* ---------------------------------------------------------------- Alternate */
+
+.uncoder .uncoder-timeline--alternate .uncoder-timeline__item {
+  grid-template-columns: minmax(0, 1fr) var(--uncoder-tl-marker) minmax(0, 1fr);
+}
+.uncoder-timeline--alternate .uncoder-timeline__marker {
+  grid-column: 2;
+}
+.uncoder-timeline--alternate .uncoder-timeline__item:nth-child(odd) .uncoder-timeline__date {
+  grid-column: 1;
+  grid-row: 1;
+  text-align: end;
+}
+.uncoder-timeline--alternate .uncoder-timeline__item:nth-child(odd) .uncoder-timeline__card {
+  grid-column: 3;
+  grid-row: 1;
+}
+.uncoder-timeline--alternate .uncoder-timeline__item:nth-child(even) .uncoder-timeline__date {
+  grid-column: 3;
+  grid-row: 1;
+  text-align: start;
+}
+.uncoder-timeline--alternate .uncoder-timeline__item:nth-child(even) .uncoder-timeline__card {
+  grid-column: 1;
+  grid-row: 1;
+}
+.uncoder-timeline--alternate .uncoder-timeline__item:nth-child(odd) .uncoder-timeline__card::before {
+  left: -7px;
+}
+.uncoder-timeline--alternate .uncoder-timeline__item:nth-child(even) .uncoder-timeline__card::before {
+  right: -7px;
+}
+
+/* ---------------------------------------------------------------- Line on one side */
+
+.uncoder .uncoder-timeline--left .uncoder-timeline__item {
+  --uncoder-tl-line-x: calc(var(--uncoder-tl-marker) / 2);
+  grid-template-columns: var(--uncoder-tl-marker) minmax(0, 1fr);
+}
+.uncoder .uncoder-timeline--right .uncoder-timeline__item {
+  --uncoder-tl-line-x: calc(100% - var(--uncoder-tl-marker) / 2);
+  grid-template-columns: minmax(0, 1fr) var(--uncoder-tl-marker);
+  text-align: end;
+}
+.uncoder-timeline--left .uncoder-timeline__marker {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+}
+.uncoder-timeline--right .uncoder-timeline__marker {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+}
+.uncoder-timeline--left .uncoder-timeline__date,
+.uncoder-timeline--left .uncoder-timeline__card {
+  grid-column: 2;
+}
+.uncoder-timeline--right .uncoder-timeline__date,
+.uncoder-timeline--right .uncoder-timeline__card {
+  grid-column: 1;
+}
+.uncoder-timeline--left .uncoder-timeline__date,
+.uncoder-timeline--right .uncoder-timeline__date {
+  grid-row: 1;
+  margin-bottom: 10px;
+}
+.uncoder-timeline--left .uncoder-timeline__card,
+.uncoder-timeline--right .uncoder-timeline__card {
+  grid-row: 2;
+}
+.uncoder-timeline--left .uncoder-timeline__card::before,
+.uncoder-timeline--right .uncoder-timeline__card::before {
+  content: none;
+}
+
+/* Alternate collapses to the left layout on phones. */
+@media (max-width: 767px) {
+  .uncoder .uncoder-timeline--alternate .uncoder-timeline__item {
+    --uncoder-tl-line-x: calc(var(--uncoder-tl-marker) / 2);
+    grid-template-columns: var(--uncoder-tl-marker) minmax(0, 1fr);
+  }
+  .uncoder-timeline--alternate .uncoder-timeline__marker {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+  .uncoder-timeline--alternate .uncoder-timeline__item:nth-child(n) .uncoder-timeline__date {
+    grid-column: 2;
+    grid-row: 1;
+    margin-bottom: 10px;
+    text-align: start;
+  }
+  .uncoder-timeline--alternate .uncoder-timeline__item:nth-child(n) .uncoder-timeline__card {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .uncoder-timeline--alternate .uncoder-timeline__item:nth-child(n) .uncoder-timeline__card::before {
+    content: none;
+  }
+}
+
+/* ---------------------------------------------------------------- Entrance (timeline module) */
+
+.uncoder-timeline--reveal .uncoder-timeline__card,
+.uncoder-timeline--reveal .uncoder-timeline__date,
+.uncoder-timeline--reveal .uncoder-timeline__marker {
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.uncoder-timeline--reveal .uncoder-timeline__date {
+  transition-delay: 0.08s;
+}
+.uncoder-timeline__item--hidden .uncoder-timeline__card,
+.uncoder-timeline__item--hidden .uncoder-timeline__date {
+  opacity: 0;
+  transform: translateY(28px);
+}
+.uncoder-timeline__item--hidden .uncoder-timeline__marker {
+  opacity: 0;
+  transform: scale(0.4);
+}
+.uncoder-timeline--reveal .uncoder-timeline__item::before {
+  transition: opacity 0.7s ease;
+}
+.uncoder-timeline__item--hidden::before {
+  opacity: 0;
+}
+.uncoder-timeline--reveal-fade-in .uncoder-timeline__item--hidden .uncoder-timeline__card,
+.uncoder-timeline--reveal-fade-in .uncoder-timeline__item--hidden .uncoder-timeline__date {
+  transform: none;
+}
+.uncoder-timeline--reveal-slide .uncoder-timeline__item--hidden .uncoder-timeline__card,
+.uncoder-timeline--reveal-slide .uncoder-timeline__item--hidden .uncoder-timeline__date {
+  transform: translateX(40px);
+}
+.uncoder-timeline--reveal-slide.uncoder-timeline--right .uncoder-timeline__item--hidden .uncoder-timeline__card,
+.uncoder-timeline--reveal-slide.uncoder-timeline--right .uncoder-timeline__item--hidden .uncoder-timeline__date,
+.uncoder-timeline--reveal-slide.uncoder-timeline--alternate .uncoder-timeline__item--hidden:nth-child(even) .uncoder-timeline__card,
+.uncoder-timeline--reveal-slide.uncoder-timeline--alternate .uncoder-timeline__item--hidden:nth-child(odd) .uncoder-timeline__date {
+  transform: translateX(-40px);
+}
+
+.uncoder-timeline__empty {
+  margin: 0;
+  padding: 16px;
+  border: 1px dashed var(--uncoder-c-border, #e5e7eb);
+  border-radius: 8px;
+  color: var(--uncoder-c-muted, #6b7280);
+  font-size: 14px;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uncoder-timeline--reveal .uncoder-timeline__item::before,
+  .uncoder-timeline--reveal .uncoder-timeline__card,
+  .uncoder-timeline--reveal .uncoder-timeline__date,
+  .uncoder-timeline--reveal .uncoder-timeline__marker {
+    transition: none;
+  }
+}

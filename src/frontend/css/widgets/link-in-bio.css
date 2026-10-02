@@ -1,0 +1,293 @@
+/* Link in Bio — div.uncoder-link-in-bio.--{filled|outline|soft} (the page background) > div.__inner (centred
+   column: avatar, name, handle, bio, ul.__social, ul.__links, p.__footer). Links are Design System buttons
+   (a.uncoder-btn.uncoder-btn--{primary|outline|ghost}.__link); this file only adds layout and the highlight. */
+
+.uncoder-link-in-bio {
+  --uncoder-lib-width: 480px;
+  --uncoder-lib-space: 24px;
+  --uncoder-lib-gap: 12px;
+  --uncoder-lib-avatar: 96px;
+  --uncoder-lib-social: 22px;
+  --uncoder-lib-link-h: 56px;
+  --uncoder-lib-hl-bg: var(--uncoder-lib-hl, var(--uncoder-c-accent, #ff7a45));
+  position: relative;
+  isolation: isolate;
+  padding: 56px 20px;
+  background-color: var(--uncoder-c-surface, #f5f7fb);
+  text-align: center;
+}
+/* Overlay over a background photo. */
+.uncoder-link-in-bio::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--uncoder-lib-overlay, transparent);
+  pointer-events: none;
+}
+.uncoder-link-in-bio--full {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100svh;
+}
+.uncoder-link-in-bio--left {
+  text-align: left;
+}
+
+.uncoder-link-in-bio__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: var(--uncoder-lib-width);
+  margin-inline: auto;
+}
+.uncoder-link-in-bio--left .uncoder-link-in-bio__inner {
+  align-items: flex-start;
+}
+.uncoder-link-in-bio--card .uncoder-link-in-bio__inner {
+  padding: 40px 28px;
+  border-radius: 24px;
+  background-color: var(--uncoder-c-white, #fff);
+  box-shadow: 0 30px 60px -32px rgb(15 23 42 / 0.4);
+}
+
+/* Profile */
+.uncoder-link-in-bio__avatar {
+  flex: none;
+  width: var(--uncoder-lib-avatar);
+  height: var(--uncoder-lib-avatar);
+  margin-bottom: 16px;
+  overflow: hidden;
+  border-radius: 50%;
+  box-shadow: 0 0 0 4px var(--uncoder-c-white, #fff), 0 12px 30px -14px rgb(15 23 42 / 0.5);
+}
+.uncoder-link-in-bio__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.uncoder-link-in-bio__avatar--initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--uncoder-c-primary, #2b59ff), var(--uncoder-c-accent, #ff7a45));
+  color: #fff;
+  font-size: calc(var(--uncoder-lib-avatar) * 0.36);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+/* Heading-level resets win over the Design System h1–h3 sizes: the name is a card title. */
+.uncoder .uncoder-link-in-bio__name {
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+  margin: 0;
+  font-size: var(--uncoder-t-h4-fs, 1.5rem);
+  font-weight: var(--uncoder-t-h4-fw, 700);
+  line-height: 1.25;
+  letter-spacing: var(--uncoder-t-h4-ls, normal);
+}
+.uncoder-link-in-bio__badge {
+  display: inline-flex;
+  flex: none;
+  color: var(--uncoder-c-primary, #2b59ff);
+}
+.uncoder-link-in-bio__badge .uncoder-svg {
+  width: 0.85em;
+  height: 0.85em;
+}
+.uncoder .uncoder-link-in-bio__handle {
+  margin: 2px 0 0;
+  color: color-mix(in srgb, currentColor 68%, transparent);
+  font-size: 0.9375em;
+}
+.uncoder .uncoder-link-in-bio__bio {
+  max-width: 34em;
+  margin: 10px 0 0;
+  line-height: 1.55;
+  text-wrap: pretty;
+}
+
+/* Social icons */
+.uncoder ul.uncoder-link-in-bio__social {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  margin: var(--uncoder-lib-space) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.uncoder-link-in-bio--left ul.uncoder-link-in-bio__social {
+  justify-content: flex-start;
+}
+.uncoder .uncoder-link-in-bio__social > li {
+  margin: 0;
+  padding: 0;
+}
+.uncoder-link-in-bio .uncoder-link-in-bio__social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.2s, background-color 0.2s, opacity 0.2s, transform 0.2s;
+}
+.uncoder-link-in-bio .uncoder-link-in-bio__social-link:hover {
+  opacity: 0.8;
+  transform: translateY(-2px);
+}
+.uncoder-link-in-bio__social-link:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+.uncoder-link-in-bio__social-svg {
+  width: var(--uncoder-lib-social);
+  height: var(--uncoder-lib-social);
+}
+.uncoder-link-in-bio--social-brand .uncoder-link-in-bio__social-link {
+  color: var(--uncoder-lib-brand, currentColor);
+}
+.uncoder-link-in-bio--social-circles .uncoder-link-in-bio__social-link {
+  padding: calc(var(--uncoder-lib-social) * 0.5);
+  border-radius: 50%;
+  background-color: color-mix(in srgb, currentColor 9%, transparent);
+}
+.uncoder-link-in-bio--social-circles .uncoder-link-in-bio__social-link:hover {
+  opacity: 1;
+  background-color: color-mix(in srgb, currentColor 16%, transparent);
+}
+
+/* Links */
+.uncoder ul.uncoder-link-in-bio__links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--uncoder-lib-gap);
+  width: 100%;
+  margin: var(--uncoder-lib-space) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.uncoder .uncoder-link-in-bio__item {
+  margin: 0;
+  padding: 0;
+}
+.uncoder-link-in-bio .uncoder-link-in-bio__link {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  min-height: var(--uncoder-lib-link-h);
+  padding-block: 12px;
+  padding-inline: 52px;
+  text-align: center;
+}
+.uncoder-link-in-bio__label {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.uncoder-link-in-bio__icon,
+.uncoder-link-in-bio__arrow {
+  position: absolute;
+  top: 50%;
+  display: inline-flex;
+  transform: translateY(-50%);
+}
+.uncoder-link-in-bio__icon {
+  inset-inline-start: 18px;
+}
+.uncoder-link-in-bio__arrow {
+  inset-inline-end: 18px;
+  opacity: 0.7;
+}
+.uncoder-link-in-bio .uncoder-link-in-bio__link .uncoder-svg {
+  width: 1.2em;
+  height: 1.2em;
+}
+.uncoder-link-in-bio--links-left .uncoder-link-in-bio__link {
+  justify-content: flex-start;
+  padding-inline-start: 18px;
+  text-align: left;
+}
+.uncoder-link-in-bio--links-left .uncoder-link-in-bio__icon {
+  position: static;
+  transform: none;
+}
+
+/* Highlighted link: accent background with black or white text, whichever reads better. */
+.uncoder-link-in-bio .uncoder-link-in-bio__link--highlight {
+  background-color: var(--uncoder-lib-hl-bg);
+  color: var(--uncoder-lib-hl-text, #fff);
+  box-shadow: 0 14px 30px -16px var(--uncoder-lib-hl-bg);
+}
+.uncoder-link-in-bio .uncoder-link-in-bio__link--highlight:is(:hover, :focus-visible) {
+  background-color: color-mix(in srgb, var(--uncoder-lib-hl-bg) 88%, #000);
+  color: var(--uncoder-lib-hl-text, #fff);
+}
+@supports (color: oklch(from red l c h)) {
+  .uncoder-link-in-bio .uncoder-link-in-bio__link--highlight,
+  .uncoder-link-in-bio .uncoder-link-in-bio__link--highlight:is(:hover, :focus-visible) {
+    color: var(--uncoder-lib-hl-text, oklch(from var(--uncoder-lib-hl-bg) clamp(0, (0.66 - l) * 1000, 1) 0 0));
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .uncoder-link-in-bio--hl-pulse .uncoder-link-in-bio__link--highlight {
+    animation: uncoder-link-in-bio-pulse 2.4s ease-out infinite;
+  }
+  .uncoder-link-in-bio--hl-wobble .uncoder-link-in-bio__link--highlight {
+    animation: uncoder-link-in-bio-wobble 4s ease-in-out infinite;
+  }
+}
+@keyframes uncoder-link-in-bio-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--uncoder-lib-hl-bg) 55%, transparent);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 14px color-mix(in srgb, var(--uncoder-lib-hl-bg) 0%, transparent);
+  }
+}
+@keyframes uncoder-link-in-bio-wobble {
+  0%,
+  80%,
+  100% {
+    transform: none;
+  }
+  84% {
+    transform: rotate(-2deg);
+  }
+  88% {
+    transform: rotate(2deg);
+  }
+  92% {
+    transform: rotate(-1.5deg);
+  }
+  96% {
+    transform: rotate(1deg);
+  }
+}
+
+.uncoder .uncoder-link-in-bio__footer {
+  margin: calc(var(--uncoder-lib-space) * 1.5) 0 0;
+  color: color-mix(in srgb, currentColor 65%, transparent);
+  font-size: 0.875em;
+}
+
+.uncoder-link-in-bio__placeholder {
+  width: 100%;
+  margin: var(--uncoder-lib-space) 0 0;
+  padding: 12px 14px;
+  border: 1px dashed var(--uncoder-c-border, #d1d5db);
+  border-radius: 8px;
+  font: 13px/1.4 system-ui, sans-serif;
+  opacity: 0.75;
+}

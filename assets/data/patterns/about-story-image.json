@@ -1,0 +1,190 @@
+{
+	"id": "about-story-image",
+	"title": "About: our story with image",
+	"category": "content",
+	"description": "About section with a tall rounded image beside the story: eyebrow, h2, two short paragraphs, a list of values and a link button. Stacks on phones.",
+	"keywords": [
+		"about",
+		"story",
+		"company",
+		"mission",
+		"values",
+		"who we are"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "About",
+			"settings": {
+				"direction": "row",
+				"direction_mobile": "column",
+				"align": "center",
+				"gap": {
+					"size": 80,
+					"unit": "px"
+				},
+				"gap_tablet": {
+					"size": 48,
+					"unit": "px"
+				},
+				"gap_mobile": {
+					"size": 32,
+					"unit": "px"
+				}
+			},
+			"children": [
+				{
+					"type": "container",
+					"settings": {
+						"width": {
+							"size": 45,
+							"unit": "%"
+						},
+						"width_mobile": {
+							"size": 100,
+							"unit": "%"
+						}
+					},
+					"children": [
+						{
+							"type": "image",
+							"settings": {
+								"image": {
+									"id": 0,
+									"url": "{{placeholder_image}}"
+								},
+								"alt": "[Describe the team or workplace photo]",
+								"object_fit": "cover",
+								"aspect_ratio": "4/5",
+								"aspect_ratio_mobile": "4/3",
+								"radius": {
+									"top": 24,
+									"right": 24,
+									"bottom": 24,
+									"left": 24,
+									"unit": "px",
+									"linked": true
+								},
+								"radius_mobile": {
+									"top": 16,
+									"right": 16,
+									"bottom": 16,
+									"left": 16,
+									"unit": "px",
+									"linked": true
+								}
+							}
+						}
+					]
+				},
+				{
+					"type": "container",
+					"settings": {
+						"width": {
+							"size": 55,
+							"unit": "%"
+						},
+						"width_mobile": {
+							"size": 100,
+							"unit": "%"
+						},
+						"gap": {
+							"size": 20,
+							"unit": "px"
+						}
+					},
+					"children": [
+						{
+							"type": "heading",
+							"settings": {
+								"title": "Our story",
+								"tag": "p",
+								"typography": {
+									"preset": "eyebrow"
+								},
+								"color": "var(--uncoder-c-primary)"
+							}
+						},
+						{
+							"type": "heading",
+							"settings": {
+								"title": "A small team with a clear purpose",
+								"tag": "h2",
+								"typography": {
+									"preset": "h2"
+								},
+								"text_wrap": "balance"
+							}
+						},
+						{
+							"type": "text-editor",
+							"settings": {
+								"content": "<p>[Company name] started in [year] with a simple idea: [the problem you set out to solve]. Since then we have grown into a team of [number] people, but the idea has not changed.</p><p>We keep things simple, say what we mean and stay with our customers long after launch day.</p>",
+								"max_width": {
+									"size": 56,
+									"unit": "ch"
+								}
+							}
+						},
+						{
+							"type": "icon-list",
+							"settings": {
+								"items": [
+									{
+										"text": "<strong>Clarity over complexity</strong> — plain language, clear plans.",
+										"icon": {
+											"library": "lucide",
+											"value": "circle-check"
+										}
+									},
+									{
+										"text": "<strong>Craft in every detail</strong> — we sweat the small things.",
+										"icon": {
+											"library": "lucide",
+											"value": "circle-check"
+										}
+									},
+									{
+										"text": "<strong>Partners for the long run</strong> — we measure success in years.",
+										"icon": {
+											"library": "lucide",
+											"value": "circle-check"
+										}
+									}
+								],
+								"icon_color": "var(--uncoder-c-primary)",
+								"gap": {
+									"size": 12,
+									"unit": "px"
+								},
+								"icon_gap": {
+									"size": 12,
+									"unit": "px"
+								},
+								"icon_valign": "top",
+								"_margin": {
+									"top": 4,
+									"right": "",
+									"bottom": 8,
+									"left": "",
+									"unit": "px",
+									"linked": false
+								}
+							}
+						},
+						{
+							"type": "button",
+							"settings": {
+								"text": "Meet the team",
+								"link": {
+									"url": "/about"
+								},
+								"variant": "outline"
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

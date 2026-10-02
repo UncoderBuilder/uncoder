@@ -1,0 +1,232 @@
+/* Flip Box — .uncoder-flip-box. Flipped by :hover (hover devices), keyboard focus, or the
+   .uncoder-flip-box--flipped class the flip-box module toggles on tap. */
+
+.uncoder-flip-box {
+  --uncoder-flip-h: 320px;
+  --uncoder-flip-duration: 650ms;
+  --uncoder-flip-ease: cubic-bezier(0.4, 0.2, 0.2, 1);
+  --uncoder-flip-focus: var(--uncoder-c-primary, #2b59ff);
+  position: relative;
+  height: var(--uncoder-flip-h);
+  border-radius: 16px;
+  perspective: 1400px;
+  -webkit-tap-highlight-color: transparent;
+}
+.uncoder-flip-box:focus {
+  outline: none;
+}
+.uncoder-flip-box:focus-visible {
+  outline: 2px solid var(--uncoder-flip-focus);
+  outline-offset: 4px;
+}
+.uncoder-flip-box__inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform var(--uncoder-flip-duration) var(--uncoder-flip-ease);
+}
+
+.uncoder-flip-box__face {
+  --uncoder-flip-overlay: transparent;
+  --uncoder-flip-align: center;
+  --uncoder-flip-text: center;
+  --uncoder-flip-justify: center;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: var(--uncoder-flip-justify);
+  align-items: var(--uncoder-flip-align);
+  text-align: var(--uncoder-flip-text);
+  padding: 32px;
+  overflow: hidden;
+  border-radius: 16px;
+  background-position: center;
+  background-size: cover;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  transition: transform var(--uncoder-flip-duration) var(--uncoder-flip-ease), opacity var(--uncoder-flip-duration) var(--uncoder-flip-ease);
+}
+.uncoder-flip-box__face::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: var(--uncoder-flip-overlay);
+  pointer-events: none;
+}
+.uncoder-flip-box__front {
+  background-color: var(--uncoder-c-surface, #f5f7fb);
+  color: var(--uncoder-c-text, #374151);
+}
+.uncoder-flip-box__back {
+  background-color: var(--uncoder-c-secondary, #0b1b3f);
+  color: rgb(255 255 255 / 0.86);
+}
+.uncoder-flip-box__content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: var(--uncoder-flip-align);
+  max-width: 100%;
+}
+
+.uncoder-flip-box__graphic {
+  margin-bottom: 20px;
+}
+.uncoder-flip-box__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4em;
+  border-radius: 14px;
+  font-size: 44px;
+  line-height: 1;
+  color: var(--uncoder-c-primary, #2b59ff);
+  background-color: color-mix(in srgb, var(--uncoder-c-primary, #2b59ff) 12%, transparent);
+}
+.uncoder-flip-box .uncoder-flip-box__image {
+  display: block;
+  width: 96px;
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+.uncoder-flip-box .uncoder-flip-box__title {
+  margin: 0 0 0.5em;
+  font-size: var(--uncoder-t-h4-fs, 1.4rem);
+  line-height: var(--uncoder-t-h4-lh, 1.3);
+  overflow-wrap: break-word;
+}
+.uncoder-flip-box__back .uncoder-flip-box__title {
+  color: #fff;
+}
+.uncoder-flip-box .uncoder-flip-box__description {
+  margin: 0;
+}
+.uncoder-flip-box__actions {
+  margin-top: 22px;
+}
+
+/* ---------------------------------------------------------------- Flipped state helpers:
+   every effect repeats the same trigger list. */
+
+/* Flip horizontal / vertical. */
+.uncoder-flip-box--flip-x .uncoder-flip-box__back {
+  transform: rotateY(180deg);
+}
+.uncoder-flip-box--flip-y .uncoder-flip-box__back {
+  transform: rotateX(180deg);
+}
+.uncoder-flip-box--flip-x:is(.uncoder-flip-box--flipped, :focus-visible, :has(:focus-visible)) .uncoder-flip-box__inner {
+  transform: rotateY(180deg);
+}
+.uncoder-flip-box--flip-y:is(.uncoder-flip-box--flipped, :focus-visible, :has(:focus-visible)) .uncoder-flip-box__inner {
+  transform: rotateX(180deg);
+}
+@media (hover: hover) {
+  .uncoder-flip-box--flip-x:hover .uncoder-flip-box__inner {
+    transform: rotateY(180deg);
+  }
+  .uncoder-flip-box--flip-y:hover .uncoder-flip-box__inner {
+    transform: rotateX(180deg);
+  }
+}
+
+/* 3D depth: content floats above the card (overflow must stay visible for preserve-3d). */
+.uncoder-flip-box--3d .uncoder-flip-box__face {
+  overflow: visible;
+  transform-style: preserve-3d;
+}
+.uncoder-flip-box--3d .uncoder-flip-box__face::before {
+  border-radius: inherit;
+}
+.uncoder-flip-box--3d .uncoder-flip-box__content {
+  transform: translateZ(70px) scale(0.86);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+/* Slide, fade and zoom: the back sits on top of the front and animates in. */
+.uncoder-flip-box--slide,
+.uncoder-flip-box--fade,
+.uncoder-flip-box--zoom {
+  overflow: hidden;
+  isolation: isolate;
+}
+.uncoder-flip-box--slide .uncoder-flip-box__back,
+.uncoder-flip-box--fade .uncoder-flip-box__back,
+.uncoder-flip-box--zoom .uncoder-flip-box__back {
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+}
+.uncoder-flip-box--slide .uncoder-flip-box__back {
+  opacity: 1;
+}
+.uncoder-flip-box--from-bottom .uncoder-flip-box__back {
+  transform: translateY(100%);
+}
+.uncoder-flip-box--from-top .uncoder-flip-box__back {
+  transform: translateY(-100%);
+}
+.uncoder-flip-box--from-right .uncoder-flip-box__back {
+  transform: translateX(100%);
+}
+.uncoder-flip-box--from-left .uncoder-flip-box__back {
+  transform: translateX(-100%);
+}
+.uncoder-flip-box--zoom .uncoder-flip-box__back {
+  transform: scale(0.72);
+}
+.uncoder-flip-box--slide:is(.uncoder-flip-box--flipped, :focus-visible, :has(:focus-visible)) .uncoder-flip-box__back,
+.uncoder-flip-box--fade:is(.uncoder-flip-box--flipped, :focus-visible, :has(:focus-visible)) .uncoder-flip-box__back,
+.uncoder-flip-box--zoom:is(.uncoder-flip-box--flipped, :focus-visible, :has(:focus-visible)) .uncoder-flip-box__back {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+.uncoder-flip-box--zoom:is(.uncoder-flip-box--flipped, :focus-visible, :has(:focus-visible)) .uncoder-flip-box__front {
+  transform: scale(1.12);
+  opacity: 0;
+}
+@media (hover: hover) {
+  .uncoder-flip-box--slide:hover .uncoder-flip-box__back,
+  .uncoder-flip-box--fade:hover .uncoder-flip-box__back,
+  .uncoder-flip-box--zoom:hover .uncoder-flip-box__back {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+  .uncoder-flip-box--zoom:hover .uncoder-flip-box__front {
+    transform: scale(1.12);
+    opacity: 0;
+  }
+}
+
+/* The hidden face never catches clicks (flip effects rely on backface culling for painting). */
+.uncoder-flip-box--flip-x .uncoder-flip-box__back,
+.uncoder-flip-box--flip-y .uncoder-flip-box__back {
+  pointer-events: none;
+}
+.uncoder-flip-box:is(.uncoder-flip-box--flipped, :focus-visible, :has(:focus-visible)) .uncoder-flip-box__back {
+  pointer-events: auto;
+}
+.uncoder-flip-box:is(.uncoder-flip-box--flipped, :focus-visible, :has(:focus-visible)) .uncoder-flip-box__front {
+  pointer-events: none;
+}
+@media (hover: hover) {
+  .uncoder-flip-box:hover .uncoder-flip-box__back {
+    pointer-events: auto;
+  }
+  .uncoder-flip-box:hover .uncoder-flip-box__front {
+    pointer-events: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uncoder-flip-box .uncoder-flip-box__inner,
+  .uncoder-flip-box .uncoder-flip-box__face {
+    transition-duration: 1ms;
+  }
+}

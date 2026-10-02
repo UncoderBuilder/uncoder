@@ -1,0 +1,515 @@
+/* Slides — full-width hero slider.
+   .uncoder-slides > [.uncoder-slides__toggle], .uncoder-slides__viewport > .uncoder-slides__slide,
+   .uncoder-slides__arrow, .uncoder-slides__pagination, .uncoder-slides__status.
+   Every slide sits in the same grid cell, so the slider is as tall as its tallest slide and never less
+   than --uncoder-slides-height; the module (modules/slides.ts) moves them with the Web Animations API.
+   Positions and colours are custom properties: widget settings set them on the root, a slide's own
+   settings on the slide (.uncoder-ri-…), which wins by inheritance. */
+
+.uncoder-slides {
+  --uncoder-slides-height: clamp(420px, 75vh, 760px);
+  --uncoder-slides-bg: var(--uncoder-c-secondary, #0b1b3f);
+  --uncoder-slides-color: #fff;
+  --uncoder-slides-content-w: 46rem;
+  --uncoder-slides-justify: center;
+  --uncoder-slides-align: center;
+  --uncoder-slides-text: center;
+  --uncoder-slides-buttons: center;
+  --uncoder-slides-kb-scale: 1.15;
+  --uncoder-slides-kb-duration: 10s;
+  --uncoder-slides-content-dur: 0.8s;
+  --uncoder-slides-content-delay: 0.18s;
+  --uncoder-slides-arrow-size: 48px;
+  --uncoder-slides-arrow-icon: 22px;
+  --uncoder-slides-arrow-offset: 20px;
+  --uncoder-slides-arrow-color: #fff;
+  --uncoder-slides-arrow-bg: rgb(255 255 255 / 0.12);
+  --uncoder-slides-arrow-border: rgb(255 255 255 / 0.5);
+  --uncoder-slides-arrow-color-hover: #0f172a;
+  --uncoder-slides-arrow-bg-hover: #fff;
+  --uncoder-slides-pag-offset: 24px;
+  --uncoder-slides-bar: 36px;
+  --uncoder-slides-dot-size: 10px;
+  --uncoder-slides-dot-gap: 10px;
+  --uncoder-slides-dot-active-width: 28px;
+  --uncoder-slides-dot-color: rgb(255 255 255 / 0.5);
+  --uncoder-slides-dot-active: #fff;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background-color: var(--uncoder-slides-bg);
+}
+
+.uncoder-slides:focus-visible {
+  outline: 3px solid var(--uncoder-c-primary, #2b59ff);
+  outline-offset: -3px;
+}
+
+.uncoder-slides > .uncoder-slides__viewport {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(var(--uncoder-slides-height), auto);
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.uncoder-slides--swipe.is-ready > .uncoder-slides__viewport {
+  touch-action: pan-y pinch-zoom;
+}
+
+.uncoder-slides.is-dragging > .uncoder-slides__viewport {
+  cursor: grabbing;
+  user-select: none;
+}
+
+/* ------------------------------------------------------------------ Slides */
+
+.uncoder-slides__viewport > .uncoder-slides__slide {
+  position: relative;
+  z-index: 0;
+  display: flex;
+  grid-area: 1 / 1;
+  min-width: 0;
+  overflow: hidden;
+  background-color: var(--uncoder-slides-bg);
+  color: var(--uncoder-slides-color);
+  visibility: hidden;
+}
+
+.uncoder-slides__viewport > .uncoder-slides__slide.is-active {
+  z-index: 2;
+  visibility: visible;
+}
+
+.uncoder-slides__viewport > .uncoder-slides__slide:is(.is-leaving, .is-peek) {
+  z-index: 1;
+  visibility: visible;
+}
+
+.uncoder-slides__slide > .uncoder-slides__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.uncoder-slides__slide > .uncoder-slides__overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgb(9 14 30 / 0.55);
+  pointer-events: none;
+}
+
+/* Fade: the outgoing text clears quickly so the text of two slides never mixes. */
+.uncoder-slides--fade > .uncoder-slides__viewport > .uncoder-slides__slide.is-leaving > .uncoder-slides__inner {
+  opacity: 0;
+  transition: opacity 0.25s ease-out;
+}
+
+/* Ken Burns: the zoom runs while the slide is shown and keeps running while it leaves. */
+.uncoder-slides__slide--kb-out > .uncoder-slides__img {
+  transform: scale(var(--uncoder-slides-kb-scale));
+}
+
+.uncoder-slides__slide--kb-in:is(.is-active, .is-leaving) > .uncoder-slides__img {
+  animation: uncoder-slides-kb-in var(--uncoder-slides-kb-duration) linear both;
+}
+
+.uncoder-slides__slide--kb-out:is(.is-active, .is-leaving) > .uncoder-slides__img {
+  animation: uncoder-slides-kb-out var(--uncoder-slides-kb-duration) linear both;
+}
+
+@keyframes uncoder-slides-kb-in {
+  from { transform: scale(1); }
+  to { transform: scale(var(--uncoder-slides-kb-scale)); }
+}
+
+@keyframes uncoder-slides-kb-out {
+  from { transform: scale(var(--uncoder-slides-kb-scale)); }
+  to { transform: scale(1); }
+}
+
+/* Whole-slide link: stretched under the content; the content lets clicks through except its own links. */
+.uncoder-slides__slide > .uncoder-slides__link {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.uncoder-slides__slide > .uncoder-slides__link:focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: -6px;
+}
+
+.uncoder-slides__slide--linked > .uncoder-slides__inner {
+  pointer-events: none;
+}
+
+.uncoder-slides__slide--linked > .uncoder-slides__inner a {
+  pointer-events: auto;
+}
+
+/* ------------------------------------------------------------------ Content */
+
+.uncoder-slides__slide > .uncoder-slides__inner {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex: 1 1 auto;
+  align-items: var(--uncoder-slides-align);
+  justify-content: var(--uncoder-slides-justify);
+  min-width: 0;
+  box-sizing: border-box;
+  padding: clamp(48px, 9vh, 104px) clamp(24px, 6vw, 96px);
+}
+
+.uncoder-slides--arrows .uncoder-slides__slide > .uncoder-slides__inner {
+  padding-inline: max(clamp(24px, 6vw, 96px), calc(var(--uncoder-slides-arrow-size) + var(--uncoder-slides-arrow-offset) + 20px));
+}
+
+.uncoder-slides--paginated .uncoder-slides__slide > .uncoder-slides__inner {
+  padding-bottom: max(clamp(48px, 9vh, 104px), calc(var(--uncoder-slides-pag-offset) + var(--uncoder-slides-bar) + 24px));
+}
+
+.uncoder-slides__inner > .uncoder-slides__content {
+  min-width: 0;
+  max-width: min(100%, var(--uncoder-slides-content-w));
+  text-align: var(--uncoder-slides-text);
+  overflow-wrap: break-word;
+}
+
+.uncoder-slides .uncoder-slides__heading {
+  margin: 0 0 0.35em;
+  color: var(--uncoder-slides-heading-color, inherit);
+  font-family: var(--uncoder-t-h1-ff, inherit);
+  font-size: var(--uncoder-t-h1-fs, clamp(2.25rem, 1.35rem + 3.4vw, 4.25rem));
+  font-weight: var(--uncoder-t-h1-fw, 700);
+  line-height: var(--uncoder-t-h1-lh, 1.08);
+  letter-spacing: var(--uncoder-t-h1-ls, -0.02em);
+  text-wrap: balance;
+}
+
+.uncoder-slides .uncoder-slides__description {
+  margin: 0 0 1.75em;
+  color: var(--uncoder-slides-desc-color, inherit);
+  font-size: clamp(1rem, 0.92rem + 0.4vw, 1.25rem);
+  line-height: 1.55;
+}
+
+.uncoder-slides .uncoder-slides__heading:last-child,
+.uncoder-slides .uncoder-slides__description:last-child {
+  margin-bottom: 0;
+}
+
+.uncoder-slides__content > .uncoder-slides__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: var(--uncoder-slides-buttons);
+  gap: 12px;
+}
+
+/* Outline and ghost buttons take the slide's text colour (white over the image by default). */
+.uncoder-slides__button.uncoder-btn--outline,
+.uncoder-slides__button.uncoder-btn--ghost,
+.uncoder-slides__button.uncoder-btn--outline:hover,
+.uncoder-slides__button.uncoder-btn--ghost:hover {
+  color: inherit;
+}
+
+.uncoder-slides__button.uncoder-btn--ghost {
+  background-color: color-mix(in srgb, currentColor 16%, transparent);
+}
+
+.uncoder-slides__button.uncoder-btn--outline:hover,
+.uncoder-slides__button.uncoder-btn--ghost:hover {
+  background-color: color-mix(in srgb, currentColor 22%, transparent);
+}
+
+/* Content animation on the incoming slide (not on first load, not after a swipe that already showed it). */
+.uncoder-slides--content-fade { --uncoder-slides-content-anim: uncoder-slides-fade; }
+.uncoder-slides--content-fade-up { --uncoder-slides-content-anim: uncoder-slides-fade-up; }
+.uncoder-slides--content-fade-down { --uncoder-slides-content-anim: uncoder-slides-fade-down; }
+.uncoder-slides--content-zoom { --uncoder-slides-content-anim: uncoder-slides-zoom; }
+
+.uncoder-slides.has-moved > .uncoder-slides__viewport > .uncoder-slides__slide.is-active:not(.is-swiped) > .uncoder-slides__inner > .uncoder-slides__content {
+  animation: var(--uncoder-slides-content-anim, none) var(--uncoder-slides-content-dur) cubic-bezier(0.2, 0.8, 0.2, 1) var(--uncoder-slides-content-delay) both;
+}
+
+@keyframes uncoder-slides-fade {
+  from { opacity: 0; }
+}
+
+@keyframes uncoder-slides-fade-up {
+  from { opacity: 0; transform: translateY(28px); }
+}
+
+@keyframes uncoder-slides-fade-down {
+  from { opacity: 0; transform: translateY(-28px); }
+}
+
+@keyframes uncoder-slides-zoom {
+  from { opacity: 0; transform: scale(0.94); }
+}
+
+/* ------------------------------------------------------------------ Arrows */
+
+.uncoder-slides > .uncoder-slides__arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--uncoder-slides-arrow-size);
+  height: var(--uncoder-slides-arrow-size);
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--uncoder-slides-arrow-border);
+  border-radius: 50%;
+  background: var(--uncoder-slides-arrow-bg);
+  color: var(--uncoder-slides-arrow-color);
+  font: inherit;
+  font-size: var(--uncoder-slides-arrow-icon);
+  line-height: 1;
+  text-transform: none;
+  box-shadow: none;
+  cursor: pointer;
+  transform: translateY(-50%);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, opacity 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.uncoder-slides > .uncoder-slides__arrow:is(:hover, :focus-visible) {
+  border-color: var(--uncoder-slides-arrow-bg-hover);
+  background: var(--uncoder-slides-arrow-bg-hover);
+  color: var(--uncoder-slides-arrow-color-hover);
+}
+
+.uncoder-slides > .uncoder-slides__arrow:focus-visible,
+.uncoder-slides > .uncoder-slides__toggle:focus-visible {
+  outline: 2px solid var(--uncoder-slides-dot-active);
+  outline-offset: 3px;
+}
+
+.uncoder-slides > .uncoder-slides__arrow.is-disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.uncoder-slides > .uncoder-slides__arrow.is-disabled:hover {
+  border-color: var(--uncoder-slides-arrow-border);
+  background: var(--uncoder-slides-arrow-bg);
+  color: var(--uncoder-slides-arrow-color);
+}
+
+.uncoder-slides > .uncoder-slides__arrow .uncoder-svg {
+  width: 1em;
+  height: 1em;
+}
+
+.uncoder-slides > .uncoder-slides__arrow:dir(rtl) .uncoder-svg {
+  transform: scaleX(-1);
+}
+
+.uncoder-slides > .uncoder-slides__arrow--prev {
+  inset-inline-start: var(--uncoder-slides-arrow-offset);
+}
+
+.uncoder-slides > .uncoder-slides__arrow--next {
+  inset-inline-end: var(--uncoder-slides-arrow-offset);
+}
+
+/* ------------------------------------------------------------------ Pagination & pause button */
+
+.uncoder-slides > .uncoder-slides__pagination {
+  position: absolute;
+  inset-inline: 0;
+  bottom: var(--uncoder-slides-pag-offset);
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--uncoder-slides-bar);
+  pointer-events: none;
+}
+
+.uncoder-slides__pagination > * {
+  pointer-events: auto;
+}
+
+.uncoder-slides__pagination > .uncoder-slides__dots {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--uncoder-slides-dot-gap);
+}
+
+.uncoder-slides__dots > .uncoder-slides__dot {
+  position: relative;
+  display: block;
+  width: var(--uncoder-slides-dot-size);
+  height: var(--uncoder-slides-dot-size);
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--uncoder-slides-dot-color);
+  color: inherit;
+  font: inherit;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.06);
+  cursor: pointer;
+  transition: width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.3s;
+}
+
+/* 24px hit area without changing the layout. */
+.uncoder-slides__dots > .uncoder-slides__dot::after {
+  content: "";
+  position: absolute;
+  inset: calc((24px - var(--uncoder-slides-dot-size)) / -2) calc(var(--uncoder-slides-dot-gap) / -2);
+}
+
+.uncoder-slides__dots > .uncoder-slides__dot:hover {
+  background: color-mix(in srgb, var(--uncoder-slides-dot-active) 75%, transparent);
+}
+
+.uncoder-slides__dots > .uncoder-slides__dot.is-active {
+  width: var(--uncoder-slides-dot-active-width);
+  background: var(--uncoder-slides-dot-active);
+}
+
+.uncoder-slides__dots > .uncoder-slides__dot:focus-visible {
+  outline: 2px solid var(--uncoder-slides-dot-active);
+  outline-offset: 4px;
+}
+
+.uncoder-slides__pagination > .uncoder-slides__fraction {
+  display: inline-flex;
+  gap: 0.35em;
+  color: #fff;
+  font-size: 0.9375rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+  text-shadow: 0 1px 2px rgb(0 0 0 / 0.4);
+}
+
+.uncoder-slides__fraction > .uncoder-slides__sep {
+  opacity: 0.6;
+}
+
+.uncoder-slides > .uncoder-slides__toggle {
+  position: absolute;
+  bottom: calc(var(--uncoder-slides-pag-offset) + (var(--uncoder-slides-bar) - 36px) / 2);
+  inset-inline-start: var(--uncoder-slides-arrow-offset);
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, currentColor 50%, transparent);
+  border-radius: 50%;
+  background: color-mix(in srgb, currentColor 12%, transparent);
+  color: #fff;
+  font: inherit;
+  font-size: 15px;
+  line-height: 1;
+  box-shadow: none;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.uncoder-slides > .uncoder-slides__toggle:hover {
+  border-color: currentColor;
+  background: color-mix(in srgb, currentColor 22%, transparent);
+}
+
+.uncoder-slides__toggle > .uncoder-svg {
+  width: 1em;
+  height: 1em;
+}
+
+.uncoder-slides__toggle > .uncoder-slides__play,
+.uncoder-slides__toggle.is-paused > .uncoder-slides__pause {
+  display: none;
+}
+
+.uncoder-slides__toggle.is-paused > .uncoder-slides__play {
+  display: inline-block;
+}
+
+/* Without the runtime only the first slide shows; the controls would do nothing. */
+html:not(.uncoder-js) .uncoder-slides > :is(.uncoder-slides__arrow, .uncoder-slides__pagination, .uncoder-slides__toggle) {
+  display: none;
+}
+
+/* ------------------------------------------------------------------ Phones: arrows join the bottom bar */
+
+@media (max-width: 767px) {
+  .uncoder-slides {
+    --uncoder-slides-arrow-size: 36px;
+    --uncoder-slides-arrow-icon: 18px;
+    --uncoder-slides-arrow-offset: 14px;
+    --uncoder-slides-pag-offset: 16px;
+    --uncoder-slides-bar: var(--uncoder-slides-arrow-size);
+  }
+
+  .uncoder-slides > .uncoder-slides__arrow {
+    top: auto;
+    bottom: var(--uncoder-slides-pag-offset);
+    transform: none;
+  }
+
+  .uncoder-slides > .uncoder-slides__arrow--prev {
+    inset-inline-start: auto;
+    inset-inline-end: calc(var(--uncoder-slides-arrow-offset) + var(--uncoder-slides-arrow-size) + 8px);
+  }
+
+  .uncoder-slides--arrows .uncoder-slides__slide > .uncoder-slides__inner {
+    padding-inline: clamp(20px, 6vw, 40px);
+    padding-bottom: calc(var(--uncoder-slides-pag-offset) + var(--uncoder-slides-bar) + 28px);
+  }
+}
+
+/* ------------------------------------------------------------------ Editor placeholder */
+
+.uncoder-slides-placeholder {
+  padding: 32px 20px;
+  border: 1px dashed var(--uncoder-c-border, #d1d5db);
+  border-radius: 8px;
+  color: var(--uncoder-c-muted, #6b7280);
+  font: 14px/1.4 system-ui, sans-serif;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uncoder-slides__slide > .uncoder-slides__img {
+    transform: none;
+    animation: none !important;
+  }
+
+  .uncoder-slides__inner > .uncoder-slides__content {
+    animation: none !important;
+  }
+
+  .uncoder-slides > .uncoder-slides__arrow,
+  .uncoder-slides > .uncoder-slides__toggle,
+  .uncoder-slides__dots > .uncoder-slides__dot {
+    transition: none;
+  }
+}

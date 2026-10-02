@@ -1,0 +1,34 @@
+{
+	"id": "studio",
+	"title": "Creative studio",
+	"description": "For agencies, studios and freelancers: a confident centered hero, bento feature grid, selected services, a big client quote and a journal.",
+	"kit": {
+		"colors": [
+			{ "id": "primary", "value": "#141414" },
+			{ "id": "secondary", "value": "#1f1f1f" },
+			{ "id": "accent", "value": "#c6f36b" },
+			{ "id": "heading", "value": "#0a0a0a" },
+			{ "id": "text", "value": "#3a3a3a" },
+			{ "id": "muted", "value": "#6f6f6f" },
+			{ "id": "surface", "value": "#f3f3ef" },
+			{ "id": "border", "value": "#e2e2dc" }
+		],
+		"fonts": [
+			{ "id": "heading", "family": "Space Grotesk" },
+			{ "id": "body", "family": "Inter" }
+		],
+		"buttons": {
+			"radius": { "top": 999, "right": 999, "bottom": 999, "left": 999, "unit": "px", "linked": true },
+			"hover_effect": "flip"
+		}
+	},
+	"header": "header-sticky",
+	"footer": "footer-simple",
+	"pages": [
+		{ "title": "Home", "front": true, "sections": ["hero-centered-badge", "logo-strip", "features-bento-grid", "services-image-cards", "testimonial-big-quote", "stats-band", "cta-split-image"] },
+		{ "title": "Services", "sections": ["features-alternating-rows", "process-steps", "cta-dark-band"] },
+		{ "title": "About", "sections": ["about-story-image", "team-grid", "timeline-milestones", "cta-dark-band"] },
+		{ "title": "Journal", "sections": ["blog-latest-posts"] },
+		{ "title": "Contact", "sections": ["contact-details-form"] }
+	]
+}

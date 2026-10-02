@@ -1,0 +1,313 @@
+{
+	"id": "testimonials-cards",
+	"title": "Testimonials: three cards",
+	"category": "social-proof",
+	"description": "Centered intro and three testimonial cards (stars, quote, name and role) in a 3-column grid — 1 column on tablets and phones. The quotes are prompts: replace them with real customer words.",
+	"keywords": [
+		"testimonials",
+		"reviews",
+		"quotes",
+		"customers",
+		"social proof",
+		"cards"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "Testimonials",
+			"settings": {
+				"gap": {
+					"size": 56,
+					"unit": "px"
+				},
+				"gap_mobile": {
+					"size": 40,
+					"unit": "px"
+				},
+				"background": {
+					"type": "classic",
+					"color": "var(--uncoder-c-surface)"
+				}
+			},
+			"children": [
+				{
+					"type": "container",
+					"settings": {
+						"gap": {
+							"size": 16,
+							"unit": "px"
+						},
+						"align": "center"
+					},
+					"children": [
+						{
+							"type": "heading",
+							"settings": {
+								"title": "Testimonials",
+								"tag": "p",
+								"typography": {
+									"preset": "eyebrow"
+								},
+								"color": "var(--uncoder-c-primary)",
+								"align": "center"
+							}
+						},
+						{
+							"type": "heading",
+							"settings": {
+								"title": "What our customers say",
+								"tag": "h2",
+								"typography": {
+									"preset": "h2"
+								},
+								"align": "center",
+								"max_width": {
+									"size": 20,
+									"unit": "ch"
+								},
+								"text_wrap": "balance"
+							}
+						},
+						{
+							"type": "text-editor",
+							"settings": {
+								"content": "<p>Hear from the teams who rely on [Company name] every day.</p>",
+								"typography": {
+									"preset": "lead"
+								},
+								"align": "center",
+								"max_width": {
+									"size": 58,
+									"unit": "ch"
+								}
+							}
+						}
+					]
+				},
+				{
+					"type": "container",
+					"settings": {
+						"layout": "grid",
+						"grid_columns": 3,
+						"grid_columns_tablet": 1,
+						"grid_columns_mobile": 1,
+						"gap": {
+							"size": 24,
+							"unit": "px"
+						},
+						"gap_mobile": {
+							"size": 16,
+							"unit": "px"
+						}
+					},
+					"children": [
+						{
+							"type": "testimonial",
+							"settings": {
+								"quote": "<p>“[A short quote about the result the customer got — for example the time saved or the problem that went away.]”</p>",
+								"name": "[Customer name]",
+								"role": "[Role, Company]",
+								"show_rating": true,
+								"rating": 5,
+								"layout": "left",
+								"star_color": "var(--uncoder-c-accent)",
+								"star_size": {
+									"size": 16,
+									"unit": "px"
+								},
+								"quote_typography": {
+									"preset": "body"
+								},
+								"quote_color": "var(--uncoder-c-heading)",
+								"name_typography": {
+									"preset": "body",
+									"weight": "600"
+								},
+								"role_typography": {
+									"preset": "small"
+								},
+								"role_color": "var(--uncoder-c-muted)",
+								"_background": {
+									"type": "classic",
+									"color": "var(--uncoder-c-white)"
+								},
+								"_border": {
+									"style": "solid",
+									"width": {
+										"top": 1,
+										"right": 1,
+										"bottom": 1,
+										"left": 1,
+										"unit": "px",
+										"linked": true
+									},
+									"color": "var(--uncoder-c-border)"
+								},
+								"_radius": {
+									"top": 16,
+									"right": 16,
+									"bottom": 16,
+									"left": 16,
+									"unit": "px",
+									"linked": true
+								},
+								"_padding": {
+									"top": 32,
+									"right": 32,
+									"bottom": 32,
+									"left": 32,
+									"unit": "px",
+									"linked": true
+								},
+								"_padding_mobile": {
+									"top": 24,
+									"right": 24,
+									"bottom": 24,
+									"left": 24,
+									"unit": "px",
+									"linked": true
+								}
+							}
+						},
+						{
+							"type": "testimonial",
+							"settings": {
+								"quote": "<p>“[A quote about what working with you felt like — responsiveness, clarity, the moment they knew they chose well.]”</p>",
+								"name": "[Customer name]",
+								"role": "[Role, Company]",
+								"show_rating": true,
+								"rating": 5,
+								"layout": "left",
+								"star_color": "var(--uncoder-c-accent)",
+								"star_size": {
+									"size": 16,
+									"unit": "px"
+								},
+								"quote_typography": {
+									"preset": "body"
+								},
+								"quote_color": "var(--uncoder-c-heading)",
+								"name_typography": {
+									"preset": "body",
+									"weight": "600"
+								},
+								"role_typography": {
+									"preset": "small"
+								},
+								"role_color": "var(--uncoder-c-muted)",
+								"_background": {
+									"type": "classic",
+									"color": "var(--uncoder-c-white)"
+								},
+								"_border": {
+									"style": "solid",
+									"width": {
+										"top": 1,
+										"right": 1,
+										"bottom": 1,
+										"left": 1,
+										"unit": "px",
+										"linked": true
+									},
+									"color": "var(--uncoder-c-border)"
+								},
+								"_radius": {
+									"top": 16,
+									"right": 16,
+									"bottom": 16,
+									"left": 16,
+									"unit": "px",
+									"linked": true
+								},
+								"_padding": {
+									"top": 32,
+									"right": 32,
+									"bottom": 32,
+									"left": 32,
+									"unit": "px",
+									"linked": true
+								},
+								"_padding_mobile": {
+									"top": 24,
+									"right": 24,
+									"bottom": 24,
+									"left": 24,
+									"unit": "px",
+									"linked": true
+								}
+							}
+						},
+						{
+							"type": "testimonial",
+							"settings": {
+								"quote": "<p>“[A quote that answers a common doubt, such as price, setup time or switching from another provider.]”</p>",
+								"name": "[Customer name]",
+								"role": "[Role, Company]",
+								"show_rating": true,
+								"rating": 5,
+								"layout": "left",
+								"star_color": "var(--uncoder-c-accent)",
+								"star_size": {
+									"size": 16,
+									"unit": "px"
+								},
+								"quote_typography": {
+									"preset": "body"
+								},
+								"quote_color": "var(--uncoder-c-heading)",
+								"name_typography": {
+									"preset": "body",
+									"weight": "600"
+								},
+								"role_typography": {
+									"preset": "small"
+								},
+								"role_color": "var(--uncoder-c-muted)",
+								"_background": {
+									"type": "classic",
+									"color": "var(--uncoder-c-white)"
+								},
+								"_border": {
+									"style": "solid",
+									"width": {
+										"top": 1,
+										"right": 1,
+										"bottom": 1,
+										"left": 1,
+										"unit": "px",
+										"linked": true
+									},
+									"color": "var(--uncoder-c-border)"
+								},
+								"_radius": {
+									"top": 16,
+									"right": 16,
+									"bottom": 16,
+									"left": 16,
+									"unit": "px",
+									"linked": true
+								},
+								"_padding": {
+									"top": 32,
+									"right": 32,
+									"bottom": 32,
+									"left": 32,
+									"unit": "px",
+									"linked": true
+								},
+								"_padding_mobile": {
+									"top": 24,
+									"right": 24,
+									"bottom": 24,
+									"left": 24,
+									"unit": "px",
+									"linked": true
+								}
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

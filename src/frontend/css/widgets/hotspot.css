@@ -1,0 +1,268 @@
+/* Hotspot: markers positioned in % of the image (--uncoder-hs-x / --uncoder-hs-y per item, set by the
+   repeater position controls). Tooltips open on .is-open (click) or hover/focus (hover trigger). */
+
+.uncoder-hotspot {
+  --uncoder-hs-size: 32px;
+  --uncoder-hs-icon: 16px;
+  --uncoder-hs-color: #fff;
+  --uncoder-hs-bg: var(--uncoder-c-primary, #2b59ff);
+  --uncoder-hs-color-active: var(--uncoder-hs-color);
+  --uncoder-hs-bg-active: var(--uncoder-c-heading, #111827);
+  --uncoder-hs-pulse: var(--uncoder-hs-bg);
+  --uncoder-hs-tip-w: 260px;
+  --uncoder-hs-tip-offset: 12px;
+  --uncoder-hs-tip-bg: var(--uncoder-c-surface, #fff);
+  position: relative;
+  display: block;
+  width: 100%;
+  line-height: 0;
+}
+
+.uncoder-hotspot > .uncoder-hotspot__img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Fallback spread when a row has no position of its own (e.g. rows from the control defaults). */
+.uncoder-hotspot > .uncoder-hotspot__item:nth-of-type(3n + 1) {
+  --uncoder-hs-x0: 28%;
+  --uncoder-hs-y0: 36%;
+}
+
+.uncoder-hotspot > .uncoder-hotspot__item:nth-of-type(3n + 2) {
+  --uncoder-hs-x0: 64%;
+  --uncoder-hs-y0: 28%;
+}
+
+.uncoder-hotspot > .uncoder-hotspot__item:nth-of-type(3n) {
+  --uncoder-hs-x0: 50%;
+  --uncoder-hs-y0: 70%;
+}
+
+.uncoder-hotspot > .uncoder-hotspot__item {
+  position: absolute;
+  top: var(--uncoder-hs-y, var(--uncoder-hs-y0, 50%));
+  left: var(--uncoder-hs-x, var(--uncoder-hs-x0, 50%));
+  z-index: 1;
+  line-height: 1.4;
+  transform: translate(-50%, -50%);
+}
+
+.uncoder-hotspot > .uncoder-hotspot__item:is(.is-open, :focus-within) {
+  z-index: 3;
+}
+
+.uncoder-hotspot--hover > .uncoder-hotspot__item:hover {
+  z-index: 3;
+}
+
+/* ------------------------------------------------------------------ Marker */
+
+.uncoder-hotspot__item > .uncoder-hotspot__marker {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: var(--uncoder-hs-size);
+  height: var(--uncoder-hs-size);
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border: 0 solid transparent;
+  border-radius: 999px;
+  background: var(--uncoder-hs-bg);
+  color: var(--uncoder-hs-color);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  text-transform: none;
+  box-shadow: 0 4px 14px -4px rgb(0 0 0 / 0.35);
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s, transform 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.uncoder-hotspot--labels .uncoder-hotspot__item > .uncoder-hotspot__marker {
+  padding-inline: calc((var(--uncoder-hs-size) - var(--uncoder-hs-icon)) / 2) 14px;
+}
+
+.uncoder-hotspot__marker > .uncoder-hotspot__icon {
+  width: var(--uncoder-hs-icon);
+  height: var(--uncoder-hs-icon);
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.uncoder-hotspot__item > .uncoder-hotspot__marker:is(:hover, :focus-visible, [aria-expanded="true"]) {
+  background: var(--uncoder-hs-bg-active);
+  color: var(--uncoder-hs-color-active);
+}
+
+.uncoder-hotspot__item > .uncoder-hotspot__marker[aria-expanded="true"] > .uncoder-hotspot__icon {
+  transform: rotate(45deg);
+}
+
+.uncoder-hotspot__item > .uncoder-hotspot__marker:focus-visible {
+  outline: 2px solid var(--uncoder-hs-bg);
+  outline-offset: 3px;
+}
+
+.uncoder-hotspot--pulse .uncoder-hotspot__item > .uncoder-hotspot__marker::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--uncoder-hs-pulse);
+  animation: uncoder-hotspot-pulse 2s cubic-bezier(0.2, 0.8, 0.2, 1) infinite;
+  pointer-events: none;
+}
+
+@keyframes uncoder-hotspot-pulse {
+  0% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  80%,
+  100% {
+    opacity: 0;
+    transform: scale(1.9);
+  }
+}
+
+/* ------------------------------------------------------------------ Tooltip */
+
+.uncoder-hotspot__item > .uncoder-hotspot__tooltip {
+  --uncoder-hs-shift: 0px;
+  position: absolute;
+  z-index: 2;
+  width: max-content;
+  max-width: min(var(--uncoder-hs-tip-w), 80vw);
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: var(--uncoder-hs-tip-bg);
+  color: var(--uncoder-c-text, #374151);
+  box-shadow: 0 16px 40px -12px rgb(15 23 42 / 0.35), 0 0 0 1px rgb(15 23 42 / 0.06);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  text-align: start;
+  white-space: normal;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.2s, visibility 0s linear 0.2s;
+}
+
+.uncoder-hotspot__item--top > .uncoder-hotspot__tooltip {
+  bottom: calc(100% + var(--uncoder-hs-tip-offset));
+  left: 50%;
+  transform: translate(calc(-50% + var(--uncoder-hs-shift)), 6px);
+}
+
+.uncoder-hotspot__item--bottom > .uncoder-hotspot__tooltip {
+  top: calc(100% + var(--uncoder-hs-tip-offset));
+  left: 50%;
+  transform: translate(calc(-50% + var(--uncoder-hs-shift)), -6px);
+}
+
+.uncoder-hotspot__item--left > .uncoder-hotspot__tooltip {
+  top: 50%;
+  right: calc(100% + var(--uncoder-hs-tip-offset));
+  transform: translate(6px, -50%);
+}
+
+.uncoder-hotspot__item--right > .uncoder-hotspot__tooltip {
+  top: 50%;
+  left: calc(100% + var(--uncoder-hs-tip-offset));
+  transform: translate(-6px, -50%);
+}
+
+/* Open: click trigger (.is-open), hover trigger (hover / keyboard focus), no-JS fallback (focus). */
+.uncoder-hotspot__item.is-open > .uncoder-hotspot__tooltip,
+.uncoder-hotspot--hover > .uncoder-hotspot__item:is(:hover, :focus-within):not(.is-dismissed) > .uncoder-hotspot__tooltip,
+html:not(.uncoder-js) .uncoder-hotspot__item:focus-within > .uncoder-hotspot__tooltip {
+  visibility: visible;
+  opacity: 1;
+  transition-delay: 0s;
+}
+
+.uncoder-hotspot__item--top.is-open > .uncoder-hotspot__tooltip,
+.uncoder-hotspot--hover > .uncoder-hotspot__item--top:is(:hover, :focus-within):not(.is-dismissed) > .uncoder-hotspot__tooltip {
+  transform: translate(calc(-50% + var(--uncoder-hs-shift)), 0);
+}
+
+.uncoder-hotspot__item--bottom.is-open > .uncoder-hotspot__tooltip,
+.uncoder-hotspot--hover > .uncoder-hotspot__item--bottom:is(:hover, :focus-within):not(.is-dismissed) > .uncoder-hotspot__tooltip {
+  transform: translate(calc(-50% + var(--uncoder-hs-shift)), 0);
+}
+
+.uncoder-hotspot__item--left.is-open > .uncoder-hotspot__tooltip,
+.uncoder-hotspot__item--right.is-open > .uncoder-hotspot__tooltip,
+.uncoder-hotspot--hover > .uncoder-hotspot__item--left:is(:hover, :focus-within):not(.is-dismissed) > .uncoder-hotspot__tooltip,
+.uncoder-hotspot--hover > .uncoder-hotspot__item--right:is(:hover, :focus-within):not(.is-dismissed) > .uncoder-hotspot__tooltip {
+  transform: translate(0, -50%);
+}
+
+/* Hover bridge so the pointer can travel from the marker into the tooltip. It covers only the gap on
+   the marker's side: reaching out on every side, a closed tooltip near the edge widened the page. */
+.uncoder-hotspot__item > .uncoder-hotspot__tooltip::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.uncoder-hotspot__item--top > .uncoder-hotspot__tooltip::before {
+  bottom: calc(-1 * var(--uncoder-hs-tip-offset) - 4px);
+}
+
+.uncoder-hotspot__item--bottom > .uncoder-hotspot__tooltip::before {
+  top: calc(-1 * var(--uncoder-hs-tip-offset) - 4px);
+}
+
+.uncoder-hotspot__item--left > .uncoder-hotspot__tooltip::before {
+  right: calc(-1 * var(--uncoder-hs-tip-offset) - 4px);
+}
+
+.uncoder-hotspot__item--right > .uncoder-hotspot__tooltip::before {
+  left: calc(-1 * var(--uncoder-hs-tip-offset) - 4px);
+}
+
+.uncoder-hotspot__tooltip > .uncoder-hotspot__title {
+  margin: 0 0 4px;
+  color: var(--uncoder-c-heading, #111827);
+  font-weight: 600;
+}
+
+.uncoder-hotspot__tooltip > .uncoder-hotspot__text {
+  margin: 0;
+}
+
+.uncoder-hotspot__tooltip > .uncoder-hotspot__link {
+  display: inline-block;
+  margin-top: 8px;
+  color: var(--uncoder-c-primary, #2b59ff);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.uncoder-hotspot__tooltip > .uncoder-hotspot__link:is(:hover, :focus-visible) {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uncoder-hotspot--pulse .uncoder-hotspot__item > .uncoder-hotspot__marker::before {
+    animation: none;
+    opacity: 0;
+  }
+
+  .uncoder-hotspot__item > .uncoder-hotspot__marker,
+  .uncoder-hotspot__marker > .uncoder-hotspot__icon,
+  .uncoder-hotspot__item > .uncoder-hotspot__tooltip {
+    transition: none;
+  }
+}

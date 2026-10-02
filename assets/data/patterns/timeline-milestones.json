@@ -1,0 +1,150 @@
+{
+	"id": "timeline-milestones",
+	"title": "Timeline: company milestones",
+	"category": "content",
+	"description": "Centered intro and an alternating vertical timeline of four milestones (date, title, text). Switches to a single left-aligned line on phones.",
+	"keywords": [
+		"timeline",
+		"history",
+		"milestones",
+		"journey",
+		"story",
+		"roadmap"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "Timeline",
+			"settings": {
+				"gap": {
+					"size": 56,
+					"unit": "px"
+				},
+				"gap_mobile": {
+					"size": 40,
+					"unit": "px"
+				}
+			},
+			"children": [
+				{
+					"type": "container",
+					"settings": {
+						"gap": {
+							"size": 16,
+							"unit": "px"
+						},
+						"align": "center"
+					},
+					"children": [
+						{
+							"type": "heading",
+							"settings": {
+								"title": "Our journey",
+								"tag": "p",
+								"typography": {
+									"preset": "eyebrow"
+								},
+								"color": "var(--uncoder-c-primary)",
+								"align": "center"
+							}
+						},
+						{
+							"type": "heading",
+							"settings": {
+								"title": "How we got here",
+								"tag": "h2",
+								"typography": {
+									"preset": "h2"
+								},
+								"align": "center",
+								"max_width": {
+									"size": 20,
+									"unit": "ch"
+								},
+								"text_wrap": "balance"
+							}
+						},
+						{
+							"type": "text-editor",
+							"settings": {
+								"content": "<p>A few of the moments that shaped who we are today.</p>",
+								"typography": {
+									"preset": "lead"
+								},
+								"align": "center",
+								"max_width": {
+									"size": 58,
+									"unit": "ch"
+								}
+							}
+						}
+					]
+				},
+				{
+					"type": "timeline",
+					"settings": {
+						"items": [
+							{
+								"date": "[Year]",
+								"title": "The idea",
+								"description": "[How the company started — the problem you noticed and the first people involved.]",
+								"icon": {
+									"library": "lucide",
+									"value": "lightbulb"
+								}
+							},
+							{
+								"date": "[Year]",
+								"title": "First customers",
+								"description": "[Your first project or customer and what you learned from it.]",
+								"icon": {
+									"library": "lucide",
+									"value": "users"
+								}
+							},
+							{
+								"date": "[Year]",
+								"title": "Growing the team",
+								"description": "[A milestone such as a new office, a key hire or a new service.]",
+								"icon": {
+									"library": "lucide",
+									"value": "flag"
+								}
+							},
+							{
+								"date": "Today",
+								"title": "Where we are now",
+								"description": "[What you focus on today and where you are heading next.]",
+								"icon": {
+									"library": "lucide",
+									"value": "rocket"
+								}
+							}
+						],
+						"title_tag": "h3",
+						"layout": "alternate",
+						"marker": "dot",
+						"marker_color": "var(--uncoder-c-primary)",
+						"line_color": "var(--uncoder-c-border)",
+						"card_background": "var(--uncoder-c-surface)",
+						"card_radius": {
+							"top": 16,
+							"right": 16,
+							"bottom": 16,
+							"left": 16,
+							"unit": "px",
+							"linked": true
+						},
+						"date_color": "var(--uncoder-c-primary)",
+						"date_typography": {
+							"preset": "eyebrow"
+						},
+						"title_typography": {
+							"preset": "h5"
+						}
+					}
+				}
+			]
+		}
+	]
+}

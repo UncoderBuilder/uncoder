@@ -1,0 +1,186 @@
+/* SoundCloud — the box keeps the player height; the facade (a button drawn locally) fills it until
+   the "embed-facade" module swaps in SoundCloud's iframe. --uncoder-soundcloud-accent comes from the
+   widget's button color. */
+
+.uncoder-soundcloud {
+  --uncoder-soundcloud-h-auto: 300px;
+  --uncoder-soundcloud-accent: #ff5500;
+  position: relative;
+  height: var(--uncoder-soundcloud-h, var(--uncoder-soundcloud-h-auto));
+  overflow: hidden;
+  line-height: 0;
+  isolation: isolate;
+}
+.uncoder-soundcloud--classic {
+  --uncoder-soundcloud-h-auto: 166px;
+}
+.uncoder-soundcloud--playlist {
+  --uncoder-soundcloud-h-auto: 450px;
+}
+
+.uncoder-soundcloud__iframe {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* ------------------------------------------------------------------ Facade */
+
+.uncoder-soundcloud--visual {
+  --uncoder-soundcloud-fg-auto: #fff;
+  --uncoder-soundcloud-bg-auto:
+    radial-gradient(120% 90% at 12% 8%, color-mix(in srgb, var(--uncoder-soundcloud-accent) 38%, transparent), transparent 60%),
+    linear-gradient(160deg, #2b2e36, #101216);
+}
+.uncoder-soundcloud--classic {
+  --uncoder-soundcloud-fg-auto: #222;
+  --uncoder-soundcloud-bg-auto: #fff;
+}
+
+/* ".uncoder" keeps theme button styles out. */
+.uncoder .uncoder-soundcloud__facade {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px 16px;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 18px 20px 14px;
+  border: 0;
+  border-radius: 0;
+  background: var(--uncoder-soundcloud-bg, var(--uncoder-soundcloud-bg-auto));
+  box-shadow: none;
+  color: var(--uncoder-soundcloud-fg, var(--uncoder-soundcloud-fg-auto));
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.35;
+  text-align: start;
+  text-transform: none;
+  letter-spacing: normal;
+  cursor: pointer;
+}
+.uncoder-soundcloud--classic .uncoder-soundcloud__facade {
+  padding: 14px 16px 10px;
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.08);
+}
+.uncoder .uncoder-soundcloud__facade[hidden] {
+  display: none;
+}
+.uncoder-soundcloud__facade:focus-visible {
+  outline: 3px solid var(--uncoder-soundcloud-accent);
+  outline-offset: -3px;
+}
+
+.uncoder-soundcloud__play {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-color: var(--uncoder-soundcloud-accent);
+  box-shadow: 0 6px 18px rgb(0 0 0 / 0.25);
+  color: #fff;
+  transition: transform 0.2s;
+}
+.uncoder-soundcloud--classic .uncoder-soundcloud__play {
+  width: 48px;
+  height: 48px;
+  box-shadow: none;
+}
+.uncoder-soundcloud__play .uncoder-svg {
+  width: 42%;
+  height: 42%;
+  margin-left: 8%;
+  fill: currentColor;
+}
+.uncoder-soundcloud__facade:is(:hover, :focus-visible) .uncoder-soundcloud__play {
+  transform: scale(1.06);
+}
+
+.uncoder-soundcloud__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.uncoder-soundcloud__user {
+  overflow: hidden;
+  font-size: 0.86em;
+  opacity: 0.75;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.uncoder-soundcloud__title {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  font-size: 1.15em;
+  font-weight: 600;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+.uncoder-soundcloud--visual .uncoder-soundcloud__title {
+  font-size: 1.35em;
+}
+
+.uncoder-soundcloud__wave {
+  grid-column: 1 / -1;
+  align-self: end;
+  width: 100%;
+  height: min(100%, 64px);
+  min-height: 0;
+  fill: currentColor;
+  opacity: 0.35;
+}
+.uncoder-soundcloud--classic .uncoder-soundcloud__wave {
+  height: min(100%, 44px);
+}
+
+.uncoder-soundcloud__note {
+  display: flex;
+  grid-column: 1 / -1;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  opacity: 0.7;
+}
+.uncoder-soundcloud__note .uncoder-svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* Editor placeholder */
+.uncoder-soundcloud--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: auto;
+  min-height: 140px;
+  padding: 24px;
+  border: 1px dashed #c3c9d4;
+  background-color: #f3f4f6;
+  color: #5b6474;
+  font: 500 13px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif;
+  text-align: center;
+}
+.uncoder-soundcloud--empty .uncoder-svg {
+  width: 20px;
+  height: 20px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uncoder-soundcloud__play {
+    transition: none;
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "uncoder",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Build setup for the compiled scripts in assets/build (sources in src/).",
+  "license": "GPL-2.0-or-later",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "node build.mjs --watch",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "immer": "^11.1.18",
+    "lucide-react": "^1.48.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "zustand": "^5.0.15"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "esbuild": "^0.28.2",
+    "lottie-web": "^5.13.0",
+    "typescript": "^5.9.0"
+  }
+}

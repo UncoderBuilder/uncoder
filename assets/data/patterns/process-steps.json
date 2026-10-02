@@ -1,0 +1,151 @@
+{
+	"id": "process-steps",
+	"title": "Process: four steps",
+	"category": "content",
+	"description": "Centered intro and a numbered, horizontally connected four-step process (stacks vertically on phones). Great for “How it works”.",
+	"keywords": [
+		"process",
+		"steps",
+		"how it works",
+		"workflow",
+		"onboarding",
+		"timeline"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "Process",
+			"settings": {
+				"gap": {
+					"size": 56,
+					"unit": "px"
+				},
+				"gap_mobile": {
+					"size": 40,
+					"unit": "px"
+				},
+				"background": {
+					"type": "classic",
+					"color": "var(--uncoder-c-surface)"
+				},
+				"_css_id": "how-it-works"
+			},
+			"children": [
+				{
+					"type": "container",
+					"settings": {
+						"gap": {
+							"size": 16,
+							"unit": "px"
+						},
+						"align": "center"
+					},
+					"children": [
+						{
+							"type": "heading",
+							"settings": {
+								"title": "How it works",
+								"tag": "p",
+								"typography": {
+									"preset": "eyebrow"
+								},
+								"color": "var(--uncoder-c-primary)",
+								"align": "center"
+							}
+						},
+						{
+							"type": "heading",
+							"settings": {
+								"title": "From first call to launch in four steps",
+								"tag": "h2",
+								"typography": {
+									"preset": "h2"
+								},
+								"align": "center",
+								"max_width": {
+									"size": 20,
+									"unit": "ch"
+								},
+								"text_wrap": "balance"
+							}
+						},
+						{
+							"type": "text-editor",
+							"settings": {
+								"content": "<p>A clear, predictable process — you always know what happens next and what we need from you.</p>",
+								"typography": {
+									"preset": "lead"
+								},
+								"align": "center",
+								"max_width": {
+									"size": 58,
+									"unit": "ch"
+								}
+							}
+						}
+					]
+				},
+				{
+					"type": "steps",
+					"settings": {
+						"items": [
+							{
+								"title": "Intro call",
+								"description": "We talk about your goals, timeline and budget, and answer your questions.",
+								"icon": {
+									"library": "lucide",
+									"value": "phone"
+								}
+							},
+							{
+								"title": "Clear plan",
+								"description": "You get a written plan with scope, milestones and a fixed quote.",
+								"icon": {
+									"library": "lucide",
+									"value": "clipboard-check"
+								}
+							},
+							{
+								"title": "Build & review",
+								"description": "We share progress every week and refine it together with you.",
+								"icon": {
+									"library": "lucide",
+									"value": "pen-tool"
+								}
+							},
+							{
+								"title": "Launch & support",
+								"description": "We go live, check everything works and stay on hand afterwards.",
+								"icon": {
+									"library": "lucide",
+									"value": "rocket"
+								}
+							}
+						],
+						"title_tag": "h3",
+						"layout": "horizontal",
+						"stack_on": "mobile",
+						"marker": "number",
+						"numbering": "zero",
+						"connector": true,
+						"marker_background": "var(--uncoder-c-primary)",
+						"marker_color": "var(--uncoder-c-white)",
+						"line_color": "var(--uncoder-c-border)",
+						"title_typography": {
+							"preset": "h5"
+						},
+						"description_color": "var(--uncoder-c-text)",
+						"gap": {
+							"size": 32,
+							"unit": "px"
+						},
+						"gap_tablet": {
+							"size": 20,
+							"unit": "px"
+						}
+					}
+				}
+			]
+		}
+	]
+}

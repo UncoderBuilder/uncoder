@@ -1,0 +1,1013 @@
+/* Uncoder — front-end base styles.
+   Every document is wrapped in .uncoder.uncoder-{id}; each element is one tag with the classes
+   uncoder-{type} uncoder-{id} (an id only for an anchor id). PLAN.md §17 and §19.
+   Containers expose their layout through CSS variables that element CSS overrides. */
+
+.uncoder,
+.uncoder *,
+.uncoder *::before,
+.uncoder *::after {
+  box-sizing: border-box;
+}
+
+.uncoder {
+  --uncoder-kit-gap-fallback: 20px;
+}
+
+/* Block themes outline every focused element, including after a mouse click (:where(.wp-site-blocks
+   :focus)). Uncoder draws its own rings with :focus-visible, so keyboard users keep them. */
+.uncoder :focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Block themes space top-level site blocks (margin-block-start = block gap). Uncoder headers,
+   footers and full-width content sit flush against each other, like the design intends. */
+.wp-site-blocks > :is(.uncoder-location, .uncoder-main) {
+  margin-block-start: 0;
+}
+
+/* ------------------------------------------------------------------ Scrolling
+   #anchor targets stop below a sticky header (--uncoder-header-h, set by modules/header.ts) plus the
+   Design System scroll offset. Smooth scrolling is a Design System setting and honours reduced motion. */
+
+html {
+  scroll-padding-top: calc(var(--uncoder-header-h, 0px) + var(--uncoder-scroll-offset, 16px));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html:has(> body.uncoder-smooth-scroll) {
+    scroll-behavior: smooth;
+  }
+}
+
+.uncoder-back-to-top {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 980;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  background-color: var(--uncoder-c-primary, #2b59ff);
+  box-shadow: 0 12px 26px -12px rgb(15 23 42 / 0.5);
+  color: #fff;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s, filter 0.15s ease;
+}
+
+.uncoder-back-to-top--left {
+  right: auto;
+  left: 24px;
+}
+
+.uncoder-back-to-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+  transition-delay: 0s;
+}
+
+.uncoder-back-to-top:is(:hover, :focus-visible) {
+  color: #fff;
+  filter: brightness(0.9);
+}
+
+.uncoder-back-to-top:focus-visible {
+  outline: 2px solid var(--uncoder-c-primary, #2b59ff);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uncoder-back-to-top {
+    transition: none;
+  }
+}
+
+/* ------------------------------------------------------------------ Dark mode
+   <html data-uncoder-scheme> is set before paint (Frontend::color_scheme_script()); kit.css swaps the colors. */
+
+html[data-uncoder-scheme="dark"] .uncoder-hide-in-dark,
+html:not([data-uncoder-scheme="dark"]) .uncoder-hide-in-light {
+  display: none !important;
+}
+
+/* ------------------------------------------------------------------ Header behaviour
+   Classes on the header location wrapper (Theme\Header_Behavior); states toggled by modules/header.ts:
+   is-scrolled (past the offset), is-hidden (reveal mode, scrolling down), is-transparent (overlaying). */
+
+.uncoder-location--header.uncoder-header--sticky {
+  position: sticky;
+  top: var(--wp-admin--admin-bar--height, 0px);
+  z-index: 990;
+  transition: transform 0.3s ease, box-shadow 0.25s ease;
+}
+
+.uncoder-location--header.uncoder-header--transparent {
+  position: absolute;
+  top: var(--wp-admin--admin-bar--height, 0px);
+  right: 0;
+  left: 0;
+  z-index: 990;
+}
+
+.uncoder-location--header.uncoder-header--transparent.uncoder-header--sticky {
+  position: fixed;
+}
+
+.uncoder-location--header.uncoder-header--sticky > .uncoder-container {
+  transition: background-color 0.25s ease, min-height 0.25s ease, padding 0.25s ease;
+}
+
+.uncoder-location--header.uncoder-header--shadow.is-scrolled {
+  box-shadow: 0 10px 28px -14px rgb(15 23 42 / 0.28);
+}
+
+.uncoder-location--header.uncoder-header--scrolled-bg.is-scrolled > .uncoder-container {
+  background-color: var(--uncoder-hdr-scrolled-bg);
+}
+
+.uncoder-location--header.uncoder-header--shrink.is-scrolled > .uncoder-container {
+  min-height: var(--uncoder-hdr-scrolled-h);
+}
+
+.uncoder-location--header.uncoder-header--reveal.is-hidden {
+  transform: translateY(calc(-100% - var(--wp-admin--admin-bar--height, 0px)));
+}
+
+/* Transparent: no background, light text, menu bar and toggle recoloured (dropdowns keep their colours). */
+.uncoder-location--header.uncoder-header--transparent.is-transparent > .uncoder-container {
+  background-color: transparent;
+}
+
+.uncoder-location--header.uncoder-header--transparent.is-transparent {
+  --uncoder-heading-color: var(--uncoder-hdr-t-color);
+  box-shadow: none;
+  color: var(--uncoder-hdr-t-color);
+}
+
+.uncoder.uncoder-location--header.is-transparent .uncoder-nav-menu {
+  --uncoder-nav-color: var(--uncoder-hdr-t-color);
+  --uncoder-nav-color-hover: var(--uncoder-hdr-t-color);
+  --uncoder-nav-color-active: var(--uncoder-hdr-t-color);
+  --uncoder-nav-pointer: var(--uncoder-hdr-t-color);
+}
+
+.uncoder.uncoder-location--header.is-transparent :is(.uncoder-nav-menu__toggle, .uncoder-site-title, .uncoder-site-title a, .uncoder-svg) {
+  color: var(--uncoder-hdr-t-color);
+}
+
+/* Scoped (0,2,0)+ so it beats the widget's own .uncoder-site-logo__img display rule. */
+.uncoder-location--header .uncoder-site-logo__img--alt,
+.uncoder-location--header.is-transparent .uncoder-site-logo__img--normal {
+  display: none;
+}
+
+.uncoder-location--header.is-transparent .uncoder-site-logo__img--alt {
+  display: inline-block;
+}
+
+.uncoder-location--header.uncoder-header--logo-white .uncoder-site-logo__img {
+  transition: filter 0.25s ease;
+}
+
+.uncoder-location--header.uncoder-header--logo-white.is-transparent .uncoder-site-logo__img {
+  filter: brightness(0) invert(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uncoder-location--header.uncoder-header--sticky,
+  .uncoder-location--header.uncoder-header--sticky > .uncoder-container {
+    transition: none;
+  }
+}
+
+/* ------------------------------------------------------------------ Containers */
+
+.uncoder-container {
+  --uncoder-dir: column;
+  --uncoder-wrap: nowrap;
+  --uncoder-justify: normal;
+  --uncoder-align: normal;
+  --uncoder-gap: var(--uncoder-kit-gap, 20px);
+  --uncoder-row-gap: var(--uncoder-gap);
+  --uncoder-width: 100%;
+  --uncoder-boxed-width: var(--uncoder-container, 1200px);
+  --uncoder-grid-cols: repeat(3, minmax(0, 1fr));
+  --uncoder-grid-rows: none;
+  --uncoder-grid-flow: row;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: var(--uncoder-width);
+  max-width: 100%;
+  min-width: 0;
+  flex-shrink: 1;
+}
+
+/* Flex is the default layout; boxed containers lay out their inner box. */
+.uncoder-container:not(.uncoder-container--boxed, .uncoder-container--grid),
+.uncoder-container--boxed:not(.uncoder-container--grid) > .uncoder-container__inner {
+  display: flex;
+  flex-direction: var(--uncoder-dir);
+  flex-wrap: var(--uncoder-wrap);
+  justify-content: var(--uncoder-justify);
+  align-items: var(--uncoder-align);
+  gap: var(--uncoder-row-gap) var(--uncoder-gap);
+}
+
+.uncoder-container--grid:not(.uncoder-container--boxed),
+.uncoder-container--grid.uncoder-container--boxed > .uncoder-container__inner {
+  display: grid;
+  grid-template-columns: var(--uncoder-grid-cols);
+  grid-template-rows: var(--uncoder-grid-rows);
+  grid-auto-flow: var(--uncoder-grid-flow);
+  justify-content: var(--uncoder-justify);
+  align-items: var(--uncoder-align);
+  gap: var(--uncoder-row-gap) var(--uncoder-gap);
+}
+
+.uncoder-container--grid > .uncoder-container,
+.uncoder-container--grid > .uncoder-container__inner > .uncoder-container {
+  width: auto;
+}
+
+.uncoder-container--boxed {
+  padding-inline: var(--uncoder-gutter, 24px);
+}
+
+/* Rows that justify their content: child containers take their content width unless they set one. */
+.uncoder-container--fit > .uncoder-container,
+.uncoder-container--fit > .uncoder-container__inner > .uncoder-container {
+  --uncoder-width: auto;
+}
+
+/* Top-level sections of pages get the Design System section spacing; any padding setting overrides it
+   (zero specificity beyond the class). Headers, footers, popups, menus and cards stay tight. */
+:where(.uncoder:not(.uncoder--header, .uncoder--footer, .uncoder--popup, .uncoder--mega-menu, .uncoder--loop-item)) > .uncoder-container {
+  padding-block: var(--uncoder-section-space, 96px);
+}
+
+/* Cards, popups and menu panels are not page-wide: a "boxed" top-level container there spans its box. */
+:where(.uncoder--loop-item, .uncoder--popup, .uncoder--mega-menu) > .uncoder-container--boxed {
+  --uncoder-boxed-width: 100%;
+  padding-inline: 0;
+}
+
+.uncoder-container--boxed > .uncoder-container__inner {
+  position: relative;
+  width: 100%;
+  max-width: var(--uncoder-boxed-width);
+  margin-inline: auto;
+  flex-grow: 1;
+}
+
+a.uncoder-container {
+  color: inherit;
+  text-decoration: none;
+}
+
+.uncoder-container--overlay,
+.uncoder-container--video,
+.uncoder-container--bg,
+.uncoder-container--shape {
+  isolation: isolate;
+}
+
+.uncoder-container--overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.uncoder-bg-video {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.uncoder-bg-video__el,
+.uncoder-bg-video iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  min-width: 100%;
+  min-height: 100%;
+  object-fit: cover;
+  transform: translate(-50%, -50%);
+  border: 0;
+}
+
+/* Background layer: slideshows and moving images (runtime modules bg-slideshow / bg-motion). */
+.uncoder-container__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.uncoder-container__bg-layer {
+  position: absolute;
+  inset: 0;
+}
+
+/* A moving copy of the container's own (responsive) background image; the box's copy stays underneath
+   as the no-JS / reduced-motion fallback. The outer box only relays the values, it paints nothing. */
+.uncoder-container__bg--image,
+.uncoder-container__bg--image > .uncoder-container__bg-layer {
+  background-image: inherit;
+  background-position: inherit;
+  background-size: inherit;
+  background-repeat: inherit;
+}
+
+.uncoder-container__bg--image {
+  visibility: hidden;
+}
+
+.uncoder-container__bg--image > .uncoder-container__bg-layer {
+  visibility: visible;
+}
+
+.uncoder-container__bg--parallax > .uncoder-container__bg-layer {
+  inset: calc(var(--uncoder-bgm-extra, 12%) * -1) 0;
+}
+
+.uncoder-container__bg--mouse > .uncoder-container__bg-layer {
+  inset: calc(var(--uncoder-bgm-extra, 24px) * -1);
+}
+
+.uncoder-container__bg--parallax > .uncoder-container__bg-layer,
+.uncoder-container__bg--zoom-in > .uncoder-container__bg-layer,
+.uncoder-container__bg--zoom-out > .uncoder-container__bg-layer,
+.uncoder-container__bg--mouse > .uncoder-container__bg-layer {
+  will-change: translate, scale;
+}
+
+.uncoder-bg-slide {
+  position: absolute;
+  inset: 0;
+  background-size: var(--uncoder-ss-size, cover);
+  background-position: var(--uncoder-ss-pos, center center);
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity var(--uncoder-ss-speed, 1000ms) ease;
+}
+
+.uncoder-bg-slide.is-prev {
+  opacity: 1;
+  z-index: 0;
+}
+
+.uncoder-bg-slide.is-active {
+  opacity: 1;
+  z-index: 1;
+}
+
+.uncoder-bg-slides--slide .uncoder-bg-slide {
+  opacity: 1;
+  translate: 100% 0;
+  transition: none;
+}
+
+.uncoder-bg-slides--slide .uncoder-bg-slide.is-active,
+.uncoder-bg-slides--slide .uncoder-bg-slide.is-prev {
+  transition: translate var(--uncoder-ss-speed, 1000ms) cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.uncoder-bg-slides--slide .uncoder-bg-slide.is-active {
+  translate: 0 0;
+}
+
+.uncoder-bg-slides--slide .uncoder-bg-slide.is-prev {
+  translate: -100% 0;
+}
+
+/* Ken Burns: the zoom keeps running while the slide fades out (same animation, so it is not restarted). */
+.uncoder-bg-slides--kb-in .uncoder-bg-slide:is(.is-active, .is-prev),
+.uncoder-bg-slides--kb-out .uncoder-bg-slide:is(.is-active, .is-prev) {
+  animation: uncoder-kb-in calc(var(--uncoder-ss-duration, 5000ms) + var(--uncoder-ss-speed, 1000ms) * 2) linear both;
+}
+
+.uncoder-bg-slides--kb-out .uncoder-bg-slide:is(.is-active, .is-prev) {
+  animation-name: uncoder-kb-out;
+}
+
+.uncoder-bg-slide:nth-child(4n + 2) { transform-origin: 20% 30%; }
+.uncoder-bg-slide:nth-child(4n + 3) { transform-origin: 80% 70%; }
+.uncoder-bg-slide:nth-child(4n + 4) { transform-origin: 30% 80%; }
+
+@keyframes uncoder-kb-in { from { scale: 1; } to { scale: 1.15; } }
+@keyframes uncoder-kb-out { from { scale: 1.15; } to { scale: 1; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .uncoder-bg-slide:is(.is-active, .is-prev) {
+    animation: none !important;
+  }
+  .uncoder-bg-slides--slide .uncoder-bg-slide {
+    translate: none !important;
+    opacity: 0;
+    transition: opacity var(--uncoder-ss-speed, 1000ms) ease;
+  }
+  .uncoder-bg-slides--slide .uncoder-bg-slide:is(.is-active, .is-prev) {
+    opacity: 1;
+  }
+}
+
+/* Shape dividers: drawn hanging from the top edge; the bottom one is the same SVG turned over. */
+.uncoder-shape {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  overflow: hidden;
+  line-height: 0;
+  direction: ltr;
+  pointer-events: none;
+}
+
+.uncoder-shape--top {
+  top: -1px;
+}
+
+.uncoder-shape--bottom {
+  bottom: -1px;
+  rotate: 180deg;
+}
+
+.uncoder-shape svg {
+  display: block;
+  position: relative;
+  left: 50%;
+  width: calc(var(--uncoder-shape-w, 100%) + 1.3px);
+  max-width: none;
+  height: var(--uncoder-shape-h, clamp(36px, 7vw, 96px));
+  translate: -50% 0;
+}
+
+.uncoder-shape--flip svg {
+  scale: -1 1;
+}
+
+.uncoder-shape--front {
+  z-index: 2;
+}
+
+.uncoder-shape__fill {
+  fill: var(--uncoder-shape-color, #fff);
+}
+
+/* ------------------------------------------------------------------ Widgets (common) */
+
+/* Every element (zero specificity: a widget's own block rules, decoration layers and element settings win). */
+:where(.uncoder, .uncoder-container, .uncoder-container__inner) > * {
+  position: relative;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.uncoder-svg {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+img.uncoder-svg--img {
+  object-fit: contain;
+}
+
+/* Heading */
+.uncoder .uncoder-heading {
+  margin: 0;
+  padding: 0;
+  overflow-wrap: break-word;
+}
+.uncoder .uncoder-heading a {
+  color: inherit;
+  text-decoration: none;
+}
+.uncoder-heading--centered {
+  margin-inline: auto !important;
+}
+
+/* Text */
+.uncoder-text {
+  overflow-wrap: break-word;
+}
+.uncoder-text > :first-child {
+  margin-top: 0;
+}
+.uncoder-text > :last-child {
+  margin-bottom: 0;
+}
+.uncoder-text--centered {
+  margin-inline: auto;
+}
+.uncoder-text--dropcap > p:first-of-type::first-letter {
+  float: left;
+  margin: 0.08em 0.12em 0 0;
+  font-size: 3.4em;
+  line-height: 0.8;
+  font-weight: 700;
+}
+
+/* Button */
+/* The Button element: a flex row holding the link. A stretched element (in a row) keeps the link at its
+   own height, as when the link sat in an inner wrapper. */
+.uncoder-button {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+/* In a flex row a button keeps its natural width (no squeezed, two-line labels); it is still capped
+   at the row width, where the label may wrap. */
+.uncoder-button {
+  flex-shrink: 0;
+  max-width: 100%;
+}
+
+.uncoder-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  width: var(--uncoder-btn-width, auto);
+  max-width: 100%;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  border: 0 solid transparent;
+  line-height: 1.2;
+  white-space: normal;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+.uncoder-btn .uncoder-svg {
+  width: 1.1em;
+  height: 1.1em;
+  transition: transform 0.2s;
+}
+.uncoder-btn:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+.uncoder-btn.uncoder-btn--secondary {
+  background-color: var(--uncoder-c-secondary, #0b1b3f);
+  color: #fff;
+}
+.uncoder-btn.uncoder-btn--secondary:hover {
+  background-color: color-mix(in srgb, var(--uncoder-c-secondary, #0b1b3f) 85%, #fff);
+  color: #fff;
+}
+.uncoder-btn.uncoder-btn--outline {
+  background-color: transparent;
+  color: var(--uncoder-c-primary, #2b59ff);
+  box-shadow: inset 0 0 0 1.5px currentColor;
+}
+.uncoder-btn.uncoder-btn--outline:hover {
+  background-color: color-mix(in srgb, var(--uncoder-c-primary, #2b59ff) 8%, transparent);
+  color: var(--uncoder-c-primary, #2b59ff);
+}
+.uncoder-btn.uncoder-btn--ghost {
+  background-color: color-mix(in srgb, var(--uncoder-c-primary, #2b59ff) 10%, transparent);
+  color: var(--uncoder-c-primary, #2b59ff);
+}
+.uncoder-btn.uncoder-btn--ghost:hover {
+  background-color: color-mix(in srgb, var(--uncoder-c-primary, #2b59ff) 18%, transparent);
+  color: var(--uncoder-c-primary, #2b59ff);
+}
+.uncoder-btn.uncoder-btn--link {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  color: var(--uncoder-c-primary, #2b59ff);
+}
+.uncoder-btn.uncoder-btn--link:hover {
+  background: none;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  color: var(--uncoder-c-primary, #2b59ff);
+}
+.uncoder-btn.uncoder-btn--sm {
+  padding: 0.6em 1.1em;
+  font-size: 0.875em;
+}
+.uncoder-btn.uncoder-btn--lg {
+  padding: 1.05em 2em;
+  font-size: 1.0625em;
+}
+.uncoder-btn.uncoder-btn--xl {
+  padding: 1.25em 2.5em;
+  font-size: 1.15em;
+}
+
+/* Button hover effects */
+.uncoder-hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px -10px rgb(0 0 0 / 0.35);
+}
+.uncoder-hover-grow:hover {
+  transform: scale(1.04);
+}
+.uncoder-hover-shrink:hover {
+  transform: scale(0.96);
+}
+.uncoder-hover-pulse:hover {
+  animation: uncoder-pulse 1s ease-in-out infinite;
+}
+.uncoder-hover-arrow:hover .uncoder-svg {
+  transform: translateX(4px);
+}
+.uncoder-hover-shine {
+  position: relative;
+  overflow: hidden;
+}
+.uncoder-hover-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 0.35) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 0.6s;
+}
+.uncoder-hover-shine:hover::after {
+  transform: translateX(120%);
+}
+.uncoder-hover-underline .uncoder-btn__text {
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1.5px no-repeat;
+  transition: background-size 0.25s;
+}
+.uncoder-hover-underline:hover .uncoder-btn__text {
+  background-size: 100% 1.5px;
+}
+.uncoder-hover-fill {
+  background-image: linear-gradient(var(--uncoder-btn-fill, rgb(255 255 255 / 0.18)), var(--uncoder-btn-fill, rgb(255 255 255 / 0.18)));
+  background-size: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.35s, background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+.uncoder-hover-fill:hover {
+  background-size: 100% 100%;
+}
+.uncoder-hover-flip {
+  overflow: hidden;
+}
+.uncoder-hover-flip .uncoder-btn__text {
+  display: inline-block;
+  text-shadow: 0 3em currentColor;
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.uncoder-hover-flip:hover .uncoder-btn__text {
+  transform: translateY(-3em);
+}
+@keyframes uncoder-pulse {
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Image */
+.uncoder-image {
+  margin: 0;
+}
+.uncoder-image img {
+  display: inline-block;
+  max-width: 100%;
+  height: auto;
+  vertical-align: middle;
+}
+.uncoder-image__link {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  border-radius: inherit;
+}
+.uncoder-image__caption {
+  margin-top: 0.6em;
+  font-size: 0.875em;
+  opacity: 0.8;
+}
+.uncoder-image--hover-zoom {
+  overflow: hidden;
+}
+.uncoder-image--hover-zoom img {
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.uncoder-image--hover-zoom:hover img {
+  transform: scale(1.06);
+}
+.uncoder-image--hover-lift img {
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.uncoder-image--hover-lift:hover img {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px -18px rgb(0 0 0 / 0.4);
+}
+.uncoder-image--hover-grayscale img {
+  filter: grayscale(1);
+  transition: filter 0.4s;
+}
+.uncoder-image--hover-grayscale:hover img {
+  filter: none;
+}
+.uncoder-image--hover-dim img {
+  transition: opacity 0.3s;
+}
+.uncoder-image--hover-dim:hover img {
+  opacity: 0.75;
+}
+.uncoder-image__img--placeholder {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  background: #eef0f4;
+}
+
+/* Icon. The variables are read with fallbacks (never declared here), so they can be set on the icon
+   itself (icon box) or on an ancestor (the Icon widget's root). */
+.uncoder-icon-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--uncoder-icon-size, 48px);
+  color: var(--uncoder-icon-color, var(--uncoder-c-primary, #2b59ff));
+  line-height: 1;
+  transition: color 0.2s, background-color 0.2s, border-color 0.2s;
+  text-decoration: none;
+}
+.uncoder-icon-wrap--stacked {
+  padding: var(--uncoder-icon-pad, 0.45em);
+  background-color: var(--uncoder-icon-shape, color-mix(in srgb, var(--uncoder-icon-color, var(--uncoder-c-primary, #2b59ff)) 12%, transparent));
+}
+.uncoder-icon-wrap--framed {
+  padding: var(--uncoder-icon-pad, 0.45em);
+  border: 2px solid var(--uncoder-icon-shape, color-mix(in srgb, var(--uncoder-icon-color, var(--uncoder-c-primary, #2b59ff)) 12%, transparent));
+}
+/* Icon widget: the root fills whatever the container gives it and places the shape inside, so a
+   stacked or framed icon keeps its shape in stretched containers and Alignment works. */
+.uncoder-icon {
+  display: flex;
+  align-items: center;
+  justify-content: var(--uncoder-icon-align, center);
+  line-height: 1;
+  text-decoration: none;
+}
+.uncoder-icon-wrap--circle {
+  border-radius: 50%;
+}
+.uncoder-icon-wrap--rounded {
+  border-radius: 0.3em;
+}
+
+/* Divider */
+.uncoder-divider {
+  --uncoder-divider-color: var(--uncoder-c-border, #e5e7eb);
+  --uncoder-divider-weight: 1px;
+  --uncoder-divider-style: solid;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding-block: 12px;
+}
+.uncoder-divider::before,
+.uncoder-divider::after {
+  content: "";
+  flex: 1 1 0;
+  border-top: var(--uncoder-divider-weight) var(--uncoder-divider-style) var(--uncoder-divider-color);
+}
+.uncoder-divider--has-element {
+  column-gap: 1em;
+}
+.uncoder-divider__element {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+
+/* Spacer */
+.uncoder-spacer {
+  height: 48px;
+}
+
+/* ------------------------------------------------------------------ Motion */
+
+/* Interactions: a box shown by an interaction starts hidden (not in the editor canvas). */
+html:not(.uncoder-editing) .uncoder-ix-hidden {
+  display: none !important;
+}
+
+.uncoder-sticky {
+  position: sticky;
+  z-index: 50;
+}
+.uncoder-sticky:not(.uncoder-sticky--bottom) {
+  top: var(--uncoder-sticky-offset, 0px);
+}
+.admin-bar .uncoder-sticky:not(.uncoder-sticky--bottom) {
+  top: calc(var(--uncoder-sticky-offset, 0px) + 32px);
+}
+@media (max-width: 782px) {
+  .admin-bar .uncoder-sticky:not(.uncoder-sticky--bottom) {
+    top: calc(var(--uncoder-sticky-offset, 0px) + 46px);
+  }
+}
+.uncoder-sticky--bottom {
+  bottom: var(--uncoder-sticky-offset, 0px);
+}
+
+.uncoder-js .uncoder-anim:not(.uncoder-anim--in) {
+  opacity: 0;
+}
+.uncoder-anim--in {
+  animation: var(--uncoder-anim-name, uncoder-fade-in) var(--uncoder-anim-duration, 700ms) cubic-bezier(0.2, 0.8, 0.2, 1) var(--uncoder-anim-delay, 0ms) backwards;
+}
+/* Keyframes only set where an element starts: it ends on its own transform, opacity and filters. */
+[data-uncoder-anim="fade-in"] { --uncoder-anim-name: uncoder-fade-in; }
+[data-uncoder-anim="fade-up"] { --uncoder-anim-name: uncoder-fade-up; }
+[data-uncoder-anim="fade-down"] { --uncoder-anim-name: uncoder-fade-down; }
+[data-uncoder-anim="fade-left"] { --uncoder-anim-name: uncoder-fade-left; }
+[data-uncoder-anim="fade-right"] { --uncoder-anim-name: uncoder-fade-right; }
+[data-uncoder-anim="zoom-in"] { --uncoder-anim-name: uncoder-zoom-in; }
+[data-uncoder-anim="zoom-out"] { --uncoder-anim-name: uncoder-zoom-out; }
+[data-uncoder-anim="slide-up"] { --uncoder-anim-name: uncoder-slide-up; }
+[data-uncoder-anim="slide-down"] { --uncoder-anim-name: uncoder-slide-down; }
+[data-uncoder-anim="slide-left"] { --uncoder-anim-name: uncoder-slide-left; }
+[data-uncoder-anim="slide-right"] { --uncoder-anim-name: uncoder-slide-right; }
+[data-uncoder-anim="flip-up"] { --uncoder-anim-name: uncoder-flip-up; }
+[data-uncoder-anim="blur-in"] { --uncoder-anim-name: uncoder-blur-in; }
+
+@keyframes uncoder-fade-in { from { opacity: 0; } }
+@keyframes uncoder-fade-up { from { opacity: 0; transform: translateY(28px); } }
+@keyframes uncoder-fade-down { from { opacity: 0; transform: translateY(-28px); } }
+@keyframes uncoder-fade-left { from { opacity: 0; transform: translateX(-36px); } }
+@keyframes uncoder-fade-right { from { opacity: 0; transform: translateX(36px); } }
+@keyframes uncoder-zoom-in { from { opacity: 0; transform: scale(0.92); } }
+@keyframes uncoder-zoom-out { from { opacity: 0; transform: scale(1.08); } }
+@keyframes uncoder-slide-up { from { transform: translateY(80px); } }
+@keyframes uncoder-slide-down { from { transform: translateY(-80px); } }
+@keyframes uncoder-slide-left { from { transform: translateX(-100px); } }
+@keyframes uncoder-slide-right { from { transform: translateX(100px); } }
+@keyframes uncoder-flip-up { from { opacity: 0; transform: perspective(800px) rotateX(35deg); } }
+@keyframes uncoder-blur-in { from { opacity: 0; filter: blur(12px); } }
+
+/* Timeline animations (Common_Controls::animations, module animate). An element that starts hidden or
+   moved stays invisible until the module has put it in its start state; the failsafe shows it anyway
+   if the script never runs. */
+.uncoder-js .uncoder-animate--pre:not(.uncoder-animate--ready) {
+  visibility: hidden;
+  animation: uncoder-animate-failsafe 0s 3s forwards;
+}
+@keyframes uncoder-animate-failsafe { to { visibility: visible; } }
+
+.uncoder-split-w,
+.uncoder-split-in,
+.uncoder-split-c {
+  display: inline-block;
+}
+.uncoder-split-w {
+  white-space: nowrap;
+}
+:is(a, u, ins, del, s) .uncoder-split-w,
+.uncoder-split-w :is(.uncoder-split-in, .uncoder-split-c) {
+  text-decoration: inherit;
+}
+/* Room above and below the line box so ascenders and descenders are not clipped at rest. */
+.uncoder-split-mask {
+  overflow: clip;
+  padding-block: 0.12em 0.24em;
+  margin-block: -0.12em -0.24em;
+  vertical-align: bottom;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uncoder-js .uncoder-anim:not(.uncoder-anim--in) {
+    opacity: 1;
+  }
+  .uncoder-js .uncoder-animate--pre:not(.uncoder-animate--ready) {
+    visibility: visible;
+  }
+  .uncoder-anim--in,
+  .uncoder-hover-pulse:hover {
+    animation: none;
+  }
+  .uncoder-btn,
+  .uncoder-image img {
+    transition: none;
+  }
+}
+
+/* ------------------------------------------------------------------ Utilities */
+
+/* Text reveal (Common_Controls::reveal, module text-reveal). Hidden until split, like entrance animations. */
+.uncoder-js [data-uncoder-reveal]:not(.uncoder-reveal--ready) {
+  visibility: hidden;
+}
+
+.uncoder-reveal .uncoder-rw {
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* Inline-blocks do not inherit a link's underline; pass it down explicitly. */
+.uncoder-reveal :is(a, u, ins, del, s) .uncoder-rw,
+.uncoder-reveal .uncoder-rw .uncoder-r {
+  text-decoration: inherit;
+}
+
+.uncoder-reveal .uncoder-r {
+  display: inline-block;
+  opacity: 0;
+  transition-property: opacity, transform, filter;
+  transition-duration: var(--uncoder-reveal-duration, 700ms);
+  transition-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition-delay: calc(var(--uncoder-reveal-delay, 0ms) + var(--i, 0) * var(--uncoder-reveal-stagger, var(--uncoder-reveal-stagger-default, 60ms)));
+}
+
+.uncoder-reveal--fade-up .uncoder-r {
+  transform: translateY(0.45em);
+}
+
+.uncoder-reveal--blur .uncoder-r {
+  filter: blur(10px);
+}
+
+.uncoder-reveal--mask .uncoder-rw {
+  overflow: hidden;
+  padding-block: 0.08em;
+  margin-block: -0.08em;
+  vertical-align: bottom;
+}
+
+.uncoder-reveal--mask .uncoder-r {
+  opacity: 1;
+  transform: translateY(110%);
+}
+
+.uncoder-reveal--rotate .uncoder-rw {
+  perspective: 600px;
+}
+
+.uncoder-reveal--rotate .uncoder-r {
+  transform: rotateX(-75deg) translateY(0.2em);
+  transform-origin: 50% 100%;
+}
+
+.uncoder-reveal--in .uncoder-r {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+.uncoder-sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.uncoder-render-error {
+  padding: 12px 14px;
+  border: 1px dashed #f0525f;
+  border-radius: 8px;
+  color: #b91c1c;
+  font: 13px/1.4 system-ui, sans-serif;
+}
+
+.uncoder-canvas .uncoder-main,
+.uncoder-template-full-width .uncoder-main {
+  width: 100%;
+}
+
+/* Lazy backgrounds (Settings → Performance): images of sections below the fold wait until they come near the
+   screen. The head script adds uncoder-lazy-bg-on; without JavaScript nothing is held back. */
+.uncoder-lazy-bg-on .uncoder-lazy-bg:not(.is-bg-in),
+.uncoder-lazy-bg-on .uncoder-lazy-bg:not(.is-bg-in) > .uncoder-container__bg {
+  background-image: none !important;
+}
+
+@media print {
+  .uncoder-lazy-bg-on .uncoder-lazy-bg:not(.is-bg-in) {
+    background-image: none !important;
+  }
+}
