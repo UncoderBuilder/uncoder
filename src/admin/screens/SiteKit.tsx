@@ -7,22 +7,24 @@ import { cfg } from '../lib/config';
 import { toast, toastError } from '../lib/toast';
 import { Badge, Callout, Card, Checkbox } from '../ui/kit';
 
-type Part = 'design' | 'templates' | 'content' | 'menus' | 'media' | 'fonts' | 'settings' | 'snippets';
+type Part = 'design' | 'templates' | 'content' | 'posts' | 'menus' | 'media' | 'fonts' | 'settings' | 'snippets';
 const PART_LABEL: Record<Part, { label: string; help: string }> = {
   design: { label: 'Design System', help: 'Colors, fonts, text styles, sizes, buttons, classes' },
   templates: { label: 'Theme Builder', help: 'Headers, footers, singles, archives, popups, saved sections, loop items' },
   content: { label: 'Pages & posts', help: 'Everything built with Uncoder' },
+  posts: { label: 'Blog posts', help: 'Posts written in the WordPress editor, with dates, categories, tags and featured images' },
   menus: { label: 'Menus', help: 'With mega menus and menu locations' },
   media: { label: 'Images & files', help: 'Every file those use, inside the zip' },
   fonts: { label: 'Custom fonts', help: 'Uploaded font files' },
   settings: { label: 'Settings', help: 'Uncoder settings (never passwords or API keys)' },
   snippets: { label: 'Custom code', help: 'Head / body / footer snippets (imported switched off)' },
 };
-const ALL: Part[] = ['design', 'templates', 'content', 'menus', 'media', 'fonts', 'settings', 'snippets'];
+const ALL: Part[] = ['design', 'templates', 'content', 'posts', 'menus', 'media', 'fonts', 'settings', 'snippets'];
 
 interface Summary {
   templates: number;
   content: number;
+  posts: number;
   menus: number;
   fonts: number;
   snippets: number;
@@ -38,13 +40,15 @@ interface Preview {
   media: number;
   templates: Array<{ title: string; type: string; exists: boolean }>;
   content: Array<{ title: string; type: string; exists: boolean }>;
+  /** Missing in kits from before blog posts could be exported. */
+  posts?: Array<{ title: string; type: string; exists: boolean }>;
   menus: Array<{ name: string; items: number; exists: boolean }>;
   homepage: boolean;
 }
 interface Report {
-  /** Every template and page written (new or replaced). */
+  /** Every template, page and post written (new or replaced). */
   created: Array<{ id: number; title: string; kind: string; type: string; edit: string; replaced?: boolean }>;
-  /** New items (templates, pages, menus, snippets); replaced ones are counted in `replaced` only. */
+  /** New items (templates, pages, posts, menus, snippets); replaced ones are counted in `replaced` only. */
   added?: number;
   replaced: number;
   skipped: number;
@@ -54,6 +58,24 @@ interface Report {
   warnings: string[];
   homepage?: boolean;
 }
+
+/** How much of a part a kit holds (design and settings: 1 or 0). */
+const inKit = (p: Part, k: Preview): number => {
+  switch (p) {
+    case 'design':
+      return k.design ? 1 : 0;
+    case 'settings':
+      return k.settings ? 1 : 0;
+    case 'snippets':
+    case 'fonts':
+    case 'media':
+      return k[p];
+    case 'posts':
+      return (k.posts ?? []).length;
+    default:
+      return k[p].length;
+  }
+};
 
 const mb = (n: number) => (n >= 1048576 ? `${(n / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(n / 1024))} KB`);
 
@@ -66,7 +88,7 @@ export function SiteKitCard() {
     api<Summary>('site-kit/summary').then(setSummary).catch(() => {});
   }, []);
 
-  const count: Partial<Record<Part, number>> = summary ? { templates: summary.templates, content: summary.content, menus: summary.menus, fonts: summary.fonts, snippets: summary.snippets } : {};
+  const count: Partial<Record<Part, number>> = summary ? { templates: summary.templates, content: summary.content, posts: summary.posts, menus: summary.menus, fonts: summary.fonts, snippets: summary.snippets } : {};
   const run = async () => {
     setExporting('Collecting pages, templates and files…');
     try {
@@ -133,14 +155,7 @@ function ImportCard({ maxUpload }: { maxUpload: number }) {
       if (!res.ok) throw new ApiError(data?.message ?? `Upload failed (${res.status})`, res.status, data);
       const p = data as Preview;
       setPreview(p);
-      setParts(
-        Object.fromEntries(
-          ALL.map((part) => [
-            part,
-            part === 'design' ? p.design : part === 'settings' ? p.settings : part === 'snippets' ? p.snippets > 0 : part === 'fonts' ? p.fonts > 0 : part === 'media' ? p.media > 0 : part === 'templates' ? p.templates.length > 0 : part === 'content' ? p.content.length > 0 : p.menus.length > 0,
-          ]),
-        ) as Record<Part, boolean>,
-      );
+      setParts(Object.fromEntries(ALL.map((part) => [part, inKit(part, p) > 0])) as Record<Part, boolean>);
     } catch (e) {
       toastError(e);
     } finally {
@@ -164,7 +179,7 @@ function ImportCard({ maxUpload }: { maxUpload: number }) {
           setProgress(`Uploading images and files… ${done} / ${total}`);
         }
       }
-      setProgress('Creating templates, pages and menus…');
+      setProgress('Creating templates, pages, posts and menus…');
       const res = await api<Report>('site-kit/import', { body: { token: preview.token, step: 'finish', parts, conflicts, homepage, activate } });
       setReport(res);
       setPreview(null);
@@ -176,10 +191,9 @@ function ImportCard({ maxUpload }: { maxUpload: number }) {
     }
   };
 
-  const existing = preview ? [...preview.templates, ...preview.content].filter((x) => x.exists).length + preview.menus.filter((m) => m.exists).length : 0;
-  const available = (p: Part) =>
-    !!preview && (p === 'design' ? preview.design : p === 'settings' ? preview.settings : p === 'snippets' ? preview.snippets > 0 : p === 'fonts' ? preview.fonts > 0 : p === 'media' ? preview.media > 0 : p === 'templates' ? preview.templates.length > 0 : p === 'content' ? preview.content.length > 0 : preview.menus.length > 0);
-  const kitCount = (p: Part) => (!preview ? 0 : p === 'templates' ? preview.templates.length : p === 'content' ? preview.content.length : p === 'menus' ? preview.menus.length : p === 'media' ? preview.media : p === 'fonts' ? preview.fonts : p === 'snippets' ? preview.snippets : undefined);
+  const existing = preview ? [...preview.templates, ...preview.content, ...(preview.posts ?? [])].filter((x) => x.exists).length + preview.menus.filter((m) => m.exists).length : 0;
+  const available = (p: Part) => !!preview && inKit(p, preview) > 0;
+  const kitCount = (p: Part) => (!preview || p === 'design' || p === 'settings' ? undefined : inKit(p, preview));
 
   return (
     <Card title="Import a site kit" description={`A zip exported from Uncoder on this or another site. You choose what to bring in before anything changes.${maxUpload ? ` Largest file this server accepts: ${mb(maxUpload)}.` : ''}`}>
@@ -224,7 +238,7 @@ function ImportCard({ maxUpload }: { maxUpload: number }) {
               {(
                 [
                   ['skip', 'Keep mine', 'Existing items stay; only new ones are added.'],
-                  ['replace', 'Replace mine', 'Existing templates, pages and menus are overwritten with the kit’s.'],
+                  ['replace', 'Replace mine', 'Existing templates, pages, posts and menus are overwritten with the kit’s.'],
                   ['keep', 'Keep both', 'The kit’s copies are added next to yours.'],
                 ] as const
               ).map(([v, label, help]) => (
@@ -268,7 +282,7 @@ function ImportCard({ maxUpload }: { maxUpload: number }) {
           <ul className="uncoder-ui-kitreport__list">
             {report.created.slice(0, 40).map((c) => (
               <li key={c.id}>
-                <Icon name={c.kind === 'template' ? 'layout-template' : 'file-text'} size={14} />
+                <Icon name={c.kind === 'template' ? 'layout-template' : c.kind === 'post' ? 'newspaper' : 'file-text'} size={14} />
                 <span>{c.title}</span>
                 <span className="uncoder-ui-muted">{c.type}</span>
                 <a href={c.edit}>Edit</a>

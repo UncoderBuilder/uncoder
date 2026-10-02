@@ -8,6 +8,7 @@
 namespace Uncoder\Builder\Site;
 
 use Uncoder\Builder\Core\Post_Types;
+use Uncoder\Builder\Core\Seo;
 use Uncoder\Builder\Core\Utils;
 use Uncoder\Builder\Menus\Mega_Menu;
 use Uncoder\Builder\Menus\Menu_Item_Extras;
@@ -25,7 +26,7 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Zip layout: manifest.json · design.json (Design System) · templates.json · content.json (pages / posts built
- * with Uncoder) · menus.json · settings.json (no secrets) · snippets.json · fonts.json + fonts/ · media.json +
+ * with Uncoder) · posts.json (blog posts written in the WordPress editor, with every category) · menus.json · settings.json (no secrets) · snippets.json · fonts.json + fonts/ · media.json +
  * media/{old id}/{file}. Export streams the zip to the admin and deletes it. Import unzips into a private
  * folder, shows what is inside, uploads media in batches (import step "media"), then creates everything else
  * (step "finish") and points every reference (media, templates, popups, menus, links, pages) at the new ids.
@@ -39,7 +40,7 @@ final class Site_Kit {
 	public const FORMAT  = 'uncoder-site-kit';
 	public const VERSION = 1;
 	/** Parts a kit can carry (all optional). */
-	public const PARTS = array( 'design', 'templates', 'content', 'menus', 'media', 'fonts', 'settings', 'snippets' );
+	public const PARTS = array( 'design', 'templates', 'content', 'posts', 'menus', 'media', 'fonts', 'settings', 'snippets' );
 	/** Settings never exported: secrets and site-local switches. */
 	private const PRIVATE_SETTINGS = array( 'remove_data', 'roles', 'maintenance', 'form_retention_days' );
 	/**
@@ -135,6 +136,33 @@ final class Site_Kit {
 		);
 	}
 
+	/** Blog posts written in the WordPress editor (posts built with Uncoder travel in content.json). */
+	private static function post_ids(): array {
+		return get_posts(
+			array(
+				'post_type'      => 'post',
+				'post_status'    => array( 'publish', 'draft', 'private', 'future', 'pending' ),
+				'posts_per_page' => 500,
+				'fields'         => 'ids',
+				'orderby'        => 'date',
+				'order'          => 'ASC',
+				'lang'           => '',
+				'meta_query'     => array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+					'relation' => 'OR',
+					array(
+						'key'     => Utils::META_MODE,
+						'compare' => 'NOT EXISTS',
+					),
+					array(
+						'key'     => Utils::META_MODE,
+						'value'   => 'builder',
+						'compare' => '!=',
+					),
+				),
+			)
+		);
+	}
+
 	private static function template_ids(): array {
 		return get_posts(
 			array(
@@ -156,6 +184,7 @@ final class Site_Kit {
 			array(
 				'templates' => count( self::template_ids() ),
 				'content'   => count( self::content_ids() ),
+				'posts'     => count( self::post_ids() ),
 				'menus'     => is_array( $menus ) ? count( $menus ) : 0,
 				'fonts'     => count( Custom_Fonts::all() ),
 				'snippets'  => count( (array) get_option( Code_Snippets::OPTION, array() ) ),
@@ -167,7 +196,7 @@ final class Site_Kit {
 	/* ------------------------------------------------------------------ Export */
 
 	/**
-	 * Body: { parts: { design, templates, content, menus, media, fonts, settings, snippets } }.
+	 * Body: { parts: { design, templates, content, posts, menus, media, fonts, settings, snippets } }.
 	 */
 	public function export( WP_REST_Request $request ) {
 		if ( ! class_exists( '\ZipArchive' ) ) {
@@ -208,6 +237,33 @@ final class Site_Kit {
 				'page_for_posts' => (int) get_option( 'page_for_posts' ),
 			);
 			$count['content']      = count( $items );
+		}
+		if ( ! empty( $parts['posts'] ) ) {
+			$items = array();
+			foreach ( self::post_ids() as $id ) {
+				$item = self::export_post( (int) $id );
+				if ( $item ) {
+					$items[] = $item;
+				}
+			}
+			// Every category, not only the posts' ones: loop grids and filters on pages name categories by id.
+			$categories = array();
+			foreach ( (array) get_terms( array( 'taxonomy' => 'category', 'hide_empty' => false ) ) as $term ) {
+				if ( $term instanceof \WP_Term ) {
+					$categories[] = array(
+						'id'          => (int) $term->term_id,
+						'name'        => $term->name,
+						'slug'        => $term->slug,
+						'description' => $term->description,
+						'parent'      => (int) $term->parent,
+					);
+				}
+			}
+			$files['posts.json'] = array(
+				'items'      => $items,
+				'categories' => $categories,
+			);
+			$count['posts']      = count( $items );
 		}
 		if ( ! empty( $parts['menus'] ) ) {
 			$files['menus.json'] = self::export_menus();
@@ -366,6 +422,41 @@ final class Site_Kit {
 			$item['translations'] = Multilingual::translations( $id );
 		}
 		return $item;
+	}
+
+	/**
+	 * A blog post written in the WordPress editor: its text, dates, categories (old ids, mapped on import), tags,
+	 * featured image (an attachment id, collected with the media) and SEO title / description.
+	 *
+	 * @return array<string,mixed>|null
+	 */
+	private static function export_post( int $id ): ?array {
+		$post = get_post( $id );
+		if ( ! $post ) {
+			return null;
+		}
+		$seo  = Seo::get( $id );
+		$tags = wp_get_post_tags( $id, array( 'fields' => 'names' ) );
+		return array(
+			'id'             => $id,
+			'title'          => $post->post_title,
+			'slug'           => $post->post_name,
+			'status'         => $post->post_status,
+			'date'           => $post->post_date,
+			'date_gmt'       => $post->post_date_gmt,
+			'excerpt'        => $post->post_excerpt,
+			'content'        => $post->post_content,
+			'comment_status' => $post->comment_status,
+			'ping_status'    => $post->ping_status,
+			'sticky'         => is_sticky( $id ),
+			'categories'     => array_map( 'intval', wp_get_post_categories( $id ) ),
+			'tags'           => is_array( $tags ) ? array_values( $tags ) : array(),
+			'thumbnail'      => (int) get_post_thumbnail_id( $id ),
+			'seo'            => array(
+				'title'       => $seo['title'],
+				'description' => $seo['description'],
+			),
+		);
 	}
 
 	/** @return array<string,mixed> */
@@ -654,6 +745,14 @@ final class Site_Kit {
 			),
 			(array) ( $content['items'] ?? array() )
 		);
+		$posts     = array_map(
+			fn( $p ) => array(
+				'title'  => (string) ( $p['title'] ?? '' ),
+				'type'   => 'post',
+				'exists' => (bool) self::existing_content( (string) ( $p['slug'] ?? '' ), 'post', (string) ( $p['title'] ?? '' ) ),
+			),
+			(array) ( self::read( $dir, 'posts.json' )['items'] ?? array() )
+		);
 		$menus     = array_map(
 			fn( $m ) => array(
 				'name'   => (string) ( $m['name'] ?? '' ),
@@ -671,6 +770,7 @@ final class Site_Kit {
 			'media'     => count( self::read( $dir, 'media.json' ) ),
 			'templates' => $templates,
 			'content'   => $pages,
+			'posts'     => $posts,
 			'menus'     => $menus,
 			'homepage'  => ! empty( $content['page_on_front'] ),
 		);
@@ -934,6 +1034,11 @@ final class Site_Kit {
 			}
 		}
 
+		if ( ! empty( $parts['posts'] ) && is_readable( $dir . '/posts.json' ) ) {
+			$report['parts'][] = 'posts';
+			$state['terms']    = $this->import_posts( self::read( $dir, 'posts.json' ), $state, $ids, $old_home, $conflicts, $report );
+		}
+
 		$menu_map = array();
 		if ( ! empty( $parts['menus'] ) ) {
 			$report['parts'][] = 'menus';
@@ -1054,6 +1159,134 @@ final class Site_Kit {
 			'edit'     => admin_url( 'post.php?action=uncoder&post=' . $id ),
 		);
 		return $id;
+	}
+
+	/**
+	 * Categories (matched by slug, created when missing) and blog posts from posts.json.
+	 *
+	 * @param array<string,mixed> $data   posts.json.
+	 * @param array<string,mixed> $state  Media maps.
+	 * @param array<int,int>      $ids    Old post id => new (by reference: the posts are added).
+	 * @param array<string,mixed> $report Report (by reference).
+	 * @return array<int,int> Old category id => new.
+	 */
+	private function import_posts( array $data, array $state, array &$ids, string $old_home, string $conflicts, array &$report ): array {
+		$terms   = array();
+		$pending = array_values( array_filter( (array) ( $data['categories'] ?? array() ), 'is_array' ) );
+		$known   = array_map( static fn( $c ) => (int) ( $c['id'] ?? 0 ), $pending );
+		// Parents before children: a category waits until its parent (when the kit has it) is placed.
+		for ( $pass = 0; $pending && $pass < 10; $pass++ ) {
+			foreach ( $pending as $i => $c ) {
+				$parent = (int) ( $c['parent'] ?? 0 );
+				if ( $parent && in_array( $parent, $known, true ) && ! isset( $terms[ $parent ] ) ) {
+					continue;
+				}
+				unset( $pending[ $i ] );
+				$slug = sanitize_title( (string) ( $c['slug'] ?? '' ) );
+				$name = sanitize_text_field( (string) ( $c['name'] ?? '' ) );
+				if ( '' === $slug && '' === $name ) {
+					continue;
+				}
+				$found = '' !== $slug ? get_term_by( 'slug', $slug, 'category' ) : false;
+				if ( $found instanceof \WP_Term ) {
+					$terms[ (int) $c['id'] ] = (int) $found->term_id;
+					continue;
+				}
+				$made = wp_insert_term(
+					'' !== $name ? $name : $slug,
+					'category',
+					array(
+						'slug'        => $slug,
+						'description' => sanitize_textarea_field( (string) ( $c['description'] ?? '' ) ),
+						'parent'      => $parent ? (int) ( $terms[ $parent ] ?? 0 ) : 0,
+					)
+				);
+				if ( is_wp_error( $made ) ) {
+					// Same name under the same parent: use that category.
+					$existing = (int) $made->get_error_data( 'term_exists' );
+					if ( $existing ) {
+						$terms[ (int) $c['id'] ] = $existing;
+					} else {
+						$report['warnings'][] = $name . ': ' . $made->get_error_message();
+					}
+					continue;
+				}
+				$terms[ (int) $c['id'] ] = (int) $made['term_id'];
+			}
+		}
+
+		foreach ( (array) ( $data['items'] ?? array() ) as $item ) {
+			if ( ! is_array( $item ) ) {
+				continue;
+			}
+			$old      = (int) ( $item['id'] ?? 0 );
+			$title    = sanitize_text_field( (string) ( $item['title'] ?? '' ) );
+			$slug     = sanitize_title( (string) ( $item['slug'] ?? '' ) );
+			$existing = self::existing_content( $slug, 'post', $title, $this->written );
+			if ( $existing && 'skip' === $conflicts ) {
+				++$report['skipped'];
+				$ids[ $old ] = $existing;
+				continue;
+			}
+			$status = in_array( $item['status'] ?? '', array( 'publish', 'draft', 'private', 'future', 'pending' ), true ) ? (string) $item['status'] : 'draft';
+			$open   = static fn( $v, string $type ) => in_array( $v, array( 'open', 'closed' ), true ) ? $v : get_default_comment_status( 'post', $type );
+			$post   = array(
+				'post_type'      => 'post',
+				'post_title'     => '' !== $title ? $title : __( 'Imported', 'uncoder' ),
+				'post_status'    => $status,
+				// The text as written; WordPress filters it on save for users who may not post unfiltered HTML.
+				'post_content'   => self::relink_text( (string) ( $item['content'] ?? '' ), $state, $old_home ),
+				'post_excerpt'   => sanitize_textarea_field( (string) ( $item['excerpt'] ?? '' ) ),
+				'post_author'    => get_current_user_id(),
+				'comment_status' => $open( $item['comment_status'] ?? '', 'comment' ),
+				'ping_status'    => $open( $item['ping_status'] ?? '', 'pingback' ),
+				'post_category'  => array_values( array_filter( array_map( static fn( $c ) => (int) ( $terms[ (int) $c ] ?? 0 ), (array) ( $item['categories'] ?? array() ) ) ) ),
+				'tags_input'     => array_values( array_map( 'sanitize_text_field', array_filter( (array) ( $item['tags'] ?? array() ), 'is_string' ) ) ),
+			);
+			foreach ( array( 'date' => 'post_date', 'date_gmt' => 'post_date_gmt' ) as $key => $field ) {
+				if ( is_string( $item[ $key ] ?? null ) && preg_match( '/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', $item[ $key ] ) && '0000-00-00 00:00:00' !== $item[ $key ] ) {
+					$post[ $field ] = $item[ $key ];
+				}
+			}
+			if ( '' !== $slug && ! ( $existing && 'keep' === $conflicts ) ) {
+				$post['post_name'] = $slug;
+			}
+			$replace = $existing && 'replace' === $conflicts;
+			if ( $replace ) {
+				$post['ID'] = $existing;
+				$id         = wp_update_post( wp_slash( $post ), true );
+			} else {
+				$id = wp_insert_post( wp_slash( $post ), true );
+			}
+			if ( is_wp_error( $id ) || ! $id ) {
+				$report['warnings'][] = sprintf( '“%s”: %s', $title, is_wp_error( $id ) ? $id->get_error_message() : 'not created' );
+				continue;
+			}
+			$id              = (int) $id;
+			$ids[ $old ]     = $id;
+			$this->written[] = $id;
+			++$report[ $replace ? 'replaced' : 'added' ];
+			if ( ! empty( $item['sticky'] ) ) {
+				stick_post( $id );
+			}
+			$thumb = (int) ( $state['media'][ (string) (int) ( $item['thumbnail'] ?? 0 ) ] ?? 0 );
+			if ( $thumb ) {
+				set_post_thumbnail( $id, $thumb );
+			}
+			$seo = is_array( $item['seo'] ?? null ) ? $item['seo'] : array();
+			if ( ! empty( $seo['title'] ) || ! empty( $seo['description'] ) ) {
+				Seo::set( $id, ! empty( $seo['title'] ) ? (string) $seo['title'] : null, ! empty( $seo['description'] ) ? (string) $seo['description'] : null );
+			}
+			$report['created'][] = array(
+				'id'       => $id,
+				'title'    => $title,
+				'kind'     => 'post',
+				'type'     => 'post',
+				'replaced' => $replace,
+				'edit'     => (string) get_edit_post_link( $id, 'raw' ),
+			);
+		}
+		return $terms;
 	}
 
 	/**
@@ -1253,6 +1486,12 @@ final class Site_Kit {
 					$value[ $k ] = $ids[ (int) $v ];
 				} elseif ( 'menu' === $k && is_numeric( $v ) && isset( $menus[ (int) $v ] ) ) {
 					$value[ $k ] = (string) $menus[ (int) $v ];
+				} elseif ( 'terms' === $k && is_array( $v ) && ! empty( $state['terms'] ) ) {
+					// Query terms ("category:5") follow the imported categories.
+					$value[ $k ] = array_map( static fn( $x ) => is_string( $x ) && preg_match( '/^category:(\d+)$/', $x, $m ) && isset( $state['terms'][ (int) $m[1] ] ) ? 'category:' . $state['terms'][ (int) $m[1] ] : $x, $v );
+				} elseif ( 'exclude' === $k && is_string( $v ) && 'category' === ( $value['taxonomy'] ?? '' ) && ! empty( $state['terms'] ) ) {
+					// Loop Filter: excluded category ids.
+					$value[ $k ] = implode( ', ', array_map( static fn( $x ) => (string) ( $state['terms'][ (int) $x ] ?? (int) $x ), array_filter( array_map( 'trim', explode( ',', $v ) ), 'is_numeric' ) ) );
 				} elseif ( in_array( $k, array( 'include_ids', 'exclude_ids' ), true ) && is_array( $v ) ) {
 					$value[ $k ] = array_map( static fn( $x ) => is_numeric( $x ) && isset( $ids[ (int) $x ] ) ? (string) $ids[ (int) $x ] : $x, $v );
 				} else {
