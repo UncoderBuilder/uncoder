@@ -597,7 +597,7 @@ export function stackCss(settings: Settings, wrapper: string, rules: Rules, devi
   for (const device of devices) {
     if (device === 'desktop') continue;
     const dir = settings['direction' + suffix(device)];
-    if (dir === 'column' || dir === 'column-reverse') rules.add(`${wrapper} > :where(.uncoder-container),${wrapper} > :where(.uncoder-container__inner) > :where(.uncoder-container)`, ['--uncoder-width:100%'], device);
+    if (dir === 'column' || dir === 'column-reverse') rules.add(`${wrapper} > :where(.uncoder-container),${wrapper} > :where(.uncoder-container__inner) > :where(.uncoder-container)`, ['--uncoder-width:var(--uncoder-full,100%)'], device);
   }
 }
 

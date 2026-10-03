@@ -100,7 +100,7 @@ final class Generator {
 			}
 			$dir = $settings[ 'direction' . Breakpoints::suffix( $device ) ] ?? '';
 			if ( 'column' === $dir || 'column-reverse' === $dir ) {
-				$rules->add( $wrapper . ' > :where(.uncoder-container),' . $wrapper . ' > :where(.uncoder-container__inner) > :where(.uncoder-container)', array( '--uncoder-width:100%' ), $device );
+				$rules->add( $wrapper . ' > :where(.uncoder-container),' . $wrapper . ' > :where(.uncoder-container__inner) > :where(.uncoder-container)', array( '--uncoder-width:var(--uncoder-full,100%)' ), $device );
 			}
 		}
 	}

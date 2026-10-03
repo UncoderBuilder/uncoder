@@ -192,6 +192,27 @@ html:not([data-uncoder-scheme="dark"]) .uncoder-hide-in-light {
 
 /* ------------------------------------------------------------------ Containers */
 
+/* "Full width" that leaves room for the element's own side margins (100% + margins would overflow its parent: a
+   section with a 12px page frame made the whole page 24px too wide, and phones scrolled sideways). */
+:root {
+  --uncoder-full: 100%;
+}
+@supports (width: -webkit-fill-available) {
+  :root {
+    --uncoder-full: -webkit-fill-available;
+  }
+}
+@supports (width: -moz-available) {
+  :root {
+    --uncoder-full: -moz-available;
+  }
+}
+@supports (width: stretch) {
+  :root {
+    --uncoder-full: stretch;
+  }
+}
+
 .uncoder-container {
   --uncoder-dir: column;
   --uncoder-wrap: nowrap;
@@ -199,7 +220,7 @@ html:not([data-uncoder-scheme="dark"]) .uncoder-hide-in-light {
   --uncoder-align: normal;
   --uncoder-gap: var(--uncoder-kit-gap, 20px);
   --uncoder-row-gap: var(--uncoder-gap);
-  --uncoder-width: 100%;
+  --uncoder-width: var(--uncoder-full, 100%);
   --uncoder-boxed-width: var(--uncoder-container, 1200px);
   --uncoder-grid-cols: repeat(3, minmax(0, 1fr));
   --uncoder-grid-rows: none;
