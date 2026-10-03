@@ -93,7 +93,7 @@ final class Design_Tools {
 						),
 						'theme'      => array(
 							'type'        => 'object',
-							'description' => 'Page-wide defaults: body_color, heading_color, link_color, link_hover_color, background.',
+							'description' => 'Page-wide defaults: body_color, heading_color, link_color, link_hover_color, background, background_image (a texture or pattern behind sections without their own background: attachment id, URL or {"id","url"}), background_size ("auto" = tile, "cover"), optical_sizing ("" = auto, "none" = fonts with an optical-size axis such as Inter keep their text cut at large sizes, matching designs made with the static font files).',
 						),
 						'settings'   => array(
 							'type'        => 'object',
@@ -241,6 +241,17 @@ final class Design_Tools {
 				if ( array_key_exists( $key, $input['theme'] ) ) {
 					$theme[ $key ] = 'enabled' === $key ? (bool) $input['theme'][ $key ] : $this->color( $input['theme'][ $key ], 'theme.' . $key, $errors );
 				}
+			}
+			if ( array_key_exists( 'background_image', $input['theme'] ) ) {
+				$image = $input['theme']['background_image'];
+				$image = is_numeric( $image ) ? array( 'id' => (int) $image ) : $image;
+				$theme['background_image'] = Plugin::instance()->controls()->get( 'media' )->normalize( $image, array() );
+			}
+			if ( isset( $input['theme']['background_size'] ) ) {
+				$theme['background_size'] = 'cover' === $input['theme']['background_size'] ? 'cover' : 'auto';
+			}
+			if ( isset( $input['theme']['optical_sizing'] ) ) {
+				$theme['optical_sizing'] = 'none' === $input['theme']['optical_sizing'] ? 'none' : '';
 			}
 			unset( $input['theme'] );
 		}

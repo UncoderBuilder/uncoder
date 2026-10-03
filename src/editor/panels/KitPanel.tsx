@@ -284,6 +284,9 @@ function Section({ section }: { section: 'buttons' | 'layout' | 'theme' }) {
         link_color: { type: 'color', label: LABELS.link_color },
         link_hover_color: { type: 'color', label: LABELS.link_hover_color },
         background: { type: 'color', label: 'Page background' },
+        background_image: { type: 'media', label: 'Background image', description: 'A texture or pattern behind every section without its own background.' },
+        background_size: { type: 'select', label: 'Image size', options: { auto: 'Tile', cover: 'Cover' }, condition: { 'background_image.url!': '' } },
+        optical_sizing: { type: 'select', label: 'Optical sizing', options: { '': 'Auto', none: 'Off' }, description: 'Off: fonts like Inter keep their text shapes at large sizes (the static font files most designs use).' },
       } as Record<string, ControlDef>;
     }
     return labelled(KIT_SCHEMAS[section]);

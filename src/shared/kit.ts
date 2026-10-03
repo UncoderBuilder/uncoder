@@ -1,5 +1,5 @@
 // TypeScript twin of Kit::css() — live preview of Design System edits in the editor canvas.
-import { fontStack, PRESET_VARS, Rules, sanitizeColor, sanitizeCustomCss, settingsCss, cssValue, suffix, mediaQuery } from './css';
+import { cssUrl, fontStack, PRESET_VARS, Rules, sanitizeColor, sanitizeCustomCss, settingsCss, cssValue, suffix, mediaQuery } from './css';
 import type { Breakpoint, ControlDef, ElementSchema, Kit, Settings } from './types';
 import BUTTON_FX from '../../assets/data/button-fx.json';
 
@@ -155,6 +155,13 @@ export function kitCss(kit: Kit, breakpoints: Breakpoint[], schemas?: Record<str
     if (bc) body.push(`color:${bc}`);
     const bg = sanitizeColor(theme.background);
     if (bg) body.push(`background-color:${bg}`);
+    // Twin of Kit::css(): the page texture, tiled at its own size or covering the page.
+    const image = theme.background_image && typeof theme.background_image === 'object' ? cssUrl(theme.background_image.url) : '';
+    if (image) {
+      body.push(`background-image:url("${image}")`);
+      body.push(theme.background_size === 'cover' ? 'background-size:cover;background-position:center top' : 'background-repeat:repeat');
+    }
+    if (theme.optical_sizing === 'none') body.push('font-optical-sizing:none');
     rules.add('body.uncoder-kit', body);
     const hc = sanitizeColor(theme.heading_color);
     for (const h of ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']) {

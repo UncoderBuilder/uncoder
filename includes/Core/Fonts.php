@@ -104,7 +104,8 @@ final class Fonts {
 		$name   = str_replace( ' ', '+', $family );
 		$info   = self::catalog()[ $family ] ?? array();
 		$opsz   = $info['o'] ?? null;
-		$list   = is_string( $weights ) ? array( $weights ) : array_values( $weights );
+		// Each weight once: Google answers 400 Bad Request (for the whole stylesheet) to a repeated tuple.
+		$list   = is_string( $weights ) ? array( $weights ) : array_values( array_unique( array_map( 'strval', $weights ) ) );
 		$axes   = array();
 		$tuples = $list;
 		if ( is_array( $opsz ) && 2 === count( $opsz ) ) {

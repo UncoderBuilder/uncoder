@@ -15,7 +15,8 @@ export const sortWeights = (weights: string[]): string[] => [...weights].sort((a
 
 export function googleFamilyParam(family: string, weights: string[] | string, info: GoogleFontInfo = {}): string {
   const name = family.replace(/ /g, '+');
-  let tuples = typeof weights === 'string' ? [weights] : [...weights];
+  // Each weight once: Google answers 400 Bad Request (for the whole stylesheet) to a repeated tuple.
+  let tuples = typeof weights === 'string' ? [weights] : [...new Set(weights.map(String))];
   const axes: string[] = [];
   if (info.o) {
     const range = `${Math.trunc(info.o[0])}..${Math.trunc(info.o[1])}`;

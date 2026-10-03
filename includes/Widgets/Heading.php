@@ -145,6 +145,8 @@ class Heading extends Widget_Base {
 				'selectors'  => array( '{{WRAPPER}} :is(mark, strong)' => 'border-radius: {{VALUE}}' ),
 			)
 		);
+		// A second typeface for the highlighted words ("Delicious *bites*" with the accent word in an italic serif).
+		$this->add_group( 'highlight_typography', array( 'type' => 'typography', 'label' => __( 'Highlight typography', 'uncoder' ), 'selector' => '{{WRAPPER}} :is(mark, strong)' ) );
 		$this->add_responsive_control(
 			'max_width',
 			array(

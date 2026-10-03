@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-03T01:34:08+00:00\n"
+"POT-Creation-Date: 2026-10-03T08:52:24+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: uncoder\n"
@@ -105,11 +105,11 @@ msgstr ""
 #: includes/Controls/Groups/Border.php:32
 #: includes/Controls/Groups/Shadow.php:36
 #: includes/Elements/Container.php:510
-#: includes/Widgets/Accordion.php:252
-#: includes/Widgets/Accordion.php:270
-#: includes/Widgets/Accordion.php:288
-#: includes/Widgets/Accordion.php:330
-#: includes/Widgets/Accordion.php:399
+#: includes/Widgets/Accordion.php:262
+#: includes/Widgets/Accordion.php:280
+#: includes/Widgets/Accordion.php:298
+#: includes/Widgets/Accordion.php:340
+#: includes/Widgets/Accordion.php:409
 #: includes/Widgets/Alert.php:238
 #: includes/Widgets/Alert.php:319
 #: includes/Widgets/Alert.php:329
@@ -278,8 +278,8 @@ msgstr ""
 #: includes/Controls/Groups/Background.php:71
 #: includes/Controls/Groups/Typography.php:57
 #: includes/Core/Common_Controls.php:288
-#: includes/Widgets/Accordion.php:310
-#: includes/Widgets/Accordion.php:389
+#: includes/Widgets/Accordion.php:320
+#: includes/Widgets/Accordion.php:399
 #: includes/Widgets/Alert.php:246
 #: includes/Widgets/Alert.php:307
 #: includes/Widgets/Author_Box.php:198
@@ -746,8 +746,9 @@ msgid "Margin"
 msgstr ""
 
 #: includes/Core/Common_Controls.php:72
-#: includes/Widgets/Accordion.php:228
-#: includes/Widgets/Accordion.php:412
+#: includes/Widgets/Accordion.php:223
+#: includes/Widgets/Accordion.php:238
+#: includes/Widgets/Accordion.php:422
 #: includes/Widgets/Alert.php:218
 #: includes/Widgets/Author_Box.php:178
 #: includes/Widgets/Blockquote.php:140
@@ -796,7 +797,7 @@ msgstr ""
 #: includes/Core/Common_Controls.php:244
 #: includes/Widgets/Animated_Headline.php:249
 #: includes/Widgets/Featured_Image.php:180
-#: includes/Widgets/Heading.php:183
+#: includes/Widgets/Heading.php:185
 #: includes/Widgets/Hotspot.php:171
 #: includes/Widgets/Icon.php:58
 #: includes/Widgets/Icon_Box.php:108
@@ -869,7 +870,7 @@ msgstr ""
 #: includes/Core/Common_Controls.php:324
 #: includes/Elements/Container.php:176
 #: includes/Elements/Container.php:193
-#: includes/Widgets/Accordion.php:240
+#: includes/Widgets/Accordion.php:250
 #: includes/Widgets/Author_Box.php:154
 #: includes/Widgets/Blockquote.php:126
 #: includes/Widgets/Breadcrumbs.php:142
@@ -1022,10 +1023,10 @@ msgstr ""
 #: includes/Elements/Container.php:417
 #: includes/Elements/Container.php:459
 #: includes/Widgets/Accordion.php:199
-#: includes/Widgets/Accordion.php:260
-#: includes/Widgets/Accordion.php:278
-#: includes/Widgets/Accordion.php:296
-#: includes/Widgets/Accordion.php:407
+#: includes/Widgets/Accordion.php:270
+#: includes/Widgets/Accordion.php:288
+#: includes/Widgets/Accordion.php:306
+#: includes/Widgets/Accordion.php:417
 #: includes/Widgets/Alert.php:337
 #: includes/Widgets/Animated_Headline.php:272
 #: includes/Widgets/Author_Box.php:163
@@ -1147,7 +1148,7 @@ msgstr ""
 #: includes/Core/Common_Controls.php:227
 #: includes/Elements/Container.php:553
 #: includes/Widgets/Accordion.php:200
-#: includes/Widgets/Accordion.php:417
+#: includes/Widgets/Accordion.php:427
 #: includes/Widgets/Alert.php:193
 #: includes/Widgets/Author_Box.php:164
 #: includes/Widgets/Author_Box.php:222
@@ -1402,7 +1403,7 @@ msgid "Bottom"
 msgstr ""
 
 #: includes/Core/Common_Controls.php:327
-#: includes/Widgets/Accordion.php:239
+#: includes/Widgets/Accordion.php:249
 #: includes/Widgets/Author_Box.php:59
 #: includes/Widgets/Author_Box.php:153
 #: includes/Widgets/Blockquote.php:125
@@ -1462,7 +1463,7 @@ msgid "Left"
 msgstr ""
 
 #: includes/Core/Common_Controls.php:328
-#: includes/Widgets/Accordion.php:241
+#: includes/Widgets/Accordion.php:251
 #: includes/Widgets/Author_Box.php:61
 #: includes/Widgets/Author_Box.php:155
 #: includes/Widgets/Blockquote.php:127
@@ -1602,7 +1603,7 @@ msgstr ""
 
 #: includes/Core/Common_Controls.php:419
 #: includes/Elements/Container.php:412
-#: includes/Widgets/Accordion.php:247
+#: includes/Widgets/Accordion.php:257
 #: includes/Widgets/Alert.php:314
 #: includes/Widgets/Breadcrumbs.php:158
 #: includes/Widgets/Button.php:155
@@ -1664,7 +1665,7 @@ msgstr ""
 
 #: includes/Core/Common_Controls.php:422
 #: includes/Elements/Container.php:454
-#: includes/Widgets/Accordion.php:265
+#: includes/Widgets/Accordion.php:275
 #: includes/Widgets/Alert.php:324
 #: includes/Widgets/Breadcrumbs.php:168
 #: includes/Widgets/Button.php:175
@@ -2309,7 +2310,7 @@ msgid "Action"
 msgstr ""
 
 #: includes/Dynamic/Core_Tags.php:366
-#: includes/Widgets/Accordion.php:283
+#: includes/Widgets/Accordion.php:293
 msgid "Open"
 msgstr ""
 
@@ -3452,7 +3453,7 @@ msgstr ""
 #: includes/Menus/Menu_Item_Extras.php:151
 #: includes/Widgets/Accordion.php:104
 #: includes/Widgets/Accordion.php:139
-#: includes/Widgets/Accordion.php:305
+#: includes/Widgets/Accordion.php:315
 #: includes/Widgets/Alert.php:138
 #: includes/Widgets/Alert.php:229
 #: includes/Widgets/Breadcrumbs.php:96
@@ -3529,7 +3530,7 @@ msgid "Call to action"
 msgstr ""
 
 #: includes/Patterns/Patterns.php:64
-#: includes/Widgets/Accordion.php:406
+#: includes/Widgets/Accordion.php:416
 #: includes/Widgets/Alert.php:264
 #: includes/Widgets/Call_To_Action.php:140
 #: includes/Widgets/Icon_Box.php:535
@@ -4212,7 +4213,7 @@ msgstr ""
 msgid "(imported)"
 msgstr ""
 
-#: includes/Site/Site_Kit.php:1521
+#: includes/Site/Site_Kit.php:1532
 msgid "This SVG was not imported: it contains active content."
 msgstr ""
 
@@ -4444,7 +4445,7 @@ msgid "How does billing work?"
 msgstr ""
 
 #: includes/Widgets/Accordion.php:99
-#: includes/Widgets/Accordion.php:222
+#: includes/Widgets/Accordion.php:232
 #: includes/Widgets/Alert.php:107
 #: includes/Widgets/Archive_Title.php:51
 #: includes/Widgets/Archive_Title.php:80
@@ -4557,7 +4558,7 @@ msgstr ""
 msgid "Open item border color"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:218
+#: includes/Widgets/Accordion.php:228
 #: includes/Widgets/Alert.php:223
 #: includes/Widgets/Author_Box.php:183
 #: includes/Widgets/Blockquote.php:154
@@ -4616,7 +4617,7 @@ msgstr ""
 msgid "Shadow"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:223
+#: includes/Widgets/Accordion.php:233
 #: includes/Widgets/Animated_Headline.php:214
 #: includes/Widgets/Animated_Headline.php:259
 #: includes/Widgets/Archive_Description.php:63
@@ -4731,7 +4732,7 @@ msgstr ""
 msgid "Typography"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:237
+#: includes/Widgets/Accordion.php:247
 #: includes/Widgets/Animated_Headline.php:168
 #: includes/Widgets/Archive_Description.php:55
 #: includes/Widgets/Archive_Title.php:73
@@ -4788,7 +4789,7 @@ msgstr ""
 msgid "Alignment"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:320
+#: includes/Widgets/Accordion.php:330
 #: includes/Widgets/Alert.php:256
 #: includes/Widgets/Author_Box.php:208
 #: includes/Widgets/Author_Box.php:254
@@ -4832,38 +4833,38 @@ msgstr ""
 msgid "Spacing"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:338
+#: includes/Widgets/Accordion.php:348
 msgid "Open color"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:346
+#: includes/Widgets/Accordion.php:356
 msgid "Icon box size"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:347
+#: includes/Widgets/Accordion.php:357
 msgid "Puts the icon in a tile of this size (with the background and radius below)."
 msgstr ""
 
-#: includes/Widgets/Accordion.php:357
+#: includes/Widgets/Accordion.php:367
 #: includes/Widgets/Button.php:256
 #: includes/Widgets/Flip_Box.php:400
 #: includes/Widgets/Nav_Menu.php:767
 msgid "Icon background"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:365
+#: includes/Widgets/Accordion.php:375
 msgid "Open icon background"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:373
+#: includes/Widgets/Accordion.php:383
 msgid "Icon radius"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:382
+#: includes/Widgets/Accordion.php:392
 msgid "Item icons"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:437
+#: includes/Widgets/Accordion.php:447
 msgid "Add an item to start building the accordion."
 msgstr ""
 
@@ -5189,7 +5190,7 @@ msgstr ""
 #: includes/Widgets/Blockquote.php:247
 #: includes/Widgets/Call_To_Action.php:610
 #: includes/Widgets/Counter.php:198
-#: includes/Widgets/Heading.php:158
+#: includes/Widgets/Heading.php:160
 #: includes/Widgets/Marquee.php:256
 #: includes/Widgets/Post_Title.php:123
 #: includes/Widgets/Site_Tagline.php:90
@@ -5200,7 +5201,7 @@ msgstr ""
 
 #: includes/Widgets/Animated_Headline.php:228
 #: includes/Widgets/Archive_Title.php:113
-#: includes/Widgets/Heading.php:163
+#: includes/Widgets/Heading.php:165
 #: includes/Widgets/Post_Title.php:128
 #: includes/Widgets/Site_Title.php:104
 msgid "Text stroke"
@@ -5208,28 +5209,28 @@ msgstr ""
 
 #: includes/Widgets/Animated_Headline.php:239
 #: includes/Widgets/Archive_Title.php:124
-#: includes/Widgets/Heading.php:174
+#: includes/Widgets/Heading.php:176
 #: includes/Widgets/Post_Title.php:139
 #: includes/Widgets/Site_Title.php:115
 msgid "Stroke color"
 msgstr ""
 
 #: includes/Widgets/Animated_Headline.php:247
-#: includes/Widgets/Heading.php:182
+#: includes/Widgets/Heading.php:184
 #: includes/Widgets/Post_Title.php:114
 #: includes/Widgets/Text_Editor.php:114
 msgid "Text wrap"
 msgstr ""
 
 #: includes/Widgets/Animated_Headline.php:250
-#: includes/Widgets/Heading.php:183
+#: includes/Widgets/Heading.php:185
 #: includes/Widgets/Post_Title.php:117
 #: includes/Widgets/Text_Editor.php:115
 msgid "Balanced"
 msgstr ""
 
 #: includes/Widgets/Animated_Headline.php:251
-#: includes/Widgets/Heading.php:183
+#: includes/Widgets/Heading.php:185
 #: includes/Widgets/Post_Title.php:118
 #: includes/Widgets/Text_Editor.php:115
 msgid "Pretty"
@@ -5313,7 +5314,7 @@ msgstr ""
 #: includes/Widgets/Archive_Description.php:84
 #: includes/Widgets/Archive_Title.php:103
 #: includes/Widgets/Featured_Image.php:141
-#: includes/Widgets/Heading.php:152
+#: includes/Widgets/Heading.php:154
 #: includes/Widgets/Hotspot.php:338
 #: includes/Widgets/Icon_Box.php:587
 #: includes/Widgets/Image.php:200
@@ -7905,6 +7906,10 @@ msgstr ""
 
 #: includes/Widgets/Heading.php:142
 msgid "Highlight radius"
+msgstr ""
+
+#: includes/Widgets/Heading.php:149
+msgid "Highlight typography"
 msgstr ""
 
 #: includes/Widgets/Hotspot.php:35

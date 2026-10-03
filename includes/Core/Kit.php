@@ -122,6 +122,9 @@ final class Kit {
 				'link_color'       => 'var(--uncoder-c-primary)',
 				'link_hover_color' => '',
 				'background'       => '',
+				'background_image' => array( 'id' => 0, 'url' => '' ),
+				'background_size'  => 'auto',
+				'optical_sizing'   => '',
 			),
 			'breakpoints' => array(),
 			'classes'     => array(),
@@ -195,6 +198,9 @@ final class Kit {
 				'link_color'       => array( 'type' => 'color' ),
 				'link_hover_color' => array( 'type' => 'color' ),
 				'background'       => array( 'type' => 'color' ),
+				'background_image' => array( 'type' => 'media' ),
+				'background_size'  => array( 'type' => 'select', 'options' => array( 'auto' => 'Tile', 'cover' => 'Cover' ) ),
+				'optical_sizing'   => array( 'type' => 'select', 'options' => array( '' => 'Auto', 'none' => 'Off' ) ),
 			),
 			'settings' => array(
 				'font_delivery'        => array( 'type' => 'select', 'options' => array( 'google' => 'Google Fonts CDN', 'local' => 'Self-hosted (downloaded once, no requests to Google)', 'none' => 'Do not load fonts' ) ),
@@ -703,6 +709,18 @@ final class Kit {
 				if ( '' !== $c ) {
 					$body[] = $prop . ':' . $c;
 				}
+			}
+			// A page texture or pattern behind every section without its own background (header, footer and
+			// coloured bands keep theirs): tiled at its own size, or one image covering the page.
+			$image = is_array( $theme['background_image'] ?? null ) ? Utils::css_url( (string) ( $theme['background_image']['url'] ?? '' ) ) : '';
+			if ( '' !== $image ) {
+				$body[] = 'background-image:url("' . $image . '")';
+				$body[] = 'cover' === ( $theme['background_size'] ?? '' ) ? 'background-size:cover;background-position:center top' : 'background-repeat:repeat';
+			}
+			// Fonts with an optical-size axis (Inter, Fraunces…) draw large text with their display cut; "Off" keeps
+			// the text cut at every size (the look and width of the static font files many designs were made with).
+			if ( 'none' === ( $theme['optical_sizing'] ?? '' ) ) {
+				$body[] = 'font-optical-sizing:none';
 			}
 			$rules->add( 'body.uncoder-kit', $body );
 			$heading_color = Utils::sanitize_color( (string) ( $theme['heading_color'] ?? '' ) );

@@ -215,6 +215,16 @@ class Accordion extends Widget_Base {
 				'selectors'  => array( self::ITEM => 'border-radius: {{VALUE}}' ),
 			)
 		);
+		// Space around the whole item (title and open panel together), apart from the title's own padding.
+		$this->add_responsive_control(
+			'item_padding',
+			array(
+				'type'       => 'dimensions',
+				'label'      => __( 'Padding', 'uncoder' ),
+				'size_units' => array( 'px', 'em', 'rem' ),
+				'selectors'  => array( self::ITEM => 'padding: {{VALUE}}' ),
+			)
+		);
 		$this->add_group( 'item_shadow', array( 'type' => 'box_shadow', 'label' => __( 'Shadow', 'uncoder' ), 'selector' => self::ITEM ) );
 		$this->end_section();
 
