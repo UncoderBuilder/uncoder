@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-03T16:40:10+00:00\n"
+"POT-Creation-Date: 2026-10-03T17:07:08+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: uncoder\n"
@@ -310,7 +310,7 @@ msgstr ""
 #: includes/Widgets/Testimonial.php:347
 #: includes/Widgets/Text_Path.php:285
 #: includes/Widgets/Timeline.php:237
-#: includes/Widgets/Video.php:286
+#: includes/Widgets/Video.php:287
 #: includes/Widgets/Video_Playlist.php:300
 msgid "Size"
 msgstr ""
@@ -338,7 +338,7 @@ msgstr ""
 #: includes/Widgets/Facebook_Embed.php:90
 #: includes/Widgets/Video.php:36
 #: includes/Widgets/Video.php:60
-#: includes/Widgets/Video.php:258
+#: includes/Widgets/Video.php:259
 #: includes/Widgets/Video_Playlist.php:106
 msgid "Video"
 msgstr ""
@@ -1135,8 +1135,8 @@ msgstr ""
 #: includes/Widgets/Testimonial.php:179
 #: includes/Widgets/Testimonial_Carousel.php:218
 #: includes/Widgets/Timeline.php:286
-#: includes/Widgets/Video.php:315
-#: includes/Widgets/Video.php:333
+#: includes/Widgets/Video.php:316
+#: includes/Widgets/Video.php:334
 #: includes/Widgets/Video_Playlist.php:318
 #: includes/Widgets/Video_Playlist.php:337
 #: includes/Widgets/Video_Playlist.php:402
@@ -1197,7 +1197,7 @@ msgstr ""
 #: includes/Widgets/Testimonial.php:321
 #: includes/Widgets/Testimonial_Carousel.php:219
 #: includes/Widgets/Timeline.php:308
-#: includes/Widgets/Video.php:268
+#: includes/Widgets/Video.php:269
 #: includes/Widgets/Video_Playlist.php:359
 msgid "Border"
 msgstr ""
@@ -1279,8 +1279,8 @@ msgstr ""
 #: includes/Widgets/Testimonial.php:316
 #: includes/Widgets/Testimonial_Carousel.php:224
 #: includes/Widgets/Timeline.php:303
-#: includes/Widgets/Video.php:263
-#: includes/Widgets/Video.php:296
+#: includes/Widgets/Video.php:264
+#: includes/Widgets/Video.php:297
 #: includes/Widgets/Video_Playlist.php:289
 #: includes/Widgets/Video_Playlist.php:354
 #: includes/Widgets/Video_Playlist.php:514
@@ -1658,7 +1658,7 @@ msgstr ""
 #: includes/Widgets/Tabs.php:316
 #: includes/Widgets/Team_Member.php:414
 #: includes/Widgets/Text_Path.php:221
-#: includes/Widgets/Video.php:302
+#: includes/Widgets/Video.php:303
 #: includes/Widgets/Video_Playlist.php:389
 msgid "Normal"
 msgstr ""
@@ -1715,7 +1715,7 @@ msgstr ""
 #: includes/Widgets/Tabs.php:329
 #: includes/Widgets/Team_Member.php:418
 #: includes/Widgets/Text_Path.php:231
-#: includes/Widgets/Video.php:320
+#: includes/Widgets/Video.php:321
 #: includes/Widgets/Video_Playlist.php:407
 msgid "Hover"
 msgstr ""
@@ -2853,7 +2853,7 @@ msgstr ""
 #: includes/Widgets/Search_Form.php:237
 #: includes/Widgets/Slides.php:326
 #: includes/Widgets/Soundcloud.php:89
-#: includes/Widgets/Video.php:144
+#: includes/Widgets/Video.php:145
 msgid "Height"
 msgstr ""
 
@@ -4611,8 +4611,8 @@ msgstr ""
 #: includes/Widgets/Testimonial.php:322
 #: includes/Widgets/Testimonial_Carousel.php:229
 #: includes/Widgets/Timeline.php:309
-#: includes/Widgets/Video.php:269
-#: includes/Widgets/Video.php:339
+#: includes/Widgets/Video.php:270
+#: includes/Widgets/Video.php:340
 #: includes/Widgets/Video_Playlist.php:294
 msgid "Shadow"
 msgstr ""
@@ -5181,7 +5181,7 @@ msgstr ""
 #: includes/Widgets/Animated_Headline.php:205
 #: includes/Widgets/Loop_Carousel.php:63
 #: includes/Widgets/Lottie.php:112
-#: includes/Widgets/Video.php:207
+#: includes/Widgets/Video.php:208
 msgid "Loop"
 msgstr ""
 
@@ -5852,8 +5852,8 @@ msgstr ""
 #: includes/Widgets/Tabs.php:531
 #: includes/Widgets/Team_Member.php:415
 #: includes/Widgets/Team_Member.php:419
-#: includes/Widgets/Video.php:307
-#: includes/Widgets/Video.php:325
+#: includes/Widgets/Video.php:308
+#: includes/Widgets/Video.php:326
 #: includes/Widgets/Video_Playlist.php:310
 msgid "Icon color"
 msgstr ""
@@ -6845,7 +6845,7 @@ msgstr ""
 #: includes/Widgets/Image_Gallery.php:148
 #: includes/Widgets/Marquee.php:370
 #: includes/Widgets/Price_List.php:294
-#: includes/Widgets/Video.php:133
+#: includes/Widgets/Video.php:134
 msgid "Aspect ratio"
 msgstr ""
 
@@ -7016,13 +7016,13 @@ msgstr ""
 
 #: includes/Widgets/Featured_Image.php:181
 #: includes/Widgets/Image.php:239
-#: includes/Widgets/Video.php:159
+#: includes/Widgets/Video.php:160
 msgid "Cover"
 msgstr ""
 
 #: includes/Widgets/Featured_Image.php:182
 #: includes/Widgets/Image.php:239
-#: includes/Widgets/Video.php:158
+#: includes/Widgets/Video.php:159
 msgid "Contain"
 msgstr ""
 
@@ -7822,7 +7822,7 @@ msgid "Color on hover"
 msgstr ""
 
 #: includes/Widgets/Google_Maps.php:112
-#: includes/Widgets/Video.php:123
+#: includes/Widgets/Video.php:124
 msgid "Accessible title"
 msgstr ""
 
@@ -12014,7 +12014,7 @@ msgstr ""
 #: includes/Widgets/Soundcloud.php:122
 #: includes/Widgets/Support/Carousel_Engine.php:285
 #: includes/Widgets/Support/Carousel_Engine.php:290
-#: includes/Widgets/Video.php:192
+#: includes/Widgets/Video.php:193
 msgid "Autoplay"
 msgstr ""
 
@@ -12266,7 +12266,7 @@ msgid "Player options"
 msgstr ""
 
 #: includes/Widgets/Soundcloud.php:113
-#: includes/Widgets/Video.php:232
+#: includes/Widgets/Video.php:233
 msgid "Load player on click"
 msgstr ""
 
@@ -13791,140 +13791,140 @@ msgstr ""
 msgid "YouTube URL"
 msgstr ""
 
-#: includes/Widgets/Video.php:90
+#: includes/Widgets/Video.php:91
 msgid "Vimeo URL"
 msgstr ""
 
-#: includes/Widgets/Video.php:101
+#: includes/Widgets/Video.php:102
 msgid "Video file"
 msgstr ""
 
-#: includes/Widgets/Video.php:113
+#: includes/Widgets/Video.php:114
 msgid "File URL"
 msgstr ""
 
-#: includes/Widgets/Video.php:124
+#: includes/Widgets/Video.php:125
 msgid "Product tour"
 msgstr ""
 
-#: includes/Widgets/Video.php:125
+#: includes/Widgets/Video.php:126
 msgid "Names the play button and player for screen readers."
 msgstr ""
 
-#: includes/Widgets/Video.php:145
+#: includes/Widgets/Video.php:146
 msgid "Overrides the aspect ratio."
 msgstr ""
 
-#: includes/Widgets/Video.php:155
+#: includes/Widgets/Video.php:156
 msgid "Video fit"
 msgstr ""
 
-#: includes/Widgets/Video.php:156
+#: includes/Widgets/Video.php:157
 msgid "Cover fills the frame and crops the edges."
 msgstr ""
 
-#: includes/Widgets/Video.php:167
+#: includes/Widgets/Video.php:168
 #: includes/Widgets/Video_Playlist.php:235
 msgid "Playback"
 msgstr ""
 
-#: includes/Widgets/Video.php:172
+#: includes/Widgets/Video.php:173
 msgid "Start at (seconds)"
 msgstr ""
 
-#: includes/Widgets/Video.php:182
+#: includes/Widgets/Video.php:183
 msgid "End at (seconds)"
 msgstr ""
 
-#: includes/Widgets/Video.php:193
+#: includes/Widgets/Video.php:194
 msgid "Starts muted when the video scrolls into view. Skipped for visitors who prefer reduced motion."
 msgstr ""
 
-#: includes/Widgets/Video.php:200
+#: includes/Widgets/Video.php:201
 msgid "Mute"
 msgstr ""
 
-#: includes/Widgets/Video.php:214
+#: includes/Widgets/Video.php:215
 msgid "Player controls"
 msgstr ""
 
-#: includes/Widgets/Video.php:222
+#: includes/Widgets/Video.php:223
 #: includes/Widgets/Video_Playlist.php:257
 msgid "Privacy mode"
 msgstr ""
 
-#: includes/Widgets/Video.php:223
+#: includes/Widgets/Video.php:224
 #: includes/Widgets/Video_Playlist.php:258
 msgid "Uses youtube-nocookie.com and Vimeo \"do not track\"."
 msgstr ""
 
-#: includes/Widgets/Video.php:233
+#: includes/Widgets/Video.php:234
 msgid "Shows a poster and play button; the player (and its cookies) load only when played."
 msgstr ""
 
-#: includes/Widgets/Video.php:242
+#: includes/Widgets/Video.php:243
 msgid "Poster image"
 msgstr ""
 
-#: includes/Widgets/Video.php:244
+#: includes/Widgets/Video.php:245
 msgid "Shown before playback. YouTube videos use their own thumbnail when empty."
 msgstr ""
 
-#: includes/Widgets/Video.php:252
+#: includes/Widgets/Video.php:253
 #: includes/Widgets/Video_Playlist.php:266
 msgid "Play icon"
 msgstr ""
 
-#: includes/Widgets/Video.php:274
+#: includes/Widgets/Video.php:275
 msgid "Poster overlay"
 msgstr ""
 
-#: includes/Widgets/Video.php:278
+#: includes/Widgets/Video.php:279
 msgid "Poster filters"
 msgstr ""
 
-#: includes/Widgets/Video.php:281
+#: includes/Widgets/Video.php:282
 #: includes/Widgets/Video_Playlist.php:295
 msgid "Play button"
 msgstr ""
 
-#: includes/Widgets/Video.php:451
+#: includes/Widgets/Video.php:473
 msgid "Vimeo video player"
 msgstr ""
 
-#: includes/Widgets/Video.php:453
+#: includes/Widgets/Video.php:475
 msgid "YouTube video player"
 msgstr ""
 
-#: includes/Widgets/Video.php:455
+#: includes/Widgets/Video.php:477
 msgid "Video player"
 msgstr ""
 
-#: includes/Widgets/Video.php:480
+#: includes/Widgets/Video.php:502
 msgid "Paste a Vimeo link in the settings."
 msgstr ""
 
-#: includes/Widgets/Video.php:480
+#: includes/Widgets/Video.php:502
 msgid "Paste a YouTube link in the settings."
 msgstr ""
 
 #. translators: %s: video title.
-#: includes/Widgets/Video.php:519
+#: includes/Widgets/Video.php:541
 #: includes/Widgets/Video_Playlist.php:755
 #, php-format
 msgid "Play video: %s"
 msgstr ""
 
 #. translators: %s: video title.
-#: includes/Widgets/Video.php:519
+#: includes/Widgets/Video.php:541
 msgid "Play video"
 msgstr ""
 
-#: includes/Widgets/Video.php:544
+#: includes/Widgets/Video.php:566
 msgid "Choose a video file in the settings."
 msgstr ""
 
-#: includes/Widgets/Video.php:544
+#: includes/Widgets/Video.php:566
 msgid "Enter a video file URL in the settings."
 msgstr ""
 

@@ -77,7 +77,8 @@ class Video extends Widget_Base {
 			array(
 				'type'        => 'text',
 				'label'       => __( 'YouTube URL', 'uncoder' ),
-				'default'     => 'https://www.youtube.com/watch?v=aqz-KE-bpKQ',
+				// Uncoder's own placeholder video ("Choose your video", on the UncoderBuilder YouTube channel).
+				'default'     => 'https://www.youtube.com/watch?v=I1YQho4pMC4',
 				'placeholder' => 'https://www.youtube.com/watch?v=…',
 				'dynamic'     => true,
 				'condition'   => array( 'source' => 'youtube' ),
@@ -355,6 +356,27 @@ class Video extends Widget_Base {
 	}
 
 	/**
+	 * Poster image URL for a YouTube video: the 1280px "maxresdefault" frame when YouTube has one (HD uploads), else
+	 * the 480px "hqdefault" every video has (blurry on a wide player). YouTube answers 404 for a missing maxres frame,
+	 * so the site asks once per video and remembers the answer (a month for maxres, a day otherwise: new uploads get
+	 * it after processing, an hour after a network error).
+	 */
+	public static function youtube_poster( string $id ): string {
+		$base = 'https://i.ytimg.com/vi/' . $id . '/';
+		if ( ! preg_match( '/^[A-Za-z0-9_-]{11}$/', $id ) ) {
+			return $base . 'hqdefault.jpg';
+		}
+		$key  = 'uncoder_yt_poster_' . $id;
+		$size = get_transient( $key );
+		if ( false === $size ) {
+			$response = wp_safe_remote_head( $base . 'maxresdefault.jpg', array( 'timeout' => 3, 'redirection' => 0 ) );
+			$size     = ! is_wp_error( $response ) && 200 === (int) wp_remote_retrieve_response_code( $response ) ? 'maxres' : 'hq';
+			set_transient( $key, $size, is_wp_error( $response ) ? HOUR_IN_SECONDS : ( 'maxres' === $size ? MONTH_IN_SECONDS : DAY_IN_SECONDS ) );
+		}
+		return $base . ( 'maxres' === $size ? 'maxresdefault.jpg' : 'hqdefault.jpg' );
+	}
+
+	/**
 	 * Vimeo id and private hash ("h") from a URL.
 	 *
 	 * @return array{0:string,1:string}
@@ -501,7 +523,7 @@ class Video extends Widget_Base {
 			$poster = '<img' . Utils::attrs(
 				array(
 					'class'          => 'uncoder-video__poster',
-					'src'            => 'https://i.ytimg.com/vi/' . self::youtube_id( (string) ( $s['youtube_url'] ?? '' ) ) . '/hqdefault.jpg',
+					'src'            => self::youtube_poster( self::youtube_id( (string) ( $s['youtube_url'] ?? '' ) ) ),
 					'alt'            => '',
 					'loading'        => 'lazy',
 					'decoding'       => 'async',

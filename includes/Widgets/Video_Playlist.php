@@ -70,8 +70,8 @@ class Video_Playlist extends Widget_Base {
 			'videos'               => array(
 				array(
 					'title'       => __( 'Sample video: part one', 'uncoder' ),
-					'url'         => 'https://www.youtube.com/watch?v=aqz-KE-bpKQ',
-					'duration'    => '10:34',
+					'url'         => 'https://www.youtube.com/watch?v=I1YQho4pMC4',
+					'duration'    => '0:22',
 					'description' => __( 'Replace these sample rows with your own videos.', 'uncoder' ),
 				),
 				array(
@@ -738,7 +738,7 @@ class Video_Playlist extends Widget_Base {
 			$poster = '<img' . Utils::attrs(
 				array(
 					'class'          => 'uncoder-video-playlist__poster',
-					'src'            => 'https://i.ytimg.com/vi/' . $item['yt'] . '/hqdefault.jpg',
+					'src'            => Video::youtube_poster( $item['yt'] ),
 					'alt'            => '',
 					'decoding'       => 'async',
 					'referrerpolicy' => 'no-referrer',
