@@ -331,6 +331,7 @@ final class Editor {
 				'assets'  => UNCODER_WB_URL . 'assets/',
 				'icons'   => self::data_url( 'lucide.json' ),
 				'fonts'   => self::data_url( 'google-fonts.json' ),
+				'fontshare' => self::data_url( 'fontshare-fonts.json' ),
 				'site'    => home_url( '/' ),
 				'mcp'     => admin_url( 'admin.php?page=uncoder-ai' ),
 				'styleBook' => \Uncoder\Builder\Site\Style_Book::url(),

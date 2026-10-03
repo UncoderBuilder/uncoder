@@ -264,8 +264,8 @@ final class Design_Tools {
 			$clean['theme'] = array_filter( $theme, static fn( $v ) => null !== $v );
 		}
 		foreach ( (array) ( $clean['fonts'] ?? array() ) as $font ) {
-			if ( '' !== $font['family'] && 0 !== strpos( $font['family'], 'var(' ) && ! Fonts::is_google( $font['family'] ) && ! isset( Fonts::SYSTEM[ $font['family'] ] ) && ! \Uncoder\Builder\Site\Custom_Fonts::get( $font['family'] ) ) {
-				$call->warn( sprintf( 'Font "%s" is neither a Google Font nor one of this site\'s custom fonts (get_design_system → custom_fonts). Check spelling with search_fonts.', $font['family'] ) );
+			if ( '' !== $font['family'] && 0 !== strpos( $font['family'], 'var(' ) && ! Fonts::is_google( $font['family'] ) && ! Fonts::is_fontshare( $font['family'] ) && ! isset( Fonts::SYSTEM[ $font['family'] ] ) && ! \Uncoder\Builder\Site\Custom_Fonts::get( $font['family'] ) ) {
+				$call->warn( sprintf( 'Font "%s" is neither a Google Font, a Fontshare font nor one of this site\'s custom fonts (get_design_system → custom_fonts). Check spelling with search_fonts.', $font['family'] ) );
 			}
 		}
 		$remove = array_filter( (array) ( $a['remove'] ?? array() ), 'is_array' );

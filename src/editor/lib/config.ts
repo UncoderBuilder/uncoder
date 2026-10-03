@@ -39,7 +39,7 @@ export interface EditorConfig {
   kit: Kit;
   breakpoints: Breakpoint[];
   rest: { root: string; wp: string; nonce: string };
-  urls: { admin: string; assets: string; icons: string; fonts: string; site: string; mcp: string; styleBook?: string };
+  urls: { admin: string; assets: string; icons: string; fonts: string; fontshare?: string; site: string; mcp: string; styleBook?: string };
   styleBookNonce?: string;
   /** Settings → Tools → Safe mode is running for this browser (only Uncoder active, default theme). */
   safeMode?: boolean;

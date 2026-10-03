@@ -44,6 +44,6 @@ class Font extends Control_Type {
 	}
 
 	public function value_hint( array $control ): string {
-		return 'font family name (any Google Font or custom font) or "var(--uncoder-f-primary)"';
+		return 'font family name (any Google Font, Fontshare font or custom font) or "var(--uncoder-f-primary)"';
 	}
 }

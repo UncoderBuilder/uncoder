@@ -12,7 +12,7 @@ use Uncoder\Builder\Plugin;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Knows the Google Fonts catalog (bundled JSON), custom fonts and how to load them.
+ * Knows the Google Fonts and Fontshare catalogs (bundled JSON), custom fonts and how to load them.
  */
 final class Fonts {
 
@@ -25,6 +25,9 @@ final class Fonts {
 
 	/** @var array<string, array{c:string,w:string[]}>|null */
 	private static ?array $catalog = null;
+
+	/** @var array<string, array{c:string,w:string[],s:string}>|null */
+	private static ?array $fontshare = null;
 
 	/**
 	 * @return array<string, array{c:string,w:string[]}> family => [category, weights]
@@ -48,13 +51,56 @@ final class Fonts {
 	}
 
 	/**
+	 * Fontshare families that are not Google Fonts (tools/fontshare-catalog.mjs): family => [category, weights,
+	 * italics, slug]. Free for commercial use (ITF Free Font License or SIL OFL), served by Fontshare's CSS API.
+	 *
+	 * @return array<string, array{c:string,w:string[],s:string,i?:int}>
+	 */
+	public static function fontshare(): array {
+		if ( null === self::$fontshare ) {
+			self::$fontshare = array();
+			$file            = UNCODER_WB_PATH . 'assets/data/fontshare-fonts.json';
+			if ( is_readable( $file ) ) {
+				$data = json_decode( (string) file_get_contents( $file ), true ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+				if ( is_array( $data ) ) {
+					self::$fontshare = $data;
+				}
+			}
+		}
+		return self::$fontshare;
+	}
+
+	public static function is_fontshare( string $family ): bool {
+		return isset( self::fontshare()[ $family ] ) && ! self::is_google( $family );
+	}
+
+	/**
+	 * One Fontshare `f[]=` parameter: the slug and its weights, each italic as weight + 1 (Fontshare's code),
+	 * e.g. `f[]=supreme@400,401,700,701`. Twin of fontshareFamilyParam() in src/shared/fonts-url.ts.
+	 *
+	 * @param string   $family  Family.
+	 * @param string[] $weights Weights.
+	 */
+	public static function fontshare_param( string $family, array $weights ): string {
+		$info  = self::fontshare()[ $family ] ?? array();
+		$codes = array();
+		foreach ( array_values( array_unique( array_map( 'strval', $weights ) ) ) as $w ) {
+			$codes[] = $w;
+			if ( ! empty( $info['i'] ) ) {
+				$codes[] = (string) ( (int) $w + 1 );
+			}
+		}
+		return 'f[]=' . rawurlencode( (string) ( $info['s'] ?? sanitize_title( $family ) ) ) . '@' . implode( ',', $codes );
+	}
+
+	/**
 	 * Family => category for every known font (Google + custom), as the TS engine needs it.
 	 *
 	 * @return array<string, array{c:string}>
 	 */
 	public static function categories(): array {
 		$out = array();
-		foreach ( self::catalog() + \Uncoder\Builder\Site\Custom_Fonts::catalog() + \Uncoder\Builder\Site\Adobe_Fonts::catalog() as $family => $data ) {
+		foreach ( self::catalog() + self::fontshare() + \Uncoder\Builder\Site\Custom_Fonts::catalog() + \Uncoder\Builder\Site\Adobe_Fonts::catalog() as $family => $data ) {
 			$out[ $family ] = array( 'c' => $data['c'] );
 		}
 		return $out;
@@ -62,7 +108,7 @@ final class Fonts {
 
 	public static function category( string $family ): string {
 		$custom = \Uncoder\Builder\Site\Custom_Fonts::get( $family );
-		$c      = $custom ? $custom['c'] : ( self::catalog()[ $family ]['c'] ?? ( \Uncoder\Builder\Site\Adobe_Fonts::catalog()[ $family ]['c'] ?? '' ) );
+		$c      = $custom ? $custom['c'] : ( self::catalog()[ $family ]['c'] ?? ( self::fontshare()[ $family ]['c'] ?? ( \Uncoder\Builder\Site\Adobe_Fonts::catalog()[ $family ]['c'] ?? '' ) ) );
 		switch ( $c ) {
 			case 'serif':
 				return 'serif';
@@ -134,10 +180,24 @@ final class Fonts {
 		}
 		// Adobe Fonts project families: Adobe's stylesheet (they are not Google fonts, so skipped below).
 		\Uncoder\Builder\Site\Adobe_Fonts::enqueue_for( array_map( 'strval', array_keys( $fonts ) ) );
-		$families = array();
+		$families  = array();
+		$fontshare = array();
 		foreach ( $fonts as $family => $weights ) {
-			// An uploaded font with the same name replaces the Google one.
-			if ( ! self::is_google( $family ) || \Uncoder\Builder\Site\Custom_Fonts::get( $family ) ) {
+			// An uploaded font with the same name replaces the Google (or Fontshare) one.
+			if ( \Uncoder\Builder\Site\Custom_Fonts::get( $family ) ) {
+				continue;
+			}
+			if ( self::is_fontshare( $family ) ) {
+				$available = self::fontshare()[ $family ]['w'];
+				$wanted    = array_values( array_intersect( array_map( 'strval', $weights ? $weights : array( '400' ) ), $available ) );
+				if ( ! $wanted ) {
+					$wanted = in_array( '400', $available, true ) ? array( '400' ) : array( $available[0] );
+				}
+				sort( $wanted );
+				$fontshare[ $family ] = $wanted;
+				continue;
+			}
+			if ( ! self::is_google( $family ) ) {
 				continue;
 			}
 			$available = self::catalog()[ $family ]['w'] ?? array( '400' );
@@ -155,6 +215,14 @@ final class Fonts {
 			sort( $wanted );
 			$families[ $family ] = $wanted;
 		}
+		if ( $fontshare ) {
+			ksort( $fontshare );
+			$params = array();
+			foreach ( $fontshare as $family => $weights ) {
+				$params[] = self::fontshare_param( $family, $weights );
+			}
+			self::enqueue_url( 'https://api.fontshare.com/v2/css?' . implode( '&', $params ) . '&display=swap', $delivery );
+		}
 		if ( ! $families ) {
 			return;
 		}
@@ -163,7 +231,13 @@ final class Fonts {
 		foreach ( $families as $family => $weights ) {
 			$parts[] = self::family_param( $family, $weights );
 		}
-		$url    = 'https://fonts.googleapis.com/css2?' . implode( '&', $parts ) . '&display=swap';
+		self::enqueue_url( 'https://fonts.googleapis.com/css2?' . implode( '&', $parts ) . '&display=swap', $delivery );
+	}
+
+	/**
+	 * Enqueues a Google Fonts or Fontshare stylesheet, or its self-hosted copy ("local" delivery).
+	 */
+	private static function enqueue_url( string $url, string $delivery ): void {
 		$handle = 'uncoder-fonts-' . substr( md5( $url ), 0, 8 );
 		if ( 'local' === $delivery ) {
 			// Self-hosted copies: visitors' browsers never contact Google.
@@ -177,7 +251,7 @@ final class Fonts {
 	}
 
 	/**
-	 * URL of a locally stored copy of a Google Fonts stylesheet, downloading it (and its WOFF2 files)
+	 * URL of a locally stored copy of a Google Fonts (or Fontshare) stylesheet, downloading it (and its WOFF2 files)
 	 * on first use. Returns null while the download is not available; the page then uses the
 	 * fallback font stack and the download is retried after ten minutes.
 	 */
@@ -218,7 +292,13 @@ final class Fonts {
 			return false;
 		}
 		$css = (string) wp_remote_retrieve_body( $response );
-		if ( ! preg_match_all( '#url\((https://fonts\.gstatic\.com/[^)\s\'"]+\.woff2)\)#', $css, $m ) ) {
+		// Fontshare lists WOFF2, WOFF and TTF per face (protocol-relative URLs): keep the WOFF2 file only.
+		$fontshare = false !== strpos( $google_url, 'api.fontshare.com' );
+		if ( $fontshare ) {
+			$css = (string) preg_replace( '#,\s*url\([\'"]?//cdn\.fontshare\.com/[^)]+\.(?:woff|ttf)[\'"]?\)\s*format\([^)]*\)#', '', $css );
+			$css = (string) preg_replace( '#url\([\'"]?(//cdn\.fontshare\.com/[^)\'"]+\.woff2)[\'"]?\)#', 'url(https:$1)', $css );
+		}
+		if ( ! preg_match_all( '#url\((https://(?:fonts\.gstatic\.com|cdn\.fontshare\.com)/[^)\s\'"]+\.woff2)\)#', $css, $m ) ) {
 			return false;
 		}
 		if ( ! wp_mkdir_p( $dir . '/files' ) ) {
@@ -249,7 +329,7 @@ final class Fonts {
 			}
 			$css = str_replace( $font_url, 'files/' . $name, $css );
 		}
-		$css = "/* Google Fonts, self-hosted by Uncoder. Licenses: https://fonts.google.com/attribution */\n" . $css;
+		$css = ( $fontshare ? "/* Fontshare fonts, self-hosted by Uncoder. Licenses: https://www.fontshare.com/licenses */\n" : "/* Google Fonts, self-hosted by Uncoder. Licenses: https://fonts.google.com/attribution */\n" ) . $css;
 		return false !== file_put_contents( $css_file, $css ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
 	}
 
@@ -261,7 +341,7 @@ final class Fonts {
 	public static function search( string $query, int $limit = 30, string $category = '' ): array {
 		$query = strtolower( trim( $query ) );
 		$out   = array();
-		foreach ( self::catalog() as $family => $data ) {
+		foreach ( self::catalog() + self::fontshare() as $family => $data ) {
 			if ( '' !== $category && $data['c'] !== $category ) {
 				continue;
 			}
@@ -270,7 +350,7 @@ final class Fonts {
 					'family'   => $family,
 					'category' => $data['c'],
 					'weights'  => $data['w'],
-				);
+				) + ( isset( $data['s'] ) ? array( 'source' => 'fontshare' ) : array() );
 				if ( count( $out ) >= $limit ) {
 					break;
 				}

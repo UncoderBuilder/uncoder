@@ -244,6 +244,30 @@ final class Audit {
 	}
 
 	/**
+	 * How many columns a grid-template-columns value makes: "1fr 1fr" = 2, "minmax(0, 1fr) 106px" = 2,
+	 * "repeat(3, 1fr)" = 3. repeat(auto-fit / auto-fill, …) adapts to the width and counts as one.
+	 */
+	private static function template_tracks( string $template ): int {
+		$count    = 0;
+		$template = (string) preg_replace_callback(
+			'/repeat\(\s*([^,]+),((?:[^()]|\([^()]*\))*)\)/i',
+			static function ( array $m ) use ( &$count ): string {
+				$times  = trim( $m[1] );
+				$count += ctype_digit( $times ) ? (int) $times * max( 1, self::template_tracks( $m[2] ) ) : 1;
+				return ' ';
+			},
+			$template
+		);
+		// minmax(a, b), fit-content(…) and [line names] are part of one track.
+		while ( preg_match( '/\([^()]*\)/', $template ) ) {
+			$template = (string) preg_replace( '/\([^()]*\)/', '', $template );
+		}
+		$template = (string) preg_replace( '/\[[^\]]*\]/', ' ', $template );
+		$tracks   = preg_split( '/\s+/', trim( $template ), -1, PREG_SPLIT_NO_EMPTY );
+		return $count + count( (array) $tracks );
+	}
+
+	/**
 	 * Whether an empty container still shows something: a background or a border.
 	 *
 	 * @param array<string,mixed> $s Container settings.
@@ -292,7 +316,9 @@ final class Audit {
 		if ( 'grid' !== ( $s['layout'] ?? '' ) && in_array( self::on_mobile( $s, 'direction', 'column' ), array( 'row', 'row-reverse' ), true ) && $is_layout && 'wrap' !== self::on_mobile( $s, 'wrap', '' ) ) {
 			$this->add( 'warning', 'responsive', $id, sprintf( 'Row with %d columns keeps the row layout on phones.', count( $children ) ), 'Add "direction_mobile": "column" (and a smaller gap_mobile).' );
 		}
-		$mobile_cols = (int) self::on_mobile( $s, 'grid_columns', 3 );
+		// A custom column template (grid_template "1fr 1fr") decides the columns; grid_columns is ignored then.
+		$template    = trim( (string) self::on_mobile( $s, 'grid_template', '' ) );
+		$mobile_cols = '' !== $template ? self::template_tracks( $template ) : (int) self::on_mobile( $s, 'grid_columns', 3 );
 		if ( 'grid' === ( $s['layout'] ?? '' ) && $mobile_cols >= 3 && ! isset( $s['grid_template_mobile'] ) ) {
 			$this->add( 'warning', 'responsive', $id, 'Grid keeps ' . $mobile_cols . ' columns on phones.', 'Add "grid_columns_mobile": 1 (and grid_columns_tablet: 2).' );
 		}

@@ -1,6 +1,6 @@
-// Google Fonts catalog for pickers + on-demand <link> injection in the canvas.
+// Google Fonts + Fontshare catalog for pickers + on-demand <link> injection in the canvas.
 import { registerFontCategories } from '@shared/css';
-import { googleFamilyParam, sortWeights } from '@shared/fonts-url';
+import { fontshareFamilyParam, googleFamilyParam, sortWeights } from '@shared/fonts-url';
 import { config } from './config';
 
 export interface FontInfo {
@@ -11,7 +11,7 @@ export interface FontInfo {
   custom?: boolean;
 }
 
-let catalog: Record<string, { c: string; w: string[]; o?: [number, number]; i?: number; custom?: boolean }> | null = null;
+let catalog: Record<string, { c: string; w: string[]; o?: [number, number]; i?: number; s?: string; custom?: boolean }> | null = null;
 let loading: Promise<void> | null = null;
 let canvasDoc: Document | null = null;
 const loaded = new Set<string>();
@@ -19,11 +19,11 @@ const loaded = new Set<string>();
 async function load(): Promise<void> {
   if (catalog) return;
   if (!loading) {
-    loading = fetch(config.urls.fonts, { credentials: 'same-origin' })
-      .then((r) => r.json())
-      .then((data) => {
-        // Custom fonts first: they win over a Google family with the same name.
-        catalog = { ...(config.customFonts ?? {}), ...data, ...(config.customFonts ?? {}) };
+    const fontshare = config.urls.fontshare ? fetch(config.urls.fontshare, { credentials: 'same-origin' }).then((r) => r.json()).catch(() => ({})) : Promise.resolve({});
+    loading = Promise.all([fetch(config.urls.fonts, { credentials: 'same-origin' }).then((r) => r.json()), fontshare])
+      .then(([data, extra]) => {
+        // Custom fonts win over a Google or Fontshare family with the same name; Google wins over Fontshare.
+        catalog = { ...extra, ...data, ...(config.customFonts ?? {}) };
         registerFontCategories(catalog!);
       })
       .catch(() => {
@@ -52,6 +52,7 @@ export const fonts = {
   ensure(used: Map<string, Set<string>>) {
     if (!canvasDoc || !catalog || config.kit.settings?.font_delivery === 'none') return;
     const missing: string[] = [];
+    const fontshare: string[] = [];
     for (const [family, weights] of used) {
       const info = catalog[family];
       if (!info || info.custom) continue;
@@ -60,13 +61,17 @@ export const fonts = {
       if (loaded.has(key)) continue;
       loaded.add(key);
       const list = w.length ? w : [info.w[0]];
-      // Twin of Fonts::family_param(): optical-size axis and italics when the family has them.
-      missing.push(googleFamilyParam(family, list, info));
+      // Twins of Fonts::fontshare_param() / Fonts::family_param(): italics (and Google's optical-size axis).
+      if (info.s) fontshare.push(fontshareFamilyParam(info.s, list, !!info.i));
+      else missing.push(googleFamilyParam(family, list, info));
     }
-    if (!missing.length) return;
-    const link = canvasDoc.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = `https://fonts.googleapis.com/css2?${missing.join('&')}&display=swap`;
-    canvasDoc.head.appendChild(link);
+    const add = (href: string) => {
+      const link = canvasDoc!.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = href;
+      canvasDoc!.head.appendChild(link);
+    };
+    if (missing.length) add(`https://fonts.googleapis.com/css2?${missing.join('&')}&display=swap`);
+    if (fontshare.length) add(`https://api.fontshare.com/v2/css?${fontshare.join('&')}&display=swap`);
   },
 };

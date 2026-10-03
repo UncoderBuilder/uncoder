@@ -13,6 +13,19 @@ export interface GoogleFontInfo {
 /** Weights sorted the way Google requires (numerically: "1000" after "900"). */
 export const sortWeights = (weights: string[]): string[] => [...weights].sort((a, b) => parseFloat(a) - parseFloat(b));
 
+/**
+ * One Fontshare `f[]=` parameter: slug and weights, each italic as weight + 1 (Fontshare's code). Twin of
+ * Fonts::fontshare_param().
+ */
+export function fontshareFamilyParam(slug: string, weights: string[], italics = false): string {
+  const codes: string[] = [];
+  for (const w of [...new Set(weights.map(String))]) {
+    codes.push(w);
+    if (italics) codes.push(String(parseInt(w, 10) + 1));
+  }
+  return `f[]=${encodeURIComponent(slug)}@${codes.join(',')}`;
+}
+
 export function googleFamilyParam(family: string, weights: string[] | string, info: GoogleFontInfo = {}): string {
   const name = family.replace(/ /g, '+');
   // Each weight once: Google answers 400 Bad Request (for the whole stylesheet) to a repeated tuple.
