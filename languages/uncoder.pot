@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-03T17:07:08+00:00\n"
+"POT-Creation-Date: 2026-10-03T18:25:42+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: uncoder\n"
@@ -161,8 +161,8 @@ msgstr ""
 #: includes/Widgets/Link_In_Bio.php:752
 #: includes/Widgets/Login.php:283
 #: includes/Widgets/Loop_Grid.php:556
-#: includes/Widgets/Marquee.php:239
-#: includes/Widgets/Marquee.php:312
+#: includes/Widgets/Marquee.php:251
+#: includes/Widgets/Marquee.php:324
 #: includes/Widgets/Nav_Menu.php:820
 #: includes/Widgets/Nav_Menu.php:838
 #: includes/Widgets/Off_Canvas.php:382
@@ -294,7 +294,7 @@ msgstr ""
 #: includes/Widgets/Icon_Box.php:405
 #: includes/Widgets/Icon_List.php:303
 #: includes/Widgets/Link_In_Bio.php:711
-#: includes/Widgets/Marquee.php:302
+#: includes/Widgets/Marquee.php:314
 #: includes/Widgets/Off_Canvas.php:410
 #: includes/Widgets/Post_Navigation.php:219
 #: includes/Widgets/Price_Table.php:272
@@ -361,7 +361,7 @@ msgstr ""
 #: includes/Widgets/Image_Gallery.php:70
 #: includes/Widgets/Image_Gallery.php:93
 #: includes/Widgets/Image_Gallery.php:244
-#: includes/Widgets/Marquee.php:341
+#: includes/Widgets/Marquee.php:353
 msgid "Images"
 msgstr ""
 
@@ -855,7 +855,7 @@ msgstr ""
 #: includes/Widgets/Login.php:485
 #: includes/Widgets/Loop_Filter.php:150
 #: includes/Widgets/Loop_Grid.php:335
-#: includes/Widgets/Marquee.php:200
+#: includes/Widgets/Marquee.php:212
 #: includes/Widgets/Nav_Menu.php:107
 #: includes/Widgets/Nav_Menu.php:213
 #: includes/Widgets/Nav_Menu.php:408
@@ -897,7 +897,7 @@ msgstr ""
 #: includes/Widgets/Loop_Filter.php:151
 #: includes/Widgets/Loop_Grid.php:336
 #: includes/Widgets/Lottie.php:167
-#: includes/Widgets/Marquee.php:201
+#: includes/Widgets/Marquee.php:213
 #: includes/Widgets/Nav_Menu.php:108
 #: includes/Widgets/Nav_Menu.php:214
 #: includes/Widgets/Nav_Menu.php:409
@@ -939,7 +939,7 @@ msgstr ""
 #: includes/Widgets/Login.php:487
 #: includes/Widgets/Loop_Filter.php:152
 #: includes/Widgets/Loop_Grid.php:337
-#: includes/Widgets/Marquee.php:202
+#: includes/Widgets/Marquee.php:214
 #: includes/Widgets/Nav_Menu.php:109
 #: includes/Widgets/Nav_Menu.php:410
 #: includes/Widgets/Posts.php:342
@@ -1238,7 +1238,7 @@ msgstr ""
 #: includes/Widgets/Logo_Grid.php:260
 #: includes/Widgets/Loop_Grid.php:458
 #: includes/Widgets/Loop_Grid.php:534
-#: includes/Widgets/Marquee.php:387
+#: includes/Widgets/Marquee.php:399
 #: includes/Widgets/Nav_Menu.php:735
 #: includes/Widgets/Nav_Menu.php:865
 #: includes/Widgets/Off_Canvas.php:338
@@ -1432,7 +1432,7 @@ msgstr ""
 #: includes/Widgets/Login.php:247
 #: includes/Widgets/Logo_Grid.php:130
 #: includes/Widgets/Lottie.php:166
-#: includes/Widgets/Marquee.php:151
+#: includes/Widgets/Marquee.php:163
 #: includes/Widgets/Nav_Menu.php:311
 #: includes/Widgets/Nav_Menu.php:954
 #: includes/Widgets/Off_Canvas.php:126
@@ -1490,7 +1490,7 @@ msgstr ""
 #: includes/Widgets/Login.php:249
 #: includes/Widgets/Logo_Grid.php:131
 #: includes/Widgets/Lottie.php:168
-#: includes/Widgets/Marquee.php:152
+#: includes/Widgets/Marquee.php:164
 #: includes/Widgets/Nav_Menu.php:312
 #: includes/Widgets/Nav_Menu.php:956
 #: includes/Widgets/Off_Canvas.php:128
@@ -1630,7 +1630,7 @@ msgstr ""
 #: includes/Widgets/Logo_Grid.php:216
 #: includes/Widgets/Loop_Grid.php:399
 #: includes/Widgets/Loop_Grid.php:484
-#: includes/Widgets/Marquee.php:234
+#: includes/Widgets/Marquee.php:246
 #: includes/Widgets/Nav_Menu.php:470
 #: includes/Widgets/Nav_Menu.php:620
 #: includes/Widgets/Nav_Menu.php:815
@@ -1688,7 +1688,7 @@ msgstr ""
 #: includes/Widgets/Logo_Grid.php:229
 #: includes/Widgets/Loop_Grid.php:417
 #: includes/Widgets/Loop_Grid.php:502
-#: includes/Widgets/Marquee.php:244
+#: includes/Widgets/Marquee.php:256
 #: includes/Widgets/Nav_Menu.php:488
 #: includes/Widgets/Nav_Menu.php:638
 #: includes/Widgets/Nav_Menu.php:833
@@ -2191,7 +2191,7 @@ msgstr ""
 #: includes/Widgets/Countdown.php:168
 #: includes/Widgets/Countdown.php:315
 #: includes/Widgets/Counter.php:115
-#: includes/Widgets/Marquee.php:297
+#: includes/Widgets/Marquee.php:309
 #: includes/Widgets/Post_Info.php:203
 msgid "Separator"
 msgstr ""
@@ -2531,7 +2531,7 @@ msgstr ""
 
 #: includes/Elements/Container.php:113
 #: includes/Widgets/Logo_Grid.php:127
-#: includes/Widgets/Marquee.php:148
+#: includes/Widgets/Marquee.php:160
 #: includes/Widgets/Steps.php:112
 #: includes/Widgets/Support/Carousel_Engine.php:100
 msgid "Direction"
@@ -2577,7 +2577,7 @@ msgstr ""
 
 #: includes/Elements/Container.php:151
 #: includes/Widgets/Form.php:218
-#: includes/Widgets/Marquee.php:174
+#: includes/Widgets/Marquee.php:186
 #: includes/Widgets/Table.php:108
 #: includes/Widgets/Table.php:113
 msgid "Rows"
@@ -2846,7 +2846,7 @@ msgstr ""
 #: includes/Widgets/Flip_Box.php:242
 #: includes/Widgets/Google_Maps.php:87
 #: includes/Widgets/Image.php:209
-#: includes/Widgets/Marquee.php:162
+#: includes/Widgets/Marquee.php:174
 #: includes/Widgets/Off_Canvas.php:185
 #: includes/Widgets/Progress_Bar.php:158
 #: includes/Widgets/Reading_Progress.php:96
@@ -2980,7 +2980,7 @@ msgstr ""
 #: includes/Widgets/Breadcrumbs.php:173
 #: includes/Widgets/Hotspot.php:403
 #: includes/Widgets/Login.php:467
-#: includes/Widgets/Marquee.php:249
+#: includes/Widgets/Marquee.php:261
 #: includes/Widgets/Post_Comments.php:78
 #: includes/Widgets/Post_Content.php:86
 #: includes/Widgets/Post_Info.php:264
@@ -4672,7 +4672,7 @@ msgstr ""
 #: includes/Widgets/Loop_Grid.php:397
 #: includes/Widgets/Loop_Grid.php:482
 #: includes/Widgets/Loop_Grid.php:551
-#: includes/Widgets/Marquee.php:232
+#: includes/Widgets/Marquee.php:244
 #: includes/Widgets/Nav_Menu.php:468
 #: includes/Widgets/Nav_Menu.php:618
 #: includes/Widgets/Nav_Menu.php:882
@@ -4812,7 +4812,7 @@ msgstr ""
 #: includes/Widgets/Link_In_Bio.php:721
 #: includes/Widgets/Login.php:291
 #: includes/Widgets/Logo_Grid.php:192
-#: includes/Widgets/Marquee.php:270
+#: includes/Widgets/Marquee.php:282
 #: includes/Widgets/Posts.php:477
 #: includes/Widgets/Posts.php:550
 #: includes/Widgets/Posts.php:578
@@ -5191,7 +5191,7 @@ msgstr ""
 #: includes/Widgets/Call_To_Action.php:610
 #: includes/Widgets/Counter.php:198
 #: includes/Widgets/Heading.php:160
-#: includes/Widgets/Marquee.php:256
+#: includes/Widgets/Marquee.php:268
 #: includes/Widgets/Post_Title.php:123
 #: includes/Widgets/Site_Tagline.php:90
 #: includes/Widgets/Site_Title.php:99
@@ -5288,7 +5288,7 @@ msgstr ""
 #: includes/Widgets/Icon_List.php:350
 #: includes/Widgets/Marquee.php:81
 #: includes/Widgets/Marquee.php:87
-#: includes/Widgets/Marquee.php:231
+#: includes/Widgets/Marquee.php:243
 #: includes/Widgets/Off_Canvas.php:82
 #: includes/Widgets/Post_Comments.php:64
 #: includes/Widgets/Post_Content.php:72
@@ -6051,7 +6051,7 @@ msgstr ""
 
 #: includes/Widgets/Call_To_Action.php:406
 #: includes/Widgets/Flip_Box.php:420
-#: includes/Widgets/Marquee.php:358
+#: includes/Widgets/Marquee.php:370
 msgid "Image width"
 msgstr ""
 
@@ -6843,7 +6843,7 @@ msgstr ""
 #: includes/Widgets/Image_Carousel.php:120
 #: includes/Widgets/Image_Compare.php:184
 #: includes/Widgets/Image_Gallery.php:148
-#: includes/Widgets/Marquee.php:370
+#: includes/Widgets/Marquee.php:382
 #: includes/Widgets/Price_List.php:294
 #: includes/Widgets/Video.php:134
 msgid "Aspect ratio"
@@ -7002,7 +7002,7 @@ msgstr ""
 #: includes/Widgets/Image_Carousel.php:123
 #: includes/Widgets/Image_Compare.php:186
 #: includes/Widgets/Image_Gallery.php:151
-#: includes/Widgets/Marquee.php:372
+#: includes/Widgets/Marquee.php:384
 #: includes/Widgets/Posts.php:156
 #: includes/Widgets/Price_List.php:301
 #: includes/Widgets/Team_Member.php:218
@@ -9180,7 +9180,7 @@ msgid "Time for one full loop; lower is faster."
 msgstr ""
 
 #: includes/Widgets/Logo_Grid.php:140
-#: includes/Widgets/Marquee.php:217
+#: includes/Widgets/Marquee.php:229
 #: includes/Widgets/Slides.php:549
 #: includes/Widgets/Support/Carousel_Engine.php:134
 #: includes/Widgets/Support/Carousel_Engine.php:311
@@ -9188,7 +9188,7 @@ msgid "Pause on hover"
 msgstr ""
 
 #: includes/Widgets/Logo_Grid.php:149
-#: includes/Widgets/Marquee.php:225
+#: includes/Widgets/Marquee.php:237
 msgid "Fade edges"
 msgstr ""
 
@@ -9231,7 +9231,7 @@ msgid "Divider width"
 msgstr ""
 
 #: includes/Widgets/Logo_Grid.php:295
-#: includes/Widgets/Marquee.php:320
+#: includes/Widgets/Marquee.php:332
 msgid "Edge fade width"
 msgstr ""
 
@@ -9769,80 +9769,88 @@ msgstr ""
 msgid "Outlined letters with no fill, in this color."
 msgstr ""
 
-#: includes/Widgets/Marquee.php:153
+#: includes/Widgets/Marquee.php:148
+msgid "Repeat items"
+msgstr ""
+
+#: includes/Widgets/Marquee.php:149
+msgid "For short content: the items appear this many times in a row, so the strip stays full at its gap instead of spreading them out. A longer row also takes longer to loop."
+msgstr ""
+
+#: includes/Widgets/Marquee.php:165
 msgid "Up"
 msgstr ""
 
-#: includes/Widgets/Marquee.php:154
+#: includes/Widgets/Marquee.php:166
 msgid "Down"
 msgstr ""
 
-#: includes/Widgets/Marquee.php:163
+#: includes/Widgets/Marquee.php:175
 msgid "The visible height of an up / down marquee. Default: 420px."
 msgstr ""
 
-#: includes/Widgets/Marquee.php:175
+#: includes/Widgets/Marquee.php:187
 msgid "Columns when the marquee moves up or down. Each row shows all the items."
 msgstr ""
 
-#: includes/Widgets/Marquee.php:188
+#: includes/Widgets/Marquee.php:200
 msgid "Alternate direction"
 msgstr ""
 
-#: includes/Widgets/Marquee.php:189
+#: includes/Widgets/Marquee.php:201
 msgid "Every other row moves the opposite way."
 msgstr ""
 
-#: includes/Widgets/Marquee.php:198
+#: includes/Widgets/Marquee.php:210
 msgid "Item alignment"
 msgstr ""
 
-#: includes/Widgets/Marquee.php:250
+#: includes/Widgets/Marquee.php:262
 msgid "Items with a link."
 msgstr ""
 
-#: includes/Widgets/Marquee.php:261
+#: includes/Widgets/Marquee.php:273
 msgid "Outline text color"
 msgstr ""
 
-#: includes/Widgets/Marquee.php:262
+#: includes/Widgets/Marquee.php:274
 msgid "Hollow letters: set the text color to transparent and pick an outline color."
 msgstr ""
 
-#: includes/Widgets/Marquee.php:280
+#: includes/Widgets/Marquee.php:292
 msgid "Item icon size"
 msgstr ""
 
-#: includes/Widgets/Marquee.php:290
+#: includes/Widgets/Marquee.php:302
 msgid "Item icon color"
 msgstr ""
 
-#: includes/Widgets/Marquee.php:331
+#: includes/Widgets/Marquee.php:343
 #: includes/Widgets/Price_Table.php:604
 msgid "Space between rows"
 msgstr ""
 
-#: includes/Widgets/Marquee.php:346
+#: includes/Widgets/Marquee.php:358
 msgid "Image height"
 msgstr ""
 
-#: includes/Widgets/Marquee.php:347
+#: includes/Widgets/Marquee.php:359
 msgid "Left / right marquees. Default: 64px."
 msgstr ""
 
-#: includes/Widgets/Marquee.php:359
+#: includes/Widgets/Marquee.php:371
 msgid "Up / down marquees. Default: the full column width."
 msgstr ""
 
-#: includes/Widgets/Marquee.php:396
+#: includes/Widgets/Marquee.php:408
 msgid "Grey until hovered"
 msgstr ""
 
-#: includes/Widgets/Marquee.php:397
+#: includes/Widgets/Marquee.php:409
 msgid "Logos and photos in greyscale that turn to colour under the pointer."
 msgstr ""
 
-#: includes/Widgets/Marquee.php:407
+#: includes/Widgets/Marquee.php:419
 msgid "Add items to build the marquee."
 msgstr ""
 

@@ -142,6 +142,18 @@ class Marquee extends Widget_Base {
 			)
 		);
 		$this->add_control(
+			'repeat',
+			array(
+				'type'        => 'number',
+				'label'       => __( 'Repeat items', 'uncoder' ),
+				'description' => __( 'For short content: the items appear this many times in a row, so the strip stays full at its gap instead of spreading them out. A longer row also takes longer to loop.', 'uncoder' ),
+				'min'         => 1,
+				'max'         => 10,
+				'step'        => 1,
+				'default'     => 1,
+			)
+		);
+		$this->add_control(
 			'direction',
 			array(
 				'type'    => 'choose',
@@ -420,8 +432,10 @@ class Marquee extends Widget_Base {
 			'down'  => 'up',
 		);
 		$sep       = $this->has_icon( $s['separator'] ?? null ) ? '<span class="uncoder-marquee__sep" aria-hidden="true">' . $this->render_icon( $s['separator'] ) . '</span>' : '';
-		$items     = $this->items( $rows, $sep, $ctx, false );
-		$copy      = $this->items( $rows, $sep, $ctx, true );
+		// Short content is repeated inside each group (the repeats are decoration, hidden from screen readers).
+		$repeat    = max( 1, min( 10, (int) ( $s['repeat'] ?? 1 ) ) );
+		$items     = $this->items( $rows, $sep, $ctx, false ) . str_repeat( $this->items( $rows, $sep, $ctx, true, true ), $repeat - 1 );
+		$copy      = str_repeat( $this->items( $rows, $sep, $ctx, true ), $repeat );
 
 		// The modifiers every lane shares.
 		$shared = array();
@@ -472,8 +486,10 @@ class Marquee extends Widget_Base {
 	 * One copy of the items.
 	 *
 	 * @param array<int, array<string,mixed>> $rows Rows.
+	 * @param bool                            $copy A decorative copy (no alt text, links out of the tab order).
+	 * @param bool                            $hide Also hide each item from screen readers (repeats in the real group).
 	 */
-	private function items( array $rows, string $sep, Render_Context $ctx, bool $copy ): string {
+	private function items( array $rows, string $sep, Render_Context $ctx, bool $copy, bool $hide = false ): string {
 		$out = '';
 		foreach ( $rows as $i => $row ) {
 			$rid   = sanitize_html_class( (string) ( $row['_id'] ?? '' ) );
@@ -502,9 +518,12 @@ class Marquee extends Widget_Base {
 				if ( $copy ) {
 					$link['tabindex'] = '-1';
 				}
+				if ( $hide ) {
+					$link['aria-hidden'] = 'true';
+				}
 				$out .= '<a' . Utils::attrs( $link ) . '>' . $inner . '</a>';
 			} else {
-				$out .= '<span' . Utils::attrs( array( 'class' => $class ) ) . '>' . $inner . '</span>';
+				$out .= '<span' . Utils::attrs( array_filter( array( 'class' => $class, 'aria-hidden' => $hide ? 'true' : '' ) ) ) . '>' . $inner . '</span>';
 			}
 			$out .= $sep;
 		}
