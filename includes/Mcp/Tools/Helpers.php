@@ -159,7 +159,7 @@ final class Helpers {
 	 *
 	 * @param mixed    $elements Raw.
 	 * @param string[] $reserved Ids already used in the target document.
-	 * @return array{0: array<int, array<string,mixed>>, 1: string[]}
+	 * @return array{0: array<int, array<string,mixed>>, 1: string[], 2: string[]} Tree, errors, warnings (repairs made).
 	 */
 	public static function normalize_tree( $elements, array $reserved = array() ): array {
 		$tree = new Tree( 'normalize' );
@@ -177,7 +177,7 @@ final class Helpers {
 				);
 			}
 		}
-		return array( $clean, $tree->errors );
+		return array( $clean, $tree->errors, $tree->warnings );
 	}
 
 	public static function errors_to_wp_error( string $message, array $errors ): WP_Error {

@@ -230,11 +230,41 @@ final class Tree {
 					}
 				}
 				$out['children'] = $children;
+				$this->match_rows( $type, $out, $path );
 			}
 		} elseif ( $can_have_children ) {
 			$out['children'] = array();
 		}
 		return $out;
+	}
+
+	/**
+	 * Nested widgets (carousel, tabs, accordion…) render one child container per row of their items repeater, so
+	 * children beyond the rows were silently left out. Missing rows are added (titled "Slide 4", "Item 5"…) and the
+	 * change is reported as a warning.
+	 *
+	 * @param array<string,mixed> $out The sanitised node (settings + children).
+	 */
+	private function match_rows( Element_Base $type, array &$out, string $path ): void {
+		$nested = $type->nested();
+		if ( null === $nested ) {
+			return;
+		}
+		$key      = (string) $nested['items'];
+		$control  = $type->get_control( $key );
+		$children = count( $out['children'] ?? array() );
+		$rows     = $out['settings'][ $key ] ?? ( $control['default'] ?? array() );
+		$rows     = is_array( $rows ) ? array_values( $rows ) : array();
+		if ( $children <= count( $rows ) ) {
+			return;
+		}
+		$title = (string) ( $control['title_field'] ?? '' );
+		$noun  = 'carousel' === $type->name() ? 'Slide' : 'Item';
+		for ( $i = count( $rows ); $i < $children; $i++ ) {
+			$rows[] = '' !== $title ? array( $title => $noun . ' ' . ( $i + 1 ) ) : array();
+		}
+		$out['settings'][ $key ] = $rows;
+		$this->warnings[]        = sprintf( '%s: %d children but fewer "%s" rows; added rows so every child is shown. Send one "%s" row per child.', $path, $children, $key, $key );
 	}
 
 	private function suggest_type( string $name ): string {

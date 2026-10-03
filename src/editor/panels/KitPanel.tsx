@@ -286,7 +286,7 @@ function Section({ section }: { section: 'buttons' | 'layout' | 'theme' }) {
         background: { type: 'color', label: 'Page background' },
         background_image: { type: 'media', label: 'Background image', description: 'A texture or pattern behind every section without its own background.' },
         background_size: { type: 'select', label: 'Image size', options: { auto: 'Tile', cover: 'Cover' }, condition: { 'background_image.url!': '' } },
-        optical_sizing: { type: 'select', label: 'Optical sizing', options: { '': 'Auto', none: 'Off' }, description: 'Off: fonts like Inter keep their text shapes at large sizes (the static font files most designs use).' },
+        optical_sizing: { type: 'select', label: 'Optical sizing', options: { '': 'Auto', none: 'Off' }, description: 'Off: fonts like Inter or DM Sans keep their standard text shapes and widths at every size (the static font files most designs use).' },
       } as Record<string, ControlDef>;
     }
     return labelled(KIT_SCHEMAS[section]);

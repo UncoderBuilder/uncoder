@@ -139,14 +139,18 @@ final class Fonts {
 	/**
 	 * One css2 `family=` parameter. Families with an optical-size axis also load it (browsers then use the
 	 * display cut for big headings, e.g. Inter Display) — `family=Inter:opsz,wght@14..32,400;14..32,600`.
+	 * With optical sizing off (Design System › Theme) the axis is left out: Google then serves the family's
+	 * standard text cut, the one in its static font files. (Turning the axis off in CSS is not the same: browsers
+	 * fall back to the font file's own default, which for DM Sans is its widest, 9pt cut.)
 	 * Families with italics load them too (`ital` axis), so <em> and italic styles use the real italic instead
 	 * of a slanted copy; browsers only download the italic files when italic text is on the page.
 	 * Twin of googleFamilyParam() in src/shared/fonts-url.ts (the editor canvas).
 	 *
 	 * @param string          $family  Family.
 	 * @param string|string[] $weights Weight list or a "min..max" range.
+	 * @param bool            $optical False when the Design System turns optical sizing off.
 	 */
-	public static function family_param( string $family, $weights ): string {
+	public static function family_param( string $family, $weights, bool $optical = true ): string {
 		$name   = str_replace( ' ', '+', $family );
 		$info   = self::catalog()[ $family ] ?? array();
 		$opsz   = $info['o'] ?? null;
@@ -154,7 +158,7 @@ final class Fonts {
 		$list   = is_string( $weights ) ? array( $weights ) : array_values( array_unique( array_map( 'strval', $weights ) ) );
 		$axes   = array();
 		$tuples = $list;
-		if ( is_array( $opsz ) && 2 === count( $opsz ) ) {
+		if ( $optical && is_array( $opsz ) && 2 === count( $opsz ) ) {
 			$range  = (int) $opsz[0] . '..' . (int) $opsz[1];
 			$tuples = array_map( static fn( $w ) => $range . ',' . $w, $tuples );
 			$axes[] = 'opsz';
@@ -228,8 +232,10 @@ final class Fonts {
 		}
 		ksort( $families );
 		$parts = array();
+		$theme = (array) Plugin::instance()->kit()->get( 'theme', array() );
+		$optical = ! ( ! empty( $theme['enabled'] ) && 'none' === ( $theme['optical_sizing'] ?? '' ) );
 		foreach ( $families as $family => $weights ) {
-			$parts[] = self::family_param( $family, $weights );
+			$parts[] = self::family_param( $family, $weights, $optical );
 		}
 		self::enqueue_url( 'https://fonts.googleapis.com/css2?' . implode( '&', $parts ) . '&display=swap', $delivery );
 	}

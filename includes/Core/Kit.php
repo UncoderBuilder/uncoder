@@ -719,6 +719,8 @@ final class Kit {
 			}
 			// Fonts with an optical-size axis (Inter, Fraunces…) draw large text with their display cut; "Off" keeps
 			// the text cut at every size (the look and width of the static font files many designs were made with).
+			// Google fonts are then also loaded without the axis (Fonts::enqueue()), which pins their standard cut;
+			// this rule covers uploaded variable fonts.
 			if ( 'none' === ( $theme['optical_sizing'] ?? '' ) ) {
 				$body[] = 'font-optical-sizing:none';
 			}

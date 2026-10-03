@@ -2,6 +2,7 @@
 import { registerFontCategories } from '@shared/css';
 import { fontshareFamilyParam, googleFamilyParam, sortWeights } from '@shared/fonts-url';
 import { config } from './config';
+import { useKit } from '../store/kit';
 
 export interface FontInfo {
   family: string;
@@ -15,6 +16,9 @@ let catalog: Record<string, { c: string; w: string[]; o?: [number, number]; i?: 
 let loading: Promise<void> | null = null;
 let canvasDoc: Document | null = null;
 const loaded = new Set<string>();
+const links: HTMLLinkElement[] = [];
+/** Whether the canvas fonts were loaded with their optical-size axis (Design System › Theme › Optical sizing). */
+let opticalMode = true;
 
 async function load(): Promise<void> {
   if (catalog) return;
@@ -47,10 +51,19 @@ export const fonts = {
   attach(doc: Document) {
     canvasDoc = doc;
     loaded.clear();
+    links.length = 0;
   },
   /** Loads the given families (with weights) into the canvas document. */
   ensure(used: Map<string, Set<string>>) {
     if (!canvasDoc || !catalog || config.kit.settings?.font_delivery === 'none') return;
+    const theme = (useKit.getState().kit.theme ?? {}) as { enabled?: boolean; optical_sizing?: string };
+    const optical = !(theme.enabled && theme.optical_sizing === 'none');
+    if (optical !== opticalMode) {
+      // The other cut's stylesheets would keep winning over the new ones (same family names), so they go.
+      for (const link of links.splice(0)) link.remove();
+      loaded.clear();
+      opticalMode = optical;
+    }
     const missing: string[] = [];
     const fontshare: string[] = [];
     for (const [family, weights] of used) {
@@ -63,13 +76,14 @@ export const fonts = {
       const list = w.length ? w : [info.w[0]];
       // Twins of Fonts::fontshare_param() / Fonts::family_param(): italics (and Google's optical-size axis).
       if (info.s) fontshare.push(fontshareFamilyParam(info.s, list, !!info.i));
-      else missing.push(googleFamilyParam(family, list, info));
+      else missing.push(googleFamilyParam(family, list, info, optical));
     }
     const add = (href: string) => {
       const link = canvasDoc!.createElement('link');
       link.rel = 'stylesheet';
       link.href = href;
       canvasDoc!.head.appendChild(link);
+      links.push(link);
     };
     if (missing.length) add(`https://fonts.googleapis.com/css2?${missing.join('&')}&display=swap`);
     if (fontshare.length) add(`https://api.fontshare.com/v2/css?${fontshare.join('&')}&display=swap`);

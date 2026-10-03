@@ -181,11 +181,16 @@ final class Page_Tools {
 					'required'   => array( 'elements' ),
 				),
 				'callback'    => static function ( array $a ) {
-					list( $tree, $errors ) = Helpers::normalize_tree( $a['elements'] );
-					return array(
-						'valid'   => ! $errors,
-						'errors'  => $errors,
-						'outline' => Helpers::outline( $tree ),
+					list( $tree, $errors, $warnings ) = Helpers::normalize_tree( $a['elements'] );
+					return array_filter(
+						array(
+							'valid'    => ! $errors,
+							'errors'   => $errors,
+							'warnings' => $warnings,
+							'outline'  => Helpers::outline( $tree ),
+						),
+						static fn( $v, $k ) => 'warnings' !== $k || $v,
+						ARRAY_FILTER_USE_BOTH
 					);
 				},
 			)

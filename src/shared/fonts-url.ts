@@ -1,5 +1,6 @@
 // Google Fonts css2 `family=` parameter. Twin of Fonts::family_param() (includes/Core/Fonts.php): both must build
-// the same URL. Families with an optical-size axis also load it (browsers use the display cut for big text), and
+// the same URL. Families with an optical-size axis also load it (browsers use the display cut for big text) unless
+// the Design System turns optical sizing off (Google then serves the standard text cut of the static files), and
 // families with italics load them too, so <em> uses the real italic instead of a slanted copy (browsers fetch the
 // italic files only when italic text is on the page).
 
@@ -26,12 +27,12 @@ export function fontshareFamilyParam(slug: string, weights: string[], italics = 
   return `f[]=${encodeURIComponent(slug)}@${codes.join(',')}`;
 }
 
-export function googleFamilyParam(family: string, weights: string[] | string, info: GoogleFontInfo = {}): string {
+export function googleFamilyParam(family: string, weights: string[] | string, info: GoogleFontInfo = {}, optical = true): string {
   const name = family.replace(/ /g, '+');
   // Each weight once: Google answers 400 Bad Request (for the whole stylesheet) to a repeated tuple.
   let tuples = typeof weights === 'string' ? [weights] : [...new Set(weights.map(String))];
   const axes: string[] = [];
-  if (info.o) {
+  if (info.o && optical) {
     const range = `${Math.trunc(info.o[0])}..${Math.trunc(info.o[1])}`;
     tuples = tuples.map((w) => `${range},${w}`);
     axes.push('opsz');
