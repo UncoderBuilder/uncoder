@@ -1394,6 +1394,7 @@ final class Site_Kit {
 			}
 			$map[ (int) $menu['id'] ] = (int) $menu_id;
 			$item_map                 = array();
+			$orphans                  = array(); // new item id => old parent id, for children stored before their parent.
 			$items                    = (array) ( $menu['items'] ?? array() );
 			usort( $items, static fn( $a, $b ) => (int) ( $a['order'] ?? 0 ) <=> (int) ( $b['order'] ?? 0 ) );
 			foreach ( $items as $item ) {
@@ -1422,11 +1423,21 @@ final class Site_Kit {
 					continue;
 				}
 				$item_map[ (int) $item['id'] ] = (int) $new_item;
+				$old_parent                    = (int) ( $item['parent'] ?? 0 );
+				if ( $old_parent && ! isset( $item_map[ $old_parent ] ) ) {
+					$orphans[ (int) $new_item ] = $old_parent;
+				}
 				if ( ! empty( $item['icon'] ) ) {
 					Menu_Item_Extras::set_icon( (int) $new_item, (string) $item['icon'] );
 				}
 				if ( is_array( $item['mega'] ?? null ) && ! empty( $item['mega']['template'] ) && isset( $ids[ (int) $item['mega']['template'] ] ) ) {
 					update_post_meta( (int) $new_item, Mega_Menu::META, array( 'template' => $ids[ (int) $item['mega']['template'] ], 'width' => (string) ( $item['mega']['width'] ?? 'container' ) ) );
+				}
+			}
+			// A child ordered before its parent: link it now that every item exists.
+			foreach ( $orphans as $new_item => $old_parent ) {
+				if ( isset( $item_map[ $old_parent ] ) ) {
+					update_post_meta( $new_item, '_menu_item_menu_item_parent', (string) $item_map[ $old_parent ] );
 				}
 			}
 		}
