@@ -36,7 +36,7 @@ final class Animations {
 		'opacity' => array( 1, 0, 1 ),
 		'x'       => array( 0, -3000, 3000 ),
 		'y'       => array( 0, -3000, 3000 ),
-		'scale'   => array( 1, 0, 10 ),
+		'scale'   => array( 1, 0, 100 ), // Up to 100: zooming through a word or a shape into what is behind it.
 		'scaleX'  => array( 1, -10, 10 ),
 		'scaleY'  => array( 1, -10, 10 ),
 		'rotate'  => array( 0, -3600, 3600 ),

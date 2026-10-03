@@ -286,6 +286,22 @@ final class Utils {
 	 *
 	 * @return array<string, array<string, bool>>
 	 */
+	/**
+	 * WordPress drops any inline style declaration with parentheses unless the function is calc(), var()… so
+	 * "color: rgba(14, 36, 25, 0.55)" disappeared from <span style>. Color functions with numeric arguments only
+	 * (rgb, rgba, hsl, hsla) are as safe as a hex value: allow them, nothing else changes.
+	 *
+	 * @param bool   $allow Whether WordPress already allows it.
+	 * @param string $css   The declaration, with the allowed functions already removed.
+	 */
+	public static function allow_color_functions( $allow, $css ): bool {
+		if ( $allow || ! is_string( $css ) ) {
+			return (bool) $allow;
+		}
+		$rest = (string) preg_replace( '/\b(?:rgba?|hsla?)\(\s*[0-9.,%\s\/deg]+\)/i', '', $css );
+		return $rest !== $css && ! preg_match( '%[\\\\(&=}]|/\*%', $rest );
+	}
+
 	public static function kses_inline(): array {
 		return array(
 			'span'   => array( 'class' => true, 'style' => true ),

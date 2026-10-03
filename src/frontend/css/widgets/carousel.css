@@ -213,6 +213,46 @@ html:not(.uncoder-js) .uncoder-carousel > .uncoder-carousel__viewport > .uncoder
   grid-area: pag;
 }
 
+/* Above: arrows on the end side of a row above the slides (next to a section heading), pagination below. */
+.uncoder-carousel--arrows-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-areas:
+    ". prev next"
+    "track track track"
+    "pag pag pag";
+  align-items: center;
+  column-gap: max(0px, var(--uncoder-carousel-arrow-offset));
+  row-gap: var(--uncoder-carousel-pag-spacing);
+}
+
+.uncoder-carousel--arrows-top > .uncoder-carousel__viewport {
+  display: contents;
+}
+
+.uncoder-carousel--arrows-top > .uncoder-carousel__viewport > .uncoder-carousel__track {
+  grid-area: track;
+}
+
+.uncoder-carousel--arrows-top > .uncoder-carousel__viewport > .uncoder-carousel__arrow {
+  position: relative;
+  top: auto;
+  inset-inline: auto;
+  transform: none;
+}
+
+.uncoder-carousel--arrows-top > .uncoder-carousel__viewport > .uncoder-carousel__arrow--prev {
+  grid-area: prev;
+}
+
+.uncoder-carousel--arrows-top > .uncoder-carousel__viewport > .uncoder-carousel__arrow--next {
+  grid-area: next;
+}
+
+.uncoder-carousel--arrows-top > .uncoder-carousel__pagination {
+  grid-area: pag;
+}
+
 /* A single page: nothing to navigate. */
 .uncoder-carousel.is-static > .uncoder-carousel__viewport > .uncoder-carousel__arrow,
 .uncoder-carousel.is-static > .uncoder-carousel__pagination {

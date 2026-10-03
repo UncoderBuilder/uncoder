@@ -161,6 +161,29 @@ class Tabs extends Widget_Base {
 				'selectors'            => array( self::ROOT => '{{VALUE}}' ),
 			)
 		);
+		// A segmented control (a pill around the tabs) hugs its tabs instead of spanning the width.
+		$this->add_responsive_control(
+			'list_fit',
+			array(
+				'type'                 => 'select',
+				'label'                => __( 'Tab list width', 'uncoder' ),
+				'description'          => __( 'Hug the tabs: the list (and its background) is only as wide as its tabs, e.g. a segmented control at the end.', 'uncoder' ),
+				'options'              => array(
+					''       => __( 'Full width', 'uncoder' ),
+					'start'  => __( 'Hug the tabs, at the start', 'uncoder' ),
+					'center' => __( 'Hug the tabs, centered', 'uncoder' ),
+					'end'    => __( 'Hug the tabs, at the end', 'uncoder' ),
+				),
+				'selectors_dictionary' => array(
+					''       => 'width:auto;margin-inline:0',
+					'start'  => 'width:fit-content;margin-inline:0 auto',
+					'center' => 'width:fit-content;margin-inline:auto',
+					'end'    => 'width:fit-content;margin-inline:auto 0',
+				),
+				'condition'            => array( 'layout!' => 'vertical' ),
+				'selectors'            => array( self::LIST => '{{VALUE}}' ),
+			)
+		);
 		$this->add_responsive_control(
 			'title_align',
 			array(

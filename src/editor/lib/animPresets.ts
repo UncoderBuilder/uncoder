@@ -24,7 +24,7 @@ export const PROP_META: Record<Exclude<AnimProp, 'clip'>, { label: string; unit?
   opacity: { label: 'Opacity', min: 0, max: 1, step: 0.05, nudge: 0 },
   x: { label: 'Move X', unit: 'px', min: -3000, max: 3000, step: 1, nudge: 40 },
   y: { label: 'Move Y', unit: 'px', min: -3000, max: 3000, step: 1, nudge: 40 },
-  scale: { label: 'Scale', min: 0, max: 10, step: 0.05, nudge: 0.8 },
+  scale: { label: 'Scale', min: 0, max: 100, step: 0.05, nudge: 0.8 },
   scaleX: { label: 'Scale X', min: -10, max: 10, step: 0.05, nudge: 0.8 },
   scaleY: { label: 'Scale Y', min: -10, max: 10, step: 0.05, nudge: 0.8 },
   rotate: { label: 'Rotate', unit: '°', min: -3600, max: 3600, step: 1, nudge: 15 },

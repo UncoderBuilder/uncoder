@@ -234,7 +234,39 @@ class Button extends Widget_Base {
 				'type'       => 'slider',
 				'label'      => __( 'Icon size', 'uncoder' ),
 				'size_units' => array( 'px', 'em' ),
-				'selectors'  => array( '{{WRAPPER}} .uncoder-btn .uncoder-svg' => 'width: {{VALUE}}; height: {{VALUE}}' ),
+				'selectors'  => array(
+					'{{WRAPPER}} .uncoder-btn'               => '--uncoder-btn-icon: {{VALUE}}',
+					'{{WRAPPER}} .uncoder-btn .uncoder-svg' => 'width: {{VALUE}}; height: {{VALUE}}',
+				),
+			)
+		);
+		// The icon in its own circle ("Book a test  (→)"): a color, a background and the circle's size.
+		$this->add_control(
+			'icon_color',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Icon color', 'uncoder' ),
+				'selectors' => array( '{{WRAPPER}} .uncoder-btn .uncoder-btn__icon' => 'color: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'icon_background',
+			array(
+				'type'        => 'color',
+				'label'       => __( 'Icon background', 'uncoder' ),
+				'description' => __( 'Puts the icon in a circle (size below).', 'uncoder' ),
+				'selectors'   => array( '{{WRAPPER}} .uncoder-btn .uncoder-btn__icon' => 'background-color: {{VALUE}}; border-radius: 50%' ),
+			)
+		);
+		$this->add_responsive_control(
+			'icon_box',
+			array(
+				'type'       => 'slider',
+				'label'      => __( 'Icon circle size', 'uncoder' ),
+				'size_units' => array( 'px', 'em' ),
+				'range'      => array( 'px' => array( 'min' => 16, 'max' => 96 ) ),
+				'condition'  => array( 'icon_background!' => '' ),
+				'selectors'  => array( '{{WRAPPER}} .uncoder-btn .uncoder-svg.uncoder-btn__icon' => 'box-sizing: border-box; width: {{VALUE}}; height: {{VALUE}}; padding: calc(({{VALUE}} - var(--uncoder-btn-icon, 1em)) / 2); border-radius: 50%; flex-shrink: 0' ),
 			)
 		);
 		$this->end_section();

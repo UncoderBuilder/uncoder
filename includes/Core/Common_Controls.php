@@ -184,6 +184,8 @@ final class Common_Controls {
 					'fixed'    => __( 'Fixed', 'uncoder' ),
 					'sticky'   => __( 'Sticky', 'uncoder' ),
 				),
+				// "Sticky" (Motion) sets the position itself; a position here would undo it.
+				'condition' => array( '_sticky' => '' ),
 				'selectors' => array( '{{WRAPPER}}' => 'position: {{VALUE}}' ),
 			)
 		);

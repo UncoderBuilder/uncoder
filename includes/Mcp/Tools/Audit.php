@@ -268,7 +268,7 @@ final class Audit {
 		// Content-sized items (an icon tile, a price next to "/ month") and items hidden on phones are not columns.
 		$small   = static function ( array $c ): bool {
 			$s = (array) ( $c['settings'] ?? array() );
-			$w = $s['width'] ?? ( $s['_custom_width'] ?? null );
+			$w = self::on_mobile( $s, 'width', $s['_custom_width'] ?? null ); // the width on phones decides.
 			$w = is_array( $w ) && 'custom' === ( $w['unit'] ?? '' ) ? (string) ( $w['size'] ?? '' ) : $w;
 			if ( ! empty( $s['_hide_mobile'] ) || 'auto' === ( $s['_width'] ?? '' ) || in_array( $w, array( 'auto', 'fit-content', 'max-content' ), true ) ) {
 				return true;

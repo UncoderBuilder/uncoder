@@ -213,6 +213,7 @@ trait Carousel_Engine {
 					'inside'  => __( 'Inside, over the slides', 'uncoder' ),
 					'outside' => __( 'Outside the slides', 'uncoder' ),
 					'bottom'  => __( 'Below, next to the pagination', 'uncoder' ),
+					'top'     => __( 'Above the slides, at the end', 'uncoder' ),
 				),
 				'condition' => array( 'arrows' => 'yes' ),
 			)
@@ -636,7 +637,7 @@ trait Carousel_Engine {
 				$classes[] = 'uncoder-carousel--pause';
 			}
 		} elseif ( ! empty( $s['arrows'] ) ) {
-			$position  = in_array( $s['arrows_position'] ?? 'inside', array( 'inside', 'outside', 'bottom' ), true ) ? $s['arrows_position'] : 'inside';
+			$position  = in_array( $s['arrows_position'] ?? 'inside', array( 'inside', 'outside', 'bottom', 'top' ), true ) ? $s['arrows_position'] : 'inside';
 			$classes[] = 'uncoder-carousel--arrows-' . $position;
 		}
 		$label = trim( (string) ( $s['carousel_label'] ?? '' ) );

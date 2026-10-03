@@ -46,6 +46,8 @@ final class Plugin {
 
 	public function on_plugins_loaded(): void {
 		Install::maybe_upgrade();
+		// Inline styles in rich text (a muted word: <span style="color: rgba(…)">) keep plain color functions.
+		add_filter( 'safecss_filter_attr_allow_css', array( Core\Utils::class, 'allow_color_functions' ), 10, 2 );
 
 		$modules = array(
 			'post_types' => Core\Post_Types::class,

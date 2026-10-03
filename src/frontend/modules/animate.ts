@@ -204,22 +204,35 @@ interface Group {
     height: number;
     current: number;
     near: boolean;
+    /** Inside a pinned (sticky) box: progress runs while the box is pinned, through its parent's height. */
+    pinned: boolean;
   }
   const scrubs = new Set<Scrub>();
   let frame = 0;
   let last = 0;
   let listening = false;
 
+  // A sticky box (not the site header) around the element: it stays put while pinned, so the scroll is measured
+  // on its parent, the track it is pinned in (a tall section with a sticky panel = a scroll scene).
+  const pinTrack = (el: HTMLElement): HTMLElement | null => {
+    const box = el.closest<HTMLElement>('.uncoder-sticky');
+    if (!box || box.closest('.uncoder-location--header, .uncoder--header') || getComputedStyle(box).position !== 'sticky') return null;
+    return box.parentElement;
+  };
   function measure(s: Scrub) {
     // Layout position (offsetTop chain), never the moved box, so the effect cannot feed its own progress.
+    const track = pinTrack(s.el);
+    s.pinned = !!track && track.offsetHeight > window.innerHeight;
+    const target = s.pinned && track ? track : s.el;
     let top = 0;
-    for (let node: HTMLElement | null = s.el; node; node = node.offsetParent as HTMLElement | null) top += node.offsetTop;
+    for (let node: HTMLElement | null = target; node; node = node.offsetParent as HTMLElement | null) top += node.offsetTop;
     s.top = top;
-    s.height = s.el.offsetHeight;
+    s.height = target.offsetHeight;
   }
   function progress(s: Scrub): number {
     const vh = window.innerHeight;
-    const raw = (window.scrollY + vh - s.top) / (vh + s.height);
+    // Pinned: 0 when the track's top reaches the top of the screen, 1 when its bottom reaches the bottom.
+    const raw = s.pinned ? (window.scrollY - s.top) / Math.max(1, s.height - vh) : (window.scrollY + vh - s.top) / (vh + s.height);
     return clamp((raw * 100 - s.start) / Math.max(1, s.end - s.start), 0, 1);
   }
   function tick(now: number) {
@@ -333,7 +346,7 @@ interface Group {
         offs.push(() => out.disconnect());
       }
     } else if (scrub) {
-      const s: Scrub = { el, group: () => g, start: clamp(def.start ?? 0, 0, 100), end: clamp(def.end ?? 100, 0, 100), smooth: clamp(def.smooth ?? 0, 0, 10), top: 0, height: 0, current: 0, near: true };
+      const s: Scrub = { el, group: () => g, start: clamp(def.start ?? 0, 0, 100), end: clamp(def.end ?? 100, 0, 100), smooth: clamp(def.smooth ?? 0, 0, 10), top: 0, height: 0, current: 0, near: true, pinned: false };
       if (s.end <= s.start) s.end = Math.min(100, s.start + 1);
       measure(s);
       s.current = progress(s);
