@@ -249,6 +249,9 @@ window.UncoderWB.register('nav-menu', (el, api) => {
     } else {
       panel.hidden = false;
       position();
+      // A panel under the header stays put while open: the page behind does not scroll (on a phone a swipe
+      // would carry the header and the panel away); a long menu scrolls inside the panel.
+      if (header) lockScroll(true);
     }
     requestAnimationFrame(() => requestAnimationFrame(() => panel.classList.add('is-open')));
   };
@@ -258,7 +261,7 @@ window.UncoderWB.register('nav-menu', (el, api) => {
     toggle.setAttribute('aria-expanded', 'false');
     root.classList.remove('is-panel-open');
     panel.classList.remove('is-open');
-    if (dialog) lockScroll(false);
+    if (dialog || header) lockScroll(false);
     closeTimer = window.setTimeout(() => {
       if (dialog) {
         if (dialog.open) dialog.close();
@@ -333,7 +336,11 @@ window.UncoderWB.register('nav-menu', (el, api) => {
     const target = e.target as Node;
     if (root.contains(target)) return;
     closeAll(main);
-    if (isOpen() && !dialog) closePanel(false);
+  };
+
+  // The mobile dropdown / panel closes on a tap outside: a click, so a swipe that starts outside does not close it.
+  const onDocumentClick = (e: MouseEvent) => {
+    if (isOpen() && !dialog && !root.contains(e.target as Node)) closePanel(false);
   };
 
   const onCancel = (e: Event) => {
@@ -351,6 +358,7 @@ window.UncoderWB.register('nav-menu', (el, api) => {
   root.addEventListener('keydown', onKeydown);
   main?.addEventListener('focusout', onFocusOut);
   document.addEventListener('pointerdown', onDocumentPointer);
+  document.addEventListener('click', onDocumentClick);
   dialog?.addEventListener('cancel', onCancel);
   window.addEventListener('resize', onResize);
   if (header) window.addEventListener('scroll', onScroll, { passive: true });
@@ -360,6 +368,7 @@ window.UncoderWB.register('nav-menu', (el, api) => {
     root.removeEventListener('keydown', onKeydown);
     main?.removeEventListener('focusout', onFocusOut);
     document.removeEventListener('pointerdown', onDocumentPointer);
+    document.removeEventListener('click', onDocumentClick);
     dialog?.removeEventListener('cancel', onCancel);
     window.removeEventListener('resize', onResize);
     window.removeEventListener('scroll', onScroll);
@@ -390,6 +399,7 @@ window.UncoderWB.register('nav-menu', (el, api) => {
         if (dialog.open) dialog.close();
       } else if (panel) {
         panel.hidden = true;
+        if (header) lockScroll(false);
       }
     }
   };

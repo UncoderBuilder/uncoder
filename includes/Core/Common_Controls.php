@@ -436,9 +436,10 @@ final class Common_Controls {
 		$el->add_control(
 			'_sticky',
 			array(
-				'type'    => 'select',
-				'label'   => __( 'Sticky', 'uncoder' ),
-				'options' => array( '' => __( 'None', 'uncoder' ), 'top' => __( 'Top', 'uncoder' ), 'bottom' => __( 'Bottom', 'uncoder' ) ),
+				'type'        => 'select',
+				'label'       => __( 'Sticky', 'uncoder' ),
+				'description' => __( 'In a header: Top keeps the header pinned from this row down; rows above it, like a top bar, scroll away.', 'uncoder' ),
+				'options'     => array( '' => __( 'None', 'uncoder' ), 'top' => __( 'Top', 'uncoder' ), 'bottom' => __( 'Bottom', 'uncoder' ) ),
 			)
 		);
 		$el->add_control(

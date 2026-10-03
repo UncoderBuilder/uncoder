@@ -90,7 +90,7 @@ final class Template_Tools {
 						'popup'      => $popup,
 						'page_settings' => array(
 							'type'        => 'object',
-							'description' => 'Template settings. Headers: header_sticky ("" | "always" | "reveal"), header_scrolled_shadow (bool), header_scrolled_bg (color), header_scrolled_height ("64px" shrink), header_scroll_offset (px), header_transparent ("" | "all" | "front" | "selected"), header_transparent_color, header_transparent_logo ({"id":…}), header_transparent_logo_white (bool), header_transparent_keep_colors (bool: only overlay the page and keep the header colors, for light heroes).',
+							'description' => 'Template settings. Headers: header_sticky ("" | "always" | "reveal"; to pin only part of the header, set "_sticky":"top" on the row that should stay and the rows above it scroll away), header_scrolled_shadow (bool), header_scrolled_bg (color), header_scrolled_height ("64px" shrink), header_scroll_offset (px), header_transparent ("" | "all" | "front" | "selected"), header_transparent_color, header_transparent_logo ({"id":…}), header_transparent_logo_white (bool), header_transparent_keep_colors (bool: only overlay the page and keep the header colors, for light heroes).',
 						),
 						'strict'     => array( 'type' => 'boolean' ),
 					),
@@ -121,7 +121,7 @@ final class Template_Tools {
 						'popup'      => $popup,
 						'page_settings' => array(
 							'type'        => 'object',
-							'description' => 'Template settings. Headers: header_sticky ("" | "always" | "reveal"), header_scrolled_shadow (bool), header_scrolled_bg (color), header_scrolled_height ("64px" shrink), header_scroll_offset (px), header_transparent ("" | "all" | "front" | "selected"), header_transparent_color, header_transparent_logo ({"id":…}), header_transparent_logo_white (bool), header_transparent_keep_colors (bool: only overlay the page and keep the header colors, for light heroes).',
+							'description' => 'Template settings. Headers: header_sticky ("" | "always" | "reveal"; to pin only part of the header, set "_sticky":"top" on the row that should stay and the rows above it scroll away), header_scrolled_shadow (bool), header_scrolled_bg (color), header_scrolled_height ("64px" shrink), header_scroll_offset (px), header_transparent ("" | "all" | "front" | "selected"), header_transparent_color, header_transparent_logo ({"id":…}), header_transparent_logo_white (bool), header_transparent_keep_colors (bool: only overlay the page and keep the header colors, for light heroes).',
 						),
 						'strict'     => array( 'type' => 'boolean' ),
 					),

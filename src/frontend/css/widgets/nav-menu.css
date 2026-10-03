@@ -761,6 +761,12 @@
   box-shadow: 0 16px 32px rgb(15 23 42 / 0.12);
 }
 
+/* "Fill the screen": the sheet reaches the bottom of the screen and covers the page (locked while it is open). */
+.uncoder-nav-menu__panel--header.uncoder-nav-menu__panel--fill .uncoder-nav-menu__inner {
+  min-height: calc(100vh - var(--uncoder-nav-panel-vtop, 0px));
+  min-height: calc(100dvh - var(--uncoder-nav-panel-vtop, 0px));
+}
+
 .uncoder-nav-menu__panel--header .uncoder-menu--mobile > .uncoder-menu__item + .uncoder-menu__item,
 .uncoder-nav-menu__panel--header .uncoder-menu--mobile .uncoder-menu__sub > .uncoder-menu__item,
 .uncoder-nav-menu__panel--header .uncoder-menu--mobile :is(.uncoder-menu__sub, .uncoder-menu__mega) {

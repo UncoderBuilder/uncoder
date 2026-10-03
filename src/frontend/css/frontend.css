@@ -100,9 +100,10 @@ html:not([data-uncoder-scheme="dark"]) .uncoder-hide-in-light {
    Classes on the header location wrapper (Theme\Header_Behavior); states toggled by modules/header.ts:
    is-scrolled (past the offset), is-hidden (reveal mode, scrolling down), is-transparent (overlaying). */
 
+/* --uncoder-header-skip: the part above a "sticky from" element (modules/header.ts), which scrolls away. */
 .uncoder-location--header.uncoder-header--sticky {
   position: sticky;
-  top: var(--wp-admin--admin-bar--height, 0px);
+  top: calc(var(--wp-admin--admin-bar--height, 0px) - var(--uncoder-header-skip, 0px));
   z-index: 990;
   transition: transform 0.3s ease, box-shadow 0.25s ease;
 }
@@ -117,6 +118,7 @@ html:not([data-uncoder-scheme="dark"]) .uncoder-hide-in-light {
 
 .uncoder-location--header.uncoder-header--transparent.uncoder-header--sticky {
   position: fixed;
+  top: calc(var(--wp-admin--admin-bar--height, 0px) - var(--uncoder-header-skip, 0px));
 }
 
 .uncoder-location--header.uncoder-header--sticky > .uncoder-container {

@@ -95,17 +95,18 @@ final class Header_Behavior {
 		$s      = $doc ? $doc->page_settings() : array();
 		$sticky = (string) ( $s['header_sticky'] ?? '' );
 		$off    = array();
-		if ( '' === $sticky && $doc ) {
-			// Headers built with the generic "sticky" option on their top-level container; its "Sticky on"
-			// devices carry over (e.g. a header that only sticks on tablets and phones).
-			foreach ( $doc->elements() as $node ) {
-				if ( 'top' === ( $node['settings']['_sticky'] ?? '' ) ) {
-					$sticky = 'always';
-					$on     = $node['settings']['_sticky_on'] ?? null;
-					if ( is_array( $on ) ) {
-						$off = array_values( array_diff( Breakpoints::devices(), $on ) );
-					}
-					break;
+		$from   = '';
+		// The generic "Sticky: Top" option on an element of the header: the header sticks from that element, and
+		// whatever sits above it (a top bar, an announcement strip) scrolls away (modules/header.ts measures it).
+		// On its own it makes the header sticky, with its "Sticky on" devices (e.g. only on tablets and phones).
+		$node = $doc ? self::sticky_node( $doc->elements() ) : null;
+		if ( $node ) {
+			$from = (string) ( $node['id'] ?? '' );
+			if ( '' === $sticky ) {
+				$sticky = 'always';
+				$on     = $node['settings']['_sticky_on'] ?? null;
+				if ( is_array( $on ) ) {
+					$off = array_values( array_diff( Breakpoints::devices(), $on ) );
 				}
 			}
 		}
@@ -121,11 +122,34 @@ final class Header_Behavior {
 
 		self::$cache[ $header_id ] = array(
 			'sticky'      => in_array( $sticky, array( 'always', 'reveal' ), true ) ? $sticky : '',
+			'sticky_from' => $from,
 			'sticky_off'  => $off,
 			'transparent' => $transparent,
 			'settings'    => $s,
 		);
 		return self::$cache[ $header_id ];
+	}
+
+	/**
+	 * The first element of a header tree set to "Sticky: Top" (depth first), or null.
+	 *
+	 * @param array<int, array<string,mixed>> $nodes Element tree.
+	 * @return array<string,mixed>|null
+	 */
+	private static function sticky_node( array $nodes ): ?array {
+		foreach ( $nodes as $node ) {
+			if ( ! is_array( $node ) ) {
+				continue;
+			}
+			if ( 'top' === ( $node['settings']['_sticky'] ?? '' ) ) {
+				return $node;
+			}
+			$found = self::sticky_node( is_array( $node['children'] ?? null ) ? $node['children'] : array() );
+			if ( $found ) {
+				return $found;
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -183,6 +207,9 @@ final class Header_Behavior {
 			'transparent' => $b['transparent'],
 			'offset'      => isset( $s['header_scroll_offset'] ) ? (int) $s['header_scroll_offset'] : 10,
 		);
+		if ( '' !== $b['sticky'] && '' !== $b['sticky_from'] ) {
+			$settings['from'] = $b['sticky_from'];
+		}
 		$args['class'] = trim( ( $args['class'] ?? '' ) . ' ' . implode( ' ', $classes ) );
 		$attrs         = (array) ( $args['attrs'] ?? array() );
 		$attrs['data-uncoder-js']   = trim( ( $attrs['data-uncoder-js'] ?? '' ) . ' header' );

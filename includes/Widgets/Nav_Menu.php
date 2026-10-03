@@ -989,6 +989,19 @@ class Nav_Menu extends Widget_Base {
 				'selectors' => array( '{{WRAPPER}}' => '--uncoder-nav-m-overlay: {{VALUE}}' ),
 			)
 		);
+		$this->add_control(
+			'm_panel_height',
+			array(
+				'type'        => 'select',
+				'label'       => __( 'Panel height', 'uncoder' ),
+				'description' => __( 'Fill the screen: the panel reaches the bottom of the screen and covers the page.', 'uncoder' ),
+				'options'     => array(
+					''     => __( 'Fit the menu', 'uncoder' ),
+					'fill' => __( 'Fill the screen', 'uncoder' ),
+				),
+				'condition'   => array( 'mobile_mode' => 'panel' ),
+			)
+		);
 		$this->add_responsive_control(
 			'm_padding',
 			array(
@@ -1407,7 +1420,7 @@ class Nav_Menu extends Widget_Base {
 				// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped parts.
 				echo '<div' . Utils::attrs(
 					array(
-						'class'  => trim( 'uncoder-nav-menu__panel uncoder-nav-menu__panel--dropdown ' . ( 'panel' === $mode ? 'uncoder-nav-menu__panel--header ' : '' ) . $mobile_class ),
+						'class'  => trim( 'uncoder-nav-menu__panel uncoder-nav-menu__panel--dropdown ' . ( 'panel' === $mode ? 'uncoder-nav-menu__panel--header ' . ( 'fill' === ( $s['m_panel_height'] ?? '' ) ? 'uncoder-nav-menu__panel--fill ' : '' ) : '' ) . $mobile_class ),
 						'id'     => $panel_id,
 						'hidden' => true,
 					)

@@ -40,6 +40,7 @@ export function PagePanel() {
             type: 'select',
             label: 'Sticky',
             options: { '': 'Off — scrolls away', always: 'Always visible', reveal: 'Show when scrolling up' },
+            description: 'To keep only part of the header, set Sticky → Top (Advanced) on the row that should stay: the rows above it, like a top bar, scroll away.',
           },
           header_scrolled_shadow: { type: 'switch', label: 'Shadow when scrolled', default: true, condition: { 'header_sticky!': '' } },
           header_scrolled_bg: { type: 'color', label: 'Background when scrolled', condition: { 'header_sticky!': '' } },

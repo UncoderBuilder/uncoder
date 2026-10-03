@@ -34,12 +34,13 @@ final class Assets {
 		return UNCODER_WB_PATH . 'assets/build/' . ltrim( $relative, '/' );
 	}
 
+	/**
+	 * Version query of a built asset: the plugin version plus the file's modification time, so an updated file
+	 * gets a new URL and browsers do not keep serving an old copy from their cache.
+	 */
 	public static function ver( string $relative ): string {
-		$file = self::path( $relative );
-		if ( defined( 'WP_DEBUG' ) && WP_DEBUG && file_exists( $file ) ) {
-			return (string) filemtime( $file );
-		}
-		return UNCODER_WB_VERSION;
+		$time = @filemtime( self::path( $relative ) ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged -- a missing file keeps the plain version.
+		return $time ? UNCODER_WB_VERSION . '.' . $time : UNCODER_WB_VERSION;
 	}
 
 	public static function register_handles(): void {
