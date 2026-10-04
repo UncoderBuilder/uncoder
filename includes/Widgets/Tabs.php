@@ -33,6 +33,9 @@ class Tabs extends Widget_Base {
 	public const LAYOUTS = array(
 		'horizontal' => '--uncoder-tabs-dir:column;--uncoder-tabs-list-display:flex;--uncoder-tabs-list-dir:row;--uncoder-tabs-list-overflow:auto hidden;--uncoder-tabs-list-basis:auto;--uncoder-tabs-acc-display:none;--uncoder-tabs-ws:nowrap;--uncoder-tabs-line-shadow:inset 0 calc(-1 * var(--uncoder-tabs-line-width)) 0 var(--uncoder-tabs-line-color);--uncoder-tabs-line-inline:0px;--uncoder-tabs-ind-block:auto 0;--uncoder-tabs-ind-inline:0;--uncoder-tabs-ind-w:auto;--uncoder-tabs-ind-h:var(--uncoder-tabs-indicator-size);--uncoder-tabs-ind-hidden:scaleX(0);--uncoder-tabs-panel-pad:0px;--uncoder-tabs-title-align-auto:center',
 		'vertical'   => '--uncoder-tabs-dir:row;--uncoder-tabs-list-display:flex;--uncoder-tabs-list-dir:column;--uncoder-tabs-list-overflow:visible;--uncoder-tabs-list-basis:var(--uncoder-tabs-list-width);--uncoder-tabs-acc-display:none;--uncoder-tabs-ws:normal;--uncoder-tabs-line-shadow:none;--uncoder-tabs-line-inline:var(--uncoder-tabs-line-width);--uncoder-tabs-ind-block:0;--uncoder-tabs-ind-inline:auto calc(-1 * var(--uncoder-tabs-line-width));--uncoder-tabs-ind-w:var(--uncoder-tabs-indicator-size);--uncoder-tabs-ind-h:auto;--uncoder-tabs-ind-hidden:scaleY(0);--uncoder-tabs-panel-pad:0px;--uncoder-tabs-title-align-auto:flex-start',
+		// Tabs one under another above the panel (a phone layout for tabs with long titles); the active tab is marked
+		// at its start.
+		'stacked'    => '--uncoder-tabs-dir:column;--uncoder-tabs-list-display:flex;--uncoder-tabs-list-dir:column;--uncoder-tabs-list-overflow:visible;--uncoder-tabs-list-basis:auto;--uncoder-tabs-acc-display:none;--uncoder-tabs-ws:normal;--uncoder-tabs-line-shadow:none;--uncoder-tabs-line-inline:0px;--uncoder-tabs-ind-block:0;--uncoder-tabs-ind-inline:0 auto;--uncoder-tabs-ind-w:var(--uncoder-tabs-indicator-size);--uncoder-tabs-ind-h:auto;--uncoder-tabs-ind-hidden:scaleY(0);--uncoder-tabs-panel-pad:0px;--uncoder-tabs-title-align-auto:flex-start',
 		'accordion'  => '--uncoder-tabs-dir:column;--uncoder-tabs-list-display:none;--uncoder-tabs-acc-display:flex;--uncoder-tabs-panel-pad:16px 0',
 	);
 
@@ -149,11 +152,12 @@ class Tabs extends Widget_Base {
 				'options'              => array(
 					'horizontal' => array( 'label' => __( 'Horizontal', 'uncoder' ), 'icon' => 'panels-top-left' ),
 					'vertical'   => array( 'label' => __( 'Vertical', 'uncoder' ), 'icon' => 'panel-left' ),
+					'stacked'    => array( 'label' => __( 'Stacked, above the content', 'uncoder' ), 'icon' => 'rows-3' ),
 					'accordion'  => array( 'label' => __( 'Accordion', 'uncoder' ), 'icon' => 'list-collapse' ),
 				),
 				'selectors_dictionary' => self::LAYOUTS,
 				'selectors'            => array( self::ROOT => '{{VALUE}}' ),
-				'ai'                   => 'Common: "horizontal" on desktop with layout_mobile "accordion".',
+				'ai'                   => 'Common: "horizontal" on desktop with layout_mobile "accordion". "stacked": the tabs one under another above the panel (e.g. layout "vertical" with layout_mobile "stacked").',
 			)
 		);
 		$this->add_responsive_control(
@@ -725,7 +729,7 @@ class Tabs extends Widget_Base {
 			array(
 				'class'            => 'uncoder-tabs__list',
 				'role'             => 'tablist',
-				'aria-orientation' => 'vertical' === ( $s['layout'] ?? 'horizontal' ) ? 'vertical' : 'horizontal',
+				'aria-orientation' => in_array( $s['layout'] ?? 'horizontal', array( 'vertical', 'stacked' ), true ) ? 'vertical' : 'horizontal',
 				'aria-label'       => '' !== $list_label ? $list_label : null,
 			)
 		) . '>';

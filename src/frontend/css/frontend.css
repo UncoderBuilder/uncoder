@@ -688,6 +688,21 @@ img.uncoder-svg--img {
     object-position: calc(50% - var(--uncoder-btn-icon, 1em) * 1.6) 50%;
   }
 }
+/* Reveal icon: the label stands alone (centred) until the pointer arrives; then the icon fades in beside it and the
+   label moves over to make room (Framer's buttons whose arrow appears on hover). The icon's negative margin takes its
+   width and the gap back while it is hidden. */
+.uncoder-hover-reveal .uncoder-btn__icon {
+  opacity: 0;
+  margin-inline-start: calc(-1 * (var(--uncoder-btn-icon-box, var(--uncoder-btn-icon, 1em)) + var(--uncoder-btn-gap, 0.5em)));
+  transition: margin 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s;
+}
+.uncoder-hover-reveal .uncoder-btn__icon:first-child {
+  margin-inline: 0 calc(-1 * (var(--uncoder-btn-icon-box, var(--uncoder-btn-icon, 1em)) + var(--uncoder-btn-gap, 0.5em)));
+}
+.uncoder-hover-reveal:is(:hover, :focus-visible) .uncoder-btn__icon {
+  opacity: 1;
+  margin-inline: 0;
+}
 .uncoder-hover-shine {
   position: relative;
   overflow: hidden;
@@ -991,7 +1006,8 @@ html:not(.uncoder-editing) .uncoder-ix-hidden {
     animation: none;
   }
   .uncoder-btn,
-  .uncoder-image img {
+  .uncoder-image img,
+  .uncoder-hover-reveal .uncoder-btn__icon {
     transition: none;
   }
 }

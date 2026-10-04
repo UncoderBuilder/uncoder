@@ -176,7 +176,7 @@ final class Kit {
 				'hover_border_color' => array( 'type' => 'color', 'selectors' => array( '.uncoder-btn:hover' => 'border-color: {{VALUE}}' ) ),
 				'shadow'           => array( 'type' => 'box_shadow', 'selector' => '.uncoder-btn' ),
 				// Default hover effect for every button without its own (button_fx_css()).
-				'hover_effect'     => array( 'type' => 'select', 'options' => array( '' => 'None', 'lift' => 'Lift', 'grow' => 'Grow', 'shrink' => 'Shrink', 'pulse' => 'Pulse', 'shine' => 'Shine', 'arrow' => 'Nudge icon', 'swap' => 'Slide icon through', 'fill' => 'Fill from left', 'fill-up' => 'Fill from bottom', 'underline' => 'Underline', 'flip' => 'Text roll' ) ),
+				'hover_effect'     => array( 'type' => 'select', 'options' => array( '' => 'None', 'lift' => 'Lift', 'grow' => 'Grow', 'shrink' => 'Shrink', 'pulse' => 'Pulse', 'shine' => 'Shine', 'arrow' => 'Nudge icon', 'swap' => 'Slide icon through', 'reveal' => 'Reveal icon', 'fill' => 'Fill from left', 'fill-up' => 'Fill from bottom', 'underline' => 'Underline', 'flip' => 'Text roll' ) ),
 				// Colour of the Fill hover effects.
 				'hover_fill'       => array( 'type' => 'color', 'selectors' => array( '.uncoder-btn' => '--uncoder-btn-fill: {{VALUE}}' ) ),
 			),

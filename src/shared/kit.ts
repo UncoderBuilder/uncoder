@@ -24,7 +24,7 @@ export const KIT_SCHEMAS: Record<string, Record<string, ControlDef>> = {
     shadow: { type: 'box_shadow', selector: '.uncoder-btn' },
     hover_effect: {
       type: 'select',
-      options: { '': 'None', lift: 'Lift', grow: 'Grow', shrink: 'Shrink', pulse: 'Pulse', shine: 'Shine', arrow: 'Nudge icon', swap: 'Slide icon through', fill: 'Fill from left', 'fill-up': 'Fill from bottom', underline: 'Underline', flip: 'Text roll' },
+      options: { '': 'None', lift: 'Lift', grow: 'Grow', shrink: 'Shrink', pulse: 'Pulse', shine: 'Shine', arrow: 'Nudge icon', swap: 'Slide icon through', reveal: 'Reveal icon', fill: 'Fill from left', 'fill-up': 'Fill from bottom', underline: 'Underline', flip: 'Text roll' },
       description: 'Used by every button that has no hover effect of its own. Off for visitors who prefer reduced motion.',
     },
     hover_fill: { type: 'color', selectors: { '.uncoder-btn': '--uncoder-btn-fill: {{VALUE}}' }, description: 'The color that sweeps in with the Fill hover effects.' },

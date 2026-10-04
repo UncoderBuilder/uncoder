@@ -27,6 +27,7 @@ class Button extends Widget_Base {
 		'shine'    => 'Shine',
 		'arrow'    => 'Nudge icon',
 		'swap'     => 'Slide icon through',
+		'reveal'   => 'Reveal icon',
 		'fill'     => 'Fill from left',
 		'fill-up'  => 'Fill from bottom',
 		'underline' => 'Underline',
@@ -123,7 +124,7 @@ class Button extends Widget_Base {
 				'type'       => 'slider',
 				'label'      => __( 'Icon spacing', 'uncoder' ),
 				'size_units' => array( 'px', 'em' ),
-				'selectors'  => array( '{{WRAPPER}} .uncoder-btn' => 'gap: {{VALUE}}' ),
+				'selectors'  => array( '{{WRAPPER}} .uncoder-btn' => 'gap: {{VALUE}}; --uncoder-btn-gap: {{VALUE}}' ),
 			)
 		);
 		$this->add_responsive_control(
@@ -267,7 +268,7 @@ class Button extends Widget_Base {
 				'size_units' => array( 'px', 'em' ),
 				'range'      => array( 'px' => array( 'min' => 16, 'max' => 96 ) ),
 				'condition'  => array( 'icon_background!' => '' ),
-				'selectors'  => array( '{{WRAPPER}} .uncoder-btn .uncoder-svg.uncoder-btn__icon' => 'box-sizing: border-box; width: {{VALUE}}; height: {{VALUE}}; padding: calc(({{VALUE}} - var(--uncoder-btn-icon, 1em)) / 2); border-radius: 50%; flex-shrink: 0' ),
+				'selectors'  => array( '{{WRAPPER}} .uncoder-btn .uncoder-svg.uncoder-btn__icon' => '--uncoder-btn-icon-box: {{VALUE}}; box-sizing: border-box; width: {{VALUE}}; height: {{VALUE}}; padding: calc(({{VALUE}} - var(--uncoder-btn-icon, 1em)) / 2); border-radius: 50%; flex-shrink: 0' ),
 			)
 		);
 		$this->end_section();
