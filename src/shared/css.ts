@@ -351,14 +351,37 @@ function groupCss(type: string, value: Settings, selector: string, rules: Rules,
 
 /* ------------------------------------------------------------------ Conditions */
 
-export function conditionsMet(control: ControlDef, settings: Settings, controls: Record<string, ControlDef>): boolean {
+/**
+ * Twin of Generator::cascade(): the devices a responsive value on `device` falls back through, nearest first
+ * (widescreen to desktop; a smaller device to each larger max-width device, then desktop).
+ */
+export function cascade(device: string, devices: string[]): string[] {
+  if (device === 'desktop') return ['desktop'];
+  if (device === 'widescreen') return ['widescreen', 'desktop'];
+  const chain: string[] = [];
+  for (const d of devices) {
+    if (d === 'desktop' || d === 'widescreen') continue;
+    chain.push(d);
+    if (d === device) break;
+  }
+  return [...chain.reverse(), 'desktop'];
+}
+
+/** On a device other than desktop each condition key is read at its value there, falling back to the larger devices'. */
+export function conditionsMet(control: ControlDef, settings: Settings, controls: Record<string, ControlDef>, device = 'desktop', devices: string[] = ['desktop']): boolean {
   const cond = control.condition;
   if (!cond || typeof cond !== 'object') return true;
   for (let [key, expected] of Object.entries(cond)) {
     const negate = key.endsWith('!');
     key = key.replace(/!$/, '');
     const [root, sub] = key.split('.', 2);
-    let actual: any = root in settings ? settings[root] : controls[root]?.default ?? '';
+    let actual: any = controls[root]?.default ?? '';
+    for (const d of cascade(device, devices)) {
+      if (root + suffix(d) in settings) {
+        actual = settings[root + suffix(d)];
+        break;
+      }
+    }
     if (sub !== undefined) actual = actual && typeof actual === 'object' ? actual[sub] ?? '' : '';
     if (typeof actual === 'boolean' && typeof expected === 'string') actual = actual ? 'yes' : '';
     const match = Array.isArray(expected)
@@ -413,7 +436,10 @@ export function settingsCss(
   for (const [key, control] of Object.entries(controls)) {
     const type = control.type;
     if (['heading', 'divider', 'notice'].includes(type)) continue;
-    if (!conditionsMet(control, ctx, controls)) continue;
+    // A responsive control's condition is read per device (below): a tablet-only "Position: absolute" turns on the
+    // tablet offsets.
+    const perDevice = !!control.responsive && !isGroupType(type) && type !== 'repeater';
+    if (!perDevice && !conditionsMet(control, ctx, controls)) continue;
 
     if (isGroupType(type)) {
       if (!control.selector) continue;
@@ -433,6 +459,7 @@ export function settingsCss(
 
     const list = control.responsive ? devices : ['desktop'];
     for (const device of list) {
+      if (perDevice && !conditionsMet(control, ctx, controls, device, devices)) continue;
       const full = key + suffix(device);
       let value: any;
       if (full in settings) value = settings[full];

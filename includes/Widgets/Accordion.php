@@ -146,8 +146,19 @@ class Accordion extends Widget_Base {
 			array(
 				'type'        => 'icon',
 				'label'       => __( 'Active icon', 'uncoder' ),
-				'description' => __( 'None: the icon turns upside down when the item opens.', 'uncoder' ),
+				'description' => __( 'None: the icon turns when the item opens (see Open rotation).', 'uncoder' ),
 				'default'     => array( 'library' => 'lucide', 'value' => 'minus' ),
+			)
+		);
+		$this->add_control(
+			'open_rotation',
+			array(
+				'type'        => 'slider',
+				'label'       => __( 'Open rotation', 'uncoder' ),
+				'description' => __( 'How far the icon turns when its item opens, with no active icon: 180° flips a chevron, 45° turns a plus into a cross.', 'uncoder' ),
+				'size_units'  => array( 'deg' ),
+				'range'       => array( 'deg' => array( 'min' => -360, 'max' => 360 ) ),
+				'selectors'   => array( self::ROOT => '--uncoder-acc-icon-rotate: {{VALUE}}' ),
 			)
 		);
 		$this->add_control(

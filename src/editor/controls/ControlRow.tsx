@@ -43,7 +43,7 @@ export const ControlRow = memo(function ControlRow({ id, keyName, control, contr
   });
   const dynamic = useDoc((s) => s.doc.nodes[id]?.dynamic?.[keyName]);
   if (!control || !raw) return null;
-  if (!visible(control, settings, controls)) return null;
+  if (!visible(control, settings, controls, device)) return null;
 
   // Shown by the inspector itself (ClassesBar at the top of the Style tab).
   if (control.ui === 'classes') return null;

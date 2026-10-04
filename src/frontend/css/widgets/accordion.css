@@ -109,7 +109,8 @@
   color: var(--uncoder-acc-icon-color-active);
 }
 
-.uncoder-accordion > .uncoder-accordion__item[open]:not(.is-closing) > .uncoder-accordion__header > .uncoder-accordion__icon > .uncoder-accordion__icon-closed {
+/* With an active icon the two swap; without one (--rotate) the closed icon stays and turns. */
+.uncoder-accordion:not(.uncoder-accordion--rotate) > .uncoder-accordion__item[open]:not(.is-closing) > .uncoder-accordion__header > .uncoder-accordion__icon > .uncoder-accordion__icon-closed {
   display: none;
 }
 
@@ -118,7 +119,7 @@
 }
 
 .uncoder-accordion--rotate > .uncoder-accordion__item[open]:not(.is-closing) > .uncoder-accordion__header > .uncoder-accordion__icon {
-  transform: rotate(180deg);
+  transform: rotate(var(--uncoder-acc-icon-rotate, 180deg));
 }
 
 /* Panel (the module animates its height) */

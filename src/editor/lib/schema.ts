@@ -42,8 +42,9 @@ export function effectiveSettings(schema: ElementSchema | undefined, settings: S
   return Object.assign(out, settings);
 }
 
-export function visible(control: ControlDef, settings: Settings, controls: Record<string, ControlDef>): boolean {
-  return conditionsMet(control, settings, controls);
+/** A responsive control follows the device being edited (like its CSS): offsets show where Position is set. */
+export function visible(control: ControlDef, settings: Settings, controls: Record<string, ControlDef>, device = 'desktop'): boolean {
+  return conditionsMet(control, settings, controls, control.responsive ? device : 'desktop', deviceIds);
 }
 
 /** Responsive keys that carry an explicit value for a control (for the "override" dots). */

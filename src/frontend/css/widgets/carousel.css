@@ -428,6 +428,13 @@ html:not(.uncoder-js) .uncoder-carousel > .uncoder-carousel__viewport > .uncoder
   overflow-x: auto;
 }
 
+/* "Fade edges": the moving row fades out at both sides; the "Still list" layout turns the mask off
+   (--uncoder-ticker-fade-mask: none). */
+.uncoder-carousel--ticker.uncoder-carousel--fade-edges > .uncoder-carousel__viewport {
+  -webkit-mask-image: var(--uncoder-ticker-fade-mask, linear-gradient(to right, transparent, #000 var(--uncoder-carousel-fade, 12.5%), #000 calc(100% - var(--uncoder-carousel-fade, 12.5%)), transparent));
+  mask-image: var(--uncoder-ticker-fade-mask, linear-gradient(to right, transparent, #000 var(--uncoder-carousel-fade, 12.5%), #000 calc(100% - var(--uncoder-carousel-fade, 12.5%)), transparent));
+}
+
 .uncoder-carousel--ticker-run > .uncoder-carousel__viewport > .uncoder-carousel__track {
   animation: uncoder-carousel-ticker var(--uncoder-carousel-ticker-duration, 40s) linear infinite;
   animation-name: var(--uncoder-ticker-anim, uncoder-carousel-ticker);

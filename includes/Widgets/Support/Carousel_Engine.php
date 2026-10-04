@@ -120,8 +120,8 @@ trait Carousel_Engine {
 					'condition'            => array( 'motion' => 'continuous' ),
 					// Custom properties read by the ticker rules in carousel.css (no script needed per device).
 					'selectors_dictionary' => array(
-						'row'   => '--uncoder-carousel-stack:0;--uncoder-ticker-dir:row;--uncoder-ticker-anim:uncoder-carousel-ticker;--uncoder-ticker-anim-rtl:uncoder-carousel-ticker-rtl;--uncoder-ticker-track-w:max-content;--uncoder-ticker-end:var(--uncoder-carousel-gap);--uncoder-ticker-slide:var(--uncoder-carousel-slide-w, 320px);--uncoder-ticker-copy:flex;--uncoder-ticker-clip:hidden',
-						'stack' => '--uncoder-carousel-stack:1;--uncoder-ticker-dir:column;--uncoder-ticker-anim:none;--uncoder-ticker-anim-rtl:none;--uncoder-ticker-track-w:auto;--uncoder-ticker-end:0px;--uncoder-ticker-slide:auto;--uncoder-ticker-copy:none;--uncoder-ticker-clip:visible',
+						'row'   => '--uncoder-carousel-stack:0;--uncoder-ticker-dir:row;--uncoder-ticker-anim:uncoder-carousel-ticker;--uncoder-ticker-anim-rtl:uncoder-carousel-ticker-rtl;--uncoder-ticker-track-w:max-content;--uncoder-ticker-end:var(--uncoder-carousel-gap);--uncoder-ticker-slide:var(--uncoder-carousel-slide-w, 320px);--uncoder-ticker-copy:flex;--uncoder-ticker-clip:hidden;--uncoder-ticker-fade-mask:initial',
+						'stack' => '--uncoder-carousel-stack:1;--uncoder-ticker-dir:column;--uncoder-ticker-anim:none;--uncoder-ticker-anim-rtl:none;--uncoder-ticker-track-w:auto;--uncoder-ticker-end:0px;--uncoder-ticker-slide:auto;--uncoder-ticker-copy:none;--uncoder-ticker-clip:visible;--uncoder-ticker-fade-mask:none',
 					),
 					'selectors'            => array( $root => '{{VALUE}}' ),
 					'ai'                   => 'Continuous motion only: "stack" (usually ticker_layout_mobile) turns the moving row into a still list, every slide full width.',
@@ -135,6 +135,26 @@ trait Carousel_Engine {
 					'description' => __( 'Also while a link inside has keyboard focus. Visitors who prefer reduced motion get a still row they can scroll.', 'uncoder' ),
 					'default'     => true,
 					'condition'   => array( 'motion' => 'continuous' ),
+				)
+			);
+			$this->add_control(
+				'ticker_fade',
+				array(
+					'type'        => 'switch',
+					'label'       => __( 'Fade edges', 'uncoder' ),
+					'description' => __( 'The slides fade in at one side and out at the other.', 'uncoder' ),
+					'condition'   => array( 'motion' => 'continuous' ),
+				)
+			);
+			$this->add_control(
+				'ticker_fade_width',
+				array(
+					'type'       => 'slider',
+					'label'      => __( 'Edge fade width', 'uncoder' ),
+					'size_units' => array( '%', 'px' ),
+					'range'      => array( 'px' => array( 'min' => 0, 'max' => 400 ) ),
+					'condition'  => array( 'motion' => 'continuous', 'ticker_fade' => 'yes' ),
+					'selectors'  => array( $root => '--uncoder-carousel-fade: {{VALUE}}' ),
 				)
 			);
 		}
@@ -635,6 +655,9 @@ trait Carousel_Engine {
 			}
 			if ( ! array_key_exists( 'ticker_pause', $s ) || ! empty( $s['ticker_pause'] ) ) {
 				$classes[] = 'uncoder-carousel--pause';
+			}
+			if ( ! empty( $s['ticker_fade'] ) ) {
+				$classes[] = 'uncoder-carousel--fade-edges';
 			}
 		} elseif ( ! empty( $s['arrows'] ) ) {
 			$position  = in_array( $s['arrows_position'] ?? 'inside', array( 'inside', 'outside', 'bottom', 'top' ), true ) ? $s['arrows_position'] : 'inside';

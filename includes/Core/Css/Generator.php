@@ -241,7 +241,10 @@ final class Generator {
 			if ( null === $ctype || ! $ctype->has_value() ) {
 				continue;
 			}
-			if ( ! self::conditions_met( $control, $ctx, $controls ) ) {
+			// A responsive control's condition is read per device (below): a tablet-only "Position: absolute" turns on
+			// the tablet offsets.
+			$per_device = ! empty( $control['responsive'] ) && ! $ctype->is_group() && 'repeater' !== $ctype->name();
+			if ( ! $per_device && ! self::conditions_met( $control, $ctx, $controls ) ) {
 				continue;
 			}
 
@@ -276,6 +279,9 @@ final class Generator {
 
 			$devices = ! empty( $control['responsive'] ) ? Breakpoints::devices() : array( 'desktop' );
 			foreach ( $devices as $device ) {
+				if ( $per_device && ! self::conditions_met( $control, $ctx, $controls, $device ) ) {
+					continue;
+				}
 				$full = $key . Breakpoints::suffix( $device );
 				if ( array_key_exists( $full, $settings ) ) {
 					$value = $settings[ $full ];
@@ -392,11 +398,14 @@ final class Generator {
 	 *
 	 * Syntax: [ 'key' => 'value' | ['a','b'], 'key!' => 'value', 'group.sub' => 'value' ].
 	 *
+	 * On a device other than desktop each key is read at its value there, falling back to the larger devices'.
+	 *
 	 * @param array<string,mixed> $control  Control.
 	 * @param array<string,mixed> $settings Settings.
 	 * @param array<string,mixed> $controls All controls (for defaults).
+	 * @param string              $device   Device id.
 	 */
-	public static function conditions_met( array $control, array $settings, array $controls ): bool {
+	public static function conditions_met( array $control, array $settings, array $controls, string $device = 'desktop' ): bool {
 		if ( empty( $control['condition'] ) || ! is_array( $control['condition'] ) ) {
 			return true;
 		}
@@ -405,7 +414,13 @@ final class Generator {
 			$key    = rtrim( (string) $key, '!' );
 			$parts  = explode( '.', $key, 2 );
 			$root   = $parts[0];
-			$actual = array_key_exists( $root, $settings ) ? $settings[ $root ] : ( $controls[ $root ]['default'] ?? '' );
+			$actual = $controls[ $root ]['default'] ?? '';
+			foreach ( self::cascade( $device ) as $d ) {
+				if ( array_key_exists( $root . Breakpoints::suffix( $d ), $settings ) ) {
+					$actual = $settings[ $root . Breakpoints::suffix( $d ) ];
+					break;
+				}
+			}
 			if ( isset( $parts[1] ) ) {
 				$actual = is_array( $actual ) ? ( $actual[ $parts[1] ] ?? '' ) : '';
 			}
@@ -418,6 +433,32 @@ final class Generator {
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * The devices a responsive value on `$device` falls back through, nearest first: widescreen to desktop, a
+	 * smaller device to each larger max-width device and then desktop.
+	 *
+	 * @return string[]
+	 */
+	private static function cascade( string $device ): array {
+		if ( 'desktop' === $device ) {
+			return array( 'desktop' );
+		}
+		if ( 'widescreen' === $device ) {
+			return array( 'widescreen', 'desktop' );
+		}
+		$chain = array();
+		foreach ( Breakpoints::devices() as $d ) {
+			if ( 'desktop' === $d || 'widescreen' === $d ) {
+				continue;
+			}
+			$chain[] = $d;
+			if ( $d === $device ) {
+				break;
+			}
+		}
+		return array_merge( array_reverse( $chain ), array( 'desktop' ) );
 	}
 
 	/**

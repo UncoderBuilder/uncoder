@@ -289,9 +289,13 @@ final class Audit {
 		// layouts of two or more real columns should stack. A column is a container that is not a small fixed
 		// tile (≤ 160px wide), or a wide widget (text, image or media that is not a small fixed size).
 		// A header bar (logo · menu · button) stays a row too: its menu turns into a toggle on phones.
-		// Content-sized items (an icon tile, a price next to "/ month") and items hidden on phones are not columns.
+		// Content-sized items (an icon tile, a price next to "/ month"), items hidden on phones and decorations
+		// placed with absolute / fixed positioning (out of the flow) are not columns.
 		$small   = static function ( array $c ): bool {
 			$s = (array) ( $c['settings'] ?? array() );
+			if ( in_array( self::on_mobile( $s, '_position', '' ), array( 'absolute', 'fixed' ), true ) ) {
+				return true;
+			}
 			$w = self::on_mobile( $s, 'width', $s['_custom_width'] ?? null ); // the width on phones decides.
 			$w = is_array( $w ) && 'custom' === ( $w['unit'] ?? '' ) ? (string) ( $w['size'] ?? '' ) : $w;
 			if ( ! empty( $s['_hide_mobile'] ) || 'auto' === ( $s['_width'] ?? '' ) || in_array( $w, array( 'auto', 'fit-content', 'max-content' ), true ) ) {
