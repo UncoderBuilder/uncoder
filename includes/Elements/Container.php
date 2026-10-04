@@ -155,6 +155,25 @@ class Container extends Element_Base {
 				'selectors' => array( '{{WRAPPER}}' => '--uncoder-grid-rows: repeat({{VALUE}}, auto)' ),
 			)
 		);
+		// Framer grids often give every row the tallest row's height (a short review card keeps the gap below it).
+		$this->add_responsive_control(
+			'grid_row_sizing',
+			array(
+				'type'                 => 'select',
+				'label'                => __( 'Row heights', 'uncoder' ),
+				'description'          => __( 'Equal: every row as tall as the tallest one.', 'uncoder' ),
+				'options'              => array(
+					''      => __( 'Fit content', 'uncoder' ),
+					'equal' => __( 'Equal', 'uncoder' ),
+				),
+				'condition'            => array( 'layout' => 'grid' ),
+				'selectors_dictionary' => array(
+					''      => '--uncoder-grid-auto-rows: auto',
+					'equal' => '--uncoder-grid-auto-rows: 1fr',
+				),
+				'selectors'            => array( '{{WRAPPER}}' => '{{VALUE}}' ),
+			)
+		);
 		$this->add_control(
 			'grid_auto_flow',
 			array(

@@ -104,6 +104,7 @@ MD;
 | width (+responsive) | column width inside a row, e.g. "50%" or {"size":40,"unit":"%"} |
 | min_height | e.g. "80vh" for heroes |
 | grid_columns (+responsive) | number of equal columns (grid) — or grid_template "2fr 1fr" |
+| grid_row_sizing (+responsive) | "" (rows fit their content) \| "equal" (every row as tall as the tallest, e.g. review cards of different lengths keep one rhythm) |
 | background | {"type":"classic","color":"var(--uncoder-c-surface)"} \| {"type":"classic","image":{"id":123},"size":"cover","position":"center center"} \| {"type":"gradient","color":"#1e1b4b","color_b":"#4338ca","gradient_angle":{"size":135,"unit":"deg"}} |
 | background slideshow | {"type":"slideshow","slides":[{"id":1},{"id":2},{"id":3}],"slide_duration":5000,"slide_transition":""(fade)\|"slide","slide_speed":1000,"ken_burns":"in"\|"out","color":"#0b1f2e"} — only the first image loads with the page |
 | bg_motion + bg_motion_speed (1–10) | moving background image (classic image or slideshow): "parallax", "zoom-in", "zoom-out", "mouse" — works on phones, unlike attachment "fixed" |
@@ -115,7 +116,7 @@ MD;
 | border, radius, shadow | card styling |
 | tag | div, section, header, footer, main, article, aside, nav, a (+ link) |
 
-Every element (containers and widgets) also has the Advanced settings: `_margin`, `_padding` (dimensions), `_width` ("full"/"auto"/"custom" + `_custom_width`), `_align_self`, `_order`, `_position` + `_offset`, `_z_index`, `_background`, `_border`, `_radius`, `_shadow`, `_animations` (timelines, topic "animations"), `_animation` ("fade-up"…), `_hide_desktop/_hide_tablet/_hide_mobile`, `_css_id`, `_css_classes`, `_custom_css`, and the scroll & mouse effects below.
+Every element (containers and widgets) also has the Advanced settings: `_margin`, `_padding` (dimensions), `_width` ("full"/"auto"/"custom" + `_custom_width`), `_align_self`, `_order`, `_flex_grow` / `_flex_shrink` / `_flex_basis` (equal columns in a row: `_flex_grow` 1 + `_flex_basis` {"size":0,"unit":"%"} on each), `_position` + `_offset`, `_z_index`, `_background`, `_border`, `_radius`, `_shadow`, `_animations` (timelines, topic "animations"), `_animation` ("fade-up"…), `_hide_desktop/_hide_tablet/_hide_mobile`, `_css_id`, `_css_classes`, `_custom_css`, and the scroll & mouse effects below.
 
 ## Motion & effects (any element)
 - Animations (the richest option; read topic "animations"): `_animations` takes preset names — `"fade-up"`, `["words-rise","hover-lift"]` — or full timelines with triggers (scroll into view, load, scroll scrub, hover, click, loop), stagger and text splits. Prefer it for new work.

@@ -844,7 +844,11 @@ class Form extends Widget_Base {
 			array(
 				'type'      => 'color',
 				'label'     => __( 'Text color', 'uncoder' ),
-				'selectors' => array( self::FIELD => 'color: {{VALUE}}' ),
+				// The select's drawn chevron follows the text (it stayed grey, unseen on a dark form).
+				'selectors' => array(
+					self::FIELD                                => 'color: {{VALUE}}',
+					'{{WRAPPER}} .uncoder-form__select::after' => 'color: {{VALUE}}',
+				),
 			)
 		);
 		$this->add_control(

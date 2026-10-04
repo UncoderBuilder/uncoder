@@ -252,6 +252,7 @@ html:not([data-uncoder-scheme="dark"]) .uncoder-hide-in-light {
   display: grid;
   grid-template-columns: var(--uncoder-grid-cols);
   grid-template-rows: var(--uncoder-grid-rows);
+  grid-auto-rows: var(--uncoder-grid-auto-rows, auto);
   grid-auto-flow: var(--uncoder-grid-flow);
   justify-content: var(--uncoder-justify);
   align-items: var(--uncoder-align);

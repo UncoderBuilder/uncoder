@@ -149,6 +149,19 @@ final class Common_Controls {
 				'selectors' => array( '{{WRAPPER}}' => 'flex-shrink: {{VALUE}}' ),
 			)
 		);
+		// The size an item starts from before growing or shrinking: 0% with Grow 1 on every item gives equal columns
+		// whatever their content (a row of stats, the two halves of a card).
+		$el->add_responsive_control(
+			'_flex_basis',
+			array(
+				'type'        => 'slider',
+				'label'       => __( 'Basis', 'uncoder' ),
+				'description' => __( 'The starting size in a row or column. 0% with Grow 1 on each item makes equal columns.', 'uncoder' ),
+				'size_units'  => array( '%', 'px', 'em', 'rem', 'vw' ),
+				'range'       => array( '%' => array( 'min' => 0, 'max' => 100 ), 'px' => array( 'min' => 0, 'max' => 1200 ) ),
+				'selectors'   => array( '{{WRAPPER}}' => 'flex-basis: {{VALUE}}' ),
+			)
+		);
 		// Inside a grid container: how many tracks the element takes (bento tiles, a tall card beside two short ones).
 		$el->add_responsive_control(
 			'_grid_column_span',
