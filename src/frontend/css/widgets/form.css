@@ -15,15 +15,19 @@
   margin: 0;
 }
 
+/* Rows of fields on a 12-column scale. A wrapping flex row rather than a 12-track grid: the grid's eleven fixed
+   gaps set a minimum width (11 × a 36px gap = 396px), wider than a phone column, so the fields overflowed. */
 .uncoder-form__fields {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  align-items: start;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
   gap: var(--uncoder-form-row-gap) var(--uncoder-form-col-gap);
 }
 
+/* A field spanning n of 12 columns: n twelfths of the row plus the n − 1 gaps inside it. */
 .uncoder-form__group {
-  grid-column: span var(--uncoder-form-span, 12);
+  flex: 0 0 calc((100% + var(--uncoder-form-col-gap)) * var(--uncoder-form-span, 12) / 12 - var(--uncoder-form-col-gap));
+  max-width: 100%;
   min-width: 0;
   margin: 0;
   padding: 0;
@@ -244,7 +248,7 @@
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
-  align-self: end;
+  align-self: flex-end;
   justify-content: flex-start;
 }
 
@@ -339,7 +343,7 @@
 /* Phones: fields stack unless a mobile width was chosen. */
 @media (max-width: 767px) {
   .uncoder-form__group:not(.uncoder-form__group--mw) {
-    grid-column: 1 / -1;
+    flex-basis: 100%;
   }
 }
 
@@ -353,12 +357,11 @@
   }
 }
 
-/* Multi-step forms: each step is a fieldset with the same 12 columns (fields keep their column widths;
-   a subgrid on a fieldset is not reliable in every browser). */
+/* Multi-step forms: each step is a fieldset laid out like the fields (fields keep their column widths). */
 .uncoder-form__step {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
+  flex: 0 0 100%;
+  display: flex;
+  flex-wrap: wrap;
   gap: var(--uncoder-form-row-gap) var(--uncoder-form-col-gap);
   align-items: inherit;
   min-inline-size: 0;
@@ -374,7 +377,7 @@
 }
 
 .uncoder-form__step-title {
-  grid-column: 1 / -1;
+  flex: 0 0 100%;
   margin-bottom: 4px;
   padding: 0;
   font-size: 1.1em;
@@ -387,7 +390,7 @@
 }
 
 .uncoder-form__nav {
-  grid-column: 1 / -1;
+  flex: 0 0 100%;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -409,7 +412,7 @@
 }
 
 .uncoder-form.is-stepped .uncoder-form__fields {
-  align-items: end;
+  align-items: flex-end;
 }
 
 .uncoder-form__progress {
@@ -488,7 +491,7 @@
 }
 
 .uncoder-form__captcha {
-  grid-column: 1 / -1;
+  flex: 0 0 100%;
 }
 
 @media (max-width: 600px) {

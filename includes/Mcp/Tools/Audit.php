@@ -153,6 +153,11 @@ final class Audit {
 
 	private function check_widget( string $id, string $type, array $s, array $eff, array $node, string $bg, array &$state, string $text = '' ): void {
 		$dynamic = (array) ( $node['dynamic'] ?? array() );
+		// A widget's own background (a pill label, a badge) is the surface its text sits on.
+		$own = is_array( $s['_background'] ?? null ) ? $s['_background'] : array();
+		if ( 'classic' === ( $own['type'] ?? 'classic' ) && '' !== (string) ( $own['color'] ?? '' ) && empty( $own['image']['id'] ) && empty( $own['image']['url'] ) ) {
+			$bg = $this->surface_color( array( 'background' => $own ), $bg );
+		}
 
 		if ( in_array( $type, array( 'heading', 'post-title', 'archive-title', 'site-title' ), true ) ) {
 			$tag = (string) ( $eff['tag'] ?? $eff['title_tag'] ?? 'h2' );
@@ -354,14 +359,28 @@ final class Audit {
 		}
 		$bg   = is_array( $s['background'] ?? null ) ? $s['background'] : array();
 		$type = $bg['type'] ?? 'classic';
-		if ( 'gradient' === $type ) {
-			return $this->resolve_color( (string) ( $bg['color'] ?? '' ) );
-		}
 		if ( ! empty( $bg['image']['id'] ) || ! empty( $bg['image']['url'] ) || 'video' === $type ) {
 			return ''; // A photo: contrast cannot be judged from settings.
 		}
+		// A gradient is judged by its first color, a see-through color (a 12% tint) as it shows over the surface
+		// below it; over an unknown surface (a photo) only a mostly opaque color is a known one.
 		$color = $this->resolve_color( (string) ( $bg['color'] ?? '' ) );
-		return '' !== $color && self::alpha( $color ) >= 0.6 ? $color : $inherited;
+		if ( '' === $color || ( '' === $inherited && self::alpha( $color ) < 0.6 ) ) {
+			return $inherited;
+		}
+		return self::over( $color, '' !== $inherited ? $inherited : '#ffffff' );
+	}
+
+	/** A color as it shows over another: a see-through rgba() / #rrggbbaa blended onto the base, as #rrggbb. */
+	private static function over( string $c, string $base ): string {
+		$a   = self::alpha( $c );
+		$top = self::rgb( $c );
+		$low = self::rgb( $base ) ?? array( 255, 255, 255 );
+		if ( $a >= 1.0 || ! $top ) {
+			return $c;
+		}
+		$mix = array_map( static fn( $t, $l ) => (int) round( $t * $a + $l * ( 1 - $a ) ), $top, $low );
+		return sprintf( '#%02x%02x%02x', $mix[0], $mix[1], $mix[2] );
 	}
 
 	private static function alpha( string $c ): float {
@@ -377,6 +396,7 @@ final class Audit {
 
 	private function check_contrast( string $id, string $color, string $bg, string $default, bool $large ): void {
 		$fg = $this->resolve_color( '' !== $color ? $color : $default );
+		$fg = self::over( $fg, $bg ); // half-transparent text shows lighter (or darker) than its color
 		$fg_rgb = self::rgb( $fg );
 		$bg_rgb = self::rgb( $bg );
 		if ( ! $fg_rgb || ! $bg_rgb ) {

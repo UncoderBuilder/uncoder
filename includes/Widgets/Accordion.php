@@ -28,6 +28,9 @@ class Accordion extends Widget_Base {
 	/** Open state (also while the JS module animates a closing item). */
 	private const OPEN = '[open]:not(.is-closing)';
 
+	/** The FAQ questions gathered on this page, keyed by question (a repeated question counts once). */
+	private static array $faq = array();
+
 	/** <summary> accepts phrasing and heading content only. */
 	public const TITLE_TAGS = array(
 		'span' => 'Default (span)',
@@ -189,7 +192,7 @@ class Accordion extends Widget_Base {
 			array(
 				'type'        => 'switch',
 				'label'       => __( 'FAQ schema', 'uncoder' ),
-				'description' => __( 'Adds FAQPage structured data (JSON-LD) built from the titles and the text of the panels. Use it once per page, for real questions and answers.', 'uncoder' ),
+				'description' => __( 'Adds FAQPage structured data (JSON-LD) built from the titles and the text of the panels. The questions of every FAQ accordion on a page are printed as one FAQPage. Use it for real questions and answers.', 'uncoder' ),
 			)
 		);
 		$this->end_section();
@@ -530,18 +533,46 @@ class Accordion extends Widget_Base {
 		}
 		echo '</div>';
 
-		if ( $faq ) {
-			$json = wp_json_encode(
-				array(
-					'@context'   => 'https://schema.org',
-					'@type'      => 'FAQPage',
-					'mainEntity' => $faq,
-				),
-				JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
-			);
-			if ( $json ) {
-				wp_print_inline_script_tag( $json, array( 'type' => 'application/ld+json' ) );
-			}
+		if ( ! $faq ) {
+			return;
+		}
+		// One FAQPage per page: the questions of every FAQ accordion (tabs of FAQs, a page FAQ plus the shared one)
+		// are gathered and printed once in the footer, where search engines expect a single FAQPage. Outside a page
+		// view (previews, REST renders) or after the footer, the accordion prints its own.
+		if ( did_action( 'wp_footer' ) || ! did_action( 'wp_head' ) ) {
+			self::print_schema( $faq );
+			return;
+		}
+		foreach ( $faq as $question ) {
+			self::$faq[ $question['name'] ] ??= $question;
+		}
+		if ( ! has_action( 'wp_footer', array( self::class, 'print_page_schema' ) ) ) {
+			add_action( 'wp_footer', array( self::class, 'print_page_schema' ), 20 );
+		}
+	}
+
+	/** wp_footer: the page's single FAQPage block. */
+	public static function print_page_schema(): void {
+		if ( self::$faq ) {
+			self::print_schema( array_values( self::$faq ) );
+			self::$faq = array();
+		}
+	}
+
+	/**
+	 * @param array<int, array<string, mixed>> $questions
+	 */
+	private static function print_schema( array $questions ): void {
+		$json = wp_json_encode(
+			array(
+				'@context'   => 'https://schema.org',
+				'@type'      => 'FAQPage',
+				'mainEntity' => $questions,
+			),
+			JSON_HEX_TAG | JSON_HEX_AMP | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE
+		);
+		if ( $json ) {
+			wp_print_inline_script_tag( $json, array( 'type' => 'application/ld+json' ) );
 		}
 	}
 

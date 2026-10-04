@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-04T04:30:21+00:00\n"
+"POT-Creation-Date: 2026-10-04T07:40:13+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: uncoder\n"
@@ -42,7 +42,7 @@ msgstr ""
 #: includes/Admin/Admin.php:52
 #: includes/Widgets/Breadcrumbs.php:67
 #: includes/Widgets/Breadcrumbs.php:566
-#: includes/Widgets/Nav_Menu.php:1303
+#: includes/Widgets/Nav_Menu.php:1316
 #: includes/Widgets/Site_Logo.php:279
 msgid "Home"
 msgstr ""
@@ -105,11 +105,11 @@ msgstr ""
 #: includes/Controls/Groups/Border.php:32
 #: includes/Controls/Groups/Shadow.php:36
 #: includes/Elements/Container.php:510
-#: includes/Widgets/Accordion.php:273
-#: includes/Widgets/Accordion.php:291
-#: includes/Widgets/Accordion.php:309
-#: includes/Widgets/Accordion.php:351
-#: includes/Widgets/Accordion.php:420
+#: includes/Widgets/Accordion.php:276
+#: includes/Widgets/Accordion.php:294
+#: includes/Widgets/Accordion.php:312
+#: includes/Widgets/Accordion.php:354
+#: includes/Widgets/Accordion.php:423
 #: includes/Widgets/Alert.php:238
 #: includes/Widgets/Alert.php:319
 #: includes/Widgets/Alert.php:329
@@ -163,8 +163,8 @@ msgstr ""
 #: includes/Widgets/Loop_Grid.php:556
 #: includes/Widgets/Marquee.php:251
 #: includes/Widgets/Marquee.php:324
-#: includes/Widgets/Nav_Menu.php:820
-#: includes/Widgets/Nav_Menu.php:838
+#: includes/Widgets/Nav_Menu.php:832
+#: includes/Widgets/Nav_Menu.php:850
 #: includes/Widgets/Off_Canvas.php:382
 #: includes/Widgets/Off_Canvas.php:422
 #: includes/Widgets/Off_Canvas.php:440
@@ -278,8 +278,8 @@ msgstr ""
 #: includes/Controls/Groups/Background.php:71
 #: includes/Controls/Groups/Typography.php:57
 #: includes/Core/Common_Controls.php:300
-#: includes/Widgets/Accordion.php:331
-#: includes/Widgets/Accordion.php:410
+#: includes/Widgets/Accordion.php:334
+#: includes/Widgets/Accordion.php:413
 #: includes/Widgets/Alert.php:246
 #: includes/Widgets/Alert.php:307
 #: includes/Widgets/Author_Box.php:198
@@ -461,8 +461,8 @@ msgstr ""
 
 #: includes/Controls/Groups/Query.php:38
 #: includes/Elements/Container.php:281
-#: includes/Widgets/Accordion.php:94
-#: includes/Widgets/Accordion.php:198
+#: includes/Widgets/Accordion.php:97
+#: includes/Widgets/Accordion.php:201
 #: includes/Widgets/Icon_List.php:57
 #: includes/Widgets/Marquee.php:73
 #: includes/Widgets/Post_Info.php:90
@@ -746,9 +746,9 @@ msgid "Margin"
 msgstr ""
 
 #: includes/Core/Common_Controls.php:72
-#: includes/Widgets/Accordion.php:234
-#: includes/Widgets/Accordion.php:249
-#: includes/Widgets/Accordion.php:433
+#: includes/Widgets/Accordion.php:237
+#: includes/Widgets/Accordion.php:252
+#: includes/Widgets/Accordion.php:436
 #: includes/Widgets/Alert.php:218
 #: includes/Widgets/Author_Box.php:178
 #: includes/Widgets/Blockquote.php:140
@@ -769,7 +769,7 @@ msgstr ""
 #: includes/Widgets/Login.php:446
 #: includes/Widgets/Loop_Filter.php:165
 #: includes/Widgets/Loop_Grid.php:543
-#: includes/Widgets/Nav_Menu.php:856
+#: includes/Widgets/Nav_Menu.php:868
 #: includes/Widgets/Off_Canvas.php:329
 #: includes/Widgets/Off_Canvas.php:359
 #: includes/Widgets/Post_Comments.php:236
@@ -849,7 +849,7 @@ msgstr ""
 #: includes/Core/Common_Controls.php:114
 #: includes/Elements/Container.php:175
 #: includes/Elements/Container.php:192
-#: includes/Widgets/Accordion.php:171
+#: includes/Widgets/Accordion.php:174
 #: includes/Widgets/Breadcrumbs.php:141
 #: includes/Widgets/Image_Compare.php:133
 #: includes/Widgets/Login.php:485
@@ -870,7 +870,7 @@ msgstr ""
 #: includes/Core/Common_Controls.php:336
 #: includes/Elements/Container.php:176
 #: includes/Elements/Container.php:193
-#: includes/Widgets/Accordion.php:261
+#: includes/Widgets/Accordion.php:264
 #: includes/Widgets/Author_Box.php:154
 #: includes/Widgets/Blockquote.php:126
 #: includes/Widgets/Breadcrumbs.php:142
@@ -901,7 +901,7 @@ msgstr ""
 #: includes/Widgets/Nav_Menu.php:108
 #: includes/Widgets/Nav_Menu.php:214
 #: includes/Widgets/Nav_Menu.php:409
-#: includes/Widgets/Nav_Menu.php:955
+#: includes/Widgets/Nav_Menu.php:967
 #: includes/Widgets/Off_Canvas.php:127
 #: includes/Widgets/Posts.php:341
 #: includes/Widgets/Posts.php:448
@@ -933,7 +933,7 @@ msgstr ""
 #: includes/Core/Common_Controls.php:116
 #: includes/Elements/Container.php:177
 #: includes/Elements/Container.php:194
-#: includes/Widgets/Accordion.php:172
+#: includes/Widgets/Accordion.php:175
 #: includes/Widgets/Breadcrumbs.php:143
 #: includes/Widgets/Image_Compare.php:135
 #: includes/Widgets/Login.php:487
@@ -1022,11 +1022,11 @@ msgstr ""
 #: includes/Elements/Container.php:410
 #: includes/Elements/Container.php:417
 #: includes/Elements/Container.php:459
-#: includes/Widgets/Accordion.php:210
-#: includes/Widgets/Accordion.php:281
-#: includes/Widgets/Accordion.php:299
-#: includes/Widgets/Accordion.php:317
-#: includes/Widgets/Accordion.php:428
+#: includes/Widgets/Accordion.php:213
+#: includes/Widgets/Accordion.php:284
+#: includes/Widgets/Accordion.php:302
+#: includes/Widgets/Accordion.php:320
+#: includes/Widgets/Accordion.php:431
 #: includes/Widgets/Alert.php:337
 #: includes/Widgets/Animated_Headline.php:272
 #: includes/Widgets/Author_Box.php:163
@@ -1074,13 +1074,13 @@ msgstr ""
 #: includes/Widgets/Loop_Grid.php:448
 #: includes/Widgets/Loop_Grid.php:497
 #: includes/Widgets/Loop_Grid.php:515
-#: includes/Widgets/Nav_Menu.php:483
-#: includes/Widgets/Nav_Menu.php:501
-#: includes/Widgets/Nav_Menu.php:530
-#: includes/Widgets/Nav_Menu.php:633
-#: includes/Widgets/Nav_Menu.php:828
-#: includes/Widgets/Nav_Menu.php:846
-#: includes/Widgets/Nav_Menu.php:887
+#: includes/Widgets/Nav_Menu.php:495
+#: includes/Widgets/Nav_Menu.php:513
+#: includes/Widgets/Nav_Menu.php:542
+#: includes/Widgets/Nav_Menu.php:645
+#: includes/Widgets/Nav_Menu.php:840
+#: includes/Widgets/Nav_Menu.php:858
+#: includes/Widgets/Nav_Menu.php:899
 #: includes/Widgets/Off_Canvas.php:273
 #: includes/Widgets/Off_Canvas.php:292
 #: includes/Widgets/Off_Canvas.php:346
@@ -1147,8 +1147,8 @@ msgstr ""
 
 #: includes/Core/Common_Controls.php:227
 #: includes/Elements/Container.php:553
-#: includes/Widgets/Accordion.php:211
-#: includes/Widgets/Accordion.php:438
+#: includes/Widgets/Accordion.php:214
+#: includes/Widgets/Accordion.php:441
 #: includes/Widgets/Alert.php:193
 #: includes/Widgets/Author_Box.php:164
 #: includes/Widgets/Author_Box.php:222
@@ -1176,9 +1176,9 @@ msgstr ""
 #: includes/Widgets/Login.php:388
 #: includes/Widgets/Logo_Grid.php:255
 #: includes/Widgets/Loop_Grid.php:529
-#: includes/Widgets/Nav_Menu.php:741
-#: includes/Widgets/Nav_Menu.php:870
-#: includes/Widgets/Nav_Menu.php:1015
+#: includes/Widgets/Nav_Menu.php:753
+#: includes/Widgets/Nav_Menu.php:882
+#: includes/Widgets/Nav_Menu.php:1027
 #: includes/Widgets/Off_Canvas.php:277
 #: includes/Widgets/Off_Canvas.php:364
 #: includes/Widgets/Posts.php:408
@@ -1203,7 +1203,7 @@ msgid "Border"
 msgstr ""
 
 #: includes/Core/Common_Controls.php:232
-#: includes/Widgets/Accordion.php:224
+#: includes/Widgets/Accordion.php:227
 #: includes/Widgets/Alert.php:209
 #: includes/Widgets/Author_Box.php:169
 #: includes/Widgets/Author_Box.php:217
@@ -1239,8 +1239,8 @@ msgstr ""
 #: includes/Widgets/Loop_Grid.php:458
 #: includes/Widgets/Loop_Grid.php:534
 #: includes/Widgets/Marquee.php:399
-#: includes/Widgets/Nav_Menu.php:735
-#: includes/Widgets/Nav_Menu.php:865
+#: includes/Widgets/Nav_Menu.php:747
+#: includes/Widgets/Nav_Menu.php:877
 #: includes/Widgets/Off_Canvas.php:338
 #: includes/Widgets/Off_Canvas.php:369
 #: includes/Widgets/Posts.php:427
@@ -1411,7 +1411,7 @@ msgid "Bottom"
 msgstr ""
 
 #: includes/Core/Common_Controls.php:339
-#: includes/Widgets/Accordion.php:260
+#: includes/Widgets/Accordion.php:263
 #: includes/Widgets/Author_Box.php:59
 #: includes/Widgets/Author_Box.php:153
 #: includes/Widgets/Blockquote.php:125
@@ -1442,7 +1442,7 @@ msgstr ""
 #: includes/Widgets/Lottie.php:166
 #: includes/Widgets/Marquee.php:163
 #: includes/Widgets/Nav_Menu.php:311
-#: includes/Widgets/Nav_Menu.php:954
+#: includes/Widgets/Nav_Menu.php:966
 #: includes/Widgets/Off_Canvas.php:126
 #: includes/Widgets/Off_Canvas.php:163
 #: includes/Widgets/Posts.php:447
@@ -1471,7 +1471,7 @@ msgid "Left"
 msgstr ""
 
 #: includes/Core/Common_Controls.php:340
-#: includes/Widgets/Accordion.php:262
+#: includes/Widgets/Accordion.php:265
 #: includes/Widgets/Author_Box.php:61
 #: includes/Widgets/Author_Box.php:155
 #: includes/Widgets/Blockquote.php:127
@@ -1500,7 +1500,7 @@ msgstr ""
 #: includes/Widgets/Lottie.php:168
 #: includes/Widgets/Marquee.php:164
 #: includes/Widgets/Nav_Menu.php:312
-#: includes/Widgets/Nav_Menu.php:956
+#: includes/Widgets/Nav_Menu.php:968
 #: includes/Widgets/Off_Canvas.php:128
 #: includes/Widgets/Off_Canvas.php:164
 #: includes/Widgets/Posts.php:449
@@ -1611,7 +1611,7 @@ msgstr ""
 
 #: includes/Core/Common_Controls.php:431
 #: includes/Elements/Container.php:412
-#: includes/Widgets/Accordion.php:268
+#: includes/Widgets/Accordion.php:271
 #: includes/Widgets/Alert.php:314
 #: includes/Widgets/Breadcrumbs.php:158
 #: includes/Widgets/Button.php:155
@@ -1639,10 +1639,10 @@ msgstr ""
 #: includes/Widgets/Loop_Grid.php:399
 #: includes/Widgets/Loop_Grid.php:484
 #: includes/Widgets/Marquee.php:246
-#: includes/Widgets/Nav_Menu.php:470
-#: includes/Widgets/Nav_Menu.php:620
-#: includes/Widgets/Nav_Menu.php:815
-#: includes/Widgets/Nav_Menu.php:892
+#: includes/Widgets/Nav_Menu.php:482
+#: includes/Widgets/Nav_Menu.php:632
+#: includes/Widgets/Nav_Menu.php:827
+#: includes/Widgets/Nav_Menu.php:904
 #: includes/Widgets/Off_Canvas.php:260
 #: includes/Widgets/Off_Canvas.php:417
 #: includes/Widgets/Posts.php:406
@@ -1673,7 +1673,7 @@ msgstr ""
 
 #: includes/Core/Common_Controls.php:434
 #: includes/Elements/Container.php:454
-#: includes/Widgets/Accordion.php:286
+#: includes/Widgets/Accordion.php:289
 #: includes/Widgets/Alert.php:324
 #: includes/Widgets/Breadcrumbs.php:168
 #: includes/Widgets/Button.php:175
@@ -1697,10 +1697,10 @@ msgstr ""
 #: includes/Widgets/Loop_Grid.php:417
 #: includes/Widgets/Loop_Grid.php:502
 #: includes/Widgets/Marquee.php:256
-#: includes/Widgets/Nav_Menu.php:488
-#: includes/Widgets/Nav_Menu.php:638
-#: includes/Widgets/Nav_Menu.php:833
-#: includes/Widgets/Nav_Menu.php:902
+#: includes/Widgets/Nav_Menu.php:500
+#: includes/Widgets/Nav_Menu.php:650
+#: includes/Widgets/Nav_Menu.php:845
+#: includes/Widgets/Nav_Menu.php:914
 #: includes/Widgets/Off_Canvas.php:279
 #: includes/Widgets/Off_Canvas.php:435
 #: includes/Widgets/Posts.php:411
@@ -2338,7 +2338,7 @@ msgid "Action"
 msgstr ""
 
 #: includes/Dynamic/Core_Tags.php:366
-#: includes/Widgets/Accordion.php:304
+#: includes/Widgets/Accordion.php:307
 msgid "Open"
 msgstr ""
 
@@ -2904,7 +2904,7 @@ msgstr ""
 
 #: includes/Elements/Container.php:558
 #: includes/Widgets/Loop_Filter.php:164
-#: includes/Widgets/Nav_Menu.php:1020
+#: includes/Widgets/Nav_Menu.php:1032
 #: includes/Widgets/Post_Info.php:370
 msgid "Radius"
 msgstr ""
@@ -2952,15 +2952,15 @@ msgstr ""
 #: includes/Widgets/Loop_Grid.php:440
 #: includes/Widgets/Loop_Grid.php:489
 #: includes/Widgets/Loop_Grid.php:507
-#: includes/Widgets/Nav_Menu.php:475
-#: includes/Widgets/Nav_Menu.php:493
-#: includes/Widgets/Nav_Menu.php:521
-#: includes/Widgets/Nav_Menu.php:625
-#: includes/Widgets/Nav_Menu.php:643
-#: includes/Widgets/Nav_Menu.php:661
-#: includes/Widgets/Nav_Menu.php:897
-#: includes/Widgets/Nav_Menu.php:907
-#: includes/Widgets/Nav_Menu.php:925
+#: includes/Widgets/Nav_Menu.php:487
+#: includes/Widgets/Nav_Menu.php:505
+#: includes/Widgets/Nav_Menu.php:533
+#: includes/Widgets/Nav_Menu.php:637
+#: includes/Widgets/Nav_Menu.php:655
+#: includes/Widgets/Nav_Menu.php:673
+#: includes/Widgets/Nav_Menu.php:909
+#: includes/Widgets/Nav_Menu.php:919
+#: includes/Widgets/Nav_Menu.php:937
 #: includes/Widgets/Off_Canvas.php:265
 #: includes/Widgets/Off_Canvas.php:284
 #: includes/Widgets/Off_Canvas.php:351
@@ -3479,9 +3479,9 @@ msgid "Show the Description field"
 msgstr ""
 
 #: includes/Menus/Menu_Item_Extras.php:151
-#: includes/Widgets/Accordion.php:104
-#: includes/Widgets/Accordion.php:139
-#: includes/Widgets/Accordion.php:326
+#: includes/Widgets/Accordion.php:107
+#: includes/Widgets/Accordion.php:142
+#: includes/Widgets/Accordion.php:329
 #: includes/Widgets/Alert.php:138
 #: includes/Widgets/Alert.php:229
 #: includes/Widgets/Breadcrumbs.php:96
@@ -3558,7 +3558,7 @@ msgid "Call to action"
 msgstr ""
 
 #: includes/Patterns/Patterns.php:64
-#: includes/Widgets/Accordion.php:427
+#: includes/Widgets/Accordion.php:430
 #: includes/Widgets/Alert.php:264
 #: includes/Widgets/Call_To_Action.php:140
 #: includes/Widgets/Icon_Box.php:535
@@ -3570,7 +3570,7 @@ msgid "Content"
 msgstr ""
 
 #: includes/Patterns/Patterns.php:65
-#: includes/Widgets/Nav_Menu.php:1310
+#: includes/Widgets/Nav_Menu.php:1323
 msgid "Contact"
 msgstr ""
 
@@ -4450,30 +4450,30 @@ msgstr ""
 msgid "Publish a post to preview this loop item with real content."
 msgstr ""
 
-#: includes/Widgets/Accordion.php:46
-#: includes/Widgets/Accordion.php:89
+#: includes/Widgets/Accordion.php:49
+#: includes/Widgets/Accordion.php:92
 #: includes/Widgets/Tabs.php:137
 msgid "Accordion"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:62
+#: includes/Widgets/Accordion.php:65
 msgid "Collapsible items whose panels are containers holding any widgets; optional FAQPage structured data. One row in \"items\" = one child container."
 msgstr ""
 
-#: includes/Widgets/Accordion.php:82
+#: includes/Widgets/Accordion.php:85
 msgid "What is included in every plan?"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:83
+#: includes/Widgets/Accordion.php:86
 msgid "Can I switch plans later?"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:84
+#: includes/Widgets/Accordion.php:87
 msgid "How does billing work?"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:99
-#: includes/Widgets/Accordion.php:243
+#: includes/Widgets/Accordion.php:102
+#: includes/Widgets/Accordion.php:246
 #: includes/Widgets/Alert.php:107
 #: includes/Widgets/Archive_Title.php:51
 #: includes/Widgets/Archive_Title.php:80
@@ -4513,11 +4513,11 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:101
+#: includes/Widgets/Accordion.php:104
 msgid "Accordion item"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:114
+#: includes/Widgets/Accordion.php:117
 #: includes/Widgets/Call_To_Action.php:167
 #: includes/Widgets/Counter.php:146
 #: includes/Widgets/Flip_Box.php:228
@@ -4534,31 +4534,31 @@ msgstr ""
 msgid "Title HTML tag"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:124
+#: includes/Widgets/Accordion.php:127
 msgid "First item open"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:132
+#: includes/Widgets/Accordion.php:135
 msgid "Allow several open items"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:148
+#: includes/Widgets/Accordion.php:151
 msgid "Active icon"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:149
+#: includes/Widgets/Accordion.php:152
 msgid "None: the icon turns when the item opens (see Open rotation)."
 msgstr ""
 
-#: includes/Widgets/Accordion.php:157
+#: includes/Widgets/Accordion.php:160
 msgid "Open rotation"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:158
+#: includes/Widgets/Accordion.php:161
 msgid "How far the icon turns when its item opens, with no active icon: 180° flips a chevron, 45° turns a plus into a cross."
 msgstr ""
 
-#: includes/Widgets/Accordion.php:168
+#: includes/Widgets/Accordion.php:171
 #: includes/Widgets/Button.php:110
 #: includes/Widgets/Form.php:345
 #: includes/Widgets/Off_Canvas.php:111
@@ -4566,21 +4566,21 @@ msgstr ""
 msgid "Icon position"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:180
+#: includes/Widgets/Accordion.php:183
 #: includes/Widgets/Counter.php:125
 msgid "Animation duration (ms)"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:191
+#: includes/Widgets/Accordion.php:194
 msgid "FAQ schema"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:192
-msgid "Adds FAQPage structured data (JSON-LD) built from the titles and the text of the panels. Use it once per page, for real questions and answers."
+#: includes/Widgets/Accordion.php:195
+msgid "Adds FAQPage structured data (JSON-LD) built from the titles and the text of the panels. The questions of every FAQ accordion on a page are printed as one FAQPage. Use it for real questions and answers."
 msgstr ""
 
-#: includes/Widgets/Accordion.php:203
-#: includes/Widgets/Nav_Menu.php:569
+#: includes/Widgets/Accordion.php:206
+#: includes/Widgets/Nav_Menu.php:581
 #: includes/Widgets/Post_Info.php:280
 #: includes/Widgets/Price_List.php:198
 #: includes/Widgets/Sitemap.php:372
@@ -4590,11 +4590,11 @@ msgstr ""
 msgid "Space between items"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:216
+#: includes/Widgets/Accordion.php:219
 msgid "Open item border color"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:239
+#: includes/Widgets/Accordion.php:242
 #: includes/Widgets/Alert.php:223
 #: includes/Widgets/Author_Box.php:183
 #: includes/Widgets/Blockquote.php:154
@@ -4623,8 +4623,8 @@ msgstr ""
 #: includes/Widgets/Image_Compare.php:212
 #: includes/Widgets/Image_Gallery.php:270
 #: includes/Widgets/Link_In_Bio.php:679
-#: includes/Widgets/Nav_Menu.php:742
-#: includes/Widgets/Nav_Menu.php:1014
+#: includes/Widgets/Nav_Menu.php:754
+#: includes/Widgets/Nav_Menu.php:1026
 #: includes/Widgets/Off_Canvas.php:374
 #: includes/Widgets/Posts.php:409
 #: includes/Widgets/Posts.php:420
@@ -4653,7 +4653,7 @@ msgstr ""
 msgid "Shadow"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:244
+#: includes/Widgets/Accordion.php:247
 #: includes/Widgets/Animated_Headline.php:214
 #: includes/Widgets/Animated_Headline.php:259
 #: includes/Widgets/Archive_Description.php:63
@@ -4709,9 +4709,9 @@ msgstr ""
 #: includes/Widgets/Loop_Grid.php:482
 #: includes/Widgets/Loop_Grid.php:551
 #: includes/Widgets/Marquee.php:244
-#: includes/Widgets/Nav_Menu.php:468
-#: includes/Widgets/Nav_Menu.php:618
-#: includes/Widgets/Nav_Menu.php:882
+#: includes/Widgets/Nav_Menu.php:480
+#: includes/Widgets/Nav_Menu.php:630
+#: includes/Widgets/Nav_Menu.php:894
 #: includes/Widgets/Off_Canvas.php:258
 #: includes/Widgets/Posts.php:493
 #: includes/Widgets/Posts.php:529
@@ -4768,7 +4768,7 @@ msgstr ""
 msgid "Typography"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:258
+#: includes/Widgets/Accordion.php:261
 #: includes/Widgets/Animated_Headline.php:168
 #: includes/Widgets/Archive_Description.php:55
 #: includes/Widgets/Archive_Title.php:73
@@ -4797,7 +4797,7 @@ msgstr ""
 #: includes/Widgets/Loop_Grid.php:333
 #: includes/Widgets/Lottie.php:164
 #: includes/Widgets/Nav_Menu.php:105
-#: includes/Widgets/Nav_Menu.php:952
+#: includes/Widgets/Nav_Menu.php:964
 #: includes/Widgets/Off_Canvas.php:124
 #: includes/Widgets/Posts.php:338
 #: includes/Widgets/Post_Content.php:65
@@ -4825,7 +4825,7 @@ msgstr ""
 msgid "Alignment"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:341
+#: includes/Widgets/Accordion.php:344
 #: includes/Widgets/Alert.php:256
 #: includes/Widgets/Author_Box.php:208
 #: includes/Widgets/Author_Box.php:254
@@ -4869,38 +4869,38 @@ msgstr ""
 msgid "Spacing"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:359
+#: includes/Widgets/Accordion.php:362
 msgid "Open color"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:367
+#: includes/Widgets/Accordion.php:370
 msgid "Icon box size"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:368
+#: includes/Widgets/Accordion.php:371
 msgid "Puts the icon in a tile of this size (with the background and radius below)."
 msgstr ""
 
-#: includes/Widgets/Accordion.php:378
+#: includes/Widgets/Accordion.php:381
 #: includes/Widgets/Button.php:256
 #: includes/Widgets/Flip_Box.php:400
-#: includes/Widgets/Nav_Menu.php:767
+#: includes/Widgets/Nav_Menu.php:779
 msgid "Icon background"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:386
+#: includes/Widgets/Accordion.php:389
 msgid "Open icon background"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:394
+#: includes/Widgets/Accordion.php:397
 msgid "Icon radius"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:403
+#: includes/Widgets/Accordion.php:406
 msgid "Item icons"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:458
+#: includes/Widgets/Accordion.php:461
 msgid "Add an item to start building the accordion."
 msgstr ""
 
@@ -5101,14 +5101,14 @@ msgid "Title spacing"
 msgstr ""
 
 #: includes/Widgets/Alert.php:284
-#: includes/Widgets/Nav_Menu.php:772
+#: includes/Widgets/Nav_Menu.php:784
 #: includes/Widgets/Steps.php:347
 #: includes/Widgets/Timeline.php:340
 msgid "Description typography"
 msgstr ""
 
 #: includes/Widgets/Alert.php:289
-#: includes/Widgets/Nav_Menu.php:777
+#: includes/Widgets/Nav_Menu.php:789
 #: includes/Widgets/Steps.php:352
 #: includes/Widgets/Timeline.php:345
 #: includes/Widgets/Video_Playlist.php:470
@@ -5695,9 +5695,9 @@ msgstr ""
 #: includes/Widgets/Hotspot.php:257
 #: includes/Widgets/Image_Gallery.php:302
 #: includes/Widgets/Link_In_Bio.php:673
-#: includes/Widgets/Nav_Menu.php:588
-#: includes/Widgets/Nav_Menu.php:748
-#: includes/Widgets/Nav_Menu.php:796
+#: includes/Widgets/Nav_Menu.php:600
+#: includes/Widgets/Nav_Menu.php:760
+#: includes/Widgets/Nav_Menu.php:808
 #: includes/Widgets/Off_Canvas.php:310
 #: includes/Widgets/Post_Info.php:319
 #: includes/Widgets/Price_Table.php:454
@@ -5723,7 +5723,7 @@ msgid "Page %s"
 msgstr ""
 
 #: includes/Widgets/Breadcrumbs.php:504
-#: includes/Widgets/Nav_Menu.php:1309
+#: includes/Widgets/Nav_Menu.php:1322
 msgid "Journal"
 msgstr ""
 
@@ -5875,7 +5875,7 @@ msgstr ""
 #: includes/Widgets/Icon_Box.php:378
 #: includes/Widgets/Icon_List.php:80
 #: includes/Widgets/Image_Gallery.php:293
-#: includes/Widgets/Nav_Menu.php:759
+#: includes/Widgets/Nav_Menu.php:771
 #: includes/Widgets/Post_Info.php:311
 #: includes/Widgets/Price_Table.php:182
 #: includes/Widgets/Price_Table.php:445
@@ -5990,6 +5990,7 @@ msgid "Button style"
 msgstr ""
 
 #: includes/Widgets/Call_To_Action.php:219
+#: includes/Widgets/Nav_Menu.php:464
 #: includes/Widgets/Search_Form.php:127
 msgid "Button icon"
 msgstr ""
@@ -6918,12 +6919,12 @@ msgid "Facade"
 msgstr ""
 
 #: includes/Widgets/Facebook_Embed.php:324
-#: includes/Widgets/Nav_Menu.php:1049
+#: includes/Widgets/Nav_Menu.php:1061
 msgid "Button background"
 msgstr ""
 
 #: includes/Widgets/Facebook_Embed.php:332
-#: includes/Widgets/Nav_Menu.php:1040
+#: includes/Widgets/Nav_Menu.php:1052
 msgid "Button text color"
 msgstr ""
 
@@ -8391,7 +8392,7 @@ msgid "Overrides the media library alt text. Leave empty when the image is decor
 msgstr ""
 
 #: includes/Widgets/Image_Box.php:102
-#: includes/Widgets/Nav_Menu.php:1306
+#: includes/Widgets/Nav_Menu.php:1319
 msgid "Brand strategy"
 msgstr ""
 
@@ -8669,7 +8670,7 @@ msgid "Dim others"
 msgstr ""
 
 #: includes/Widgets/Image_Gallery.php:284
-#: includes/Widgets/Nav_Menu.php:987
+#: includes/Widgets/Nav_Menu.php:999
 #: includes/Widgets/Slides.php:302
 msgid "Overlay color"
 msgstr ""
@@ -8709,7 +8710,7 @@ msgstr ""
 #: includes/Widgets/Language_Switcher.php:71
 #: includes/Widgets/Loop_Filter.php:106
 #: includes/Widgets/Nav_Menu.php:295
-#: includes/Widgets/Nav_Menu.php:617
+#: includes/Widgets/Nav_Menu.php:629
 msgid "Dropdown"
 msgstr ""
 
@@ -8933,7 +8934,7 @@ msgid "Layout & background"
 msgstr ""
 
 #: includes/Widgets/Link_In_Bio.php:390
-#: includes/Widgets/Nav_Menu.php:1000
+#: includes/Widgets/Nav_Menu.php:1012
 msgid "Fill the screen"
 msgstr ""
 
@@ -9253,8 +9254,8 @@ msgid "Cells"
 msgstr ""
 
 #: includes/Widgets/Logo_Grid.php:269
-#: includes/Widgets/Nav_Menu.php:727
-#: includes/Widgets/Nav_Menu.php:944
+#: includes/Widgets/Nav_Menu.php:739
+#: includes/Widgets/Nav_Menu.php:956
 #: includes/Widgets/Post_Comments.php:115
 #: includes/Widgets/Post_Info.php:299
 #: includes/Widgets/Post_Navigation.php:146
@@ -9625,9 +9626,9 @@ msgid "Pagination distance"
 msgstr ""
 
 #: includes/Widgets/Loop_Grid.php:435
-#: includes/Widgets/Nav_Menu.php:516
-#: includes/Widgets/Nav_Menu.php:656
-#: includes/Widgets/Nav_Menu.php:920
+#: includes/Widgets/Nav_Menu.php:528
+#: includes/Widgets/Nav_Menu.php:668
+#: includes/Widgets/Nav_Menu.php:932
 #: includes/Widgets/Posts.php:686
 #: includes/Widgets/Table_Of_Contents.php:288
 #: includes/Widgets/Tabs.php:348
@@ -9943,7 +9944,7 @@ msgstr ""
 #: includes/Widgets/Nav_Menu.php:81
 #: includes/Widgets/Nav_Menu.php:279
 #: includes/Widgets/Nav_Menu.php:389
-#: includes/Widgets/Nav_Menu.php:1396
+#: includes/Widgets/Nav_Menu.php:1409
 #: includes/Widgets/Off_Canvas.php:60
 #: includes/Widgets/Off_Canvas.php:83
 #: includes/Widgets/Off_Canvas.php:150
@@ -10046,7 +10047,7 @@ msgstr ""
 
 #: includes/Widgets/Nav_Menu.php:260
 #: includes/Widgets/Nav_Menu.php:292
-#: includes/Widgets/Nav_Menu.php:877
+#: includes/Widgets/Nav_Menu.php:889
 msgid "Mobile menu"
 msgstr ""
 
@@ -10151,188 +10152,192 @@ msgstr ""
 msgid "A full-width button at the end of the mobile menu, e.g. \"Get started\". Empty: no button."
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:467
-#: includes/Widgets/Nav_Menu.php:1350
+#: includes/Widgets/Nav_Menu.php:465
+msgid "Shown after the button text, e.g. an arrow."
+msgstr ""
+
+#: includes/Widgets/Nav_Menu.php:479
+#: includes/Widgets/Nav_Menu.php:1363
 msgid "Main menu"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:502
+#: includes/Widgets/Nav_Menu.php:514
 msgid "Also the pill of the Magnetic button and Sliding highlight effects."
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:510
-#: includes/Widgets/Nav_Menu.php:538
+#: includes/Widgets/Nav_Menu.php:522
+#: includes/Widgets/Nav_Menu.php:550
 msgid "Underline color"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:522
+#: includes/Widgets/Nav_Menu.php:534
 msgid "The current page and its parent items."
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:549
+#: includes/Widgets/Nav_Menu.php:561
 msgid "Underline thickness"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:560
-#: includes/Widgets/Nav_Menu.php:709
-#: includes/Widgets/Nav_Menu.php:935
+#: includes/Widgets/Nav_Menu.php:572
+#: includes/Widgets/Nav_Menu.php:721
+#: includes/Widgets/Nav_Menu.php:947
 #: includes/Widgets/Price_List.php:216
 #: includes/Widgets/Video_Playlist.php:374
 msgid "Item padding"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:579
-#: includes/Widgets/Nav_Menu.php:718
+#: includes/Widgets/Nav_Menu.php:591
+#: includes/Widgets/Nav_Menu.php:730
 #: includes/Widgets/Price_List.php:247
 #: includes/Widgets/Video_Playlist.php:383
 msgid "Item radius"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:589
+#: includes/Widgets/Nav_Menu.php:601
 msgid "Icons of the menu bar items."
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:599
+#: includes/Widgets/Nav_Menu.php:611
 msgid "Indicator size"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:609
+#: includes/Widgets/Nav_Menu.php:621
 msgid "Indicator spacing"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:651
-#: includes/Widgets/Nav_Menu.php:669
-#: includes/Widgets/Nav_Menu.php:915
+#: includes/Widgets/Nav_Menu.php:663
+#: includes/Widgets/Nav_Menu.php:681
+#: includes/Widgets/Nav_Menu.php:927
 #: includes/Widgets/Price_List.php:227
 #: includes/Widgets/Price_List.php:237
 msgid "Item background"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:679
+#: includes/Widgets/Nav_Menu.php:691
 #: includes/Widgets/Search_Form.php:412
 msgid "Min width"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:689
+#: includes/Widgets/Nav_Menu.php:701
 msgid "Distance"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:690
+#: includes/Widgets/Nav_Menu.php:702
 msgid "Space between the menu and its dropdowns."
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:700
+#: includes/Widgets/Nav_Menu.php:712
 msgid "Inner padding"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:743
+#: includes/Widgets/Nav_Menu.php:755
 msgid "Icons and descriptions"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:749
+#: includes/Widgets/Nav_Menu.php:761
 msgid "In dropdowns and the mobile menu."
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:768
+#: includes/Widgets/Nav_Menu.php:780
 msgid "Puts each icon on a small tile."
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:787
+#: includes/Widgets/Nav_Menu.php:799
 msgid "Hamburger toggle"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:806
+#: includes/Widgets/Nav_Menu.php:818
 msgid "Line thickness"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:813
+#: includes/Widgets/Nav_Menu.php:825
 #: includes/Widgets/Share_Buttons.php:367
 msgid "Label typography"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:965
+#: includes/Widgets/Nav_Menu.php:977
 msgid "Distance from toggle"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:976
+#: includes/Widgets/Nav_Menu.php:988
 msgid "Drawer width"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:996
+#: includes/Widgets/Nav_Menu.php:1008
 msgid "Panel height"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:997
+#: includes/Widgets/Nav_Menu.php:1009
 msgid "Fill the screen: the panel reaches the bottom of the screen and covers the page."
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:999
+#: includes/Widgets/Nav_Menu.php:1011
 msgid "Fit the menu"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1009
+#: includes/Widgets/Nav_Menu.php:1021
 msgid "Panel padding"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1029
+#: includes/Widgets/Nav_Menu.php:1041
 msgid "Button spacing"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1058
+#: includes/Widgets/Nav_Menu.php:1070
 msgid "Button shadow"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1067
+#: includes/Widgets/Nav_Menu.php:1079
 #: includes/Widgets/Search_Form.php:619
 msgid "Close button color"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1076
+#: includes/Widgets/Nav_Menu.php:1088
 msgid "Close button size"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1093
+#: includes/Widgets/Nav_Menu.php:1105
 msgid "Animated underline"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1094
+#: includes/Widgets/Nav_Menu.php:1106
 msgid "Flip text"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1095
+#: includes/Widgets/Nav_Menu.php:1107
 msgid "Magnetic button"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1096
+#: includes/Widgets/Nav_Menu.php:1108
 msgid "Focus item"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1097
+#: includes/Widgets/Nav_Menu.php:1109
 msgid "Sliding highlight"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1098
+#: includes/Widgets/Nav_Menu.php:1110
 msgid "Color only"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1304
+#: includes/Widgets/Nav_Menu.php:1317
 msgid "About"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1305
+#: includes/Widgets/Nav_Menu.php:1318
 msgid "Services"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1307
+#: includes/Widgets/Nav_Menu.php:1320
 #: includes/Widgets/Progress_Bar.php:56
 msgid "Web design"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1308
+#: includes/Widgets/Nav_Menu.php:1321
 msgid "Development"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1442
+#: includes/Widgets/Nav_Menu.php:1455
 msgid "Close menu"
 msgstr ""
 

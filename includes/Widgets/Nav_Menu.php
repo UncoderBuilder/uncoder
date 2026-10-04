@@ -457,6 +457,18 @@ class Nav_Menu extends Widget_Base {
 				),
 			)
 		);
+		$this->add_control(
+			'm_button_icon',
+			array(
+				'type'        => 'icon',
+				'label'       => __( 'Button icon', 'uncoder' ),
+				'description' => __( 'Shown after the button text, e.g. an arrow.', 'uncoder' ),
+				'condition'   => array(
+					'breakpoint!'    => 'none',
+					'm_button_text!' => '',
+				),
+			)
+		);
 		$this->end_section();
 
 		$this->register_style_controls();
@@ -1180,7 +1192,8 @@ class Nav_Menu extends Widget_Base {
 		$attrs          = $this->link_attrs( $s['m_button_link'] ?? array() );
 		$attrs['class'] = 'uncoder-btn uncoder-btn--' . $variant . ' uncoder-btn--md';
 		$tag            = isset( $attrs['href'] ) ? 'a' : 'span';
-		return '<div class="uncoder-nav-menu__cta"><' . $tag . Utils::attrs( $attrs ) . '><span class="uncoder-btn__text">' . esc_html( $text ) . '</span></' . $tag . '></div>';
+		$icon           = $this->has_icon( $s['m_button_icon'] ?? null ) ? $this->render_icon( $s['m_button_icon'], array( 'class' => 'uncoder-btn__icon' ) ) : '';
+		return '<div class="uncoder-nav-menu__cta"><' . $tag . Utils::attrs( $attrs ) . '><span class="uncoder-btn__text">' . esc_html( $text ) . '</span>' . $icon . '</' . $tag . '></div>';
 	}
 
 	/**
