@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-04T17:57:08+00:00\n"
+"POT-Creation-Date: 2026-10-04T20:25:08+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: uncoder\n"
@@ -42,7 +42,7 @@ msgstr ""
 #: includes/Admin/Admin.php:52
 #: includes/Widgets/Breadcrumbs.php:67
 #: includes/Widgets/Breadcrumbs.php:566
-#: includes/Widgets/Nav_Menu.php:1316
+#: includes/Widgets/Nav_Menu.php:1336
 #: includes/Widgets/Site_Logo.php:279
 msgid "Home"
 msgstr ""
@@ -131,8 +131,8 @@ msgstr ""
 #: includes/Widgets/Countdown.php:320
 #: includes/Widgets/Countdown.php:341
 #: includes/Widgets/Counter.php:194
-#: includes/Widgets/Counter.php:215
-#: includes/Widgets/Counter.php:259
+#: includes/Widgets/Counter.php:228
+#: includes/Widgets/Counter.php:272
 #: includes/Widgets/Divider.php:122
 #: includes/Widgets/Featured_Image.php:238
 #: includes/Widgets/Flip_Box.php:453
@@ -289,7 +289,7 @@ msgstr ""
 #: includes/Widgets/Blockquote.php:208
 #: includes/Widgets/Button.php:97
 #: includes/Widgets/Countdown.php:328
-#: includes/Widgets/Counter.php:204
+#: includes/Widgets/Counter.php:217
 #: includes/Widgets/Facebook_Embed.php:197
 #: includes/Widgets/Form.php:372
 #: includes/Widgets/Hotspot.php:247
@@ -595,7 +595,7 @@ msgid "Family"
 msgstr ""
 
 #: includes/Controls/Groups/Typography.php:58
-#: includes/Widgets/Counter.php:223
+#: includes/Widgets/Counter.php:236
 #: includes/Widgets/Divider.php:130
 #: includes/Widgets/Icon_List.php:238
 #: includes/Widgets/Price_List.php:379
@@ -623,7 +623,7 @@ msgstr ""
 msgid "Word spacing"
 msgstr ""
 
-#: includes/Core/Animated_Backgrounds.php:104
+#: includes/Core/Animated_Backgrounds.php:105
 #: includes/Core/Common_Controls.php:467
 #: includes/Core/Common_Controls.php:627
 #: includes/Core/Common_Controls.php:677
@@ -668,7 +668,7 @@ msgid "None"
 msgstr ""
 
 #. translators: %s: style name, e.g. "Style 1".
-#: includes/Core/Animated_Backgrounds.php:107
+#: includes/Core/Animated_Backgrounds.php:108
 #, php-format
 msgid "CSS: %s"
 msgstr ""
@@ -822,6 +822,7 @@ msgstr ""
 #: includes/Widgets/Countdown.php:222
 #: includes/Widgets/Form.php:402
 #: includes/Widgets/Login.php:423
+#: includes/Widgets/Nav_Menu.php:1054
 #: includes/Widgets/Price_Table.php:281
 #: includes/Widgets/Tabs.php:191
 msgid "Full width"
@@ -1397,7 +1398,7 @@ msgstr ""
 #: includes/Widgets/Author_Box.php:60
 #: includes/Widgets/Call_To_Action.php:124
 #: includes/Widgets/Call_To_Action.php:335
-#: includes/Widgets/Counter.php:236
+#: includes/Widgets/Counter.php:249
 #: includes/Widgets/Flip_Box.php:196
 #: includes/Widgets/Flip_Box.php:373
 #: includes/Widgets/Hotspot.php:172
@@ -2684,7 +2685,7 @@ msgid "Align items"
 msgstr ""
 
 #: includes/Elements/Container.php:215
-#: includes/Widgets/Counter.php:234
+#: includes/Widgets/Counter.php:247
 #: includes/Widgets/Price_Table.php:516
 msgid "Baseline"
 msgstr ""
@@ -3608,7 +3609,7 @@ msgid "Content"
 msgstr ""
 
 #: includes/Patterns/Patterns.php:65
-#: includes/Widgets/Nav_Menu.php:1323
+#: includes/Widgets/Nav_Menu.php:1343
 msgid "Contact"
 msgstr ""
 
@@ -4518,7 +4519,7 @@ msgstr ""
 #: includes/Widgets/Call_To_Action.php:155
 #: includes/Widgets/Call_To_Action.php:583
 #: includes/Widgets/Counter.php:136
-#: includes/Widgets/Counter.php:253
+#: includes/Widgets/Counter.php:266
 #: includes/Widgets/Flip_Box.php:89
 #: includes/Widgets/Flip_Box.php:114
 #: includes/Widgets/Flip_Box.php:447
@@ -4712,7 +4713,7 @@ msgstr ""
 #: includes/Widgets/Countdown.php:295
 #: includes/Widgets/Countdown.php:336
 #: includes/Widgets/Counter.php:189
-#: includes/Widgets/Counter.php:254
+#: includes/Widgets/Counter.php:267
 #: includes/Widgets/Featured_Image.php:233
 #: includes/Widgets/Flip_Box.php:274
 #: includes/Widgets/Flip_Box.php:448
@@ -4873,8 +4874,8 @@ msgstr ""
 #: includes/Widgets/Blockquote.php:218
 #: includes/Widgets/Blockquote.php:273
 #: includes/Widgets/Countdown.php:308
-#: includes/Widgets/Counter.php:245
-#: includes/Widgets/Counter.php:267
+#: includes/Widgets/Counter.php:258
+#: includes/Widgets/Counter.php:280
 #: includes/Widgets/Featured_Image.php:255
 #: includes/Widgets/Icon_Box.php:468
 #: includes/Widgets/Icon_Box.php:525
@@ -5265,7 +5266,7 @@ msgstr ""
 #: includes/Widgets/Archive_Title.php:108
 #: includes/Widgets/Blockquote.php:247
 #: includes/Widgets/Call_To_Action.php:610
-#: includes/Widgets/Counter.php:198
+#: includes/Widgets/Counter.php:211
 #: includes/Widgets/Heading.php:160
 #: includes/Widgets/Marquee.php:268
 #: includes/Widgets/Post_Title.php:123
@@ -5764,7 +5765,7 @@ msgid "Page %s"
 msgstr ""
 
 #: includes/Widgets/Breadcrumbs.php:504
-#: includes/Widgets/Nav_Menu.php:1322
+#: includes/Widgets/Nav_Menu.php:1342
 msgid "Journal"
 msgstr ""
 
@@ -6098,7 +6099,7 @@ msgid "Content alignment"
 msgstr ""
 
 #: includes/Widgets/Call_To_Action.php:333
-#: includes/Widgets/Counter.php:232
+#: includes/Widgets/Counter.php:245
 #: includes/Widgets/Flip_Box.php:371
 #: includes/Widgets/Hotspot.php:145
 #: includes/Widgets/Icon_List.php:323
@@ -6108,7 +6109,7 @@ msgid "Vertical position"
 msgstr ""
 
 #: includes/Widgets/Call_To_Action.php:336
-#: includes/Widgets/Counter.php:235
+#: includes/Widgets/Counter.php:248
 #: includes/Widgets/Flip_Box.php:374
 #: includes/Widgets/Icon_List.php:327
 #: includes/Widgets/Slides.php:155
@@ -6581,6 +6582,7 @@ msgid "Unit shadow"
 msgstr ""
 
 #: includes/Widgets/Countdown.php:282
+#: includes/Widgets/Counter.php:202
 msgid "Digits"
 msgstr ""
 
@@ -6762,11 +6764,23 @@ msgstr ""
 msgid "Number"
 msgstr ""
 
-#: includes/Widgets/Counter.php:199
-msgid "Prefix & suffix"
+#: includes/Widgets/Counter.php:203
+msgid "Even-width digits keep the number steady while it counts; proportional ones keep the font’s own spacing."
 msgstr ""
 
 #: includes/Widgets/Counter.php:205
+msgid "Even width"
+msgstr ""
+
+#: includes/Widgets/Counter.php:206
+msgid "Proportional"
+msgstr ""
+
+#: includes/Widgets/Counter.php:212
+msgid "Prefix & suffix"
+msgstr ""
+
+#: includes/Widgets/Counter.php:218
 msgid "Relative to the number, e.g. 0.6em."
 msgstr ""
 
@@ -6962,12 +6976,12 @@ msgid "Facade"
 msgstr ""
 
 #: includes/Widgets/Facebook_Embed.php:324
-#: includes/Widgets/Nav_Menu.php:1061
+#: includes/Widgets/Nav_Menu.php:1081
 msgid "Button background"
 msgstr ""
 
 #: includes/Widgets/Facebook_Embed.php:332
-#: includes/Widgets/Nav_Menu.php:1052
+#: includes/Widgets/Nav_Menu.php:1072
 msgid "Button text color"
 msgstr ""
 
@@ -8435,7 +8449,7 @@ msgid "Overrides the media library alt text. Leave empty when the image is decor
 msgstr ""
 
 #: includes/Widgets/Image_Box.php:102
-#: includes/Widgets/Nav_Menu.php:1319
+#: includes/Widgets/Nav_Menu.php:1339
 msgid "Brand strategy"
 msgstr ""
 
@@ -9990,7 +10004,7 @@ msgstr ""
 #: includes/Widgets/Nav_Menu.php:81
 #: includes/Widgets/Nav_Menu.php:279
 #: includes/Widgets/Nav_Menu.php:389
-#: includes/Widgets/Nav_Menu.php:1409
+#: includes/Widgets/Nav_Menu.php:1429
 #: includes/Widgets/Off_Canvas.php:60
 #: includes/Widgets/Off_Canvas.php:83
 #: includes/Widgets/Off_Canvas.php:150
@@ -10203,7 +10217,7 @@ msgid "Shown after the button text, e.g. an arrow."
 msgstr ""
 
 #: includes/Widgets/Nav_Menu.php:479
-#: includes/Widgets/Nav_Menu.php:1363
+#: includes/Widgets/Nav_Menu.php:1383
 msgid "Main menu"
 msgstr ""
 
@@ -10329,61 +10343,77 @@ msgstr ""
 msgid "Button spacing"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1070
+#: includes/Widgets/Nav_Menu.php:1052
+msgid "Button width"
+msgstr ""
+
+#: includes/Widgets/Nav_Menu.php:1055
+msgid "Fit the text, left"
+msgstr ""
+
+#: includes/Widgets/Nav_Menu.php:1056
+msgid "Fit the text, centered"
+msgstr ""
+
+#: includes/Widgets/Nav_Menu.php:1057
+msgid "Fit the text, right"
+msgstr ""
+
+#: includes/Widgets/Nav_Menu.php:1090
 msgid "Button shadow"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1079
+#: includes/Widgets/Nav_Menu.php:1099
 #: includes/Widgets/Search_Form.php:619
 msgid "Close button color"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1088
+#: includes/Widgets/Nav_Menu.php:1108
 msgid "Close button size"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1105
+#: includes/Widgets/Nav_Menu.php:1125
 msgid "Animated underline"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1106
+#: includes/Widgets/Nav_Menu.php:1126
 msgid "Flip text"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1107
+#: includes/Widgets/Nav_Menu.php:1127
 msgid "Magnetic button"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1108
+#: includes/Widgets/Nav_Menu.php:1128
 msgid "Focus item"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1109
+#: includes/Widgets/Nav_Menu.php:1129
 msgid "Sliding highlight"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1110
+#: includes/Widgets/Nav_Menu.php:1130
 msgid "Color only"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1317
+#: includes/Widgets/Nav_Menu.php:1337
 msgid "About"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1318
+#: includes/Widgets/Nav_Menu.php:1338
 msgid "Services"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1320
+#: includes/Widgets/Nav_Menu.php:1340
 #: includes/Widgets/Progress_Bar.php:56
 msgid "Web design"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1321
+#: includes/Widgets/Nav_Menu.php:1341
 msgid "Development"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1455
+#: includes/Widgets/Nav_Menu.php:1475
 msgid "Close menu"
 msgstr ""
 

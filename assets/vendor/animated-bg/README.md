@@ -12,5 +12,7 @@ Background animations for containers (Style → Background → Animated backgrou
 (`window.ogl`, https://github.com/oframe/ogl), used by Bit Wave only. `fluid-gradient.js` includes the Ashima
 Arts simplex noise (MIT, see the notice in the file).
 
+`light-rays.js` is Uncoder's own: soft beams of light from a corner, in Colour 1 on a transparent layer.
+
 Each script defines `window.uiAnimated_<Name>(element, canvas, settings)` and stores its WebGL objects on
 `element.animatedBackground`.

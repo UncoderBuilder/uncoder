@@ -65,8 +65,12 @@ final class Media {
 		return (array) $attr;
 	}
 
-	/** Shapes a plain SVG may hold: no animation (<set>, <animate> can rewrite links), links, embeds or scripts. */
-	public const PLAIN_SVG_TAGS = array( 'svg', 'title', 'desc', 'defs', 'lineargradient', 'radialgradient', 'stop', 'pattern', 'clippath', 'mask', 'g', 'path', 'rect', 'circle', 'ellipse', 'line', 'polyline', 'polygon', 'text', 'tspan' );
+	/**
+	 * Shapes a plain SVG may hold: no animation (<set>, <animate> can rewrite links), links, embeds or scripts. Filter
+	 * effects (blurs, shadows, colour changes) only repaint the shapes, so they count as plain; <feImage> can load a
+	 * picture and does not.
+	 */
+	public const PLAIN_SVG_TAGS = array( 'svg', 'title', 'desc', 'defs', 'lineargradient', 'radialgradient', 'stop', 'pattern', 'clippath', 'mask', 'g', 'path', 'rect', 'circle', 'ellipse', 'line', 'polyline', 'polygon', 'text', 'tspan', 'filter', 'feblend', 'fecolormatrix', 'fecomponenttransfer', 'fefunca', 'fefuncr', 'fefuncg', 'fefuncb', 'fecomposite', 'feflood', 'fegaussianblur', 'femerge', 'femergenode', 'feoffset', 'fedropshadow', 'femorphology', 'feturbulence', 'fedisplacementmap' );
 
 	/**
 	 * Whether SVG markup holds only plain shapes: no scripts, styles, event handlers, javascript: links, foreign

@@ -652,7 +652,7 @@ class Container extends Element_Base {
 				'type'    => 'select',
 				'label'   => __( 'Animation', 'uncoder' ),
 				'options' => Animated_Backgrounds::options(),
-				'ai'      => 'An animated layer behind the content. CSS styles "style-1"…"style-5" (soft drifting gradients, no script) or WebGL shaders: gradients "fluid-gradient", "borealis", "gradient-mesh", "mist", "mystic-lake", "noir-haze", "void-wave", "halftone"; lights "the-shining", "phase-tunnel", "plasma-line", "light-strings"; shapes "flame", "pulse-bubble", "neon-eclipse", "echo-sphere"; images "liquid-mask", "liquid-image" (use bg_anim_image or the background image); patterns "bit-wave", "flux-stripes", "perspective-grid". Colours default to the Design System. Use on one or two sections (hero, CTA), with enough contrast for the text on top.',
+				'ai'      => 'An animated layer behind the content. CSS styles "style-1"…"style-5" (soft drifting gradients, no script) or WebGL shaders: gradients "fluid-gradient", "borealis", "gradient-mesh", "mist", "mystic-lake", "noir-haze", "void-wave", "halftone"; lights "the-shining", "phase-tunnel", "plasma-line", "light-strings", "light-rays" (beams from the top right corner on a transparent layer); shapes "flame", "pulse-bubble", "neon-eclipse", "echo-sphere"; images "liquid-mask", "liquid-image" (use bg_anim_image or the background image); patterns "bit-wave", "flux-stripes", "perspective-grid". Colours default to the Design System. Use on one or two sections (hero, CTA), with enough contrast for the text on top.',
 			)
 		);
 		$colors = array(

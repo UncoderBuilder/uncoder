@@ -195,6 +195,19 @@ class Counter extends Widget_Base {
 				'selectors' => array( '{{WRAPPER}} .uncoder-counter__number-wrap' => 'color: {{VALUE}}' ),
 			)
 		);
+		$this->add_control(
+			'number_digits',
+			array(
+				'type'        => 'select',
+				'label'       => __( 'Digits', 'uncoder' ),
+				'description' => __( 'Even-width digits keep the number steady while it counts; proportional ones keep the font’s own spacing.', 'uncoder' ),
+				'options'     => array(
+					''                  => __( 'Even width', 'uncoder' ),
+					'proportional-nums' => __( 'Proportional', 'uncoder' ),
+				),
+				'selectors'   => array( '{{WRAPPER}} .uncoder-counter__number' => 'font-variant-numeric: {{VALUE}}' ),
+			)
+		);
 		$this->add_group( 'number_shadow', array( 'type' => 'text_shadow', 'label' => __( 'Text shadow', 'uncoder' ), 'selector' => '{{WRAPPER}} .uncoder-counter__number-wrap' ) );
 		$this->add_control( 'affix_heading', array( 'type' => 'heading', 'label' => __( 'Prefix & suffix', 'uncoder' ) ) );
 		$this->add_responsive_control(

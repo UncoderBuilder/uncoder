@@ -837,7 +837,7 @@
 }
 
 .uncoder-nav-menu__cta .uncoder-btn {
-  --uncoder-btn-width: 100%;
+  --uncoder-btn-width: var(--uncoder-nav-m-btn-w, 100%);
 }
 
 .uncoder-nav-menu__panel--header .uncoder-nav-menu__cta {

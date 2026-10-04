@@ -160,7 +160,7 @@ function BgLayer({ s }: { s: Settings }) {
 }
 
 const ABG_CSS = ['style-1', 'style-2', 'style-3', 'style-4', 'style-5'];
-const ABG_SHADERS = ['fluid-gradient', 'borealis', 'gradient-mesh', 'mist', 'mystic-lake', 'noir-haze', 'void-wave', 'halftone', 'the-shining', 'phase-tunnel', 'plasma-line', 'light-strings', 'flame', 'pulse-bubble', 'neon-eclipse', 'echo-sphere', 'liquid-mask', 'liquid-image', 'bit-wave', 'flux-stripes', 'perspective-grid'];
+const ABG_SHADERS = ['fluid-gradient', 'borealis', 'gradient-mesh', 'mist', 'mystic-lake', 'noir-haze', 'void-wave', 'halftone', 'the-shining', 'phase-tunnel', 'plasma-line', 'light-strings', 'light-rays', 'flame', 'pulse-bubble', 'neon-eclipse', 'echo-sphere', 'liquid-mask', 'liquid-image', 'bit-wave', 'flux-stripes', 'perspective-grid'];
 const ABG_DEFAULTS = { speed: 20, scale: 10, intensity: 50, noise: 20, angle: 0, frame: 10 };
 
 /** The container's animated background (twin of Animated_Backgrounds::name() and ::settings()). */

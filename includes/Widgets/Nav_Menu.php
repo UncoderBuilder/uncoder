@@ -1046,6 +1046,26 @@ class Nav_Menu extends Widget_Base {
 			)
 		);
 		$this->add_control(
+			'm_button_width',
+			array(
+				'type'                 => 'select',
+				'label'                => __( 'Button width', 'uncoder' ),
+				'options'              => array(
+					''       => __( 'Full width', 'uncoder' ),
+					'left'   => __( 'Fit the text, left', 'uncoder' ),
+					'center' => __( 'Fit the text, centered', 'uncoder' ),
+					'right'  => __( 'Fit the text, right', 'uncoder' ),
+				),
+				'condition'            => array( 'm_button_text!' => '' ),
+				'selectors_dictionary' => array(
+					'left'   => 'justify-content:flex-start;--uncoder-nav-m-btn-w:auto',
+					'center' => 'justify-content:center;--uncoder-nav-m-btn-w:auto',
+					'right'  => 'justify-content:flex-end;--uncoder-nav-m-btn-w:auto',
+				),
+				'selectors'            => array( '{{WRAPPER}} .uncoder-nav-menu__cta' => '{{VALUE}}' ),
+			)
+		);
+		$this->add_control(
 			'm_button_color',
 			array(
 				'type'      => 'color',

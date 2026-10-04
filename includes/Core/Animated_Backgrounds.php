@@ -42,6 +42,7 @@ final class Animated_Backgrounds {
 			'phase-tunnel'  => 'Phase Tunnel',
 			'plasma-line'   => 'Plasma Line',
 			'light-strings' => 'Light Strings',
+			'light-rays'    => 'Light Rays',
 		),
 		'Shape'    => array(
 			'flame'        => 'Flame',
@@ -62,19 +63,19 @@ final class Animated_Backgrounds {
 
 	/** Animations that ignore a setting (as in Uncoder Elements), so the control is hidden for them. */
 	private const IGNORE = array(
-		'bg'          => array( 'flux-stripes', 'fluid-gradient', 'bit-wave', 'gradient-mesh', 'liquid-mask', 'liquid-image', 'mystic-lake', 'neon-eclipse', 'the-shining', 'plasma-line' ),
-		'color_2'     => array( 'mystic-lake', 'noir-haze', 'void-wave', 'the-shining', 'mist', 'flame', 'liquid-mask', 'liquid-image', 'halftone' ),
-		'color_3'     => array( 'mystic-lake', 'pulse-bubble', 'noir-haze', 'void-wave', 'the-shining', 'mist', 'flame', 'halftone', 'bit-wave', 'echo-sphere', 'liquid-mask', 'liquid-image', 'phase-tunnel' ),
-		'color_4'     => array( 'mystic-lake', 'pulse-bubble', 'noir-haze', 'void-wave', 'the-shining', 'mist', 'flame', 'halftone', 'bit-wave', 'echo-sphere', 'liquid-mask', 'liquid-image', 'phase-tunnel', 'style-1', 'style-2', 'style-3', 'style-4', 'style-5' ),
+		'bg'          => array( 'flux-stripes', 'fluid-gradient', 'bit-wave', 'gradient-mesh', 'liquid-mask', 'liquid-image', 'mystic-lake', 'neon-eclipse', 'the-shining', 'plasma-line', 'light-rays' ),
+		'color_2'     => array( 'mystic-lake', 'noir-haze', 'void-wave', 'the-shining', 'mist', 'flame', 'liquid-mask', 'liquid-image', 'halftone', 'light-rays' ),
+		'color_3'     => array( 'mystic-lake', 'pulse-bubble', 'noir-haze', 'void-wave', 'the-shining', 'mist', 'flame', 'halftone', 'bit-wave', 'echo-sphere', 'liquid-mask', 'liquid-image', 'phase-tunnel', 'light-rays' ),
+		'color_4'     => array( 'mystic-lake', 'pulse-bubble', 'noir-haze', 'void-wave', 'the-shining', 'mist', 'flame', 'halftone', 'bit-wave', 'echo-sphere', 'liquid-mask', 'liquid-image', 'phase-tunnel', 'style-1', 'style-2', 'style-3', 'style-4', 'style-5', 'light-rays' ),
 		'offset'      => array( 'fluid-gradient', 'borealis', 'bit-wave', 'void-wave', 'noir-haze', 'mystic-lake', 'gradient-mesh', 'liquid-mask', 'liquid-image' ),
 		'speed'       => array( 'flux-stripes', 'liquid-mask', 'liquid-image' ),
-		'noise'       => array( 'fluid-gradient', 'liquid-mask', 'perspective-grid', 'halftone' ),
-		'interactive' => array( 'liquid-image' ),
+		'noise'       => array( 'fluid-gradient', 'liquid-mask', 'perspective-grid', 'halftone', 'light-rays' ),
+		'interactive' => array( 'liquid-image', 'light-rays' ),
 	);
 
 	/** Animations that use a setting only they have. */
 	private const ONLY = array(
-		'angle' => array( 'flux-stripes', 'light-strings', 'plasma-line', 'the-shining', 'mist' ),
+		'angle' => array( 'flux-stripes', 'light-strings', 'plasma-line', 'the-shining', 'mist', 'light-rays' ),
 		'image' => array( 'liquid-mask', 'liquid-image' ),
 	);
 
