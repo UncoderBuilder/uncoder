@@ -15,6 +15,7 @@ interface CarouselSettings {
   speed?: number;
   i18n?: { goto?: string; status?: string; pause?: string; play?: string };
   ticker?: number; // continuous motion: speed in px per second
+  center?: boolean; // the current slide sits in the middle (endless with loop)
 }
 
 /**
@@ -122,6 +123,67 @@ window.UncoderWB.register(
       cleanups.push(() => target.removeEventListener(type, fn, opts));
     };
 
+    // Centered: the current slide sits in the middle (pages are the slides themselves). With Rewind it loops
+    // endlessly: a copy of every slide goes before and after the set, and a move that ends on a copy jumps silently
+    // to its original, so there is always a neighbour on both sides.
+    const center = !!s.center;
+    const endless = center && !!s.loop && !api.editor && slides.length > 1;
+    let all = slides;
+    if (endless) {
+      const copy = (sl: HTMLElement, i: number) => {
+        const c = sl.cloneNode(true) as HTMLElement;
+        c.classList.add('uncoder-carousel__slide--clone');
+        c.dataset.cloneOf = String(i);
+        c.setAttribute('aria-hidden', 'true');
+        c.setAttribute('inert', '');
+        c.removeAttribute('role');
+        c.removeAttribute('aria-roledescription');
+        c.removeAttribute('aria-label');
+        c.querySelectorAll('[id]').forEach((n) => n.removeAttribute('id'));
+        return c;
+      };
+      const before = slides.map(copy);
+      const after = slides.map(copy);
+      before.forEach((c) => track.insertBefore(c, slides[0]));
+      after.forEach((c) => track.appendChild(c));
+      all = [...before, ...slides, ...after];
+      // The copies sit beside the visible slides: lazy images there would load late and leave gaps.
+      track.querySelectorAll<HTMLImageElement>('img[loading="lazy"]').forEach((img) => (img.loading = 'eager'));
+      // Widgets inside the copies (an image slideshow in a card) run like the originals.
+      [...before, ...after].forEach((c) => api.init(c));
+      cleanups.push(() =>
+        [...before, ...after].forEach((c) => {
+          api.destroy(c);
+          c.remove();
+        }),
+      );
+    }
+    /** Where a slide's middle is, in scroll coordinates from the track's inline start (unaffected by its scale). */
+    const middleOf = (el: HTMLElement) => {
+      const box = track.getBoundingClientRect();
+      const r = el.getBoundingClientRect();
+      const mid = isRtl() ? box.right - (r.left + r.width / 2) : r.left + r.width / 2 - box.left;
+      return mid + position();
+    };
+    /** The scroll offset that puts a slide in the middle. */
+    const centerX = (el: HTMLElement) => Math.round(middleOf(el) - track.clientWidth / 2);
+    /** The slide (original or copy) nearest to the middle. */
+    const middleSlide = () => {
+      const pos = position();
+      let best = all[0];
+      let dist = Infinity;
+      for (const el of all) {
+        const d = Math.abs(centerX(el) - pos);
+        if (d < dist) {
+          dist = d;
+          best = el;
+        }
+      }
+      return best;
+    };
+    const originalOf = (el: HTMLElement) => (el.dataset.cloneOf !== undefined ? slides[Number(el.dataset.cloneOf)] : el);
+    let targetSlide: HTMLElement | null = null; // slide an endless move is heading to
+
     let pages: Page[] = [{ x: 0, slide: 0 }];
     let dots: HTMLButtonElement[] = [];
     let index = -1;
@@ -136,6 +198,17 @@ window.UncoderWB.register(
     /* -------------------------------------------------------------- Geometry */
 
     const measure = () => {
+      if (center) {
+        // Half the free width on each side lets the first and last slides reach the middle.
+        const keep = index >= 0 ? (targetSlide ?? middleSlide()) : endless ? slides[0] : null;
+        root.style.setProperty('--uncoder-carousel-edge', `${Math.max(0, (track.clientWidth - slides[0].offsetWidth) / 2)}px`);
+        pages = slides.map((el, i) => ({ x: Math.max(0, centerX(el)), slide: i }));
+        // Keep the current slide in the middle when the width changes (and start endless loops on the first slide).
+        if (keep && !anim && !drag) track.scrollLeft = (isRtl() ? -1 : 1) * centerX(keep);
+        buildDots();
+        update(false);
+        return;
+      }
       const max = maxScroll();
       const list: Page[] = [];
       if (max > 1) {
@@ -163,6 +236,7 @@ window.UncoderWB.register(
     };
 
     const nearest = () => {
+      if (center) return Math.max(0, slides.indexOf(originalOf(middleSlide())));
       const pos = position();
       let best = 0;
       for (let i = 1; i < pages.length; i++) {
@@ -199,6 +273,10 @@ window.UncoderWB.register(
 
     const update = (announce: boolean) => {
       frame = 0;
+      if (center) {
+        const mid = middleSlide();
+        all.forEach((el) => el.classList.toggle('is-current', el === mid));
+      }
       const i = nearest();
       const last = pages.length - 1;
       root.classList.toggle('is-static', last === 0);
@@ -237,6 +315,20 @@ window.UncoderWB.register(
       root.classList.remove('is-animating');
     };
 
+    /** Endless: a move that ended on a copy continues from its original, without a visible jump. */
+    const settle = () => {
+      targetSlide = null;
+      if (!endless || drag) return;
+      const mid = middleSlide();
+      const orig = originalOf(mid);
+      if (orig === mid) return;
+      root.classList.add('is-jumping');
+      const delta = centerX(orig) - centerX(mid);
+      track.scrollLeft += isRtl() ? -delta : delta;
+      update(false);
+      requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove('is-jumping')));
+    };
+
     const scrollToX = (x: number) => {
       stopAnim();
       const to = isRtl() ? -x : x;
@@ -244,6 +336,7 @@ window.UncoderWB.register(
       const ms = reduced ? 0 : Math.max(0, Number(s.speed ?? 500) || 0);
       if (!ms || Math.abs(to - from) < 1) {
         track.scrollLeft = to;
+        settle();
         return;
       }
       const start = performance.now();
@@ -258,6 +351,7 @@ window.UncoderWB.register(
           anim = 0;
           target = null;
           root.classList.remove('is-animating');
+          settle();
         }
       };
       anim = requestAnimationFrame(tick);
@@ -267,12 +361,28 @@ window.UncoderWB.register(
       const last = pages.length - 1;
       if (page > last) page = s.loop || !user ? 0 : last;
       if (page < 0) page = s.loop ? last : 0;
+      if (endless) targetSlide = slides[page];
       scrollToX(pages[page].x);
       if (anim) target = page;
       if (user) schedule();
     };
 
-    const step = (dir: 1 | -1, user = true) => go((target ?? nearest()) + dir, user);
+    /** Endless: to the slide (copy or original) `dir` places from the one in (or heading to) the middle. */
+    const moveBy = (from: HTMLElement, dir: number) => {
+      const n = Math.max(0, Math.min(all.length - 1, all.indexOf(from) + dir));
+      const to = all[n];
+      scrollToX(centerX(to));
+      targetSlide = anim ? to : null;
+    };
+
+    const step = (dir: 1 | -1, user = true) => {
+      if (endless) {
+        moveBy(targetSlide ?? middleSlide(), dir);
+        if (user) schedule();
+        return;
+      }
+      go((target ?? nearest()) + dir, user);
+    };
 
     const isDisabled = (b: HTMLButtonElement) => b.getAttribute('aria-disabled') === 'true';
     if (prev) listen(prev, 'click', () => !isDisabled(prev) && step(-1));
@@ -286,6 +396,11 @@ window.UncoderWB.register(
       const control = el2 === track || el2.parentElement === viewport || el2.closest('.uncoder-carousel__pagination') !== null;
       if (!control) return;
       const rtl = isRtl();
+      if (endless && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) {
+        e.preventDefault();
+        step((e.key === 'ArrowRight') !== rtl ? 1 : -1);
+        return;
+      }
       let page: number;
       if (e.key === 'ArrowRight') page = (target ?? nearest()) + (rtl ? -1 : 1);
       else if (e.key === 'ArrowLeft') page = (target ?? nearest()) + (rtl ? 1 : -1);
@@ -306,17 +421,29 @@ window.UncoderWB.register(
     listen(track, 'wheel', interrupt, { passive: true });
     listen(track, 'touchstart', interrupt, { passive: true });
     listen(track, 'scroll', onScroll, { passive: true });
+    // Endless: a swipe or trackpad scroll that comes to rest on a copy hands over to the original.
+    let idle = 0;
+    if (endless) {
+      listen(track, 'scroll', () => {
+        clearTimeout(idle);
+        idle = window.setTimeout(() => {
+          if (!anim && !drag) settle();
+        }, 150);
+      }, { passive: true });
+      cleanups.push(() => clearTimeout(idle));
+    }
 
     /* -------------------------------------------------------------- Mouse drag */
 
-    let drag: { x: number; scroll: number; moved: boolean; id: number } | null = null;
+    let drag: { x: number; scroll: number; moved: boolean; id: number; from: HTMLElement | null } | null = null;
     let suppressClick = false;
     if (s.drag && !api.editor) {
       listen(track, 'pointerdown', (e: PointerEvent) => {
         if (e.pointerType !== 'mouse' || e.button !== 0 || root.classList.contains('is-static')) return;
         if ((e.target as Element).closest('input, textarea, select, button, [contenteditable]')) return;
+        const from = endless ? (targetSlide ?? middleSlide()) : null;
         stopAnim();
-        drag = { x: e.clientX, scroll: track.scrollLeft, moved: false, id: e.pointerId };
+        drag = { x: e.clientX, scroll: track.scrollLeft, moved: false, id: e.pointerId, from };
       });
       listen(track, 'pointermove', (e: PointerEvent) => {
         if (!drag || e.pointerId !== drag.id) return;
@@ -336,7 +463,7 @@ window.UncoderWB.register(
       });
       const end = (e: PointerEvent) => {
         if (!drag || e.pointerId !== drag.id) return;
-        const { moved, x, scroll } = drag;
+        const { moved, x, scroll, from } = drag;
         drag = null;
         if (!moved) return;
         root.classList.remove('is-dragging');
@@ -345,6 +472,11 @@ window.UncoderWB.register(
         const dx = e.clientX - x;
         const start = Math.abs(scroll);
         const forward = isRtl() ? dx > 0 : dx < 0;
+        if (endless && from) {
+          moveBy(from, Math.abs(dx) > 40 ? (forward ? 1 : -1) : 0);
+          schedule();
+          return;
+        }
         let page = nearest();
         if (Math.abs(dx) > 40) {
           if (forward) {
@@ -487,9 +619,11 @@ window.UncoderWB.register(
       if (frame) cancelAnimationFrame(frame);
       if (resizeFrame) cancelAnimationFrame(resizeFrame);
       if (dotsWrap) dotsWrap.textContent = '';
-      root.classList.remove('is-ready', 'is-static', 'is-start', 'is-end', 'is-playing', 'is-dragging', 'is-animating');
+      root.classList.remove('is-ready', 'is-static', 'is-start', 'is-end', 'is-playing', 'is-dragging', 'is-animating', 'is-jumping');
       root.style.removeProperty('--uncoder-carousel-progress-size');
       root.style.removeProperty('--uncoder-carousel-progress-start');
+      root.style.removeProperty('--uncoder-carousel-edge');
+      slides.forEach((el) => el.classList.remove('is-current'));
     };
   },
   { lazy: true },

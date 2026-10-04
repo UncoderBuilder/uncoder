@@ -70,6 +70,36 @@ html:not(.uncoder-js) .uncoder-carousel > .uncoder-carousel__viewport > .uncoder
   scroll-snap-align: start;
 }
 
+/* Centered: the current slide snaps to the middle; the runtime sets --uncoder-carousel-edge (half the free width) so the
+   first and last slides can reach the middle, and marks the middle slide .is-current. The other slides shrink and
+   fade (Other slides: scale / opacity) once the runtime is ready; .is-jumping (the endless loop's silent jump from a
+   copy back to its original) skips the transition. */
+.uncoder-carousel--center > .uncoder-carousel__viewport > .uncoder-carousel__track {
+  padding-inline: var(--uncoder-carousel-edge, 0px);
+  scroll-padding-inline: var(--uncoder-carousel-edge, 0px);
+}
+
+.uncoder-carousel--center > .uncoder-carousel__viewport > .uncoder-carousel__track > .uncoder-carousel__slide {
+  flex-basis: var(--uncoder-carousel-center-w, calc((100% - (var(--uncoder-carousel-spv) - 1) * var(--uncoder-carousel-gap)) / var(--uncoder-carousel-spv)));
+  scroll-snap-align: center;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.uncoder-carousel--center.is-ready > .uncoder-carousel__viewport > .uncoder-carousel__track > .uncoder-carousel__slide:not(.is-current) {
+  transform: scale(var(--uncoder-carousel-inactive-scale, 1));
+  opacity: var(--uncoder-carousel-inactive-opacity, 1);
+}
+
+.uncoder-carousel--center.is-jumping > .uncoder-carousel__viewport > .uncoder-carousel__track > .uncoder-carousel__slide {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uncoder-carousel--center > .uncoder-carousel__viewport > .uncoder-carousel__track > .uncoder-carousel__slide {
+    transition: none;
+  }
+}
+
 /* Equal-height slides: the child container (or the editor slot around it) fills the slide. */
 .uncoder-carousel__slide > .uncoder-container,
 .uncoder-carousel__slide > .uncoder-slot,

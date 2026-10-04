@@ -213,6 +213,54 @@ trait Carousel_Engine {
 				'selectors'            => array( $root => '--uncoder-carousel-align: {{VALUE}}' ),
 			)
 		);
+		// Framer's slideshow with effects: the current slide in the middle, its smaller, paler neighbours either side.
+		$this->add_control(
+			'center_mode',
+			array(
+				'type'        => 'switch',
+				'label'       => __( 'Center the current slide', 'uncoder' ),
+				'description' => __( 'The current slide sits in the middle with its neighbours on both sides. With Rewind on, the slides loop endlessly.', 'uncoder' ),
+				'condition'   => $slides,
+				'ai'          => 'A centered, endless slideshow: center_mode + loop, a fixed center_slide_width (e.g. "350px") and gap; inactive_scale (e.g. 0.85) and inactive_opacity (e.g. 0.5) shrink and fade the neighbours; autoplay for the motion.',
+			)
+		);
+		$centered = array_merge( $slides, array( 'center_mode' => 'yes' ) );
+		$this->add_responsive_control(
+			'center_slide_width',
+			array(
+				'type'        => 'slider',
+				'label'       => __( 'Slide width', 'uncoder' ),
+				'description' => __( 'Empty: from Slides per view.', 'uncoder' ),
+				'size_units'  => array( 'px', '%', 'rem', 'vw' ),
+				'range'       => array( 'px' => array( 'min' => 80, 'max' => 1200 ) ),
+				'condition'   => $centered,
+				'selectors'   => array( $root => '--uncoder-carousel-center-w: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'inactive_scale',
+			array(
+				'type'      => 'number',
+				'label'     => __( 'Other slides: scale', 'uncoder' ),
+				'min'       => 0.5,
+				'max'       => 1,
+				'step'      => 0.01,
+				'condition' => $centered,
+				'selectors' => array( $root => '--uncoder-carousel-inactive-scale: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'inactive_opacity',
+			array(
+				'type'      => 'number',
+				'label'     => __( 'Other slides: opacity', 'uncoder' ),
+				'min'       => 0,
+				'max'       => 1,
+				'step'      => 0.05,
+				'condition' => $centered,
+				'selectors' => array( $root => '--uncoder-carousel-inactive-opacity: {{VALUE}}' ),
+			)
+		);
 		$this->add_control( 'nav_heading', array( 'type' => 'heading', 'label' => __( 'Navigation', 'uncoder' ), 'condition' => $slides ) );
 		$this->add_control(
 			'arrows',
@@ -276,7 +324,7 @@ trait Carousel_Engine {
 			array(
 				'type'        => 'switch',
 				'label'       => __( 'Rewind', 'uncoder' ),
-				'description' => __( 'Next on the last slide goes back to the first one.', 'uncoder' ),
+				'description' => __( 'Next on the last slide goes back to the first one; a centered carousel loops endlessly.', 'uncoder' ),
 				'condition'   => $slides,
 			)
 		);
@@ -623,6 +671,7 @@ trait Carousel_Engine {
 			'delay'        => (int) self::carousel_number( $s['autoplay_delay'] ?? '', 5000, 1000, 30000 ),
 			'pauseOnHover' => ! empty( $s['pause_on_hover'] ),
 			'loop'         => ! empty( $s['loop'] ),
+			'center'       => ! empty( $s['center_mode'] ),
 			'drag'         => ! empty( $s['drag'] ),
 			'speed'        => (int) self::carousel_number( $s['speed'] ?? '', 500, 0, 3000 ),
 			'i18n'         => array(
@@ -659,9 +708,14 @@ trait Carousel_Engine {
 			if ( ! empty( $s['ticker_fade'] ) ) {
 				$classes[] = 'uncoder-carousel--fade-edges';
 			}
-		} elseif ( ! empty( $s['arrows'] ) ) {
-			$position  = in_array( $s['arrows_position'] ?? 'inside', array( 'inside', 'outside', 'bottom', 'top' ), true ) ? $s['arrows_position'] : 'inside';
-			$classes[] = 'uncoder-carousel--arrows-' . $position;
+		} else {
+			if ( ! empty( $s['arrows'] ) ) {
+				$position  = in_array( $s['arrows_position'] ?? 'inside', array( 'inside', 'outside', 'bottom', 'top' ), true ) ? $s['arrows_position'] : 'inside';
+				$classes[] = 'uncoder-carousel--arrows-' . $position;
+			}
+			if ( ! empty( $s['center_mode'] ) ) {
+				$classes[] = 'uncoder-carousel--center';
+			}
 		}
 		$label = trim( (string) ( $s['carousel_label'] ?? '' ) );
 		return '<div' . Utils::attrs(

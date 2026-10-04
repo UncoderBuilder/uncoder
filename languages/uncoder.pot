@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-04T09:53:40+00:00\n"
+"POT-Creation-Date: 2026-10-04T11:18:00+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: uncoder\n"
@@ -200,7 +200,7 @@ msgstr ""
 #: includes/Widgets/Slides.php:911
 #: includes/Widgets/Social_Icons.php:88
 #: includes/Widgets/Steps.php:289
-#: includes/Widgets/Support/Carousel_Engine.php:565
+#: includes/Widgets/Support/Carousel_Engine.php:613
 #: includes/Widgets/Table.php:392
 #: includes/Widgets/Table_Of_Contents.php:234
 #: includes/Widgets/Table_Of_Contents.php:265
@@ -473,7 +473,7 @@ msgid "Items"
 msgstr ""
 
 #: includes/Controls/Groups/Query.php:39
-#: includes/Widgets/Support/Carousel_Engine.php:398
+#: includes/Widgets/Support/Carousel_Engine.php:446
 msgid "Offset"
 msgstr ""
 
@@ -653,7 +653,7 @@ msgstr ""
 #: includes/Widgets/Slides.php:221
 #: includes/Widgets/Slides.php:455
 #: includes/Widgets/Slides.php:516
-#: includes/Widgets/Support/Carousel_Engine.php:267
+#: includes/Widgets/Support/Carousel_Engine.php:315
 #: includes/Widgets/Table.php:201
 #: includes/Widgets/Table_Of_Contents.php:107
 #: includes/Widgets/Tabs.php:239
@@ -919,7 +919,7 @@ msgstr ""
 #: includes/Widgets/Social_Icons.php:178
 #: includes/Widgets/Star_Rating.php:145
 #: includes/Widgets/Steps.php:141
-#: includes/Widgets/Support/Carousel_Engine.php:489
+#: includes/Widgets/Support/Carousel_Engine.php:537
 #: includes/Widgets/Table.php:66
 #: includes/Widgets/Table.php:403
 #: includes/Widgets/Tabs.php:151
@@ -1128,8 +1128,8 @@ msgstr ""
 #: includes/Widgets/Soundcloud.php:206
 #: includes/Widgets/Steps.php:228
 #: includes/Widgets/Steps.php:246
-#: includes/Widgets/Support/Carousel_Engine.php:419
-#: includes/Widgets/Support/Carousel_Engine.php:439
+#: includes/Widgets/Support/Carousel_Engine.php:467
+#: includes/Widgets/Support/Carousel_Engine.php:487
 #: includes/Widgets/Table.php:273
 #: includes/Widgets/Table.php:368
 #: includes/Widgets/Table_Of_Contents.php:196
@@ -1197,7 +1197,7 @@ msgstr ""
 #: includes/Widgets/Site_Logo.php:209
 #: includes/Widgets/Soundcloud.php:199
 #: includes/Widgets/Steps.php:260
-#: includes/Widgets/Support/Carousel_Engine.php:423
+#: includes/Widgets/Support/Carousel_Engine.php:471
 #: includes/Widgets/Table_Of_Contents.php:197
 #: includes/Widgets/Tabs.php:326
 #: includes/Widgets/Tabs.php:486
@@ -1275,7 +1275,7 @@ msgstr ""
 #: includes/Widgets/Social_Icons.php:248
 #: includes/Widgets/Soundcloud.php:194
 #: includes/Widgets/Steps.php:265
-#: includes/Widgets/Support/Carousel_Engine.php:457
+#: includes/Widgets/Support/Carousel_Engine.php:505
 #: includes/Widgets/Table.php:299
 #: includes/Widgets/Table_Of_Contents.php:202
 #: includes/Widgets/Tabs.php:310
@@ -1467,7 +1467,7 @@ msgstr ""
 #: includes/Widgets/Social_Icons.php:177
 #: includes/Widgets/Star_Rating.php:144
 #: includes/Widgets/Steps.php:140
-#: includes/Widgets/Support/Carousel_Engine.php:488
+#: includes/Widgets/Support/Carousel_Engine.php:536
 #: includes/Widgets/Table.php:65
 #: includes/Widgets/Table.php:402
 #: includes/Widgets/Tabs.php:193
@@ -1523,7 +1523,7 @@ msgstr ""
 #: includes/Widgets/Slides.php:168
 #: includes/Widgets/Social_Icons.php:179
 #: includes/Widgets/Star_Rating.php:146
-#: includes/Widgets/Support/Carousel_Engine.php:490
+#: includes/Widgets/Support/Carousel_Engine.php:538
 #: includes/Widgets/Table.php:67
 #: includes/Widgets/Table.php:404
 #: includes/Widgets/Tabs.php:195
@@ -1614,7 +1614,7 @@ msgstr ""
 
 #: includes/Core/Common_Controls.php:433
 #: includes/Widgets/Slides.php:537
-#: includes/Widgets/Support/Carousel_Engine.php:319
+#: includes/Widgets/Support/Carousel_Engine.php:367
 msgid "Delay (ms)"
 msgstr ""
 
@@ -1670,7 +1670,7 @@ msgstr ""
 #: includes/Widgets/Slides.php:934
 #: includes/Widgets/Social_Icons.php:255
 #: includes/Widgets/Steps.php:223
-#: includes/Widgets/Support/Carousel_Engine.php:406
+#: includes/Widgets/Support/Carousel_Engine.php:454
 #: includes/Widgets/Table_Of_Contents.php:260
 #: includes/Widgets/Tabs.php:316
 #: includes/Widgets/Team_Member.php:414
@@ -1727,7 +1727,7 @@ msgstr ""
 #: includes/Widgets/Slides.php:939
 #: includes/Widgets/Social_Icons.php:277
 #: includes/Widgets/Steps.php:241
-#: includes/Widgets/Support/Carousel_Engine.php:426
+#: includes/Widgets/Support/Carousel_Engine.php:474
 #: includes/Widgets/Table_Of_Contents.php:278
 #: includes/Widgets/Tabs.php:329
 #: includes/Widgets/Team_Member.php:418
@@ -4658,7 +4658,7 @@ msgstr ""
 #: includes/Widgets/Social_Icons.php:314
 #: includes/Widgets/Soundcloud.php:200
 #: includes/Widgets/Steps.php:270
-#: includes/Widgets/Support/Carousel_Engine.php:424
+#: includes/Widgets/Support/Carousel_Engine.php:472
 #: includes/Widgets/Table_Of_Contents.php:216
 #: includes/Widgets/Tabs.php:327
 #: includes/Widgets/Tabs.php:366
@@ -4774,7 +4774,7 @@ msgstr ""
 #: includes/Widgets/Slides.php:749
 #: includes/Widgets/Slides.php:902
 #: includes/Widgets/Social_Icons.php:325
-#: includes/Widgets/Support/Carousel_Engine.php:556
+#: includes/Widgets/Support/Carousel_Engine.php:604
 #: includes/Widgets/Table.php:260
 #: includes/Widgets/Table.php:355
 #: includes/Widgets/Table.php:375
@@ -4835,7 +4835,7 @@ msgstr ""
 #: includes/Widgets/Social_Icons.php:175
 #: includes/Widgets/Star_Rating.php:142
 #: includes/Widgets/Steps.php:138
-#: includes/Widgets/Support/Carousel_Engine.php:486
+#: includes/Widgets/Support/Carousel_Engine.php:534
 #: includes/Widgets/Table.php:62
 #: includes/Widgets/Table.php:400
 #: includes/Widgets/Team_Member.php:227
@@ -5727,7 +5727,7 @@ msgstr ""
 #: includes/Widgets/Share_Buttons.php:351
 #: includes/Widgets/Slides.php:789
 #: includes/Widgets/Steps.php:276
-#: includes/Widgets/Support/Carousel_Engine.php:388
+#: includes/Widgets/Support/Carousel_Engine.php:436
 #: includes/Widgets/Team_Member.php:390
 #: includes/Widgets/Timeline.php:272
 msgid "Icon size"
@@ -5871,7 +5871,7 @@ msgstr ""
 #: includes/Widgets/Slides.php:809
 #: includes/Widgets/Slides.php:937
 #: includes/Widgets/Slides.php:942
-#: includes/Widgets/Support/Carousel_Engine.php:447
+#: includes/Widgets/Support/Carousel_Engine.php:495
 #: includes/Widgets/Table.php:281
 #: includes/Widgets/Tabs.php:343
 #: includes/Widgets/Tabs.php:362
@@ -5904,8 +5904,8 @@ msgstr ""
 #: includes/Widgets/Slides.php:807
 #: includes/Widgets/Slides.php:812
 #: includes/Widgets/Social_Icons.php:282
-#: includes/Widgets/Support/Carousel_Engine.php:411
-#: includes/Widgets/Support/Carousel_Engine.php:431
+#: includes/Widgets/Support/Carousel_Engine.php:459
+#: includes/Widgets/Support/Carousel_Engine.php:479
 #: includes/Widgets/Tabs.php:531
 #: includes/Widgets/Team_Member.php:415
 #: includes/Widgets/Team_Member.php:419
@@ -6045,7 +6045,7 @@ msgstr ""
 #: includes/Widgets/Flip_Box.php:165
 #: includes/Widgets/Slides.php:730
 #: includes/Widgets/Slides.php:779
-#: includes/Widgets/Support/Carousel_Engine.php:378
+#: includes/Widgets/Support/Carousel_Engine.php:426
 #: includes/Widgets/Team_Member.php:380
 msgid "Button size"
 msgstr ""
@@ -6219,8 +6219,8 @@ msgstr ""
 
 #: includes/Widgets/Carousel.php:31
 #: includes/Widgets/Support/Carousel_Engine.php:56
-#: includes/Widgets/Support/Carousel_Engine.php:351
-#: includes/Widgets/Support/Carousel_Engine.php:672
+#: includes/Widgets/Support/Carousel_Engine.php:399
+#: includes/Widgets/Support/Carousel_Engine.php:726
 msgid "Carousel"
 msgstr ""
 
@@ -9242,7 +9242,7 @@ msgstr ""
 #: includes/Widgets/Marquee.php:229
 #: includes/Widgets/Slides.php:549
 #: includes/Widgets/Support/Carousel_Engine.php:134
-#: includes/Widgets/Support/Carousel_Engine.php:331
+#: includes/Widgets/Support/Carousel_Engine.php:379
 msgid "Pause on hover"
 msgstr ""
 
@@ -9594,8 +9594,8 @@ msgstr ""
 #: includes/Widgets/Posts.php:306
 #: includes/Widgets/Posts.php:643
 #: includes/Widgets/Slides.php:513
-#: includes/Widgets/Support/Carousel_Engine.php:263
-#: includes/Widgets/Support/Carousel_Engine.php:467
+#: includes/Widgets/Support/Carousel_Engine.php:311
+#: includes/Widgets/Support/Carousel_Engine.php:515
 msgid "Pagination"
 msgstr ""
 
@@ -10394,7 +10394,7 @@ msgstr ""
 
 #: includes/Widgets/Off_Canvas.php:148
 #: includes/Widgets/Slides.php:568
-#: includes/Widgets/Support/Carousel_Engine.php:350
+#: includes/Widgets/Support/Carousel_Engine.php:398
 #: includes/Widgets/Tabs.php:257
 msgid "Accessible name"
 msgstr ""
@@ -10886,7 +10886,7 @@ msgstr ""
 
 #: includes/Widgets/Post_Navigation.php:51
 #: includes/Widgets/Slides.php:482
-#: includes/Widgets/Support/Carousel_Engine.php:216
+#: includes/Widgets/Support/Carousel_Engine.php:264
 msgid "Navigation"
 msgstr ""
 
@@ -10906,20 +10906,20 @@ msgstr ""
 #: includes/Widgets/Post_Navigation.php:210
 #: includes/Widgets/Slides.php:487
 #: includes/Widgets/Slides.php:770
-#: includes/Widgets/Support/Carousel_Engine.php:221
-#: includes/Widgets/Support/Carousel_Engine.php:369
+#: includes/Widgets/Support/Carousel_Engine.php:269
+#: includes/Widgets/Support/Carousel_Engine.php:417
 msgid "Arrows"
 msgstr ""
 
 #: includes/Widgets/Post_Navigation.php:98
 #: includes/Widgets/Slides.php:495
-#: includes/Widgets/Support/Carousel_Engine.php:245
+#: includes/Widgets/Support/Carousel_Engine.php:293
 msgid "Previous icon"
 msgstr ""
 
 #: includes/Widgets/Post_Navigation.php:107
 #: includes/Widgets/Slides.php:504
-#: includes/Widgets/Support/Carousel_Engine.php:254
+#: includes/Widgets/Support/Carousel_Engine.php:302
 msgid "Next icon"
 msgstr ""
 
@@ -11288,7 +11288,7 @@ msgid "A labelled bar filled to a percentage, e.g. skills or goals. The fill ani
 msgstr ""
 
 #: includes/Widgets/Progress_Bar.php:50
-#: includes/Widgets/Support/Carousel_Engine.php:270
+#: includes/Widgets/Support/Carousel_Engine.php:318
 msgid "Progress bar"
 msgstr ""
 
@@ -11343,7 +11343,7 @@ msgstr ""
 
 #: includes/Widgets/Progress_Bar.php:186
 #: includes/Widgets/Reading_Progress.php:114
-#: includes/Widgets/Support/Carousel_Engine.php:594
+#: includes/Widgets/Support/Carousel_Engine.php:642
 msgid "Track color"
 msgstr ""
 
@@ -11424,7 +11424,7 @@ msgid "The Anchor ID (Behaviour → Anchor & classes) of the section to measure,
 msgstr ""
 
 #: includes/Widgets/Reading_Progress.php:106
-#: includes/Widgets/Support/Carousel_Engine.php:585
+#: includes/Widgets/Support/Carousel_Engine.php:633
 msgid "Bar color"
 msgstr ""
 
@@ -12042,7 +12042,7 @@ msgid "Slider"
 msgstr ""
 
 #: includes/Widgets/Slides.php:441
-#: includes/Widgets/Support/Carousel_Engine.php:297
+#: includes/Widgets/Support/Carousel_Engine.php:345
 msgid "Transition duration (ms)"
 msgstr ""
 
@@ -12085,20 +12085,20 @@ msgid "Change slides with a touch swipe or a mouse drag."
 msgstr ""
 
 #: includes/Widgets/Slides.php:517
-#: includes/Widgets/Support/Carousel_Engine.php:268
+#: includes/Widgets/Support/Carousel_Engine.php:316
 msgid "Dots"
 msgstr ""
 
 #: includes/Widgets/Slides.php:518
-#: includes/Widgets/Support/Carousel_Engine.php:269
+#: includes/Widgets/Support/Carousel_Engine.php:317
 msgid "Fraction (2 / 5)"
 msgstr ""
 
 #: includes/Widgets/Slides.php:522
 #: includes/Widgets/Slides.php:527
 #: includes/Widgets/Soundcloud.php:122
-#: includes/Widgets/Support/Carousel_Engine.php:305
-#: includes/Widgets/Support/Carousel_Engine.php:310
+#: includes/Widgets/Support/Carousel_Engine.php:353
+#: includes/Widgets/Support/Carousel_Engine.php:358
 #: includes/Widgets/Video.php:193
 msgid "Autoplay"
 msgstr ""
@@ -12108,12 +12108,12 @@ msgid "Never starts in the editor or for visitors who prefer reduced motion; pau
 msgstr ""
 
 #: includes/Widgets/Slides.php:558
-#: includes/Widgets/Support/Carousel_Engine.php:340
+#: includes/Widgets/Support/Carousel_Engine.php:388
 msgid "Pause button"
 msgstr ""
 
 #: includes/Widgets/Slides.php:559
-#: includes/Widgets/Support/Carousel_Engine.php:341
+#: includes/Widgets/Support/Carousel_Engine.php:389
 msgid "Required by WCAG 2.2.2 for content that moves on its own."
 msgstr ""
 
@@ -12151,56 +12151,56 @@ msgid "Distance from bottom"
 msgstr ""
 
 #: includes/Widgets/Slides.php:850
-#: includes/Widgets/Support/Carousel_Engine.php:504
+#: includes/Widgets/Support/Carousel_Engine.php:552
 msgid "Dot size"
 msgstr ""
 
 #: includes/Widgets/Slides.php:861
-#: includes/Widgets/Support/Carousel_Engine.php:515
+#: includes/Widgets/Support/Carousel_Engine.php:563
 msgid "Active dot width"
 msgstr ""
 
 #: includes/Widgets/Slides.php:862
-#: includes/Widgets/Support/Carousel_Engine.php:516
+#: includes/Widgets/Support/Carousel_Engine.php:564
 msgid "Same as the dot size for round dots, wider for a pill."
 msgstr ""
 
 #: includes/Widgets/Slides.php:873
-#: includes/Widgets/Support/Carousel_Engine.php:527
+#: includes/Widgets/Support/Carousel_Engine.php:575
 msgid "Space between dots"
 msgstr ""
 
 #: includes/Widgets/Slides.php:884
-#: includes/Widgets/Support/Carousel_Engine.php:538
+#: includes/Widgets/Support/Carousel_Engine.php:586
 msgid "Dot color"
 msgstr ""
 
 #: includes/Widgets/Slides.php:893
-#: includes/Widgets/Support/Carousel_Engine.php:547
+#: includes/Widgets/Support/Carousel_Engine.php:595
 msgid "Active dot color"
 msgstr ""
 
 #: includes/Widgets/Slides.php:920
-#: includes/Widgets/Support/Carousel_Engine.php:603
+#: includes/Widgets/Support/Carousel_Engine.php:651
 msgid "Pause button color"
 msgstr ""
 
 #. translators: 1: slide number, 2: number of slides.
 #: includes/Widgets/Slides.php:960
-#: includes/Widgets/Support/Carousel_Engine.php:632
+#: includes/Widgets/Support/Carousel_Engine.php:681
 #, php-format
 msgid "Slide %1$s of %2$s"
 msgstr ""
 
 #: includes/Widgets/Slides.php:961
 #: includes/Widgets/Slides.php:1021
-#: includes/Widgets/Support/Carousel_Engine.php:633
-#: includes/Widgets/Support/Carousel_Engine.php:748
+#: includes/Widgets/Support/Carousel_Engine.php:682
+#: includes/Widgets/Support/Carousel_Engine.php:802
 msgid "Pause autoplay"
 msgstr ""
 
 #: includes/Widgets/Slides.php:962
-#: includes/Widgets/Support/Carousel_Engine.php:634
+#: includes/Widgets/Support/Carousel_Engine.php:683
 msgid "Start autoplay"
 msgstr ""
 
@@ -12209,22 +12209,22 @@ msgid "Add a slide to start building the slider."
 msgstr ""
 
 #: includes/Widgets/Slides.php:1004
-#: includes/Widgets/Support/Carousel_Engine.php:671
+#: includes/Widgets/Support/Carousel_Engine.php:725
 msgid "carousel"
 msgstr ""
 
 #: includes/Widgets/Slides.php:1037
-#: includes/Widgets/Support/Carousel_Engine.php:724
+#: includes/Widgets/Support/Carousel_Engine.php:778
 msgid "Previous slide"
 msgstr ""
 
 #: includes/Widgets/Slides.php:1037
-#: includes/Widgets/Support/Carousel_Engine.php:732
+#: includes/Widgets/Support/Carousel_Engine.php:786
 msgid "Next slide"
 msgstr ""
 
 #: includes/Widgets/Slides.php:1052
-#: includes/Widgets/Support/Carousel_Engine.php:753
+#: includes/Widgets/Support/Carousel_Engine.php:807
 msgid "Choose slide"
 msgstr ""
 
@@ -12235,13 +12235,13 @@ msgid "Go to slide %d"
 msgstr ""
 
 #: includes/Widgets/Slides.php:1111
-#: includes/Widgets/Support/Carousel_Engine.php:698
+#: includes/Widgets/Support/Carousel_Engine.php:752
 msgid "slide"
 msgstr ""
 
 #. translators: 1: slide number, 2: number of slides.
 #: includes/Widgets/Slides.php:1113
-#: includes/Widgets/Support/Carousel_Engine.php:700
+#: includes/Widgets/Support/Carousel_Engine.php:754
 #, php-format
 msgid "%1$d of %2$d"
 msgstr ""
@@ -12624,6 +12624,7 @@ msgid "Continuous (ticker)"
 msgstr ""
 
 #: includes/Widgets/Support/Carousel_Engine.php:77
+#: includes/Widgets/Support/Carousel_Engine.php:232
 msgid "Slide width"
 msgstr ""
 
@@ -12667,64 +12668,84 @@ msgstr ""
 msgid "Slides to scroll"
 msgstr ""
 
-#: includes/Widgets/Support/Carousel_Engine.php:230
-msgid "Arrows position"
+#: includes/Widgets/Support/Carousel_Engine.php:221
+msgid "Center the current slide"
+msgstr ""
+
+#: includes/Widgets/Support/Carousel_Engine.php:222
+msgid "The current slide sits in the middle with its neighbours on both sides. With Rewind on, the slides loop endlessly."
 msgstr ""
 
 #: includes/Widgets/Support/Carousel_Engine.php:233
-msgid "Inside, over the slides"
+msgid "Empty: from Slides per view."
 msgstr ""
 
-#: includes/Widgets/Support/Carousel_Engine.php:234
-msgid "Outside the slides"
+#: includes/Widgets/Support/Carousel_Engine.php:244
+msgid "Other slides: scale"
 msgstr ""
 
-#: includes/Widgets/Support/Carousel_Engine.php:235
-msgid "Below, next to the pagination"
-msgstr ""
-
-#: includes/Widgets/Support/Carousel_Engine.php:236
-msgid "Above the slides, at the end"
+#: includes/Widgets/Support/Carousel_Engine.php:256
+msgid "Other slides: opacity"
 msgstr ""
 
 #: includes/Widgets/Support/Carousel_Engine.php:278
+msgid "Arrows position"
+msgstr ""
+
+#: includes/Widgets/Support/Carousel_Engine.php:281
+msgid "Inside, over the slides"
+msgstr ""
+
+#: includes/Widgets/Support/Carousel_Engine.php:282
+msgid "Outside the slides"
+msgstr ""
+
+#: includes/Widgets/Support/Carousel_Engine.php:283
+msgid "Below, next to the pagination"
+msgstr ""
+
+#: includes/Widgets/Support/Carousel_Engine.php:284
+msgid "Above the slides, at the end"
+msgstr ""
+
+#: includes/Widgets/Support/Carousel_Engine.php:326
 msgid "Rewind"
 msgstr ""
 
-#: includes/Widgets/Support/Carousel_Engine.php:279
-msgid "Next on the last slide goes back to the first one."
+#: includes/Widgets/Support/Carousel_Engine.php:327
+msgid "Next on the last slide goes back to the first one; a centered carousel loops endlessly."
 msgstr ""
 
-#: includes/Widgets/Support/Carousel_Engine.php:287
+#: includes/Widgets/Support/Carousel_Engine.php:335
 msgid "Mouse drag"
 msgstr ""
 
-#: includes/Widgets/Support/Carousel_Engine.php:288
+#: includes/Widgets/Support/Carousel_Engine.php:336
 msgid "Touch swipe and trackpads always work."
 msgstr ""
 
-#: includes/Widgets/Support/Carousel_Engine.php:311
+#: includes/Widgets/Support/Carousel_Engine.php:359
 msgid "Never starts for visitors who prefer reduced motion; pauses while hovered or focused."
 msgstr ""
 
-#: includes/Widgets/Support/Carousel_Engine.php:352
+#: includes/Widgets/Support/Carousel_Engine.php:400
 msgid "Announced by screen readers, e.g. \"Customer stories\"."
 msgstr ""
 
-#: includes/Widgets/Support/Carousel_Engine.php:399
+#: includes/Widgets/Support/Carousel_Engine.php:447
 msgid "Distance from the slides edge (inside / outside) or between the two arrows (below)."
 msgstr ""
 
-#: includes/Widgets/Support/Carousel_Engine.php:476
+#: includes/Widgets/Support/Carousel_Engine.php:524
 msgid "Distance from slides"
 msgstr ""
 
-#: includes/Widgets/Support/Carousel_Engine.php:574
+#: includes/Widgets/Support/Carousel_Engine.php:622
 msgid "Bar height"
 msgstr ""
 
 #. translators: %s: slide number.
-#: includes/Widgets/Support/Carousel_Engine.php:630
+#: includes/Widgets/Support/Carousel_Engine.php:679
 #, php-format
 msgid "Go to slide %s"
 msgstr ""
