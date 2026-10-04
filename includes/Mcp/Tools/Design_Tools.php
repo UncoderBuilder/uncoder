@@ -200,14 +200,8 @@ final class Design_Tools {
 		}
 		$input = array_intersect_key( $a, array_flip( array_diff( $known, array( 'remove' ) ) ) );
 		// Breakpoints may come as a list [{"id":"tablet","value":1199}] or a map {"tablet":{"value":1199}}.
-		if ( isset( $input['breakpoints'] ) && is_array( $input['breakpoints'] ) && isset( $input['breakpoints'][0] ) ) {
-			$map = array();
-			foreach ( $input['breakpoints'] as $bp ) {
-				if ( is_array( $bp ) && isset( $bp['id'] ) ) {
-					$map[ (string) $bp['id'] ] = array_diff_key( $bp, array( 'id' => 1 ) );
-				}
-			}
-			$input['breakpoints'] = $map;
+		if ( isset( $input['breakpoints'] ) && is_array( $input['breakpoints'] ) ) {
+			$input['breakpoints'] = \Uncoder\Builder\Core\Kit::breakpoint_map( $input['breakpoints'] );
 		}
 		if ( isset( $input['breakpoints'] ) && is_array( $input['breakpoints'] ) ) {
 			foreach ( array_keys( $input['breakpoints'] ) as $id ) {

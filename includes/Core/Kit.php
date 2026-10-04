@@ -416,7 +416,7 @@ final class Kit {
 		}
 		if ( isset( $data['breakpoints'] ) && is_array( $data['breakpoints'] ) ) {
 			$out['breakpoints'] = array();
-			foreach ( $data['breakpoints'] as $id => $bp ) {
+			foreach ( self::breakpoint_map( $data['breakpoints'] ) as $id => $bp ) {
 				if ( isset( Breakpoints::DEFAULTS[ $id ] ) && is_array( $bp ) ) {
 					$entry = array();
 					// A change that only gives a width keeps the breakpoint's on/off state (update() merges per field).
@@ -943,6 +943,38 @@ final class Kit {
 			'path' => $file,
 			'ver'  => substr( md5( $this->css_build() ), 0, 10 ),
 		);
+	}
+
+	/**
+	 * Breakpoints as stored ({"tablet":{"value":1199}}), also from the list the kit exports
+	 * ([{"id":"desktop",…},{"id":"tablet","value":1199,…}], a Site Kit's design.json). A full list, with its
+	 * "desktop" entry, holds every active breakpoint, so the ones it leaves out are turned off; a shorter list (an
+	 * AI or script changing a width) only changes the ones it names.
+	 *
+	 * @param array<int|string,mixed> $breakpoints Breakpoints in either shape.
+	 * @return array<string,mixed>
+	 */
+	public static function breakpoint_map( array $breakpoints ): array {
+		if ( ! isset( $breakpoints[0] ) ) {
+			return $breakpoints;
+		}
+		$map  = array();
+		$full = false;
+		foreach ( $breakpoints as $bp ) {
+			if ( is_array( $bp ) && isset( $bp['id'] ) ) {
+				if ( 'desktop' === $bp['id'] ) {
+					$full = true;
+					continue;
+				}
+				$map[ (string) $bp['id'] ] = array_intersect_key( $bp, array( 'value' => 1, 'enabled' => 1 ) );
+			}
+		}
+		if ( $full ) {
+			foreach ( array_keys( Breakpoints::DEFAULTS ) as $id ) {
+				$map[ $id ] = isset( $map[ $id ] ) ? array( 'enabled' => true ) + $map[ $id ] : array( 'enabled' => false );
+			}
+		}
+		return $map;
 	}
 
 	/**
