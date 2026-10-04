@@ -54,9 +54,24 @@ final class Masks {
 			'bubble'   => __( 'Speech bubble', 'uncoder' ),
 			'flower'   => __( 'Flower', 'uncoder' ),
 			'wave'     => __( 'Wavy bottom', 'uncoder' ),
+			'fade-bottom' => __( 'Fade out at the bottom', 'uncoder' ),
+			'fade-top'    => __( 'Fade out at the top', 'uncoder' ),
+			'fade-y'      => __( 'Fade out at top and bottom', 'uncoder' ),
+			'fade-x'      => __( 'Fade out at the sides', 'uncoder' ),
 			'custom'   => __( 'Custom image (SVG / PNG)', 'uncoder' ),
 		);
 	}
+
+	/**
+	 * Fades: a gradient instead of a shape (a wall of cards that fades out at the bottom, a row fading at its sides),
+	 * over the fade length (`--uncoder-mask-fade`, the Fade length control; 32% by default).
+	 */
+	public const FADES = array(
+		'fade-bottom' => 'linear-gradient(to bottom,#000 calc(100% - var(--uncoder-mask-fade,32%)),transparent)',
+		'fade-top'    => 'linear-gradient(to top,#000 calc(100% - var(--uncoder-mask-fade,32%)),transparent)',
+		'fade-y'      => 'linear-gradient(to bottom,transparent,#000 var(--uncoder-mask-fade,32%),#000 calc(100% - var(--uncoder-mask-fade,32%)),transparent)',
+		'fade-x'      => 'linear-gradient(to right,transparent,#000 var(--uncoder-mask-fade,32%),#000 calc(100% - var(--uncoder-mask-fade,32%)),transparent)',
+	);
 
 	/**
 	 * selectors_dictionary for the shape control: the image plus sensible defaults (fit, centred, no repeat)
@@ -70,6 +85,9 @@ final class Masks {
 		foreach ( array_keys( self::SHAPES ) as $id ) {
 			$url       = self::url( $id );
 			$out[ $id ] = '-webkit-mask-image:' . $url . ';mask-image:' . $url . ';' . $defaults;
+		}
+		foreach ( self::FADES as $id => $gradient ) {
+			$out[ $id ] = '-webkit-mask-image:' . $gradient . ';mask-image:' . $gradient . ';-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat';
 		}
 		return $out;
 	}

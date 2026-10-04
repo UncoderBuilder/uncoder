@@ -65,6 +65,24 @@ final class Media {
 		return (array) $attr;
 	}
 
+	/** Shapes a plain SVG may hold: no animation (<set>, <animate> can rewrite links), links, embeds or scripts. */
+	public const PLAIN_SVG_TAGS = array( 'svg', 'title', 'desc', 'defs', 'lineargradient', 'radialgradient', 'stop', 'pattern', 'clippath', 'mask', 'g', 'path', 'rect', 'circle', 'ellipse', 'line', 'polyline', 'polygon', 'text', 'tspan' );
+
+	/**
+	 * Whether SVG markup holds only plain shapes: no scripts, styles, event handlers, javascript: links, foreign
+	 * objects, embeds or outside references (a Site Kit imports such files; icons print them inline).
+	 */
+	public static function is_plain_svg( string $svg ): bool {
+		if ( '' === $svg || strlen( $svg ) > 2 * MB_IN_BYTES || ! preg_match( '/<svg[\s>]/i', $svg ) ) {
+			return false;
+		}
+		preg_match_all( '/<\s*([a-zA-Z][a-zA-Z0-9:._-]*)/', $svg, $tags );
+		if ( array_diff( array_map( 'strtolower', $tags[1] ), self::PLAIN_SVG_TAGS ) ) {
+			return false;
+		}
+		return ! preg_match( '/<!|<\?(?!xml\s)|\son[a-z]+\s*=|javascript:|href\s*=\s*["\']\s*(?!#)/i', $svg );
+	}
+
 	/**
 	 * Saves generated SVG markup as an attachment.
 	 *

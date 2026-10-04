@@ -282,6 +282,18 @@ final class Common_Controls {
 			)
 		);
 		$el->add_responsive_control(
+			'_mask_fade',
+			array(
+				'type'        => 'slider',
+				'label'       => __( 'Fade length', 'uncoder' ),
+				'description' => __( 'How much of the element fades out (from each faded edge).', 'uncoder' ),
+				'size_units'  => array( '%', 'px' ),
+				'range'       => array( '%' => array( 'min' => 0, 'max' => 50 ), 'px' => array( 'min' => 0, 'max' => 400 ) ),
+				'condition'   => array( '_mask' => array( 'fade-bottom', 'fade-top', 'fade-y', 'fade-x' ) ),
+				'selectors'   => array( '{{WRAPPER}}' => '--uncoder-mask-fade: {{VALUE}}' ),
+			)
+		);
+		$el->add_responsive_control(
 			'_mask_size',
 			array(
 				'type'                 => 'select',
@@ -297,7 +309,7 @@ final class Common_Controls {
 					'stretch' => '-webkit-mask-size:100% 100%;mask-size:100% 100%',
 					'custom'  => '',
 				),
-				'condition'            => array( '_mask!' => '' ),
+				'condition'            => array( '_mask' => array_keys( Masks::SHAPES + array( 'custom' => 1 ) ) ),
 				'selectors'            => array( '{{WRAPPER}}' => '{{VALUE}}' ),
 			)
 		);

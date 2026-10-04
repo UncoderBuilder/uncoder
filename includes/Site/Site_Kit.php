@@ -1523,12 +1523,9 @@ final class Site_Kit {
 	 */
 	private static function import_svg( string $src, array $m ) {
 		$svg = (string) file_get_contents( $src ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
-		// Only the shapes Uncoder's placeholder / logo generator writes; no animation (<set>, <animate> can
-		// rewrite links), links, embeds, scripts, event handlers or outside references.
-		$allowed = array( 'svg', 'title', 'desc', 'defs', 'lineargradient', 'radialgradient', 'stop', 'pattern', 'clippath', 'mask', 'g', 'path', 'rect', 'circle', 'ellipse', 'line', 'polyline', 'polygon', 'text', 'tspan' );
-		preg_match_all( '/<\s*([a-zA-Z][a-zA-Z0-9:._-]*)/', $svg, $tags );
-		$unknown = array_diff( array_map( 'strtolower', $tags[1] ), $allowed );
-		if ( '' === $svg || strlen( $svg ) > 2 * MB_IN_BYTES || ! preg_match( '/<svg[\s>]/i', $svg ) || $unknown || preg_match( '/<!|<\?(?!xml\s)|\son[a-z]+\s*=|javascript:|href\s*=\s*["\']\s*(?!#)/i', $svg ) ) {
+		// Only plain shapes (what Uncoder's placeholder / logo generator writes): no animation, links, embeds,
+		// scripts, event handlers or outside references.
+		if ( ! \Uncoder\Builder\Core\Media::is_plain_svg( $svg ) ) {
 			return new WP_Error( 'uncoder_svg', __( 'This SVG was not imported: it contains active content.', 'uncoder' ) );
 		}
 		return \Uncoder\Builder\Core\Media::insert_svg( $svg, pathinfo( $src, PATHINFO_FILENAME ), (int) ( $m['width'] ?? 0 ), (int) ( $m['height'] ?? 0 ), (string) ( $m['title'] ?? '' ), (string) $m['generated'] );

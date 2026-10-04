@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-04T03:42:58+00:00\n"
+"POT-Creation-Date: 2026-10-04T04:30:21+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: uncoder\n"
@@ -254,7 +254,7 @@ msgstr ""
 #: includes/Controls/Groups/Background.php:58
 #: includes/Controls/Groups/Background.php:72
 #: includes/Core/Common_Controls.php:179
-#: includes/Core/Common_Controls.php:322
+#: includes/Core/Common_Controls.php:334
 #: includes/Widgets/Link_In_Bio.php:328
 #: includes/Widgets/Login.php:245
 #: includes/Widgets/Loop_Grid.php:230
@@ -268,8 +268,8 @@ msgid "Attachment"
 msgstr ""
 
 #: includes/Controls/Groups/Background.php:51
-#: includes/Core/Common_Controls.php:342
-#: includes/Core/Common_Controls.php:345
+#: includes/Core/Common_Controls.php:354
+#: includes/Core/Common_Controls.php:357
 #: includes/Widgets/Loop_Grid.php:241
 msgid "Repeat"
 msgstr ""
@@ -277,7 +277,7 @@ msgstr ""
 #: includes/Controls/Groups/Background.php:52
 #: includes/Controls/Groups/Background.php:71
 #: includes/Controls/Groups/Typography.php:57
-#: includes/Core/Common_Controls.php:288
+#: includes/Core/Common_Controls.php:300
 #: includes/Widgets/Accordion.php:331
 #: includes/Widgets/Accordion.php:410
 #: includes/Widgets/Alert.php:246
@@ -519,7 +519,7 @@ msgid "Avoid duplicates"
 msgstr ""
 
 #: includes/Controls/Groups/Shadow.php:33
-#: includes/Core/Common_Controls.php:577
+#: includes/Core/Common_Controls.php:589
 #: includes/Widgets/Image_Compare.php:147
 #: includes/Widgets/Nav_Menu.php:96
 #: includes/Widgets/Steps.php:115
@@ -528,7 +528,7 @@ msgid "Horizontal"
 msgstr ""
 
 #: includes/Controls/Groups/Shadow.php:34
-#: includes/Core/Common_Controls.php:570
+#: includes/Core/Common_Controls.php:582
 #: includes/Widgets/Icon_List.php:111
 #: includes/Widgets/Image_Compare.php:148
 #: includes/Widgets/Nav_Menu.php:97
@@ -538,7 +538,7 @@ msgid "Vertical"
 msgstr ""
 
 #: includes/Controls/Groups/Shadow.php:35
-#: includes/Core/Common_Controls.php:619
+#: includes/Core/Common_Controls.php:631
 msgid "Blur"
 msgstr ""
 
@@ -561,14 +561,14 @@ msgid "Offset Y"
 msgstr ""
 
 #: includes/Controls/Groups/Transform.php:40
-#: includes/Core/Common_Controls.php:581
+#: includes/Core/Common_Controls.php:593
 #: includes/Widgets/Icon.php:176
 #: includes/Widgets/Icon_Box.php:458
 msgid "Rotate"
 msgstr ""
 
 #: includes/Controls/Groups/Transform.php:41
-#: includes/Core/Common_Controls.php:586
+#: includes/Core/Common_Controls.php:598
 #: includes/Elements/Container.php:679
 #: includes/Widgets/Star_Rating.php:51
 msgid "Scale"
@@ -599,7 +599,7 @@ msgid "Weight"
 msgstr ""
 
 #: includes/Controls/Groups/Typography.php:61
-#: includes/Core/Common_Controls.php:420
+#: includes/Core/Common_Controls.php:432
 msgid "Transform"
 msgstr ""
 
@@ -620,10 +620,10 @@ msgid "Word spacing"
 msgstr ""
 
 #: includes/Core/Animated_Backgrounds.php:104
-#: includes/Core/Common_Controls.php:442
-#: includes/Core/Common_Controls.php:602
-#: includes/Core/Common_Controls.php:652
-#: includes/Core/Common_Controls.php:737
+#: includes/Core/Common_Controls.php:454
+#: includes/Core/Common_Controls.php:614
+#: includes/Core/Common_Controls.php:664
+#: includes/Core/Common_Controls.php:749
 #: includes/Core/Masks.php:44
 #: includes/Elements/Container.php:428
 #: includes/Elements/Container.php:501
@@ -828,7 +828,7 @@ msgid "Fit content"
 msgstr ""
 
 #: includes/Core/Common_Controls.php:87
-#: includes/Core/Common_Controls.php:293
+#: includes/Core/Common_Controls.php:305
 #: includes/Site/Custom_Icons.php:96
 #: includes/Widgets/Image.php:117
 #: includes/Widgets/Post_Info.php:147
@@ -867,7 +867,7 @@ msgid "Start"
 msgstr ""
 
 #: includes/Core/Common_Controls.php:115
-#: includes/Core/Common_Controls.php:324
+#: includes/Core/Common_Controls.php:336
 #: includes/Elements/Container.php:176
 #: includes/Elements/Container.php:193
 #: includes/Widgets/Accordion.php:261
@@ -950,7 +950,7 @@ msgid "End"
 msgstr ""
 
 #: includes/Core/Common_Controls.php:117
-#: includes/Core/Common_Controls.php:292
+#: includes/Core/Common_Controls.php:304
 #: includes/Elements/Container.php:195
 #: includes/Widgets/Nav_Menu.php:110
 #: includes/Widgets/Share_Buttons.php:312
@@ -997,7 +997,7 @@ msgid "Fixed"
 msgstr ""
 
 #: includes/Core/Common_Controls.php:185
-#: includes/Core/Common_Controls.php:440
+#: includes/Core/Common_Controls.php:452
 #: includes/Widgets/Table_Of_Contents.php:179
 msgid "Sticky"
 msgstr ""
@@ -1348,23 +1348,31 @@ msgstr ""
 msgid "Opaque parts show the element; transparent parts hide it."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:290
+#: includes/Core/Common_Controls.php:288
+msgid "Fade length"
+msgstr ""
+
+#: includes/Core/Common_Controls.php:289
+msgid "How much of the element fades out (from each faded edge)."
+msgstr ""
+
+#: includes/Core/Common_Controls.php:302
 msgid "Fit"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:291
+#: includes/Core/Common_Controls.php:303
 #: includes/Widgets/Featured_Image.php:183
 #: includes/Widgets/Image.php:239
 #: includes/Widgets/Progress_Bar.php:177
 msgid "Fill"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:308
+#: includes/Core/Common_Controls.php:320
 msgid "Mask width"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:325
-#: includes/Core/Common_Controls.php:442
+#: includes/Core/Common_Controls.php:337
+#: includes/Core/Common_Controls.php:454
 #: includes/Elements/Container.php:491
 #: includes/Widgets/Author_Box.php:60
 #: includes/Widgets/Call_To_Action.php:124
@@ -1385,8 +1393,8 @@ msgstr ""
 msgid "Top"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:326
-#: includes/Core/Common_Controls.php:442
+#: includes/Core/Common_Controls.php:338
+#: includes/Core/Common_Controls.php:454
 #: includes/Elements/Container.php:491
 #: includes/Widgets/Call_To_Action.php:125
 #: includes/Widgets/Call_To_Action.php:337
@@ -1402,7 +1410,7 @@ msgstr ""
 msgid "Bottom"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:327
+#: includes/Core/Common_Controls.php:339
 #: includes/Widgets/Accordion.php:260
 #: includes/Widgets/Author_Box.php:59
 #: includes/Widgets/Author_Box.php:153
@@ -1462,7 +1470,7 @@ msgstr ""
 msgid "Left"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:328
+#: includes/Core/Common_Controls.php:340
 #: includes/Widgets/Accordion.php:262
 #: includes/Widgets/Author_Box.php:61
 #: includes/Widgets/Author_Box.php:155
@@ -1518,90 +1526,90 @@ msgstr ""
 msgid "Right"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:329
+#: includes/Core/Common_Controls.php:341
 msgid "Top left"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:330
+#: includes/Core/Common_Controls.php:342
 msgid "Top right"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:331
+#: includes/Core/Common_Controls.php:343
 msgid "Bottom left"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:332
+#: includes/Core/Common_Controls.php:344
 msgid "Bottom right"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:344
+#: includes/Core/Common_Controls.php:356
 msgid "No repeat"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:346
+#: includes/Core/Common_Controls.php:358
 msgid "Repeat horizontally"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:347
+#: includes/Core/Common_Controls.php:359
 msgid "Repeat vertically"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:348
+#: includes/Core/Common_Controls.php:360
 msgid "Round"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:349
+#: includes/Core/Common_Controls.php:361
 #: includes/Widgets/Spacer.php:46
 msgid "Space"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:358
+#: includes/Core/Common_Controls.php:370
 msgid "Anchor & classes"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:363
+#: includes/Core/Common_Controls.php:375
 #: includes/Widgets/Menu_Anchor.php:60
 msgid "Anchor ID"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:365
+#: includes/Core/Common_Controls.php:377
 msgid "Link to this element with #your-id (e.g. a menu item “/#contact”). Also usable as a CSS id."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:373
+#: includes/Core/Common_Controls.php:385
 msgid "CSS classes"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:375
+#: includes/Core/Common_Controls.php:387
 msgid "Extra classes for your own CSS, separated by spaces. Every element already has uncoder-{type} and uncoder-{id}."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:380
+#: includes/Core/Common_Controls.php:392
 msgid "Animations"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:391
+#: includes/Core/Common_Controls.php:403
 msgid "Motion & effects"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:392
+#: includes/Core/Common_Controls.php:404
 #: includes/Widgets/Timeline.php:166
 msgid "Entrance animation"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:397
+#: includes/Core/Common_Controls.php:409
 #: includes/Widgets/Flip_Box.php:217
 #: includes/Widgets/Progress_Bar.php:127
 msgid "Duration (ms)"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:408
+#: includes/Core/Common_Controls.php:420
 #: includes/Widgets/Slides.php:537
 #: includes/Widgets/Support/Carousel_Engine.php:319
 msgid "Delay (ms)"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:419
+#: includes/Core/Common_Controls.php:431
 #: includes/Elements/Container.php:412
 #: includes/Widgets/Accordion.php:268
 #: includes/Widgets/Alert.php:314
@@ -1663,7 +1671,7 @@ msgstr ""
 msgid "Normal"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:422
+#: includes/Core/Common_Controls.php:434
 #: includes/Elements/Container.php:454
 #: includes/Widgets/Accordion.php:286
 #: includes/Widgets/Alert.php:324
@@ -1720,11 +1728,11 @@ msgstr ""
 msgid "Hover"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:423
+#: includes/Core/Common_Controls.php:435
 msgid "Transform on hover"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:430
+#: includes/Core/Common_Controls.php:442
 #: includes/Widgets/Call_To_Action.php:483
 #: includes/Widgets/Google_Maps.php:166
 #: includes/Widgets/Icon_Box.php:334
@@ -1732,28 +1740,28 @@ msgstr ""
 msgid "Transition (ms)"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:441
+#: includes/Core/Common_Controls.php:453
 msgid "In a header: Top keeps the header pinned from this row down; rows above it, like a top bar, scroll away."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:449
+#: includes/Core/Common_Controls.php:461
 msgid "Sticky offset (px)"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:455
-#: includes/Core/Common_Controls.php:673
+#: includes/Core/Common_Controls.php:467
+#: includes/Core/Common_Controls.php:685
 msgid "Desktop"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:463
+#: includes/Core/Common_Controls.php:475
 msgid "Sticky on"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:466
+#: includes/Core/Common_Controls.php:478
 msgid "Devices where the element sticks; elsewhere it scrolls with the page."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:470
+#: includes/Core/Common_Controls.php:482
 #: includes/Widgets/Call_To_Action.php:490
 #: includes/Widgets/Featured_Image.php:208
 #: includes/Widgets/Google_Maps.php:158
@@ -1771,127 +1779,127 @@ msgstr ""
 msgid "CSS filters"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:475
+#: includes/Core/Common_Controls.php:487
 msgid "Backdrop filter"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:476
+#: includes/Core/Common_Controls.php:488
 msgid "Blurs or tints what shows through the element (frosted glass). Give it a semi-transparent background."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:484
+#: includes/Core/Common_Controls.php:496
 msgid "Visibility"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:485
+#: includes/Core/Common_Controls.php:497
 msgid "Hide on desktop"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:486
+#: includes/Core/Common_Controls.php:498
 msgid "Hide on tablet"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:487
+#: includes/Core/Common_Controls.php:499
 msgid "Hide on mobile"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:492
+#: includes/Core/Common_Controls.php:504
 msgid "Hide in dark mode"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:493
+#: includes/Core/Common_Controls.php:505
 msgid "With dark mode on in the Design System: e.g. a dark logo for light pages and a light one for dark pages."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:496
+#: includes/Core/Common_Controls.php:508
 msgid "Hide in light mode"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:499
+#: includes/Core/Common_Controls.php:511
 msgid "Conditions"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:504
+#: includes/Core/Common_Controls.php:516
 msgid "Show this element when"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:505
+#: includes/Core/Common_Controls.php:517
 msgid "Any set can match; every rule in a set must match. Checked on the server, so a hidden element is not in the page at all. The editor always shows it. With a page cache, user-based rules need the cache to vary by login (most do)."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:511
+#: includes/Core/Common_Controls.php:523
 msgid "Interactions"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:516
+#: includes/Core/Common_Controls.php:528
 msgid "When…"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:517
+#: includes/Core/Common_Controls.php:529
 msgid "Make things happen without code: toggle a class, show or hide another element, open a popup, scroll somewhere. They run on the live page, not while editing."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:525
+#: includes/Core/Common_Controls.php:537
 msgid "Start hidden"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:526
+#: includes/Core/Common_Controls.php:538
 msgid "For a box that an interaction shows (Show or Show / hide). The editor keeps it visible, dimmed."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:531
+#: includes/Core/Common_Controls.php:543
 msgid "Attributes & CSS"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:536
+#: includes/Core/Common_Controls.php:548
 msgid "Custom attributes"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:537
+#: includes/Core/Common_Controls.php:549
 msgid "One per line: key|value. Event handlers are not allowed."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:545
+#: includes/Core/Common_Controls.php:557
 msgid "Custom CSS"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:546
+#: includes/Core/Common_Controls.php:558
 msgid "Use \"selector\" to target this element, e.g. selector:hover { opacity:.8 }. Each device tab adds CSS for that screen size and smaller (desktop applies everywhere)."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:559
+#: includes/Core/Common_Controls.php:571
 msgid "Scroll & mouse effects"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:560
+#: includes/Core/Common_Controls.php:572
 msgid "While scrolling"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:571
+#: includes/Core/Common_Controls.php:583
 msgid "−10 to 10. Positive moves up faster than the page, negative lags behind (parallax)."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:578
+#: includes/Core/Common_Controls.php:590
 msgid "Positive drifts right as the page scrolls down."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:594
+#: includes/Core/Common_Controls.php:606
 msgid "Amount (%)"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:603
+#: includes/Core/Common_Controls.php:615
 msgid "In (as it enters)"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:604
+#: includes/Core/Common_Controls.php:616
 msgid "Out (as it leaves)"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:605
+#: includes/Core/Common_Controls.php:617
 msgid "In and out"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:611
+#: includes/Core/Common_Controls.php:623
 #: includes/Widgets/Animated_Headline.php:149
 #: includes/Widgets/Flip_Box.php:183
 #: includes/Widgets/Slides.php:432
@@ -1899,135 +1907,135 @@ msgstr ""
 msgid "Fade"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:621
+#: includes/Core/Common_Controls.php:633
 msgid "Replaces the CSS filters of this element while active."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:628
+#: includes/Core/Common_Controls.php:640
 msgid "Range start"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:632
+#: includes/Core/Common_Controls.php:644
 msgid "Percent of the trip across the screen, from entering at the bottom (0) to leaving at the top (100)."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:639
+#: includes/Core/Common_Controls.php:651
 msgid "Range end"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:645
+#: includes/Core/Common_Controls.php:657
 msgid "Pointer"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:650
+#: includes/Core/Common_Controls.php:662
 msgid "Mouse effect"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:653
+#: includes/Core/Common_Controls.php:665
 #: includes/Elements/Container.php:432
 #: includes/Elements/Container.php:719
 msgid "Follow the pointer"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:654
+#: includes/Core/Common_Controls.php:666
 msgid "3D tilt on hover"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:661
+#: includes/Core/Common_Controls.php:673
 msgid "Strength"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:663
+#: includes/Core/Common_Controls.php:675
 msgid "Negative values move the other way."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:671
+#: includes/Core/Common_Controls.php:683
 msgid "Apply on"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:674
+#: includes/Core/Common_Controls.php:686
 msgid "Tablet"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:675
+#: includes/Core/Common_Controls.php:687
 msgid "Mobile"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:677
+#: includes/Core/Common_Controls.php:689
 msgid "Empty means every device. Effects never run for visitors who prefer reduced motion."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:734
+#: includes/Core/Common_Controls.php:746
 msgid "Text reveal"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:735
+#: includes/Core/Common_Controls.php:747
 msgid "Animates the text in piece by piece when it scrolls into view."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:738
+#: includes/Core/Common_Controls.php:750
 msgid "Word by word"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:739
+#: includes/Core/Common_Controls.php:751
 msgid "Letter by letter"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:740
+#: includes/Core/Common_Controls.php:752
 msgid "Line by line"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:748
+#: includes/Core/Common_Controls.php:760
 msgid "Reveal effect"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:758
+#: includes/Core/Common_Controls.php:770
 #: includes/Widgets/Off_Canvas.php:68
 #: includes/Widgets/Off_Canvas.php:253
 msgid "Trigger"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:759
+#: includes/Core/Common_Controls.php:771
 msgid "Follow the scroll: the text starts faint and lights up piece by piece as the visitor scrolls, and dims again when scrolling back."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:761
+#: includes/Core/Common_Controls.php:773
 msgid "Once, when it scrolls into view"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:762
+#: includes/Core/Common_Controls.php:774
 msgid "Follow the scroll"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:771
+#: includes/Core/Common_Controls.php:783
 msgid "Start opacity"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:772
+#: includes/Core/Common_Controls.php:784
 msgid "How visible the text is before it is revealed. Empty: 0, or 0.2 when following the scroll."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:784
+#: includes/Core/Common_Controls.php:796
 msgid "Blur (px)"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:785
+#: includes/Core/Common_Controls.php:797
 msgid "Empty: 10, or 4 when following the scroll."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:799
+#: includes/Core/Common_Controls.php:811
 msgid "Stagger (ms)"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:800
+#: includes/Core/Common_Controls.php:812
 msgid "Pause between pieces. Empty: 60 for words, 25 for letters, 140 for lines."
 msgstr ""
 
-#: includes/Core/Common_Controls.php:814
+#: includes/Core/Common_Controls.php:826
 msgid "Reveal duration (ms)"
 msgstr ""
 
-#: includes/Core/Common_Controls.php:825
+#: includes/Core/Common_Controls.php:837
 msgid "Reveal delay (ms)"
 msgstr ""
 
@@ -2091,6 +2099,22 @@ msgid "Wavy bottom"
 msgstr ""
 
 #: includes/Core/Masks.php:57
+msgid "Fade out at the bottom"
+msgstr ""
+
+#: includes/Core/Masks.php:58
+msgid "Fade out at the top"
+msgstr ""
+
+#: includes/Core/Masks.php:59
+msgid "Fade out at top and bottom"
+msgstr ""
+
+#: includes/Core/Masks.php:60
+msgid "Fade out at the sides"
+msgstr ""
+
+#: includes/Core/Masks.php:61
 msgid "Custom image (SVG / PNG)"
 msgstr ""
 
@@ -4217,7 +4241,7 @@ msgstr ""
 msgid "(imported)"
 msgstr ""
 
-#: includes/Site/Site_Kit.php:1532
+#: includes/Site/Site_Kit.php:1529
 msgid "This SVG was not imported: it contains active content."
 msgstr ""
 

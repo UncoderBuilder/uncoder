@@ -105,6 +105,30 @@ final class Icons {
 	}
 
 	/**
+	 * An uploaded SVG icon drawn in currentColor, printed inline so it takes the icon colour (an <img> cannot):
+	 * the markup after "<svg" with the root's class and ARIA attributes removed (render() adds its own). Only for
+	 * small files of plain shapes; anything else stays an <img>.
+	 */
+	private static function inline_svg( int $id ): string {
+		static $cache = array();
+		if ( $id <= 0 ) {
+			return '';
+		}
+		if ( ! isset( $cache[ $id ] ) ) {
+			$cache[ $id ] = '';
+			$file         = 'image/svg+xml' === get_post_mime_type( $id ) ? get_attached_file( $id ) : '';
+			if ( $file && is_readable( $file ) && filesize( $file ) <= 64 * KB_IN_BYTES ) {
+				$svg = (string) file_get_contents( $file ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+				if ( false !== stripos( $svg, 'currentcolor' ) && Media::is_plain_svg( $svg ) && preg_match( '/<svg\b([^>]*)>(.*)<\/svg>/is', $svg, $m ) ) {
+					$root         = (string) preg_replace( '/\s(class|aria-[a-z]+|focusable|role)\s*=\s*("[^"]*"|\'[^\']*\')/i', '', $m[1] );
+					$cache[ $id ] = $root . '>' . $m[2] . '</svg>';
+				}
+			}
+		}
+		return $cache[ $id ];
+	}
+
+	/**
 	 * "fas fa-house", "bi-house", "phosphor:house" … → [ library, name ], or null for a plain Lucide name.
 	 *
 	 * @return array{0:string,1:string}|null
@@ -141,6 +165,19 @@ final class Icons {
 		unset( $attrs['class'] );
 
 		if ( 'svg' === $library && ! empty( $icon['url'] ) ) {
+			$inline = self::inline_svg( (int) ( $icon['id'] ?? 0 ) );
+			if ( '' !== $inline ) {
+				return '<svg' . Utils::attrs(
+					array_merge(
+						array(
+							'class'       => $class . ' uncoder-svg--inline',
+							'aria-hidden' => 'true',
+							'focusable'   => 'false',
+						),
+						$attrs
+					)
+				) . $inline;
+			}
 			return '<img' . Utils::attrs(
 				array_merge(
 					array(
