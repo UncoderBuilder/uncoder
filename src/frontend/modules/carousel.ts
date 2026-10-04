@@ -16,6 +16,7 @@ interface CarouselSettings {
   i18n?: { goto?: string; status?: string; pause?: string; play?: string };
   ticker?: number; // continuous motion: speed in px per second
   center?: boolean; // the current slide sits in the middle (endless with loop)
+  endless?: boolean; // copies of the slides on both sides: the row never rewinds
 }
 
 /**
@@ -123,11 +124,11 @@ window.UncoderWB.register(
       cleanups.push(() => target.removeEventListener(type, fn, opts));
     };
 
-    // Centered: the current slide sits in the middle (pages are the slides themselves). With Rewind it loops
-    // endlessly: a copy of every slide goes before and after the set, and a move that ends on a copy jumps silently
-    // to its original, so there is always a neighbour on both sides.
+    // Centered: the current slide sits in the middle (pages are the slides themselves). With Rewind (or Loop
+    // endlessly on any carousel) it loops endlessly: a copy of every slide goes before and after the set, and a move
+    // that ends on a copy jumps silently to its original, so there is always a neighbour on both sides.
     const center = !!s.center;
-    const endless = center && !!s.loop && !api.editor && slides.length > 1;
+    const endless = ((center && !!s.loop) || !!s.endless) && !api.editor && slides.length > 1;
     let all = slides;
     if (endless) {
       const copy = (sl: HTMLElement, i: number) => {
@@ -167,13 +168,23 @@ window.UncoderWB.register(
     };
     /** The scroll offset that puts a slide in the middle. */
     const centerX = (el: HTMLElement) => Math.round(middleOf(el) - track.clientWidth / 2);
-    /** The slide (original or copy) nearest to the middle. */
+    /** Where a slide starts, in scroll coordinates from the track's inline start. */
+    const startX = (el: HTMLElement) => {
+      const box = track.getBoundingClientRect();
+      const r = el.getBoundingClientRect();
+      return Math.round((isRtl() ? box.right - r.right : r.left - box.left) + position());
+    };
+    /** The scroll offset that brings a slide into place: in the middle (centered) or at the start. */
+    const anchorX = (el: HTMLElement) => (center ? centerX(el) : startX(el));
+    /** Slides per move (Slides to scroll), from its per-device custom property. */
+    const perStep = () => Math.max(1, Math.round(parseFloat(getComputedStyle(root).getPropertyValue('--uncoder-carousel-sts')) || 1));
+    /** The slide (original or copy) in place: nearest to the middle (centered) or to the start. */
     const middleSlide = () => {
       const pos = position();
       let best = all[0];
       let dist = Infinity;
       for (const el of all) {
-        const d = Math.abs(centerX(el) - pos);
+        const d = Math.abs(anchorX(el) - pos);
         if (d < dist) {
           dist = d;
           best = el;
@@ -209,13 +220,23 @@ window.UncoderWB.register(
         update(false);
         return;
       }
+      if (endless) {
+        // Endless, start-aligned: a page every Slides-to-scroll slides; the row starts on the first original.
+        const keep = index >= 0 ? (targetSlide ?? middleSlide()) : slides[0];
+        const per = perStep();
+        pages = slides.filter((_, i) => i % per === 0).map((el) => ({ x: startX(el), slide: slides.indexOf(el) }));
+        if (keep && !anim && !drag) track.scrollLeft = (isRtl() ? -1 : 1) * startX(keep);
+        buildDots();
+        update(false);
+        return;
+      }
       const max = maxScroll();
       const list: Page[] = [];
       if (max > 1) {
         const rtl = isRtl();
         const box = track.getBoundingClientRect();
         const scrolled = position();
-        const step = Math.max(1, Math.round(parseFloat(getComputedStyle(root).getPropertyValue('--uncoder-carousel-sts')) || 1));
+        const step = perStep();
         const offsets = slides.map((slide) => {
           const r = slide.getBoundingClientRect();
           return Math.round((rtl ? box.right - r.right : r.left - box.left) + scrolled);
@@ -237,6 +258,7 @@ window.UncoderWB.register(
 
     const nearest = () => {
       if (center) return Math.max(0, slides.indexOf(originalOf(middleSlide())));
+      if (endless) return Math.max(0, Math.min(pages.length - 1, Math.round(slides.indexOf(originalOf(middleSlide())) / perStep())));
       const pos = position();
       let best = 0;
       for (let i = 1; i < pages.length; i++) {
@@ -293,8 +315,8 @@ window.UncoderWB.register(
       root.classList.toggle('is-static', last === 0);
       root.classList.toggle('is-start', i === 0);
       root.classList.toggle('is-end', i === last);
-      setDisabled(prev, !s.loop && i === 0);
-      setDisabled(next, !s.loop && i === last);
+      setDisabled(prev, !s.loop && !endless && i === 0);
+      setDisabled(next, !s.loop && !endless && i === last);
       const width = track.scrollWidth || 1;
       root.style.setProperty('--uncoder-carousel-progress-size', String(Math.min(1, track.clientWidth / width)));
       root.style.setProperty('--uncoder-carousel-progress-start', String(Math.min(1, position() / width)));
@@ -334,7 +356,7 @@ window.UncoderWB.register(
       const orig = originalOf(mid);
       if (orig === mid) return;
       root.classList.add('is-jumping');
-      const delta = centerX(orig) - centerX(mid);
+      const delta = anchorX(orig) - anchorX(mid);
       track.scrollLeft += isRtl() ? -delta : delta;
       update(false);
       requestAnimationFrame(() => requestAnimationFrame(() => root.classList.remove('is-jumping')));
@@ -372,7 +394,7 @@ window.UncoderWB.register(
       const last = pages.length - 1;
       if (page > last) page = s.loop || !user ? 0 : last;
       if (page < 0) page = s.loop ? last : 0;
-      if (endless) targetSlide = slides[page];
+      if (endless) targetSlide = slides[pages[page].slide];
       scrollToX(pages[page].x);
       if (anim) target = page;
       if (user) schedule();
@@ -382,13 +404,13 @@ window.UncoderWB.register(
     const moveBy = (from: HTMLElement, dir: number) => {
       const n = Math.max(0, Math.min(all.length - 1, all.indexOf(from) + dir));
       const to = all[n];
-      scrollToX(centerX(to));
+      scrollToX(anchorX(to));
       targetSlide = anim ? to : null;
     };
 
     const step = (dir: 1 | -1, user = true) => {
       if (endless) {
-        moveBy(targetSlide ?? middleSlide(), dir);
+        moveBy(targetSlide ?? middleSlide(), center ? dir : dir * perStep());
         if (user) schedule();
         return;
       }
@@ -484,7 +506,7 @@ window.UncoderWB.register(
         const start = Math.abs(scroll);
         const forward = isRtl() ? dx > 0 : dx < 0;
         if (endless && from) {
-          moveBy(from, Math.abs(dx) > 40 ? (forward ? 1 : -1) : 0);
+          moveBy(from, Math.abs(dx) > 40 ? (forward ? 1 : -1) * (center ? 1 : perStep()) : 0);
           schedule();
           return;
         }

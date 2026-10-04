@@ -664,6 +664,30 @@ img.uncoder-svg--img {
 .uncoder-hover-arrow:hover .uncoder-svg {
   transform: translateX(4px);
 }
+/* Slide icon through: the icon leaves at the end side and comes back in from the start (Framer's two-arrow buttons);
+   the icon's own circle stays put. */
+.uncoder-hover-swap:is(:hover, :focus-visible) svg.uncoder-btn__icon > * {
+  animation: uncoder-swap 0.6s ease;
+}
+.uncoder-hover-swap:is(:hover, :focus-visible) img.uncoder-btn__icon {
+  animation: uncoder-swap-img 0.6s ease;
+}
+@keyframes uncoder-swap {
+  45% {
+    transform: translateX(160%);
+  }
+  45.01% {
+    transform: translateX(-160%);
+  }
+}
+@keyframes uncoder-swap-img {
+  45% {
+    object-position: calc(50% + var(--uncoder-btn-icon, 1em) * 1.6) 50%;
+  }
+  45.01% {
+    object-position: calc(50% - var(--uncoder-btn-icon, 1em) * 1.6) 50%;
+  }
+}
 .uncoder-hover-shine {
   position: relative;
   overflow: hidden;
@@ -961,7 +985,9 @@ html:not(.uncoder-editing) .uncoder-ix-hidden {
     visibility: visible;
   }
   .uncoder-anim--in,
-  .uncoder-hover-pulse:hover {
+  .uncoder-hover-pulse:hover,
+  .uncoder-hover-swap:is(:hover, :focus-visible) svg.uncoder-btn__icon > *,
+  .uncoder-hover-swap:is(:hover, :focus-visible) img.uncoder-btn__icon {
     animation: none;
   }
   .uncoder-btn,

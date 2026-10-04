@@ -26,6 +26,7 @@ class Button extends Widget_Base {
 		'pulse'    => 'Pulse',
 		'shine'    => 'Shine',
 		'arrow'    => 'Nudge icon',
+		'swap'     => 'Slide icon through',
 		'fill'     => 'Fill from left',
 		'fill-up'  => 'Fill from bottom',
 		'underline' => 'Underline',

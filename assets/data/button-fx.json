@@ -4,6 +4,7 @@
   "shrink": [["&:hover", "transform:scale(.96)"]],
   "pulse": [["&:hover", "animation:uncoder-pulse 1s ease-in-out infinite"]],
   "arrow": [["& .uncoder-svg", "transition:transform .25s"], ["&:hover .uncoder-svg", "transform:translateX(4px)"]],
+  "swap": [["&:is(:hover,:focus-visible) svg.uncoder-btn__icon > *", "animation:uncoder-swap .6s ease"], ["&:is(:hover,:focus-visible) img.uncoder-btn__icon", "animation:uncoder-swap-img .6s ease"]],
   "shine": [["&", "position:relative;overflow:hidden"], ["&::after", "content:\"\";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgb(255 255 255/.35) 50%,transparent 70%);transform:translateX(-120%);transition:transform .6s;pointer-events:none"], ["&:hover::after", "transform:translateX(120%)"]],
   "fill": [["&", "background-image:linear-gradient(rgb(255 255 255/.18),rgb(255 255 255/.18));background-size:0 100%;background-repeat:no-repeat;transition:background-size .35s,background-color .2s,color .2s,border-color .2s,box-shadow .2s,transform .2s"], ["&:hover", "background-size:100% 100%"]],
   "underline": [["& .uncoder-btn__text", "background:linear-gradient(currentColor,currentColor) 0 100%/0 1.5px no-repeat;transition:background-size .25s"], ["&:hover .uncoder-btn__text", "background-size:100% 1.5px"]],

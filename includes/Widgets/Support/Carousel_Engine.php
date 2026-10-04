@@ -312,6 +312,7 @@ trait Carousel_Engine {
 					'inside'  => __( 'Inside, over the slides', 'uncoder' ),
 					'outside' => __( 'Outside the slides', 'uncoder' ),
 					'bottom'  => __( 'Below, next to the pagination', 'uncoder' ),
+					'bottom-center' => __( 'Below, centred', 'uncoder' ),
 					'top'     => __( 'Above the slides, at the end', 'uncoder' ),
 					'slide'   => __( 'On the edges of the current slide', 'uncoder' ),
 				),
@@ -359,6 +360,16 @@ trait Carousel_Engine {
 				'label'       => __( 'Rewind', 'uncoder' ),
 				'description' => __( 'Next on the last slide goes back to the first one; a centered carousel loops endlessly.', 'uncoder' ),
 				'condition'   => $slides,
+			)
+		);
+		$this->add_control(
+			'endless',
+			array(
+				'type'        => 'switch',
+				'label'       => __( 'Loop endlessly', 'uncoder' ),
+				'description' => __( 'The slides repeat on both sides, so the row never rewinds.', 'uncoder' ),
+				'condition'   => $slides,
+				'ai'          => 'An infinite row (a team or logo slider that keeps going, with or without autoplay): "endless":true. Centered carousels loop endlessly with "loop" alone.',
 			)
 		);
 		$this->add_control(
@@ -705,6 +716,7 @@ trait Carousel_Engine {
 			'pauseOnHover' => ! empty( $s['pause_on_hover'] ),
 			'loop'         => ! empty( $s['loop'] ),
 			'center'       => ! empty( $s['center_mode'] ),
+			'endless'      => ! empty( $s['endless'] ),
 			'drag'         => ! empty( $s['drag'] ),
 			'speed'        => (int) self::carousel_number( $s['speed'] ?? '', 500, 0, 3000 ),
 			'i18n'         => array(
@@ -743,7 +755,7 @@ trait Carousel_Engine {
 			}
 		} else {
 			if ( ! empty( $s['arrows'] ) ) {
-				$position  = in_array( $s['arrows_position'] ?? 'inside', array( 'inside', 'outside', 'bottom', 'top', 'slide' ), true ) ? $s['arrows_position'] : 'inside';
+				$position  = in_array( $s['arrows_position'] ?? 'inside', array( 'inside', 'outside', 'bottom', 'bottom-center', 'top', 'slide' ), true ) ? $s['arrows_position'] : 'inside';
 				$classes[] = 'uncoder-carousel--arrows-' . $position;
 			}
 			if ( ! empty( $s['center_mode'] ) ) {

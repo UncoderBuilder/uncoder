@@ -278,6 +278,53 @@ html:not(.uncoder-js) .uncoder-carousel > .uncoder-carousel__viewport > .uncoder
   grid-area: pag;
 }
 
+/* Below, centred: the two arrows side by side in the middle under the slides, pagination under them. */
+.uncoder-carousel--arrows-bottom-center {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto minmax(0, 1fr);
+  grid-template-areas:
+    "track track track track"
+    ". prev next .";
+  align-items: center;
+  column-gap: max(0px, var(--uncoder-carousel-arrow-offset));
+  row-gap: var(--uncoder-carousel-pag-spacing);
+}
+
+/* A row for the pagination only when there is one (an empty row would add a gap). */
+.uncoder-carousel--arrows-bottom-center:has(> .uncoder-carousel__pagination) {
+  grid-template-areas:
+    "track track track track"
+    ". prev next ."
+    "pag pag pag pag";
+}
+
+.uncoder-carousel--arrows-bottom-center > .uncoder-carousel__viewport {
+  display: contents;
+}
+
+.uncoder-carousel--arrows-bottom-center > .uncoder-carousel__viewport > .uncoder-carousel__track {
+  grid-area: track;
+}
+
+.uncoder-carousel--arrows-bottom-center > .uncoder-carousel__viewport > .uncoder-carousel__arrow {
+  position: relative;
+  top: auto;
+  inset-inline: auto;
+  transform: none;
+}
+
+.uncoder-carousel--arrows-bottom-center > .uncoder-carousel__viewport > .uncoder-carousel__arrow--prev {
+  grid-area: prev;
+}
+
+.uncoder-carousel--arrows-bottom-center > .uncoder-carousel__viewport > .uncoder-carousel__arrow--next {
+  grid-area: next;
+}
+
+.uncoder-carousel--arrows-bottom-center > .uncoder-carousel__pagination {
+  grid-area: pag;
+}
+
 /* Above: arrows on the end side of a row above the slides (next to a section heading), pagination below. */
 .uncoder-carousel--arrows-top {
   display: grid;

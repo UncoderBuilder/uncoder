@@ -293,7 +293,14 @@ final class Audit {
 			return true;
 		}
 		$border = (array) ( $s['border'] ?? array() );
-		return ! empty( $border['style'] ) && 'none' !== $border['style'];
+		if ( ! empty( $border['style'] ) && 'none' !== $border['style'] ) {
+			return true;
+		}
+		// A layer painted in custom CSS (a gradient shade, a masked tint) or placed over its parent (an overlay).
+		if ( preg_match( '/(^|[\s;{])background(-color|-image)?\s*:/i', (string) ( $s['_custom_css'] ?? '' ) ) ) {
+			return true;
+		}
+		return in_array( (string) ( $s['_position'] ?? '' ), array( 'absolute', 'fixed' ), true );
 	}
 
 	/**
