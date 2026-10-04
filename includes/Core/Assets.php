@@ -174,10 +174,70 @@ final class Assets {
 		}
 		$handle = 'uncoder-w-' . $name;
 		if ( ! wp_style_is( $handle, 'registered' ) ) {
-			wp_register_style( $handle, self::url( 'frontend/widgets/' . $name . '.css' ), array( 'uncoder-frontend', 'uncoder-kit' ), self::ver( 'frontend/widgets/' . $name . '.css' ) );
+			list( $url, $ver ) = self::widget_style_src( $name );
+			wp_register_style( $handle, $url, array( 'uncoder-frontend', 'uncoder-kit' ), $ver );
 		}
 		wp_enqueue_style( $handle );
 		return true;
+	}
+
+	/**
+	 * URL and version of a widget stylesheet. The built files switch layouts at Uncoder's default breakpoints
+	 * (tablet 1024px, mobile 767px); on a site that moves them, a copy with the site's widths in its media queries
+	 * is written to uploads once per file version and served instead, so a widget changes with the rest of the page.
+	 *
+	 * @return array{0:string,1:string}
+	 */
+	private static function widget_style_src( string $name ): array {
+		$relative = 'frontend/widgets/' . $name . '.css';
+		$plain    = array( self::url( $relative ), self::ver( $relative ) );
+		$map      = self::moved_breakpoints();
+		$uploads  = $map ? Utils::uploads() : null;
+		if ( ! $uploads ) {
+			return $plain;
+		}
+		$file = '/css/widgets/' . $name . '-' . substr( md5( $plain[1] . '|' . wp_json_encode( $map ) ), 0, 10 ) . '.css';
+		if ( ! file_exists( $uploads['dir'] . $file ) ) {
+			$css = (string) @file_get_contents( self::path( $relative ) ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+			$out = (string) preg_replace_callback(
+				'/\(max-width:\s*(767|1024)px\)/',
+				static function ( array $m ) use ( $map ): string {
+					return '(max-width:' . ( $map[ $m[1] ] ?? $m[1] ) . 'px)';
+				},
+				$css
+			);
+			if ( '' === $css || $out === $css ) {
+				return $plain;
+			}
+			wp_mkdir_p( $uploads['dir'] . '/css/widgets' );
+			foreach ( (array) glob( $uploads['dir'] . '/css/widgets/' . $name . '-*.css' ) as $old ) {
+				wp_delete_file( (string) $old ); // copies for an older plugin build or other breakpoints
+			}
+			if ( false === file_put_contents( $uploads['dir'] . $file, $out ) ) { // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+				return $plain;
+			}
+		}
+		return array( $uploads['url'] . $file, $plain[1] );
+	}
+
+	/**
+	 * The site's tablet and mobile widths where they differ from Uncoder's defaults, keyed by the default
+	 * (`[ '767' => 809 ]`); empty on a site with the default breakpoints.
+	 *
+	 * @return array<string,int>
+	 */
+	private static function moved_breakpoints(): array {
+		static $map = null;
+		if ( null === $map ) {
+			$map    = array();
+			$active = Breakpoints::active();
+			foreach ( array( 'tablet' => 1024, 'mobile' => 767 ) as $id => $default ) {
+				if ( isset( $active[ $id ] ) && 'max' === $active[ $id ]['direction'] && (int) $active[ $id ]['value'] !== $default ) {
+					$map[ (string) $default ] = (int) $active[ $id ]['value'];
+				}
+			}
+		}
+		return $map;
 	}
 
 	/**
