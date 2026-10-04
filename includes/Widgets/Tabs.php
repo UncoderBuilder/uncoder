@@ -103,6 +103,12 @@ class Tabs extends Widget_Base {
 						'inline'  => true,
 					),
 					'icon'   => array( 'type' => 'icon', 'label' => __( 'Icon', 'uncoder' ) ),
+					'badge'  => array(
+						'type'        => 'text',
+						'label'       => __( 'Badge', 'uncoder' ),
+						'placeholder' => __( 'Save 20%', 'uncoder' ),
+						'description' => __( 'A small tag after the title.', 'uncoder' ),
+					),
 					'anchor' => array(
 						'type'        => 'text',
 						'label'       => __( 'Anchor', 'uncoder' ),
@@ -123,6 +129,15 @@ class Tabs extends Widget_Base {
 				'max'     => 50,
 				'step'    => 1,
 				'default' => 1,
+			)
+		);
+		$this->add_control(
+			'switch',
+			array(
+				'type'        => 'switch',
+				'label'       => __( 'Switch between two tabs', 'uncoder' ),
+				'description' => __( 'With two tabs, a toggle between their titles flips from one to the other: monthly and yearly prices, for example.', 'uncoder' ),
+				'ai'          => 'A pricing toggle: two tabs (e.g. "Monthly" / "Yearly", badge "Save 20%" on the second), "switch":true, indicator off, padding 0; each child container holds that plan. Style with switch_color / switch_active_color / switch_knob_color and badge_*.',
 			)
 		);
 		$this->add_responsive_control(
@@ -441,6 +456,132 @@ class Tabs extends Widget_Base {
 		$this->end_section();
 
 		/* ---------------------------------------------------------------- Style: icon */
+		$switch = array( 'switch' => 'yes' );
+		$this->start_section(
+			'style_switch',
+			array(
+				'label'     => __( 'Switch', 'uncoder' ),
+				'tab'       => 'style',
+				'condition' => $switch,
+			)
+		);
+		$this->add_control(
+			'switch_width',
+			array(
+				'type'       => 'slider',
+				'label'      => __( 'Width', 'uncoder' ),
+				'size_units' => array( 'px' ),
+				'range'      => array( 'px' => array( 'min' => 24, 'max' => 80 ) ),
+				'selectors'  => array( self::ROOT => '--uncoder-tabs-switch-w: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'switch_height',
+			array(
+				'type'       => 'slider',
+				'label'      => __( 'Height', 'uncoder' ),
+				'size_units' => array( 'px' ),
+				'range'      => array( 'px' => array( 'min' => 12, 'max' => 44 ) ),
+				'selectors'  => array( self::ROOT => '--uncoder-tabs-switch-h: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'switch_knob',
+			array(
+				'type'       => 'slider',
+				'label'      => __( 'Knob size', 'uncoder' ),
+				'size_units' => array( 'px' ),
+				'range'      => array( 'px' => array( 'min' => 8, 'max' => 40 ) ),
+				'selectors'  => array( self::ROOT => '--uncoder-tabs-switch-knob: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'switch_color',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Color (first tab)', 'uncoder' ),
+				'selectors' => array( self::ROOT => '--uncoder-tabs-switch-off: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'switch_active_color',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Color (second tab)', 'uncoder' ),
+				'selectors' => array( self::ROOT => '--uncoder-tabs-switch-on: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'switch_knob_color',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Knob color', 'uncoder' ),
+				'selectors' => array( self::ROOT => '--uncoder-tabs-switch-knob-color: {{VALUE}}' ),
+			)
+		);
+		$this->end_section();
+
+		$badge = '{{WRAPPER}} .uncoder-tabs__badge';
+		$this->start_section( 'style_badge', array( 'label' => __( 'Badge', 'uncoder' ), 'tab' => 'style' ) );
+		$this->add_group( 'badge_typography', array( 'type' => 'typography', 'label' => __( 'Typography', 'uncoder' ), 'selector' => $badge ) );
+		$this->add_responsive_control(
+			'badge_padding',
+			array(
+				'type'       => 'dimensions',
+				'label'      => __( 'Padding', 'uncoder' ),
+				'size_units' => array( 'px', 'em' ),
+				'selectors'  => array( $badge => 'padding: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'badge_radius',
+			array(
+				'type'       => 'dimensions',
+				'label'      => __( 'Border radius', 'uncoder' ),
+				'size_units' => array( 'px', '%' ),
+				'selectors'  => array( $badge => 'border-radius: {{VALUE}}' ),
+			)
+		);
+		$this->start_tabs( 'badge_tabs' );
+		$this->start_tab( 'normal', __( 'Normal', 'uncoder' ) );
+		$this->add_control(
+			'badge_color',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Color', 'uncoder' ),
+				'selectors' => array( $badge => 'color: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'badge_background',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Background', 'uncoder' ),
+				'selectors' => array( $badge => 'background-color: {{VALUE}}' ),
+			)
+		);
+		$this->end_tab();
+		$this->start_tab( 'active', __( 'Active', 'uncoder' ) );
+		$this->add_control(
+			'badge_active_color',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Color', 'uncoder' ),
+				'selectors' => array( '{{WRAPPER}} .is-active > .uncoder-tabs__badge' => 'color: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'badge_active_background',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Background', 'uncoder' ),
+				'selectors' => array( '{{WRAPPER}} .is-active > .uncoder-tabs__badge' => 'background-color: {{VALUE}}' ),
+			)
+		);
+		$this->end_tab();
+		$this->end_tabs();
+		$this->end_section();
+
 		$this->start_section( 'style_icon', array( 'label' => __( 'Icon', 'uncoder' ), 'tab' => 'style' ) );
 		$this->add_responsive_control(
 			'icon_size',
@@ -606,6 +747,9 @@ class Tabs extends Widget_Base {
 			// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo $this->label( $row, $ctx->inline( 'tabs.' . $i . '.title' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped parts.
 			echo '</button>';
+			if ( 0 === $i && 2 === $count && ! empty( $s['switch'] ) ) {
+				echo '<span class="uncoder-tabs__switch" aria-hidden="true"></span>';
+			}
 		}
 		echo '</div><div class="uncoder-tabs__panels">';
 		foreach ( $rows as $i => $row ) {
@@ -648,7 +792,9 @@ class Tabs extends Widget_Base {
 	 */
 	private function label( array $row, string $inline ): string {
 		$icon = $this->has_icon( $row['icon'] ?? null ) ? $this->render_icon( $row['icon'], array( 'class' => 'uncoder-tabs__icon' ) ) : '';
-		return $icon . '<span class="uncoder-tabs__title"' . $inline . '>' . $this->inline_html( $row['title'] ?? '' ) . '</span>';
+		$badge = trim( (string) ( $row['badge'] ?? '' ) );
+		return $icon . '<span class="uncoder-tabs__title"' . $inline . '>' . $this->inline_html( $row['title'] ?? '' ) . '</span>'
+			. ( '' !== $badge ? '<span class="uncoder-tabs__badge">' . esc_html( $badge ) . '</span>' : '' );
 	}
 
 	/**

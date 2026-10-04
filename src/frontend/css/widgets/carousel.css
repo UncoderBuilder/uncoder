@@ -86,8 +86,33 @@ html:not(.uncoder-js) .uncoder-carousel > .uncoder-carousel__viewport > .uncoder
 }
 
 .uncoder-carousel--center.is-ready > .uncoder-carousel__viewport > .uncoder-carousel__track > .uncoder-carousel__slide:not(.is-current) {
-  transform: scale(var(--uncoder-carousel-inactive-scale, 1));
+  transform: scale(var(--uncoder-carousel-inactive-scale, 1)) rotateY(var(--uncoder-carousel-slide-turn, 0deg));
   opacity: var(--uncoder-carousel-inactive-opacity, 1);
+}
+
+/* The runtime marks the slides before the current one .is-before and those after it .is-after (the current slide keeps
+   the mark it came with, so its origin does not jump while it grows back). Other slides: turn and shrink towards. */
+.uncoder-carousel--center > .uncoder-carousel__viewport > .uncoder-carousel__track > .uncoder-carousel__slide.is-before {
+  --uncoder-carousel-slide-turn: calc(-1 * var(--uncoder-carousel-turn, 0deg));
+  transform-origin: var(--uncoder-carousel-origin-before, 50%) 50%;
+}
+
+.uncoder-carousel--center > .uncoder-carousel__viewport > .uncoder-carousel__track > .uncoder-carousel__slide.is-after {
+  --uncoder-carousel-slide-turn: var(--uncoder-carousel-turn, 0deg);
+  transform-origin: var(--uncoder-carousel-origin-after, 50%) 50%;
+}
+
+.uncoder-carousel--center:dir(rtl) > .uncoder-carousel__viewport > .uncoder-carousel__track > .uncoder-carousel__slide.is-before {
+  transform-origin: calc(100% - var(--uncoder-carousel-origin-before, 50%)) 50%;
+}
+
+.uncoder-carousel--center:dir(rtl) > .uncoder-carousel__viewport > .uncoder-carousel__track > .uncoder-carousel__slide.is-after {
+  transform-origin: calc(100% - var(--uncoder-carousel-origin-after, 50%)) 50%;
+}
+
+/* A turn needs depth: the vanishing point stays in the middle of the row. */
+.uncoder-carousel--turn > .uncoder-carousel__viewport > .uncoder-carousel__track {
+  perspective: 1200px;
 }
 
 .uncoder-carousel--center.is-jumping > .uncoder-carousel__viewport > .uncoder-carousel__track > .uncoder-carousel__slide {
@@ -189,6 +214,16 @@ html:not(.uncoder-js) .uncoder-carousel > .uncoder-carousel__viewport > .uncoder
 
 .uncoder-carousel > .uncoder-carousel__viewport > .uncoder-carousel__arrow--next {
   inset-inline-end: var(--uncoder-carousel-arrow-offset);
+}
+
+/* On the current slide: a centered carousel's arrows sit on the edges of the slide in the middle (Offset moves them
+   outwards). */
+.uncoder-carousel--arrows-slide > .uncoder-carousel__viewport > .uncoder-carousel__arrow--prev {
+  inset-inline-start: calc(50% - var(--uncoder-carousel-center-w, calc((100% - (var(--uncoder-carousel-spv) - 1) * var(--uncoder-carousel-gap)) / var(--uncoder-carousel-spv))) / 2 - var(--uncoder-carousel-arrow-offset));
+}
+
+.uncoder-carousel--arrows-slide > .uncoder-carousel__viewport > .uncoder-carousel__arrow--next {
+  inset-inline-end: calc(50% - var(--uncoder-carousel-center-w, calc((100% - (var(--uncoder-carousel-spv) - 1) * var(--uncoder-carousel-gap)) / var(--uncoder-carousel-spv))) / 2 - var(--uncoder-carousel-arrow-offset));
 }
 
 /* Outside: room is kept on both sides of the slides. */

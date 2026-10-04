@@ -74,6 +74,11 @@ window.UncoderWB.register('tabs', (el, api) => {
   };
 
   const onListClick = (e: MouseEvent) => {
+    // The switch between two tabs flips to the other one (the tabs themselves stay the keyboard path).
+    if ((e.target as Element).closest('.uncoder-tabs__switch')) {
+      select(active === 0 ? 1 : 0, { user: true });
+      return;
+    }
     const i = tabs.indexOf((e.target as Element).closest('.uncoder-tabs__tab') as HTMLButtonElement);
     if (i >= 0) select(i, { user: true });
   };

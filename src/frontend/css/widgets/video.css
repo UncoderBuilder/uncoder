@@ -96,6 +96,69 @@
   fill: currentColor;
 }
 
+/* Play / pause pill on a file video without controls. Both icons are in the button; .is-playing (set by the runtime)
+   shows the pause icon. ".uncoder" keeps theme button styles out. */
+.uncoder .uncoder-video__toggle {
+  position: absolute;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--uncoder-video-toggle-gap, 4px);
+  min-height: 0;
+  margin: 0;
+  padding: 6px 14px 6px 10px;
+  border: 0;
+  border-radius: 999px;
+  background-color: rgb(17 17 17 / 0.55);
+  -webkit-backdrop-filter: blur(var(--uncoder-video-toggle-blur, 12px));
+  backdrop-filter: blur(var(--uncoder-video-toggle-blur, 12px));
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: normal;
+  text-transform: none;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+.uncoder-video__toggle--bottom-left {
+  bottom: var(--uncoder-video-toggle-y, 16px);
+  inset-inline-start: var(--uncoder-video-toggle-x, 16px);
+}
+
+.uncoder-video__toggle--bottom-right {
+  bottom: var(--uncoder-video-toggle-y, 16px);
+  inset-inline-end: var(--uncoder-video-toggle-x, 16px);
+}
+
+.uncoder-video__toggle--top-left {
+  top: var(--uncoder-video-toggle-y, 16px);
+  inset-inline-start: var(--uncoder-video-toggle-x, 16px);
+}
+
+.uncoder-video__toggle--top-right {
+  top: var(--uncoder-video-toggle-y, 16px);
+  inset-inline-end: var(--uncoder-video-toggle-x, 16px);
+}
+
+.uncoder-video__toggle:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.uncoder-video__toggle-icon {
+  flex: none;
+  width: var(--uncoder-video-toggle-icon, 16px);
+  height: var(--uncoder-video-toggle-icon, 16px);
+  fill: currentColor;
+}
+
+.uncoder-video__toggle.is-playing > .uncoder-video__toggle-play,
+.uncoder-video__toggle:not(.is-playing) > .uncoder-video__toggle-pause {
+  display: none;
+}
+
 /* Editor placeholder */
 .uncoder-video--empty {
   display: flex;

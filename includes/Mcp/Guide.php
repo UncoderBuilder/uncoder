@@ -260,7 +260,7 @@ MD;
 }
 ```
 - Keep standard ids so widgets inherit correctly: primary, secondary, accent, heading, text, muted, surface, border, white, black.
-- Fonts: any Google Font by name. Pair a characterful heading face with a readable body face; vary choices between sites.
+- Fonts: any Google Font by name (or Fontshare). System stacks need no download: "system-ui", "apple-system" (Apple's SF Pro, the browser's sans-serif elsewhere), "sans-serif", "serif", "monospace". Pair a characterful heading face with a readable body face; vary choices between sites.
 - Text styles: display, h1–h6, lead, body, small, eyebrow, button. Headings inside widgets use them via `{"preset":"h2"}`.
 - Contrast: text on backgrounds ≥ 4.5:1 (≥3:1 for large text). Check light text on brand colors.
 - `revert_design_system` restores the previous version.

@@ -216,6 +216,45 @@ class Video extends Widget_Base {
 				'default' => true,
 			)
 		);
+		// A muted loop without the native controls still needs a way to stop it (WCAG 2.2.2): Framer's video pill.
+		$this->add_control(
+			'toggle',
+			array(
+				'type'        => 'switch',
+				'label'       => __( 'Play / pause button', 'uncoder' ),
+				'description' => __( 'A small button on the video to play and pause it, for videos without player controls (needed when a video plays on its own).', 'uncoder' ),
+				'condition'   => array(
+					'source'    => array( 'hosted', 'external' ),
+					'controls!' => 'yes',
+				),
+				'ai'          => 'For a silent background-style loop (autoplay + mute + loop, controls off) add "toggle":true: a "Pause" / "Play" pill on the video. Style it with toggle_background, toggle_color, toggle_blur, toggle_padding, toggle_radius, toggle_typography, toggle_offset_x / toggle_offset_y.',
+			)
+		);
+		$this->add_control(
+			'toggle_text',
+			array(
+				'type'        => 'switch',
+				'label'       => __( 'Button text', 'uncoder' ),
+				'description' => __( 'Play / Pause next to the icon.', 'uncoder' ),
+				'default'     => true,
+				'condition'   => array( 'toggle' => 'yes' ),
+			)
+		);
+		$this->add_control(
+			'toggle_position',
+			array(
+				'type'      => 'select',
+				'label'     => __( 'Button position', 'uncoder' ),
+				'default'   => 'bottom-left',
+				'options'   => array(
+					'bottom-left'  => __( 'Bottom left', 'uncoder' ),
+					'bottom-right' => __( 'Bottom right', 'uncoder' ),
+					'top-left'     => __( 'Top left', 'uncoder' ),
+					'top-right'    => __( 'Top right', 'uncoder' ),
+				),
+				'condition' => array( 'toggle' => 'yes' ),
+			)
+		);
 		$this->add_control(
 			'privacy',
 			array(
@@ -339,6 +378,126 @@ class Video extends Widget_Base {
 		$this->end_tabs();
 		$this->add_group( 'play_shadow', array( 'type' => 'box_shadow', 'label' => __( 'Shadow', 'uncoder' ), 'selector' => '{{WRAPPER}} .uncoder-video__play' ) );
 		$this->end_section();
+
+		$this->start_section(
+			'style_toggle',
+			array(
+				'label'     => __( 'Play / pause button', 'uncoder' ),
+				'tab'       => 'style',
+				'condition' => array( 'toggle' => 'yes' ),
+			)
+		);
+		$this->add_responsive_control(
+			'toggle_offset_x',
+			array(
+				'type'       => 'slider',
+				'label'      => __( 'Distance from the side', 'uncoder' ),
+				'size_units' => array( 'px', 'em', 'rem' ),
+				'range'      => array( 'px' => array( 'min' => 0, 'max' => 80 ) ),
+				'selectors'  => array( '{{WRAPPER}}' => '--uncoder-video-toggle-x: {{VALUE}}' ),
+			)
+		);
+		$this->add_responsive_control(
+			'toggle_offset_y',
+			array(
+				'type'       => 'slider',
+				'label'      => __( 'Distance from the edge', 'uncoder' ),
+				'size_units' => array( 'px', 'em', 'rem' ),
+				'range'      => array( 'px' => array( 'min' => 0, 'max' => 80 ) ),
+				'selectors'  => array( '{{WRAPPER}}' => '--uncoder-video-toggle-y: {{VALUE}}' ),
+			)
+		);
+		$this->add_group( 'toggle_typography', array( 'type' => 'typography', 'label' => __( 'Typography', 'uncoder' ), 'selector' => '{{WRAPPER}} .uncoder-video__toggle' ) );
+		$this->add_control(
+			'toggle_color',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Color', 'uncoder' ),
+				'selectors' => array( '{{WRAPPER}} .uncoder-video__toggle' => 'color: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'toggle_background',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Background', 'uncoder' ),
+				'selectors' => array( '{{WRAPPER}} .uncoder-video__toggle' => 'background-color: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'toggle_blur',
+			array(
+				'type'       => 'slider',
+				'label'      => __( 'Background blur', 'uncoder' ),
+				'size_units' => array( 'px' ),
+				'range'      => array( 'px' => array( 'min' => 0, 'max' => 40 ) ),
+				'selectors'  => array( '{{WRAPPER}}' => '--uncoder-video-toggle-blur: {{VALUE}}' ),
+			)
+		);
+		$this->add_responsive_control(
+			'toggle_icon_size',
+			array(
+				'type'       => 'slider',
+				'label'      => __( 'Icon size', 'uncoder' ),
+				'size_units' => array( 'px', 'em' ),
+				'range'      => array( 'px' => array( 'min' => 8, 'max' => 40 ) ),
+				'selectors'  => array( '{{WRAPPER}}' => '--uncoder-video-toggle-icon: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'toggle_gap',
+			array(
+				'type'       => 'slider',
+				'label'      => __( 'Icon spacing', 'uncoder' ),
+				'size_units' => array( 'px' ),
+				'range'      => array( 'px' => array( 'min' => 0, 'max' => 20 ) ),
+				'selectors'  => array( '{{WRAPPER}}' => '--uncoder-video-toggle-gap: {{VALUE}}' ),
+			)
+		);
+		$this->add_responsive_control(
+			'toggle_padding',
+			array(
+				'type'       => 'dimensions',
+				'label'      => __( 'Padding', 'uncoder' ),
+				'size_units' => array( 'px', 'em' ),
+				'selectors'  => array( '{{WRAPPER}} .uncoder-video__toggle' => 'padding: {{VALUE}}' ),
+			)
+		);
+		$this->add_responsive_control(
+			'toggle_radius',
+			array(
+				'type'       => 'dimensions',
+				'label'      => __( 'Border radius', 'uncoder' ),
+				'size_units' => array( 'px', '%' ),
+				'selectors'  => array( '{{WRAPPER}} .uncoder-video__toggle' => 'border-radius: {{VALUE}}' ),
+			)
+		);
+		$this->end_section();
+	}
+
+	/**
+	 * The play / pause pill of a file video: both icons (the runtime shows the one for the current state) and the label.
+	 *
+	 * @param array<string,mixed> $s Settings.
+	 */
+	private function toggle_button( array $s, bool $playing ): string {
+		$position = in_array( $s['toggle_position'] ?? '', array( 'bottom-left', 'bottom-right', 'top-left', 'top-right' ), true ) ? (string) $s['toggle_position'] : 'bottom-left';
+		$play     = __( 'Play', 'uncoder' );
+		$pause    = __( 'Pause', 'uncoder' );
+		$attrs    = array(
+			'type'             => 'button',
+			'class'            => array( 'uncoder-video__toggle', 'uncoder-video__toggle--' . $position, $playing ? 'is-playing' : '' ),
+			'data-play'        => $play,
+			'data-pause'       => $pause,
+			'data-play-label'  => __( 'Play video', 'uncoder' ),
+			'data-pause-label' => __( 'Pause video', 'uncoder' ),
+			'aria-label'       => $playing ? __( 'Pause video', 'uncoder' ) : __( 'Play video', 'uncoder' ),
+		);
+		$svg      = static function ( string $kind, string $path ): string {
+			return '<svg class="uncoder-video__toggle-icon uncoder-video__toggle-' . $kind . '" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="' . $path . '"/></svg>';
+		};
+		$label    = ! array_key_exists( 'toggle_text', $s ) || ! empty( $s['toggle_text'] ) ? '<span class="uncoder-video__toggle-label">' . esc_html( $playing ? $pause : $play ) . '</span>' : '';
+		return '<button' . Utils::attrs( $attrs ) . '>' . $svg( 'play', 'M8 5v14l11-7z' ) . $svg( 'pause', 'M6 19h4V5H6v14zm8-14v14h4V5h-4z' ) . $label . '</button>';
 	}
 
 	/**
@@ -588,6 +747,7 @@ class Video extends Widget_Base {
 			'preload'     => '' !== $poster ? 'none' : 'metadata',
 			'aria-label'  => $title,
 		);
-		echo '<div class="uncoder-video uncoder-video--' . esc_attr( $source ) . '"><video' . Utils::attrs( $video ) . '></video></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- attrs() escapes.
+		$toggle = ! empty( $s['toggle'] ) && empty( $s['controls'] ) ? $this->toggle_button( $s, $autoplay ) : '';
+		echo '<div class="uncoder-video uncoder-video--' . esc_attr( $source ) . '"><video' . Utils::attrs( $video ) . '></video>' . $toggle . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- attrs() escapes, button markup escaped.
 	}
 }

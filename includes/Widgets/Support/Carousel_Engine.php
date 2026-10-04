@@ -221,7 +221,7 @@ trait Carousel_Engine {
 				'label'       => __( 'Center the current slide', 'uncoder' ),
 				'description' => __( 'The current slide sits in the middle with its neighbours on both sides. With Rewind on, the slides loop endlessly.', 'uncoder' ),
 				'condition'   => $slides,
-				'ai'          => 'A centered, endless slideshow: center_mode + loop, a fixed center_slide_width (e.g. "350px") and gap; inactive_scale (e.g. 0.85) and inactive_opacity (e.g. 0.5) shrink and fade the neighbours; autoplay for the motion.',
+				'ai'          => 'A centered, endless slideshow: center_mode + loop, a fixed center_slide_width (e.g. "350px") and gap; inactive_scale (e.g. 0.85) and inactive_opacity (e.g. 0.5) shrink and fade the neighbours; inactive_turn (degrees, e.g. 5) turns them away in 3D and inactive_origin "inner" shrinks them towards the current slide; arrows_position "slide" puts the arrows on the edges of the current slide; autoplay for the motion.',
 			)
 		);
 		$centered = array_merge( $slides, array( 'center_mode' => 'yes' ) );
@@ -261,6 +261,37 @@ trait Carousel_Engine {
 				'selectors' => array( $root => '--uncoder-carousel-inactive-opacity: {{VALUE}}' ),
 			)
 		);
+		// Framer's 3D slideshow: the neighbours also turn away, in perspective, around the edge nearer the middle.
+		$this->add_control(
+			'inactive_turn',
+			array(
+				'type'        => 'number',
+				'label'       => __( 'Other slides: turn', 'uncoder' ),
+				'description' => __( 'Degrees the other slides turn away, in perspective: those before the current slide one way, those after it the other.', 'uncoder' ),
+				'min'         => -60,
+				'max'         => 60,
+				'step'        => 1,
+				'condition'   => $centered,
+				'selectors'   => array( $root => '--uncoder-carousel-turn: {{VALUE}}deg' ),
+			)
+		);
+		$this->add_control(
+			'inactive_origin',
+			array(
+				'type'                 => 'select',
+				'label'                => __( 'Other slides: shrink towards', 'uncoder' ),
+				'options'              => array(
+					''      => __( 'Their middle', 'uncoder' ),
+					'inner' => __( 'The current slide', 'uncoder' ),
+				),
+				'condition'            => $centered,
+				'selectors_dictionary' => array(
+					''      => '--uncoder-carousel-origin-before: 50%; --uncoder-carousel-origin-after: 50%',
+					'inner' => '--uncoder-carousel-origin-before: 100%; --uncoder-carousel-origin-after: 0%',
+				),
+				'selectors'            => array( $root => '{{VALUE}}' ),
+			)
+		);
 		$this->add_control( 'nav_heading', array( 'type' => 'heading', 'label' => __( 'Navigation', 'uncoder' ), 'condition' => $slides ) );
 		$this->add_control(
 			'arrows',
@@ -282,7 +313,9 @@ trait Carousel_Engine {
 					'outside' => __( 'Outside the slides', 'uncoder' ),
 					'bottom'  => __( 'Below, next to the pagination', 'uncoder' ),
 					'top'     => __( 'Above the slides, at the end', 'uncoder' ),
+					'slide'   => __( 'On the edges of the current slide', 'uncoder' ),
 				),
+				'description' => __( 'On the edges of the current slide: for a centered carousel (Offset moves them outwards).', 'uncoder' ),
 				'condition' => array( 'arrows' => 'yes' ),
 			)
 		);
@@ -444,7 +477,7 @@ trait Carousel_Engine {
 			array(
 				'type'        => 'slider',
 				'label'       => __( 'Offset', 'uncoder' ),
-				'description' => __( 'Distance from the slides edge (inside / outside) or between the two arrows (below).', 'uncoder' ),
+				'description' => __( 'Distance from the slides edge (inside / outside), outwards from the current slide (on its edges) or between the two arrows (below).', 'uncoder' ),
 				'size_units'  => array( 'px', 'rem' ),
 				'range'       => array( 'px' => array( 'min' => -40, 'max' => 100 ) ),
 				'selectors'   => array( $root => '--uncoder-carousel-arrow-offset: {{VALUE}}' ),
@@ -710,11 +743,14 @@ trait Carousel_Engine {
 			}
 		} else {
 			if ( ! empty( $s['arrows'] ) ) {
-				$position  = in_array( $s['arrows_position'] ?? 'inside', array( 'inside', 'outside', 'bottom', 'top' ), true ) ? $s['arrows_position'] : 'inside';
+				$position  = in_array( $s['arrows_position'] ?? 'inside', array( 'inside', 'outside', 'bottom', 'top', 'slide' ), true ) ? $s['arrows_position'] : 'inside';
 				$classes[] = 'uncoder-carousel--arrows-' . $position;
 			}
 			if ( ! empty( $s['center_mode'] ) ) {
 				$classes[] = 'uncoder-carousel--center';
+				if ( is_numeric( $s['inactive_turn'] ?? null ) && 0.0 !== (float) $s['inactive_turn'] ) {
+					$classes[] = 'uncoder-carousel--turn';
+				}
 			}
 		}
 		$label = trim( (string) ( $s['carousel_label'] ?? '' ) );

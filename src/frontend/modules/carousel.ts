@@ -274,8 +274,19 @@ window.UncoderWB.register(
     const update = (announce: boolean) => {
       frame = 0;
       if (center) {
+        // The slides before the middle one are .is-before, those after it .is-after; the middle one keeps the mark it
+        // came with, so its transform origin does not jump while it grows back.
         const mid = middleSlide();
-        all.forEach((el) => el.classList.toggle('is-current', el === mid));
+        let before = true;
+        all.forEach((el) => {
+          el.classList.toggle('is-current', el === mid);
+          if (el === mid) {
+            before = false;
+            return;
+          }
+          el.classList.toggle('is-before', before);
+          el.classList.toggle('is-after', !before);
+        });
       }
       const i = nearest();
       const last = pages.length - 1;
@@ -623,7 +634,7 @@ window.UncoderWB.register(
       root.style.removeProperty('--uncoder-carousel-progress-size');
       root.style.removeProperty('--uncoder-carousel-progress-start');
       root.style.removeProperty('--uncoder-carousel-edge');
-      slides.forEach((el) => el.classList.remove('is-current'));
+      slides.forEach((el) => el.classList.remove('is-current', 'is-before', 'is-after'));
     };
   },
   { lazy: true },

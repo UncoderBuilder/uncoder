@@ -117,6 +117,59 @@
   outline-offset: -2px;
 }
 
+/* Switch between two tabs: a toggle between the titles; on (the knob at the end) while the second tab is active. */
+.uncoder-tabs > .uncoder-tabs__list > .uncoder-tabs__switch {
+  --uncoder-tabs-switch-inset: calc((var(--uncoder-tabs-switch-h, 22px) - var(--uncoder-tabs-switch-knob, 16px)) / 2);
+  position: relative;
+  flex: none;
+  align-self: center;
+  width: var(--uncoder-tabs-switch-w, 40px);
+  height: var(--uncoder-tabs-switch-h, 22px);
+  border-radius: 999px;
+  background-color: var(--uncoder-tabs-switch-off, #e5e7eb);
+  cursor: pointer;
+  transition: background-color 0.25s ease;
+}
+
+.uncoder-tabs > .uncoder-tabs__list > .uncoder-tabs__switch::after {
+  content: "";
+  position: absolute;
+  top: var(--uncoder-tabs-switch-inset);
+  inset-inline-start: var(--uncoder-tabs-switch-inset);
+  width: var(--uncoder-tabs-switch-knob, 16px);
+  height: var(--uncoder-tabs-switch-knob, 16px);
+  border-radius: 50%;
+  background-color: var(--uncoder-tabs-switch-knob-color, #fff);
+  transition: inset-inline-start 0.25s ease;
+}
+
+.uncoder-tabs > .uncoder-tabs__list > .uncoder-tabs__tab:not(.is-active) + .uncoder-tabs__switch {
+  background-color: var(--uncoder-tabs-switch-on, var(--uncoder-c-primary, #2b59ff));
+}
+
+.uncoder-tabs > .uncoder-tabs__list > .uncoder-tabs__tab:not(.is-active) + .uncoder-tabs__switch::after {
+  inset-inline-start: calc(var(--uncoder-tabs-switch-w, 40px) - var(--uncoder-tabs-switch-knob, 16px) - var(--uncoder-tabs-switch-inset));
+}
+
+.uncoder-tabs__badge {
+  display: inline-block;
+  flex: none;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 0.75em;
+  line-height: 1.2;
+  white-space: nowrap;
+  transition: color 0.25s ease, background-color 0.25s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uncoder-tabs > .uncoder-tabs__list > .uncoder-tabs__switch,
+  .uncoder-tabs > .uncoder-tabs__list > .uncoder-tabs__switch::after,
+  .uncoder-tabs__badge {
+    transition: none;
+  }
+}
+
 /* Active indicator: a bar on the divider line, animated in. */
 .uncoder-tabs > .uncoder-tabs__list > .uncoder-tabs__tab::after {
   content: "";

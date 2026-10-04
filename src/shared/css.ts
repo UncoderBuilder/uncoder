@@ -107,6 +107,7 @@ export function registerFontCategories(map: Record<string, { c: string }>) {
 
 const SYSTEM_FONTS: Record<string, string> = {
   'system-ui': 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+  'apple-system': '-apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif',
   'sans-serif': 'ui-sans-serif, system-ui, sans-serif',
   serif: 'ui-serif, Georgia, Cambria, "Times New Roman", serif',
   monospace: 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',

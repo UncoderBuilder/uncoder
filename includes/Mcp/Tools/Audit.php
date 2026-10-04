@@ -159,6 +159,16 @@ final class Audit {
 			$bg = $this->surface_color( array( 'background' => $own ), $bg );
 		}
 
+		// Headings written inside a text block (a title with inline icons) count too, in their order.
+		if ( 'text-editor' === $type && ! isset( $dynamic['content'] ) && preg_match_all( '/<h([1-6])[\s>]/i', (string) ( $eff['content'] ?? '' ), $hm ) ) {
+			foreach ( $hm[1] as $level ) {
+				$state['headings'][] = array(
+					'id'    => $id,
+					'level' => (int) $level,
+				);
+			}
+		}
+
 		if ( in_array( $type, array( 'heading', 'post-title', 'archive-title', 'site-title' ), true ) ) {
 			$tag = (string) ( $eff['tag'] ?? $eff['title_tag'] ?? 'h2' );
 			if ( preg_match( '/^h([1-6])$/', $tag, $m ) ) {

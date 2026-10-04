@@ -17,10 +17,12 @@ defined( 'ABSPATH' ) || exit;
 final class Fonts {
 
 	public const SYSTEM = array(
-		'system-ui'  => 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
-		'sans-serif' => 'ui-sans-serif, system-ui, sans-serif',
-		'serif'      => 'ui-serif, Georgia, Cambria, "Times New Roman", serif',
-		'monospace'  => 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
+		'system-ui'    => 'system-ui, -apple-system, "Segoe UI", Roboto, sans-serif',
+		// Apple's SF Pro where it exists (Framer's "SF Pro Display"), the browser's sans-serif elsewhere, as in Framer.
+		'apple-system' => '-apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif',
+		'sans-serif'   => 'ui-sans-serif, system-ui, sans-serif',
+		'serif'        => 'ui-serif, Georgia, Cambria, "Times New Roman", serif',
+		'monospace'    => 'ui-monospace, SFMono-Regular, Menlo, Consolas, monospace',
 	);
 
 	/** @var array<string, array{c:string,w:string[]}>|null */
