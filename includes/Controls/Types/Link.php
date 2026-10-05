@@ -72,6 +72,13 @@ class Link extends Control_Type {
 		if ( is_array( $value ) && isset( $value['target'] ) && '_blank' === $value['target'] ) {
 			$value['external'] = true;
 		}
+		// Elementor's names for the same options ({url, is_external, nofollow, custom_attributes}).
+		if ( is_array( $value ) && ! empty( $value['is_external'] ) ) {
+			$value['external'] = true;
+		}
+		if ( is_array( $value ) && empty( $value['attributes'] ) && ! empty( $value['custom_attributes'] ) ) {
+			$value['attributes'] = $value['custom_attributes'];
+		}
 		return $this->sanitize( $value, $control );
 	}
 
@@ -84,6 +91,6 @@ class Link extends Control_Type {
 	}
 
 	public function value_hint( array $control ): string {
-		return '{"url": "https://… | /path | #anchor | mailto: | tel:", "external": bool, "nofollow": bool} — plain URL string accepted';
+		return '{"url": "https://… | /path | #anchor | mailto: | tel:", "external": bool, "nofollow": bool, "attributes": "key|value"} — plain URL string accepted';
 	}
 }

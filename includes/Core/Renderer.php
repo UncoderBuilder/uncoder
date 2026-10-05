@@ -366,10 +366,23 @@ final class Renderer {
 		if ( 'a' === $tag ) {
 			$link = $s['link'] ?? array();
 			if ( is_array( $link ) && ! empty( $link['url'] ) ) {
+				// The same attributes a widget's link gets (Widget_Base::link_attrs()).
 				$attrs['href'] = $link['url'];
+				$rel           = array();
 				if ( ! empty( $link['external'] ) ) {
 					$attrs['target'] = '_blank';
-					$attrs['rel']    = 'noopener';
+					$rel[]           = 'noopener';
+				}
+				if ( ! empty( $link['nofollow'] ) ) {
+					$rel[] = 'nofollow';
+				}
+				if ( $rel ) {
+					$attrs['rel'] = implode( ' ', $rel );
+				}
+				if ( ! empty( $link['attributes'] ) ) {
+					foreach ( Utils::parse_custom_attributes( (string) $link['attributes'] ) as $k => $v ) {
+						$attrs[ $k ] = $v;
+					}
 				}
 			}
 			if ( $editor ) {
