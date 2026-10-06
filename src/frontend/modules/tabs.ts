@@ -132,6 +132,23 @@ window.UncoderWB.register('tabs', (el, api) => {
     }
   };
 
+  // A link inside a panel to one of this widget's own tabs (#anchor) switches to it in place, with no jump or scroll:
+  // a slider's previous / next arrows repeated in every slide. From the keyboard, focus moves to the new tab.
+  const onPanelLinkClick = (e: MouseEvent) => {
+    const link = (e.target as Element).closest<HTMLAnchorElement>('a[href^="#"]');
+    if (!link || link.closest('.uncoder-tabs') !== root) return;
+    let id = '';
+    try {
+      id = decodeURIComponent((link.getAttribute('href') || '').slice(1));
+    } catch {
+      return;
+    }
+    const i = id ? tabs.findIndex((tab, k) => tab.id === id || panels[k].id === id) : -1;
+    if (i < 0) return;
+    e.preventDefault();
+    select(i, { user: true, focus: e.detail === 0 });
+  };
+
   const indexFromHash = (): number => {
     let id = '';
     try {
@@ -178,6 +195,7 @@ window.UncoderWB.register('tabs', (el, api) => {
   list.addEventListener('click', onListClick);
   list.addEventListener('keydown', onListKey);
   wrap.addEventListener('click', onAccClick);
+  wrap.addEventListener('click', onPanelLinkClick);
   wrap.addEventListener('animationend', onAnimationEnd);
   el.addEventListener('uncoder:nested-select', onNestedSelect);
   window.addEventListener('resize', onResize);
@@ -188,6 +206,7 @@ window.UncoderWB.register('tabs', (el, api) => {
     list.removeEventListener('click', onListClick);
     list.removeEventListener('keydown', onListKey);
     wrap.removeEventListener('click', onAccClick);
+    wrap.removeEventListener('click', onPanelLinkClick);
     wrap.removeEventListener('animationend', onAnimationEnd);
     el.removeEventListener('uncoder:nested-select', onNestedSelect);
     window.removeEventListener('resize', onResize);

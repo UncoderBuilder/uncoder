@@ -124,8 +124,21 @@ class Accordion extends Widget_Base {
 			'first_open',
 			array(
 				'type'    => 'switch',
-				'label'   => __( 'First item open', 'uncoder' ),
+				'label'   => __( 'Start with an item open', 'uncoder' ),
 				'default' => true,
+			)
+		);
+		$this->add_control(
+			'open_item',
+			array(
+				'type'        => 'number',
+				'label'       => __( 'Open item', 'uncoder' ),
+				'description' => __( 'Which item is open when the page loads (1 is the first).', 'uncoder' ),
+				'min'         => 1,
+				'max'         => 50,
+				'step'        => 1,
+				'default'     => 1,
+				'condition'   => array( 'first_open' => true ),
 			)
 		);
 		$this->add_control(
@@ -483,7 +496,7 @@ class Accordion extends Widget_Base {
 		echo '<div class="' . esc_attr( implode( ' ', $classes ) ) . '">';
 		foreach ( $rows as $i => $row ) {
 			$n       = $i + 1;
-			$open    = 0 === $i && ! empty( $s['first_open'] );
+			$open    = ! empty( $s['first_open'] ) && $i === max( 1, (int) ( $s['open_item'] ?? 1 ) ) - 1;
 			$rid     = sanitize_html_class( (string) ( $row['_id'] ?? '' ) );
 			$title   = $this->inline_html( $row['title'] ?? '' );
 			$header  = $uid . '-header-' . $n;
