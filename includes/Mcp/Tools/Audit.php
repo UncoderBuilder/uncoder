@@ -209,7 +209,9 @@ final class Audit {
 
 		if ( 'button' === $type ) {
 			$url = (string) ( $eff['link']['url'] ?? '' );
-			if ( ! isset( $dynamic['link'] ) && ( '' === $url || '#' === $url ) ) {
+			// A button that works through a click interaction (a toggle, a popup) needs no link.
+			$acts = array_filter( is_array( $eff['_interactions'] ?? null ) ? $eff['_interactions'] : array(), static fn( $row ) => is_array( $row ) && 'click' === ( $row['trigger'] ?? '' ) );
+			if ( ! isset( $dynamic['link'] ) && ! $acts && ( '' === $url || '#' === $url ) ) {
 				$this->add( 'warning', 'links', $id, 'Button links to "' . ( '' === $url ? '(nothing)' : '#' ) . '".', 'Set link to a real page URL, #section anchor or tel:/mailto:.' );
 			}
 			if ( '' === trim( (string) ( $eff['text'] ?? '' ) ) && ! isset( $dynamic['text'] ) ) {
