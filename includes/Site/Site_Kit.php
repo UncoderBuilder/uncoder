@@ -1562,7 +1562,8 @@ final class Site_Kit {
 			foreach ( $value as $k => $v ) {
 				if ( is_string( $k ) && in_array( $k, self::REF_KEYS, true ) && is_numeric( $v ) && isset( $ids[ (int) $v ] ) ) {
 					$value[ $k ] = $ids[ (int) $v ];
-				} elseif ( 'menu' === $k && is_numeric( $v ) && isset( $menus[ (int) $v ] ) ) {
+				} elseif ( in_array( $k, array( 'menu', 'mobile_menu' ), true ) && is_numeric( $v ) && isset( $menus[ (int) $v ] ) ) {
+					// The Nav Menu's own menu and its separate phone menu.
 					$value[ $k ] = (string) $menus[ (int) $v ];
 				} elseif ( 'terms' === $k && is_array( $v ) && ! empty( $state['terms'] ) ) {
 					// Query terms ("category:5") follow the imported categories.
