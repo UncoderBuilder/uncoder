@@ -7,6 +7,7 @@
 
 namespace Uncoder\Builder\Widgets;
 
+use Uncoder\Builder\Core\Breakpoints;
 use Uncoder\Builder\Core\Render_Context;
 use Uncoder\Builder\Core\Utils;
 use Uncoder\Builder\Core\Widget_Base;
@@ -139,6 +140,17 @@ class Accordion extends Widget_Base {
 				'step'        => 1,
 				'default'     => 1,
 				'condition'   => array( 'first_open' => true ),
+			)
+		);
+		$this->add_control(
+			'open_on_mobile',
+			array(
+				'type'        => 'switch',
+				'label'       => __( 'Open on phones too', 'uncoder' ),
+				'description' => __( 'Off: on phones every item starts closed.', 'uncoder' ),
+				'default'     => true,
+				'condition'   => array( 'first_open' => true ),
+				'ai'          => 'false = the open item starts closed on phones (below the mobile breakpoint), as many Framer FAQs do.',
 			)
 		);
 		$this->add_control(
@@ -457,11 +469,15 @@ class Accordion extends Widget_Base {
 
 	public function wrapper_attributes( array $s, Render_Context $ctx ): array {
 		$duration = is_numeric( $s['duration'] ?? '' ) ? (int) $s['duration'] : 300;
+		$mobile   = Breakpoints::active()['mobile'] ?? null;
+		$closed   = ! empty( $s['first_open'] ) && array_key_exists( 'open_on_mobile', $s ) && empty( $s['open_on_mobile'] ) && $mobile && ! $ctx->editor;
 		return array(
 			'data-settings' => $this->json_attr(
 				array(
-					'multiple' => ! empty( $s['multiple'] ),
-					'duration' => min( max( $duration, 0 ), 2000 ),
+					'multiple'    => ! empty( $s['multiple'] ),
+					'duration'    => min( max( $duration, 0 ), 2000 ),
+					// Phones (up to the mobile breakpoint) start with every item closed.
+					'closedBelow' => $closed ? (int) $mobile['value'] : 0,
 				)
 			),
 		);

@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-06T14:24:53+00:00\n"
+"POT-Creation-Date: 2026-10-06T19:17:51+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: uncoder\n"
@@ -105,11 +105,11 @@ msgstr ""
 #: includes/Controls/Groups/Border.php:32
 #: includes/Controls/Groups/Shadow.php:36
 #: includes/Elements/Container.php:529
-#: includes/Widgets/Accordion.php:289
-#: includes/Widgets/Accordion.php:307
-#: includes/Widgets/Accordion.php:325
-#: includes/Widgets/Accordion.php:367
-#: includes/Widgets/Accordion.php:436
+#: includes/Widgets/Accordion.php:301
+#: includes/Widgets/Accordion.php:319
+#: includes/Widgets/Accordion.php:337
+#: includes/Widgets/Accordion.php:379
+#: includes/Widgets/Accordion.php:448
 #: includes/Widgets/Alert.php:238
 #: includes/Widgets/Alert.php:319
 #: includes/Widgets/Alert.php:329
@@ -281,8 +281,8 @@ msgstr ""
 #: includes/Controls/Groups/Background.php:71
 #: includes/Controls/Groups/Typography.php:57
 #: includes/Core/Common_Controls.php:313
-#: includes/Widgets/Accordion.php:347
-#: includes/Widgets/Accordion.php:426
+#: includes/Widgets/Accordion.php:359
+#: includes/Widgets/Accordion.php:438
 #: includes/Widgets/Alert.php:246
 #: includes/Widgets/Alert.php:307
 #: includes/Widgets/Author_Box.php:198
@@ -465,8 +465,8 @@ msgstr ""
 
 #: includes/Controls/Groups/Query.php:38
 #: includes/Elements/Container.php:300
-#: includes/Widgets/Accordion.php:97
-#: includes/Widgets/Accordion.php:214
+#: includes/Widgets/Accordion.php:98
+#: includes/Widgets/Accordion.php:226
 #: includes/Widgets/Icon_List.php:57
 #: includes/Widgets/Marquee.php:73
 #: includes/Widgets/Post_Info.php:90
@@ -750,9 +750,9 @@ msgid "Margin"
 msgstr ""
 
 #: includes/Core/Common_Controls.php:72
-#: includes/Widgets/Accordion.php:250
-#: includes/Widgets/Accordion.php:265
-#: includes/Widgets/Accordion.php:449
+#: includes/Widgets/Accordion.php:262
+#: includes/Widgets/Accordion.php:277
+#: includes/Widgets/Accordion.php:461
 #: includes/Widgets/Alert.php:218
 #: includes/Widgets/Author_Box.php:178
 #: includes/Widgets/Blockquote.php:140
@@ -857,7 +857,7 @@ msgstr ""
 #: includes/Core/Common_Controls.php:114
 #: includes/Elements/Container.php:194
 #: includes/Elements/Container.php:211
-#: includes/Widgets/Accordion.php:187
+#: includes/Widgets/Accordion.php:199
 #: includes/Widgets/Breadcrumbs.php:141
 #: includes/Widgets/Image_Compare.php:133
 #: includes/Widgets/Login.php:485
@@ -878,7 +878,7 @@ msgstr ""
 #: includes/Core/Common_Controls.php:349
 #: includes/Elements/Container.php:195
 #: includes/Elements/Container.php:212
-#: includes/Widgets/Accordion.php:277
+#: includes/Widgets/Accordion.php:289
 #: includes/Widgets/Author_Box.php:154
 #: includes/Widgets/Blockquote.php:126
 #: includes/Widgets/Breadcrumbs.php:142
@@ -941,7 +941,7 @@ msgstr ""
 #: includes/Core/Common_Controls.php:116
 #: includes/Elements/Container.php:196
 #: includes/Elements/Container.php:213
-#: includes/Widgets/Accordion.php:188
+#: includes/Widgets/Accordion.php:200
 #: includes/Widgets/Breadcrumbs.php:143
 #: includes/Widgets/Image_Compare.php:135
 #: includes/Widgets/Login.php:487
@@ -1038,11 +1038,11 @@ msgstr ""
 #: includes/Elements/Container.php:429
 #: includes/Elements/Container.php:436
 #: includes/Elements/Container.php:478
-#: includes/Widgets/Accordion.php:226
-#: includes/Widgets/Accordion.php:297
-#: includes/Widgets/Accordion.php:315
-#: includes/Widgets/Accordion.php:333
-#: includes/Widgets/Accordion.php:444
+#: includes/Widgets/Accordion.php:238
+#: includes/Widgets/Accordion.php:309
+#: includes/Widgets/Accordion.php:327
+#: includes/Widgets/Accordion.php:345
+#: includes/Widgets/Accordion.php:456
 #: includes/Widgets/Alert.php:337
 #: includes/Widgets/Animated_Headline.php:272
 #: includes/Widgets/Author_Box.php:163
@@ -1166,8 +1166,8 @@ msgstr ""
 
 #: includes/Core/Common_Controls.php:240
 #: includes/Elements/Container.php:572
-#: includes/Widgets/Accordion.php:227
-#: includes/Widgets/Accordion.php:454
+#: includes/Widgets/Accordion.php:239
+#: includes/Widgets/Accordion.php:466
 #: includes/Widgets/Alert.php:193
 #: includes/Widgets/Author_Box.php:164
 #: includes/Widgets/Author_Box.php:222
@@ -1222,7 +1222,7 @@ msgid "Border"
 msgstr ""
 
 #: includes/Core/Common_Controls.php:245
-#: includes/Widgets/Accordion.php:240
+#: includes/Widgets/Accordion.php:252
 #: includes/Widgets/Alert.php:209
 #: includes/Widgets/Author_Box.php:169
 #: includes/Widgets/Author_Box.php:217
@@ -1432,7 +1432,7 @@ msgid "Bottom"
 msgstr ""
 
 #: includes/Core/Common_Controls.php:352
-#: includes/Widgets/Accordion.php:276
+#: includes/Widgets/Accordion.php:288
 #: includes/Widgets/Author_Box.php:59
 #: includes/Widgets/Author_Box.php:153
 #: includes/Widgets/Blockquote.php:125
@@ -1492,7 +1492,7 @@ msgid "Left"
 msgstr ""
 
 #: includes/Core/Common_Controls.php:353
-#: includes/Widgets/Accordion.php:278
+#: includes/Widgets/Accordion.php:290
 #: includes/Widgets/Author_Box.php:61
 #: includes/Widgets/Author_Box.php:155
 #: includes/Widgets/Blockquote.php:127
@@ -1636,7 +1636,7 @@ msgstr ""
 
 #: includes/Core/Common_Controls.php:444
 #: includes/Elements/Container.php:431
-#: includes/Widgets/Accordion.php:284
+#: includes/Widgets/Accordion.php:296
 #: includes/Widgets/Alert.php:314
 #: includes/Widgets/Breadcrumbs.php:158
 #: includes/Widgets/Button.php:157
@@ -1699,7 +1699,7 @@ msgstr ""
 
 #: includes/Core/Common_Controls.php:447
 #: includes/Elements/Container.php:473
-#: includes/Widgets/Accordion.php:302
+#: includes/Widgets/Accordion.php:314
 #: includes/Widgets/Alert.php:324
 #: includes/Widgets/Breadcrumbs.php:168
 #: includes/Widgets/Button.php:177
@@ -2364,7 +2364,7 @@ msgid "Action"
 msgstr ""
 
 #: includes/Dynamic/Core_Tags.php:366
-#: includes/Widgets/Accordion.php:320
+#: includes/Widgets/Accordion.php:332
 msgid "Open"
 msgstr ""
 
@@ -3518,9 +3518,9 @@ msgid "Show the Description field"
 msgstr ""
 
 #: includes/Menus/Menu_Item_Extras.php:151
-#: includes/Widgets/Accordion.php:107
-#: includes/Widgets/Accordion.php:155
-#: includes/Widgets/Accordion.php:342
+#: includes/Widgets/Accordion.php:108
+#: includes/Widgets/Accordion.php:167
+#: includes/Widgets/Accordion.php:354
 #: includes/Widgets/Alert.php:138
 #: includes/Widgets/Alert.php:229
 #: includes/Widgets/Breadcrumbs.php:96
@@ -3597,7 +3597,7 @@ msgid "Call to action"
 msgstr ""
 
 #: includes/Patterns/Patterns.php:64
-#: includes/Widgets/Accordion.php:443
+#: includes/Widgets/Accordion.php:455
 #: includes/Widgets/Alert.php:264
 #: includes/Widgets/Call_To_Action.php:140
 #: includes/Widgets/Icon_Box.php:535
@@ -4489,30 +4489,30 @@ msgstr ""
 msgid "Publish a post to preview this loop item with real content."
 msgstr ""
 
-#: includes/Widgets/Accordion.php:49
-#: includes/Widgets/Accordion.php:92
+#: includes/Widgets/Accordion.php:50
+#: includes/Widgets/Accordion.php:93
 #: includes/Widgets/Tabs.php:156
 msgid "Accordion"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:65
+#: includes/Widgets/Accordion.php:66
 msgid "Collapsible items whose panels are containers holding any widgets; optional FAQPage structured data. One row in \"items\" = one child container."
 msgstr ""
 
-#: includes/Widgets/Accordion.php:85
+#: includes/Widgets/Accordion.php:86
 msgid "What is included in every plan?"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:86
+#: includes/Widgets/Accordion.php:87
 msgid "Can I switch plans later?"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:87
+#: includes/Widgets/Accordion.php:88
 msgid "How does billing work?"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:102
-#: includes/Widgets/Accordion.php:259
+#: includes/Widgets/Accordion.php:103
+#: includes/Widgets/Accordion.php:271
 #: includes/Widgets/Alert.php:107
 #: includes/Widgets/Archive_Title.php:51
 #: includes/Widgets/Archive_Title.php:80
@@ -4552,11 +4552,11 @@ msgstr ""
 msgid "Title"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:104
+#: includes/Widgets/Accordion.php:105
 msgid "Accordion item"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:117
+#: includes/Widgets/Accordion.php:118
 #: includes/Widgets/Call_To_Action.php:167
 #: includes/Widgets/Counter.php:146
 #: includes/Widgets/Flip_Box.php:228
@@ -4573,39 +4573,47 @@ msgstr ""
 msgid "Title HTML tag"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:127
+#: includes/Widgets/Accordion.php:128
 msgid "Start with an item open"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:135
+#: includes/Widgets/Accordion.php:136
 msgid "Open item"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:136
+#: includes/Widgets/Accordion.php:137
 msgid "Which item is open when the page loads (1 is the first)."
 msgstr ""
 
-#: includes/Widgets/Accordion.php:148
+#: includes/Widgets/Accordion.php:149
+msgid "Open on phones too"
+msgstr ""
+
+#: includes/Widgets/Accordion.php:150
+msgid "Off: on phones every item starts closed."
+msgstr ""
+
+#: includes/Widgets/Accordion.php:160
 msgid "Allow several open items"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:164
+#: includes/Widgets/Accordion.php:176
 msgid "Active icon"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:165
+#: includes/Widgets/Accordion.php:177
 msgid "None: the icon turns when the item opens (see Open rotation)."
 msgstr ""
 
-#: includes/Widgets/Accordion.php:173
+#: includes/Widgets/Accordion.php:185
 msgid "Open rotation"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:174
+#: includes/Widgets/Accordion.php:186
 msgid "How far the icon turns when its item opens, with no active icon: 180° flips a chevron, 45° turns a plus into a cross."
 msgstr ""
 
-#: includes/Widgets/Accordion.php:184
+#: includes/Widgets/Accordion.php:196
 #: includes/Widgets/Button.php:112
 #: includes/Widgets/Form.php:345
 #: includes/Widgets/Off_Canvas.php:111
@@ -4613,20 +4621,20 @@ msgstr ""
 msgid "Icon position"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:196
+#: includes/Widgets/Accordion.php:208
 #: includes/Widgets/Counter.php:125
 msgid "Animation duration (ms)"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:207
+#: includes/Widgets/Accordion.php:219
 msgid "FAQ schema"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:208
+#: includes/Widgets/Accordion.php:220
 msgid "Adds FAQPage structured data (JSON-LD) built from the titles and the text of the panels. The questions of every FAQ accordion on a page are printed as one FAQPage. Use it for real questions and answers."
 msgstr ""
 
-#: includes/Widgets/Accordion.php:219
+#: includes/Widgets/Accordion.php:231
 #: includes/Widgets/Nav_Menu.php:581
 #: includes/Widgets/Post_Info.php:280
 #: includes/Widgets/Price_List.php:198
@@ -4637,11 +4645,11 @@ msgstr ""
 msgid "Space between items"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:232
+#: includes/Widgets/Accordion.php:244
 msgid "Open item border color"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:255
+#: includes/Widgets/Accordion.php:267
 #: includes/Widgets/Alert.php:223
 #: includes/Widgets/Author_Box.php:183
 #: includes/Widgets/Blockquote.php:154
@@ -4700,7 +4708,7 @@ msgstr ""
 msgid "Shadow"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:260
+#: includes/Widgets/Accordion.php:272
 #: includes/Widgets/Animated_Headline.php:214
 #: includes/Widgets/Animated_Headline.php:259
 #: includes/Widgets/Archive_Description.php:63
@@ -4817,7 +4825,7 @@ msgstr ""
 msgid "Typography"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:274
+#: includes/Widgets/Accordion.php:286
 #: includes/Widgets/Animated_Headline.php:168
 #: includes/Widgets/Archive_Description.php:55
 #: includes/Widgets/Archive_Title.php:73
@@ -4874,7 +4882,7 @@ msgstr ""
 msgid "Alignment"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:357
+#: includes/Widgets/Accordion.php:369
 #: includes/Widgets/Alert.php:256
 #: includes/Widgets/Author_Box.php:208
 #: includes/Widgets/Author_Box.php:254
@@ -4918,38 +4926,38 @@ msgstr ""
 msgid "Spacing"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:375
+#: includes/Widgets/Accordion.php:387
 msgid "Open color"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:383
+#: includes/Widgets/Accordion.php:395
 msgid "Icon box size"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:384
+#: includes/Widgets/Accordion.php:396
 msgid "Puts the icon in a tile of this size (with the background and radius below)."
 msgstr ""
 
-#: includes/Widgets/Accordion.php:394
+#: includes/Widgets/Accordion.php:406
 #: includes/Widgets/Button.php:258
 #: includes/Widgets/Flip_Box.php:400
 #: includes/Widgets/Nav_Menu.php:779
 msgid "Icon background"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:402
+#: includes/Widgets/Accordion.php:414
 msgid "Open icon background"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:410
+#: includes/Widgets/Accordion.php:422
 msgid "Icon radius"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:419
+#: includes/Widgets/Accordion.php:431
 msgid "Item icons"
 msgstr ""
 
-#: includes/Widgets/Accordion.php:474
+#: includes/Widgets/Accordion.php:490
 msgid "Add an item to start building the accordion."
 msgstr ""
 

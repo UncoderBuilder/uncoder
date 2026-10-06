@@ -4,7 +4,13 @@
 window.UncoderWB.register('accordion', (el, api) => {
   const root = (el.matches('.uncoder-accordion') ? (el as HTMLElement) : el.querySelector<HTMLElement>(':scope > .uncoder-accordion'));
   if (!root) return;
-  const s = api.settings<{ multiple?: boolean; duration?: number }>(el);
+  const s = api.settings<{ multiple?: boolean; duration?: number; closedBelow?: number }>(el);
+  // "Open on phones too" off: on a phone-sized screen the item rendered open starts closed.
+  if (s.closedBelow && window.matchMedia?.(`(max-width: ${s.closedBelow}px)`).matches) {
+    root.querySelectorAll<HTMLDetailsElement>(':scope > details.uncoder-accordion__item[open]').forEach((d) => {
+      d.open = false;
+    });
+  }
 
   interface Item {
     details: HTMLDetailsElement;
