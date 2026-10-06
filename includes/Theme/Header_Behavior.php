@@ -169,11 +169,9 @@ final class Header_Behavior {
 		if ( '' !== $b['sticky'] ) {
 			$classes[] = 'uncoder-header--sticky';
 			// Devices left out of "Sticky on" scroll normally (the visibility CSS ranges); a transparent header
-			// keeps overlaying there instead.
-			if ( ! $b['transparent'] ) {
-				foreach ( $b['sticky_off'] as $device ) {
-					$classes[] = 'uncoder-sticky-off-' . sanitize_html_class( (string) $device );
-				}
+			// keeps overlaying there instead, and scrolls away with the page (absolute, not fixed).
+			foreach ( $b['sticky_off'] as $device ) {
+				$classes[] = ( $b['transparent'] ? 'uncoder-header-overlay-' : 'uncoder-sticky-off-' ) . sanitize_html_class( (string) $device );
 			}
 			if ( 'reveal' === $b['sticky'] ) {
 				$classes[] = 'uncoder-header--reveal';

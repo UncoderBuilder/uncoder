@@ -804,7 +804,9 @@ final class Kit {
 	public static function visibility_css(): string {
 		$css = '';
 		foreach ( self::device_queries() as $device => $query ) {
-			$rules = '.uncoder-hide-' . $device . '{display:none!important}.uncoder-sticky-off-' . $device . '{position:relative!important;top:auto!important;bottom:auto!important}';
+			$rules = '.uncoder-hide-' . $device . '{display:none!important}.uncoder-sticky-off-' . $device . '{position:relative!important;top:auto!important;bottom:auto!important}'
+				// A transparent header that is not sticky on this device overlays the page and scrolls away with it.
+				. '.uncoder-header-overlay-' . $device . '{position:absolute!important;top:var(--wp-admin--admin-bar--height,0px)!important}';
 			$css  .= '' !== $query ? '@media ' . $query . '{' . $rules . '}' : $rules;
 		}
 		return $css;
