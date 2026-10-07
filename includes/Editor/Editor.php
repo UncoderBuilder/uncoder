@@ -61,10 +61,12 @@ final class Editor {
 	}
 
 	/**
+	 * "Edit with Uncoder" under the posts built with Uncoder (other posts start from the button in the post editor).
+	 *
 	 * @param array<string,string> $actions Actions.
 	 */
 	public function row_action( array $actions, \WP_Post $post ): array {
-		if ( self::can_edit( $post->ID ) && 'trash' !== $post->post_status ) {
+		if ( 'trash' !== $post->post_status && Utils::is_builder_post( $post->ID ) && self::can_edit( $post->ID ) ) {
 			$actions['uncoder'] = '<a href="' . esc_url( self::url( $post->ID ) ) . '">' . Brand::mark( 12, 'vertical-align:-1px;margin-right:4px' ) . esc_html__( 'Edit with Uncoder', 'uncoder' ) . '</a>';
 		}
 		return $actions;

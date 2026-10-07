@@ -123,9 +123,11 @@ export const useUi = create<UiState>(() => ({
   panel: requestedPanel() ?? startPanel(),
   mainPanel: startPanel(),
   layout: stored.layout === 'dock' ? 'dock' : 'float',
-  inspectorAt: stored.inspectorAt === 'right' || stored.inspectorAt === 'float' ? stored.inspectorAt : 'left',
+  // Docked on the right unless the user chose otherwise. Saved as inspectorDock: the old inspectorAt also held the
+  // former default (left) for people who never chose, so it is not read.
+  inspectorAt: stored.inspectorDock === 'left' || stored.inspectorDock === 'float' ? stored.inspectorDock : 'right',
   inspectorFloat: validFloat(stored.inspectorFloat),
-  inspectorSide: stored.inspectorSide === 'right' ? 'right' : 'left',
+  inspectorSide: stored.inspectorDock && stored.inspectorSide === 'left' ? 'left' : 'right',
   inspectorState: 'normal',
   fit: 1,
   canvasWidth: 0,
@@ -165,7 +167,7 @@ useUi.subscribe((s, prev) => {
     try {
       localStorage.setItem(
         'uncoder-editor',
-        JSON.stringify({ theme: s.theme, panel: s.mainPanel, openSections: s.openSections, layout: s.layout, recent: s.recentWidgets, inspectorAt: s.inspectorAt, inspectorFloat: s.inspectorFloat, inspectorSide: s.inspectorSide }),
+        JSON.stringify({ theme: s.theme, panel: s.mainPanel, openSections: s.openSections, layout: s.layout, recent: s.recentWidgets, inspectorDock: s.inspectorAt, inspectorFloat: s.inspectorFloat, inspectorSide: s.inspectorSide }),
       );
     } catch {
       /* private mode */

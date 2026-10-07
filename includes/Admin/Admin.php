@@ -58,6 +58,8 @@ final class Admin {
 		);
 		$unread = current_user_can( 'edit_pages' ) ? \Uncoder\Builder\Forms\Store::unread_count() : 0;
 
+		// Right under the Dashboard (2), before anything else (Jetpack uses 3, the first separator is 4); a string, so
+		// WordPress keeps the fraction.
 		add_menu_page(
 			__( 'Uncoder', 'uncoder' ),
 			__( 'Uncoder', 'uncoder' ),
@@ -65,7 +67,7 @@ final class Admin {
 			self::SLUG,
 			array( $this, 'render' ),
 			\Uncoder\Builder\Core\Brand::menu_icon(),
-			58
+			'2.1'
 		);
 		foreach ( $this->pages as $slug => $page ) {
 			$label = $page[0];

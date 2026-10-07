@@ -159,21 +159,27 @@ window.UncoderWB.register(
         }),
       );
     }
-    /** Where a slide's middle is, in scroll coordinates from the track's inline start (unaffected by its scale). */
-    const middleOf = (el: HTMLElement) => {
+    /** Where a slide starts and how wide it is, in scroll coordinates from the track's inline start. From its layout box
+     *  (the track is its offset parent): the side slides of a centred carousel are scaled and turned, and their drawn
+     *  box would aim the scroll short of where the slide lands once it is current (scroll snapping then jumped the rest). */
+    const placeOf = (el: HTMLElement) => {
+      if (el.offsetParent === track) {
+        const w = el.offsetWidth;
+        return { start: isRtl() ? track.clientWidth - el.offsetLeft - w : el.offsetLeft, width: w };
+      }
       const box = track.getBoundingClientRect();
       const r = el.getBoundingClientRect();
-      const mid = isRtl() ? box.right - (r.left + r.width / 2) : r.left + r.width / 2 - box.left;
-      return mid + position();
+      return { start: (isRtl() ? box.right - r.right : r.left - box.left) + position(), width: r.width };
+    };
+    /** Where a slide's middle is, in scroll coordinates from the track's inline start. */
+    const middleOf = (el: HTMLElement) => {
+      const p = placeOf(el);
+      return p.start + p.width / 2;
     };
     /** The scroll offset that puts a slide in the middle. */
     const centerX = (el: HTMLElement) => Math.round(middleOf(el) - track.clientWidth / 2);
     /** Where a slide starts, in scroll coordinates from the track's inline start. */
-    const startX = (el: HTMLElement) => {
-      const box = track.getBoundingClientRect();
-      const r = el.getBoundingClientRect();
-      return Math.round((isRtl() ? box.right - r.right : r.left - box.left) + position());
-    };
+    const startX = (el: HTMLElement) => Math.round(placeOf(el).start);
     /** The scroll offset that brings a slide into place: in the middle (centered) or at the start. */
     const anchorX = (el: HTMLElement) => (center ? centerX(el) : startX(el));
     /** Slides per move (Slides to scroll), from its per-device custom property. */
@@ -200,6 +206,7 @@ window.UncoderWB.register(
     let index = -1;
     let target: number | null = null; // page an animation is heading to
     let anim = 0;
+    let settling = 0; // timer: snapping stays off while the current slide grows (centred)
     let frame = 0;
 
     const isRtl = () => getComputedStyle(track).direction === 'rtl';
@@ -384,10 +391,22 @@ window.UncoderWB.register(
           anim = 0;
           target = null;
           root.classList.remove('is-animating');
+          if (center) holdSnap();
           settle();
         }
       };
       anim = requestAnimationFrame(tick);
+    };
+
+    /** Centred: browsers snap to a slide's drawn box, and the new current slide is still growing (its scale and turn
+     *  transition) when the scroll arrives, so snapping stays off until that transition is over. */
+    const holdSnap = () => {
+      const current = track.querySelector<HTMLElement>(':scope > .is-current') ?? slides[0];
+      const ms = Math.max(0, ...getComputedStyle(current).transitionDuration.split(',').map((d) => parseFloat(d) * (d.trim().endsWith('ms') ? 1 : 1000) || 0));
+      if (!ms) return;
+      root.classList.add('is-settling');
+      clearTimeout(settling);
+      settling = window.setTimeout(() => root.classList.remove('is-settling'), ms + 50);
     };
 
     const go = (page: number, user = false) => {
@@ -649,10 +668,11 @@ window.UncoderWB.register(
       cleanups.forEach((fn) => fn());
       stopAnim();
       clearTimeout(timer);
+      clearTimeout(settling);
       if (frame) cancelAnimationFrame(frame);
       if (resizeFrame) cancelAnimationFrame(resizeFrame);
       if (dotsWrap) dotsWrap.textContent = '';
-      root.classList.remove('is-ready', 'is-static', 'is-start', 'is-end', 'is-playing', 'is-dragging', 'is-animating', 'is-jumping');
+      root.classList.remove('is-ready', 'is-static', 'is-start', 'is-end', 'is-playing', 'is-dragging', 'is-animating', 'is-settling', 'is-jumping');
       root.style.removeProperty('--uncoder-carousel-progress-size');
       root.style.removeProperty('--uncoder-carousel-progress-start');
       root.style.removeProperty('--uncoder-carousel-edge');

@@ -38,7 +38,9 @@
   min-width: 0;
 }
 
+/* Positioned, so it is the slides' offset parent: the runtime reads their layout boxes from it. */
 .uncoder-carousel > .uncoder-carousel__viewport > .uncoder-carousel__track {
+  position: relative;
   display: flex;
   align-items: var(--uncoder-carousel-align);
   gap: var(--uncoder-carousel-gap);
@@ -133,6 +135,7 @@ html:not(.uncoder-js) .uncoder-carousel > .uncoder-carousel__viewport > .uncoder
 }
 
 .uncoder-carousel.is-animating > .uncoder-carousel__viewport > .uncoder-carousel__track,
+.uncoder-carousel.is-settling > .uncoder-carousel__viewport > .uncoder-carousel__track,
 .uncoder-carousel.is-dragging > .uncoder-carousel__viewport > .uncoder-carousel__track {
   scroll-snap-type: none;
 }

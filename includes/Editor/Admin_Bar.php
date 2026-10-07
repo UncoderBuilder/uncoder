@@ -10,6 +10,7 @@ namespace Uncoder\Builder\Editor;
 use Uncoder\Builder\Core\Brand;
 use Uncoder\Builder\Core\Post_Types;
 use Uncoder\Builder\Core\Renderer;
+use Uncoder\Builder\Core\Utils;
 use Uncoder\Builder\Site\Role_Manager;
 
 defined( 'ABSPATH' ) || exit;
@@ -37,10 +38,10 @@ final class Admin_Bar {
 		return ! is_admin() && is_user_logged_in() && is_admin_bar_showing() && Role_Manager::can_use();
 	}
 
-	/** The viewed post or page, when it can be opened in Uncoder. */
+	/** The viewed post or page, when it is built with Uncoder (other posts start from the button in the post editor). */
 	private static function main_id(): int {
 		$id = is_singular() ? (int) get_queried_object_id() : 0;
-		return $id && Editor::can_edit( $id ) ? $id : 0;
+		return $id && Utils::is_builder_post( $id ) && Editor::can_edit( $id ) ? $id : 0;
 	}
 
 	public function node( \WP_Admin_Bar $bar ): void {

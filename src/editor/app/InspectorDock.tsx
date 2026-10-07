@@ -1,5 +1,5 @@
-// Where the inspector sits (store/ui inspectorAt): docked next to the build panel (default), docked on the
-// right, or floating anywhere. The grip in its header floats it (click) or moves it (drag); dragging it to the
+// Where the inspector sits (store/ui inspectorAt): docked on the right (default), docked next to the build panel
+// on the left, or floating anywhere. The grip in its header floats it (click) or moves it (drag); dragging it to the
 // left or right edge shows where it will dock and docks it on release. The dock menu offers all three.
 import type { KeyboardEvent as ReactKeyboardEvent, PointerEvent as ReactPointerEvent } from 'react';
 import { placeInspector, useUi, type InspectorAt, type InspectorFloat } from '../store/ui';
