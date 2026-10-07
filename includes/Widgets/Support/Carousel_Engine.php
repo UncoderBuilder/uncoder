@@ -321,6 +321,21 @@ trait Carousel_Engine {
 			)
 		);
 		$this->add_control(
+			'arrows_visibility',
+			array(
+				'type'        => 'select',
+				'label'       => __( 'Show arrows', 'uncoder' ),
+				'default'     => 'always',
+				'options'     => array(
+					'always'    => __( 'Always', 'uncoder' ),
+					'available' => __( 'When there is more to see', 'uncoder' ),
+				),
+				'description' => __( 'Always: at the first or last slide the arrow that cannot move is dimmed. When there is more to see: it fades out there, and both arrows hide when every slide fits.', 'uncoder' ),
+				'condition'   => array( 'arrows' => 'yes' ),
+				'ai'          => '"available" hides the previous arrow on the first slide and the next arrow on the last (with loop off; an endless carousel always has both), like Framer slideshows; "always" keeps both and dims the one that cannot move.',
+			)
+		);
+		$this->add_control(
 			'prev_icon',
 			array(
 				'type'      => 'icon',
@@ -757,6 +772,9 @@ trait Carousel_Engine {
 			if ( ! empty( $s['arrows'] ) ) {
 				$position  = in_array( $s['arrows_position'] ?? 'inside', array( 'inside', 'outside', 'bottom', 'bottom-center', 'top', 'slide' ), true ) ? $s['arrows_position'] : 'inside';
 				$classes[] = 'uncoder-carousel--arrows-' . $position;
+				if ( 'available' === ( $s['arrows_visibility'] ?? 'always' ) ) {
+					$classes[] = 'uncoder-carousel--arrows-auto';
+				}
 			}
 			if ( ! empty( $s['center_mode'] ) ) {
 				$classes[] = 'uncoder-carousel--center';

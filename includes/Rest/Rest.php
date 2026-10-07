@@ -18,6 +18,30 @@ final class Rest {
 
 	public function register(): void {
 		add_action( 'rest_api_init', array( $this, 'routes' ) );
+		add_filter( 'rest_pre_dispatch', array( $this, 'unwrap_body' ), 0, 3 );
+	}
+
+	/**
+	 * Opens a request body the editor wrapped in base64 ({"uncoder_body": "…"} with the X-Uncoder-Wrapped header),
+	 * which it does when a host firewall refused the plain JSON (src/editor/lib/api.ts). Runs before the route and
+	 * its permission check, so every endpoint sees the JSON it was sent. Any route: the editor also writes WordPress
+	 * core routes.
+	 *
+	 * @param mixed            $result  Response to short-circuit with, or null.
+	 * @param \WP_REST_Server  $server  Server.
+	 * @param \WP_REST_Request $request Request.
+	 * @return mixed
+	 */
+	public function unwrap_body( $result, $server, $request ) {
+		if ( null !== $result || ! $request instanceof \WP_REST_Request || '1' !== $request->get_header( 'X-Uncoder-Wrapped' ) ) {
+			return $result;
+		}
+		$params = $request->get_json_params();
+		$body   = is_array( $params ) && 1 === count( $params ) && is_string( $params['uncoder_body'] ?? null ) ? base64_decode( $params['uncoder_body'], true ) : false;
+		if ( is_string( $body ) && null !== json_decode( $body ) ) {
+			$request->set_body( $body );
+		}
+		return $result;
 	}
 
 	public function routes(): void {

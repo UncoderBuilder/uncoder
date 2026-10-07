@@ -202,6 +202,18 @@ html:not(.uncoder-js) .uncoder-carousel > .uncoder-carousel__viewport > .uncoder
   color: var(--uncoder-carousel-arrow-color);
 }
 
+/* Show arrows "When there is more to see": the arrow that cannot move fades out (and leaves the tab order). */
+.uncoder-carousel--arrows-auto > .uncoder-carousel__viewport > .uncoder-carousel__arrow {
+  transition: opacity 0.25s ease, visibility 0s linear 0s, background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.uncoder-carousel--arrows-auto > .uncoder-carousel__viewport > .uncoder-carousel__arrow.is-disabled {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.25s ease, visibility 0s linear 0.25s, background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
 .uncoder-carousel__arrow .uncoder-svg {
   width: 1em;
   height: 1em;
