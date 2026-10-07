@@ -693,15 +693,53 @@ img.uncoder-svg--img {
    width and the gap back while it is hidden. */
 .uncoder-hover-reveal .uncoder-btn__icon {
   opacity: 0;
-  margin-inline-start: calc(-1 * (var(--uncoder-btn-icon-box, var(--uncoder-btn-icon, 1em)) + var(--uncoder-btn-gap, 0.5em)));
+  margin-inline-start: calc(-1 * (var(--uncoder-btn-icon-box, var(--uncoder-btn-icon, 1.1em)) + var(--uncoder-btn-gap, 0.5em)));
   transition: margin 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s;
 }
 .uncoder-hover-reveal .uncoder-btn__icon:first-child {
-  margin-inline: 0 calc(-1 * (var(--uncoder-btn-icon-box, var(--uncoder-btn-icon, 1em)) + var(--uncoder-btn-gap, 0.5em)));
+  margin-inline: 0 calc(-1 * (var(--uncoder-btn-icon-box, var(--uncoder-btn-icon, 1.1em)) + var(--uncoder-btn-gap, 0.5em)));
 }
 .uncoder-hover-reveal:is(:hover, :focus-visible) .uncoder-btn__icon {
   opacity: 1;
   margin-inline: 0;
+}
+/* Move icon across: the icon travels over the label to its other side while the label slides into the icon's place,
+   on a spring (Framer's buttons whose arrow changes sides). Icon and label share one grid cell, so 100% is the icon,
+   the gap and the label together, also in a full-width button with centred content. CSS only. */
+.uncoder-hover-side:has(> .uncoder-btn__icon) {
+  display: inline-grid;
+  grid-template-areas: "fx";
+}
+.uncoder-hover-side:has(> .uncoder-btn__icon) > :is(.uncoder-btn__icon, .uncoder-btn__text) {
+  grid-area: fx;
+  position: relative;
+  inset-inline-start: 0;
+  transition: inset-inline-start 0.45s cubic-bezier(0.3, 1.15, 0.5, 1);
+  transition: inset-inline-start 0.45s linear(0, 0.069, 0.22, 0.395, 0.562, 0.702, 0.812, 0.893, 0.948, 0.983, 1.004, 1.014, 1.017, 1.017, 1.015, 1.012, 1.009, 1.006, 1.004, 1.002, 1.001, 1, 1, 1, 1, 1);
+}
+.uncoder-hover-side:has(> .uncoder-btn__icon) > .uncoder-btn__icon:first-child {
+  justify-self: start;
+}
+.uncoder-hover-side:has(> .uncoder-btn__icon) > .uncoder-btn__icon:first-child + .uncoder-btn__text {
+  margin-inline-start: calc(var(--uncoder-btn-icon-box, var(--uncoder-btn-icon, 1.1em)) + var(--uncoder-btn-gap, 0.5em));
+}
+.uncoder-hover-side:has(> .uncoder-btn__icon) > .uncoder-btn__text + .uncoder-btn__icon {
+  justify-self: end;
+}
+.uncoder-hover-side:has(> .uncoder-btn__icon) > .uncoder-btn__text:first-child {
+  margin-inline-end: calc(var(--uncoder-btn-icon-box, var(--uncoder-btn-icon, 1.1em)) + var(--uncoder-btn-gap, 0.5em));
+}
+.uncoder-hover-side:has(> .uncoder-btn__icon):is(:hover, :focus-visible) > .uncoder-btn__icon:first-child {
+  inset-inline-start: calc(100% - var(--uncoder-btn-icon-box, var(--uncoder-btn-icon, 1.1em)));
+}
+.uncoder-hover-side:has(> .uncoder-btn__icon):is(:hover, :focus-visible) > .uncoder-btn__icon:first-child + .uncoder-btn__text {
+  inset-inline-start: calc(-1 * (var(--uncoder-btn-icon-box, var(--uncoder-btn-icon, 1.1em)) + var(--uncoder-btn-gap, 0.5em)));
+}
+.uncoder-hover-side:has(> .uncoder-btn__icon):is(:hover, :focus-visible) > .uncoder-btn__text + .uncoder-btn__icon {
+  inset-inline-start: calc(var(--uncoder-btn-icon-box, var(--uncoder-btn-icon, 1.1em)) - 100%);
+}
+.uncoder-hover-side:has(> .uncoder-btn__icon):is(:hover, :focus-visible) > .uncoder-btn__text:first-child {
+  inset-inline-start: calc(var(--uncoder-btn-icon-box, var(--uncoder-btn-icon, 1.1em)) + var(--uncoder-btn-gap, 0.5em));
 }
 .uncoder-hover-shine {
   position: relative;
@@ -1007,7 +1045,8 @@ html:not(.uncoder-editing) .uncoder-ix-hidden {
   }
   .uncoder-btn,
   .uncoder-image img,
-  .uncoder-hover-reveal .uncoder-btn__icon {
+  .uncoder-hover-reveal .uncoder-btn__icon,
+  .uncoder-hover-side > * {
     transition: none;
   }
 }

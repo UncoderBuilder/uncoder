@@ -351,6 +351,7 @@ class Form extends Widget_Base {
 				'condition' => array( 'button_icon.library!' => 'none' ),
 			)
 		);
+		$this->add_control( 'button_hover_effect', array( 'type' => 'select', 'label' => __( 'Hover effect', 'uncoder' ), 'options' => Button::HOVER_EFFECTS ) );
 		$this->add_control(
 			'button_variant',
 			array(
@@ -1364,10 +1365,15 @@ class Form extends Widget_Base {
 		$label   = '<span class="uncoder-btn__text"' . $ctx->inline( 'button_text' ) . '>' . esc_html( $text ) . '</span>';
 		$inner   = 'before' === ( $s['button_icon_position'] ?? 'after' ) ? $icon . $label : $label . $icon;
 		$classes = array( 'uncoder-form__group', 'uncoder-form__group--submit' );
+		$button  = 'uncoder-btn uncoder-btn--' . $variant . ' uncoder-btn--' . $size . ' uncoder-form__submit';
+		$effect  = (string) ( $s['button_hover_effect'] ?? '' );
+		if ( '' !== $effect && isset( Button::HOVER_EFFECTS[ $effect ] ) ) {
+			$button .= ' uncoder-hover-' . $effect;
+		}
 		if ( isset( $s['button_width_mobile'] ) && '' !== $s['button_width_mobile'] ) {
 			$classes[] = 'uncoder-form__group--mw';
 		}
 		return '<div class="' . esc_attr( implode( ' ', $classes ) ) . '">'
-			. '<button type="submit" class="' . esc_attr( 'uncoder-btn uncoder-btn--' . $variant . ' uncoder-btn--' . $size . ' uncoder-form__submit' ) . '">' . $inner . '</button></div>';
+			. '<button type="submit" class="' . esc_attr( $button ) . '">' . $inner . '</button></div>';
 	}
 }

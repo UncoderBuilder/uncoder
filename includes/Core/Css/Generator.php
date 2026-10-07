@@ -115,9 +115,29 @@ final class Generator {
 		foreach ( Breakpoints::devices() as $device ) {
 			$custom = $settings[ $key . Breakpoints::suffix( $device ) ] ?? '';
 			if ( is_string( $custom ) && '' !== trim( $custom ) ) {
-				$rules->add_raw( str_replace( 'selector', $wrapper, Utils::sanitize_custom_css( $custom ) ), $device );
+				$rules->add_raw( self::scope_custom_css( Utils::sanitize_custom_css( $custom ), $wrapper ), $device );
 			}
 		}
+	}
+
+	/**
+	 * Puts the element's selector in place of "selector". At the start of a selector it becomes the wrapper itself
+	 * (".uncoder .uncoder-abc"); further in ("a:hover > selector img") it becomes :is(wrapper), which matches the same
+	 * element with the same specificity, where the wrapper's descendant combinator would break the selector.
+	 * Twin of scopeCustomCss() in src/shared/css.ts.
+	 *
+	 * @param string $css     Sanitized custom CSS.
+	 * @param string $wrapper The element's selector.
+	 */
+	public static function scope_custom_css( string $css, string $wrapper ): string {
+		$css = (string) preg_replace_callback(
+			'/(^|[{},;]\s*)selector/',
+			static function ( array $m ) use ( $wrapper ): string {
+				return $m[1] . $wrapper;
+			},
+			$css
+		);
+		return str_replace( 'selector', ':is(' . $wrapper . ')', $css );
 	}
 
 	/** Built-in states of the inspector's state switch; any other key is a custom selector around "&". */

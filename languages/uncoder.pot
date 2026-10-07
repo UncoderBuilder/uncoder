@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-07T08:25:30+00:00\n"
+"POT-Creation-Date: 2026-10-07T09:07:01+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: uncoder\n"
@@ -137,7 +137,7 @@ msgstr ""
 #: includes/Widgets/Featured_Image.php:238
 #: includes/Widgets/Flip_Box.php:453
 #: includes/Widgets/Flip_Box.php:472
-#: includes/Widgets/Form.php:794
+#: includes/Widgets/Form.php:795
 #: includes/Widgets/Heading.php:96
 #: includes/Widgets/Icon_Box.php:542
 #: includes/Widgets/Icon_Box.php:571
@@ -287,11 +287,11 @@ msgstr ""
 #: includes/Widgets/Alert.php:307
 #: includes/Widgets/Author_Box.php:198
 #: includes/Widgets/Blockquote.php:208
-#: includes/Widgets/Button.php:97
+#: includes/Widgets/Button.php:98
 #: includes/Widgets/Countdown.php:328
 #: includes/Widgets/Counter.php:217
 #: includes/Widgets/Facebook_Embed.php:197
-#: includes/Widgets/Form.php:372
+#: includes/Widgets/Form.php:373
 #: includes/Widgets/Hotspot.php:247
 #: includes/Widgets/Icon.php:145
 #: includes/Widgets/Icon_Box.php:405
@@ -401,9 +401,9 @@ msgstr ""
 #: includes/Widgets/Alert.php:93
 #: includes/Widgets/Animated_Headline.php:70
 #: includes/Widgets/Blockquote.php:92
-#: includes/Widgets/Button.php:82
+#: includes/Widgets/Button.php:83
 #: includes/Widgets/Divider.php:46
-#: includes/Widgets/Form.php:358
+#: includes/Widgets/Form.php:359
 #: includes/Widgets/Icon_List.php:224
 #: includes/Widgets/Link_In_Bio.php:340
 #: includes/Widgets/Price_Table.php:262
@@ -682,7 +682,7 @@ msgstr ""
 
 #: includes/Core/Assets.php:78
 #: includes/Widgets/Form.php:325
-#: includes/Widgets/Form.php:1121
+#: includes/Widgets/Form.php:1122
 #: includes/Widgets/Loop_Grid.php:292
 #: includes/Widgets/Loop_Grid.php:782
 #: includes/Widgets/Posts.php:330
@@ -756,12 +756,12 @@ msgstr ""
 #: includes/Widgets/Alert.php:218
 #: includes/Widgets/Author_Box.php:178
 #: includes/Widgets/Blockquote.php:140
-#: includes/Widgets/Button.php:228
+#: includes/Widgets/Button.php:229
 #: includes/Widgets/Call_To_Action.php:658
 #: includes/Widgets/Carousel.php:120
 #: includes/Widgets/Flip_Box.php:344
-#: includes/Widgets/Form.php:912
-#: includes/Widgets/Form.php:977
+#: includes/Widgets/Form.php:913
+#: includes/Widgets/Form.php:978
 #: includes/Widgets/Hotspot.php:366
 #: includes/Widgets/Icon.php:155
 #: includes/Widgets/Icon_Box.php:278
@@ -818,9 +818,9 @@ msgstr ""
 #: includes/Core/Common_Controls.php:85
 #: includes/Elements/Container.php:72
 #: includes/Menus/Mega_Menu.php:200
-#: includes/Widgets/Button.php:139
+#: includes/Widgets/Button.php:140
 #: includes/Widgets/Countdown.php:222
-#: includes/Widgets/Form.php:402
+#: includes/Widgets/Form.php:403
 #: includes/Widgets/Login.php:423
 #: includes/Widgets/Nav_Menu.php:1119
 #: includes/Widgets/Price_Table.php:281
@@ -882,7 +882,7 @@ msgstr ""
 #: includes/Widgets/Author_Box.php:154
 #: includes/Widgets/Blockquote.php:126
 #: includes/Widgets/Breadcrumbs.php:142
-#: includes/Widgets/Button.php:137
+#: includes/Widgets/Button.php:138
 #: includes/Widgets/Call_To_Action.php:318
 #: includes/Widgets/Countdown.php:220
 #: includes/Widgets/Counter.php:175
@@ -890,7 +890,7 @@ msgstr ""
 #: includes/Widgets/Facebook_Embed.php:239
 #: includes/Widgets/Featured_Image.php:119
 #: includes/Widgets/Flip_Box.php:356
-#: includes/Widgets/Form.php:400
+#: includes/Widgets/Form.php:401
 #: includes/Widgets/Icon.php:87
 #: includes/Widgets/Icon_List.php:201
 #: includes/Widgets/Image.php:170
@@ -1047,8 +1047,8 @@ msgstr ""
 #: includes/Widgets/Animated_Headline.php:272
 #: includes/Widgets/Author_Box.php:163
 #: includes/Widgets/Blockquote.php:135
-#: includes/Widgets/Button.php:170
-#: includes/Widgets/Button.php:190
+#: includes/Widgets/Button.php:171
+#: includes/Widgets/Button.php:191
 #: includes/Widgets/Call_To_Action.php:369
 #: includes/Widgets/Call_To_Action.php:674
 #: includes/Widgets/Call_To_Action.php:711
@@ -1062,10 +1062,10 @@ msgstr ""
 #: includes/Widgets/Flip_Box.php:278
 #: includes/Widgets/Flip_Box.php:283
 #: includes/Widgets/Flip_Box.php:318
-#: includes/Widgets/Form.php:870
-#: includes/Widgets/Form.php:882
-#: includes/Widgets/Form.php:940
-#: includes/Widgets/Form.php:953
+#: includes/Widgets/Form.php:871
+#: includes/Widgets/Form.php:883
+#: includes/Widgets/Form.php:941
+#: includes/Widgets/Form.php:954
 #: includes/Widgets/Hotspot.php:286
 #: includes/Widgets/Hotspot.php:304
 #: includes/Widgets/Hotspot.php:358
@@ -1171,15 +1171,15 @@ msgstr ""
 #: includes/Widgets/Alert.php:193
 #: includes/Widgets/Author_Box.php:164
 #: includes/Widgets/Author_Box.php:222
-#: includes/Widgets/Button.php:174
+#: includes/Widgets/Button.php:175
 #: includes/Widgets/Call_To_Action.php:381
 #: includes/Widgets/Carousel.php:106
 #: includes/Widgets/Code_Highlight.php:265
 #: includes/Widgets/Facebook_Embed.php:292
 #: includes/Widgets/Featured_Image.php:206
 #: includes/Widgets/Flip_Box.php:258
-#: includes/Widgets/Form.php:874
-#: includes/Widgets/Form.php:941
+#: includes/Widgets/Form.php:875
+#: includes/Widgets/Form.php:942
 #: includes/Widgets/Google_Maps.php:154
 #: includes/Widgets/Hotspot.php:310
 #: includes/Widgets/Icon_Box.php:295
@@ -1227,7 +1227,7 @@ msgstr ""
 #: includes/Widgets/Author_Box.php:169
 #: includes/Widgets/Author_Box.php:217
 #: includes/Widgets/Blockquote.php:149
-#: includes/Widgets/Button.php:219
+#: includes/Widgets/Button.php:220
 #: includes/Widgets/Call_To_Action.php:386
 #: includes/Widgets/Call_To_Action.php:649
 #: includes/Widgets/Carousel.php:111
@@ -1236,8 +1236,8 @@ msgstr ""
 #: includes/Widgets/Featured_Image.php:201
 #: includes/Widgets/Flip_Box.php:253
 #: includes/Widgets/Flip_Box.php:291
-#: includes/Widgets/Form.php:903
-#: includes/Widgets/Form.php:968
+#: includes/Widgets/Form.php:904
+#: includes/Widgets/Form.php:969
 #: includes/Widgets/Google_Maps.php:149
 #: includes/Widgets/Hotspot.php:233
 #: includes/Widgets/Hotspot.php:315
@@ -1436,7 +1436,7 @@ msgstr ""
 #: includes/Widgets/Author_Box.php:59
 #: includes/Widgets/Author_Box.php:153
 #: includes/Widgets/Blockquote.php:125
-#: includes/Widgets/Button.php:136
+#: includes/Widgets/Button.php:137
 #: includes/Widgets/Call_To_Action.php:122
 #: includes/Widgets/Call_To_Action.php:290
 #: includes/Widgets/Call_To_Action.php:317
@@ -1447,7 +1447,7 @@ msgstr ""
 #: includes/Widgets/Featured_Image.php:118
 #: includes/Widgets/Flip_Box.php:198
 #: includes/Widgets/Flip_Box.php:355
-#: includes/Widgets/Form.php:399
+#: includes/Widgets/Form.php:400
 #: includes/Widgets/Hotspot.php:174
 #: includes/Widgets/Hotspot.php:204
 #: includes/Widgets/Icon.php:86
@@ -1496,7 +1496,7 @@ msgstr ""
 #: includes/Widgets/Author_Box.php:61
 #: includes/Widgets/Author_Box.php:155
 #: includes/Widgets/Blockquote.php:127
-#: includes/Widgets/Button.php:138
+#: includes/Widgets/Button.php:139
 #: includes/Widgets/Call_To_Action.php:123
 #: includes/Widgets/Call_To_Action.php:291
 #: includes/Widgets/Call_To_Action.php:319
@@ -1507,7 +1507,7 @@ msgstr ""
 #: includes/Widgets/Featured_Image.php:120
 #: includes/Widgets/Flip_Box.php:197
 #: includes/Widgets/Flip_Box.php:357
-#: includes/Widgets/Form.php:401
+#: includes/Widgets/Form.php:402
 #: includes/Widgets/Hotspot.php:175
 #: includes/Widgets/Hotspot.php:205
 #: includes/Widgets/Icon.php:88
@@ -1639,15 +1639,15 @@ msgstr ""
 #: includes/Widgets/Accordion.php:296
 #: includes/Widgets/Alert.php:314
 #: includes/Widgets/Breadcrumbs.php:158
-#: includes/Widgets/Button.php:157
+#: includes/Widgets/Button.php:158
 #: includes/Widgets/Call_To_Action.php:392
 #: includes/Widgets/Call_To_Action.php:495
 #: includes/Widgets/Call_To_Action.php:547
 #: includes/Widgets/Call_To_Action.php:709
 #: includes/Widgets/Code_Highlight.php:319
 #: includes/Widgets/Flip_Box.php:276
-#: includes/Widgets/Form.php:841
-#: includes/Widgets/Form.php:931
+#: includes/Widgets/Form.php:842
+#: includes/Widgets/Form.php:932
 #: includes/Widgets/Google_Maps.php:157
 #: includes/Widgets/Hotspot.php:273
 #: includes/Widgets/Icon.php:102
@@ -1702,13 +1702,13 @@ msgstr ""
 #: includes/Widgets/Accordion.php:314
 #: includes/Widgets/Alert.php:324
 #: includes/Widgets/Breadcrumbs.php:168
-#: includes/Widgets/Button.php:177
+#: includes/Widgets/Button.php:178
 #: includes/Widgets/Call_To_Action.php:395
 #: includes/Widgets/Call_To_Action.php:518
 #: includes/Widgets/Call_To_Action.php:714
 #: includes/Widgets/Code_Highlight.php:323
 #: includes/Widgets/Flip_Box.php:281
-#: includes/Widgets/Form.php:944
+#: includes/Widgets/Form.php:945
 #: includes/Widgets/Google_Maps.php:160
 #: includes/Widgets/Icon.php:121
 #: includes/Widgets/Icon_Box.php:298
@@ -2194,7 +2194,7 @@ msgstr ""
 
 #: includes/Dynamic/Core_Tags.php:59
 #: includes/Dynamic/Core_Tags.php:326
-#: includes/Widgets/Form.php:538
+#: includes/Widgets/Form.php:539
 #: includes/Widgets/Post_Info.php:135
 #: includes/Widgets/Post_Info.php:141
 msgid "Format"
@@ -2291,8 +2291,8 @@ msgid "Term post count"
 msgstr ""
 
 #: includes/Dynamic/Core_Tags.php:244
-#: includes/Widgets/Form.php:504
-#: includes/Widgets/Form.php:630
+#: includes/Widgets/Form.php:505
+#: includes/Widgets/Form.php:631
 #: includes/Widgets/Site_Logo.php:311
 #: includes/Widgets/Site_Title.php:50
 #: includes/Widgets/Site_Title.php:128
@@ -2701,7 +2701,7 @@ msgid "Gap"
 msgstr ""
 
 #: includes/Elements/Container.php:234
-#: includes/Widgets/Form.php:780
+#: includes/Widgets/Form.php:781
 #: includes/Widgets/Loop_Grid.php:372
 #: includes/Widgets/Posts.php:373
 #: includes/Widgets/Sitemap.php:264
@@ -2738,7 +2738,7 @@ msgstr ""
 
 #: includes/Elements/Container.php:278
 #: includes/Widgets/Animated_Headline.php:163
-#: includes/Widgets/Button.php:73
+#: includes/Widgets/Button.php:74
 #: includes/Widgets/Featured_Image.php:81
 #: includes/Widgets/Heading.php:62
 #: includes/Widgets/Hotspot.php:159
@@ -2959,8 +2959,8 @@ msgstr ""
 #: includes/Elements/Container.php:594
 #: includes/Elements/Container.php:599
 #: includes/Widgets/Breadcrumbs.php:183
-#: includes/Widgets/Button.php:162
-#: includes/Widgets/Button.php:182
+#: includes/Widgets/Button.php:163
+#: includes/Widgets/Button.php:183
 #: includes/Widgets/Call_To_Action.php:377
 #: includes/Widgets/Call_To_Action.php:682
 #: includes/Widgets/Call_To_Action.php:710
@@ -2973,9 +2973,9 @@ msgstr ""
 #: includes/Widgets/Flip_Box.php:277
 #: includes/Widgets/Flip_Box.php:282
 #: includes/Widgets/Flip_Box.php:336
-#: includes/Widgets/Form.php:846
-#: includes/Widgets/Form.php:936
-#: includes/Widgets/Form.php:949
+#: includes/Widgets/Form.php:847
+#: includes/Widgets/Form.php:937
+#: includes/Widgets/Form.php:950
 #: includes/Widgets/Hotspot.php:395
 #: includes/Widgets/Link_In_Bio.php:437
 #: includes/Widgets/Link_In_Bio.php:598
@@ -3121,7 +3121,7 @@ msgid "The animation reacts to the mouse."
 msgstr ""
 
 #: includes/Forms/Actions.php:111
-#: includes/Widgets/Form.php:484
+#: includes/Widgets/Form.php:485
 msgid "New submission: [form_name]"
 msgstr ""
 
@@ -3133,7 +3133,7 @@ msgid "Sent by the form \"%1$s\" on %2$s"
 msgstr ""
 
 #: includes/Forms/Actions.php:251
-#: includes/Widgets/Form.php:611
+#: includes/Widgets/Form.php:612
 msgid "Thanks for getting in touch with [site_name]"
 msgstr ""
 
@@ -3147,7 +3147,7 @@ msgid ""
 msgstr ""
 
 #: includes/Forms/Fields.php:300
-#: includes/Widgets/Form.php:438
+#: includes/Widgets/Form.php:439
 msgid "This field is required."
 msgstr ""
 
@@ -3228,7 +3228,7 @@ msgstr ""
 #: includes/Forms/Forms.php:203
 #: includes/Forms/Privacy.php:123
 #: includes/Widgets/Form.php:54
-#: includes/Widgets/Form.php:765
+#: includes/Widgets/Form.php:766
 #: includes/Widgets/Login.php:54
 #: includes/Widgets/Login.php:231
 msgid "Form"
@@ -3259,12 +3259,12 @@ msgid "Please complete the security check and try again."
 msgstr ""
 
 #: includes/Forms/Forms.php:511
-#: includes/Widgets/Form.php:430
+#: includes/Widgets/Form.php:431
 msgid "Something went wrong. Please try again."
 msgstr ""
 
 #: includes/Forms/Forms.php:535
-#: includes/Widgets/Form.php:1146
+#: includes/Widgets/Form.php:1147
 msgid "Thanks! Your message has been sent."
 msgstr ""
 
@@ -3524,7 +3524,7 @@ msgstr ""
 #: includes/Widgets/Alert.php:138
 #: includes/Widgets/Alert.php:229
 #: includes/Widgets/Breadcrumbs.php:96
-#: includes/Widgets/Button.php:107
+#: includes/Widgets/Button.php:108
 #: includes/Widgets/Divider.php:92
 #: includes/Widgets/Divider.php:110
 #: includes/Widgets/Flip_Box.php:61
@@ -4614,7 +4614,7 @@ msgid "How far the icon turns when its item opens, with no active icon: 180° fl
 msgstr ""
 
 #: includes/Widgets/Accordion.php:196
-#: includes/Widgets/Button.php:112
+#: includes/Widgets/Button.php:113
 #: includes/Widgets/Form.php:345
 #: includes/Widgets/Off_Canvas.php:111
 #: includes/Widgets/Tabs.php:228
@@ -4653,8 +4653,8 @@ msgstr ""
 #: includes/Widgets/Alert.php:223
 #: includes/Widgets/Author_Box.php:183
 #: includes/Widgets/Blockquote.php:154
-#: includes/Widgets/Button.php:175
-#: includes/Widgets/Button.php:202
+#: includes/Widgets/Button.php:176
+#: includes/Widgets/Button.php:203
 #: includes/Widgets/Call_To_Action.php:393
 #: includes/Widgets/Call_To_Action.php:396
 #: includes/Widgets/Call_To_Action.php:697
@@ -4663,8 +4663,8 @@ msgstr ""
 #: includes/Widgets/Facebook_Embed.php:293
 #: includes/Widgets/Featured_Image.php:207
 #: includes/Widgets/Flip_Box.php:259
-#: includes/Widgets/Form.php:875
-#: includes/Widgets/Form.php:942
+#: includes/Widgets/Form.php:876
+#: includes/Widgets/Form.php:943
 #: includes/Widgets/Google_Maps.php:155
 #: includes/Widgets/Hotspot.php:320
 #: includes/Widgets/Hotspot.php:380
@@ -4718,7 +4718,7 @@ msgstr ""
 #: includes/Widgets/Author_Box.php:281
 #: includes/Widgets/Blockquote.php:238
 #: includes/Widgets/Breadcrumbs.php:156
-#: includes/Widgets/Button.php:155
+#: includes/Widgets/Button.php:156
 #: includes/Widgets/Call_To_Action.php:563
 #: includes/Widgets/Call_To_Action.php:584
 #: includes/Widgets/Call_To_Action.php:614
@@ -4734,10 +4734,10 @@ msgstr ""
 #: includes/Widgets/Flip_Box.php:274
 #: includes/Widgets/Flip_Box.php:448
 #: includes/Widgets/Flip_Box.php:467
-#: includes/Widgets/Form.php:798
-#: includes/Widgets/Form.php:839
-#: includes/Widgets/Form.php:929
-#: includes/Widgets/Form.php:986
+#: includes/Widgets/Form.php:799
+#: includes/Widgets/Form.php:840
+#: includes/Widgets/Form.php:930
+#: includes/Widgets/Form.php:987
 #: includes/Widgets/Heading.php:88
 #: includes/Widgets/Icon_Box.php:537
 #: includes/Widgets/Icon_Box.php:566
@@ -4831,7 +4831,7 @@ msgstr ""
 #: includes/Widgets/Archive_Title.php:73
 #: includes/Widgets/Blockquote.php:123
 #: includes/Widgets/Breadcrumbs.php:139
-#: includes/Widgets/Button.php:134
+#: includes/Widgets/Button.php:135
 #: includes/Widgets/Countdown.php:217
 #: includes/Widgets/Counter.php:172
 #: includes/Widgets/Divider.php:70
@@ -4839,7 +4839,7 @@ msgstr ""
 #: includes/Widgets/Featured_Image.php:116
 #: includes/Widgets/Featured_Image.php:246
 #: includes/Widgets/Flip_Box.php:353
-#: includes/Widgets/Form.php:397
+#: includes/Widgets/Form.php:398
 #: includes/Widgets/Heading.php:76
 #: includes/Widgets/Icon.php:84
 #: includes/Widgets/Icon_Box.php:260
@@ -4939,7 +4939,7 @@ msgid "Puts the icon in a tile of this size (with the background and radius belo
 msgstr ""
 
 #: includes/Widgets/Accordion.php:406
-#: includes/Widgets/Button.php:258
+#: includes/Widgets/Button.php:259
 #: includes/Widgets/Flip_Box.php:400
 #: includes/Widgets/Nav_Menu.php:844
 msgid "Icon background"
@@ -5012,9 +5012,9 @@ msgid "Soft with side accent"
 msgstr ""
 
 #: includes/Widgets/Alert.php:98
-#: includes/Widgets/Button.php:87
+#: includes/Widgets/Button.php:88
 #: includes/Widgets/Call_To_Action.php:56
-#: includes/Widgets/Form.php:363
+#: includes/Widgets/Form.php:364
 #: includes/Widgets/Link_In_Bio.php:249
 #: includes/Widgets/Loop_Grid.php:323
 #: includes/Widgets/Nav_Menu.php:484
@@ -5371,7 +5371,7 @@ msgstr ""
 
 #: includes/Widgets/Archive_Description.php:62
 #: includes/Widgets/Breadcrumbs.php:95
-#: includes/Widgets/Button.php:63
+#: includes/Widgets/Button.php:64
 #: includes/Widgets/Divider.php:91
 #: includes/Widgets/Divider.php:100
 #: includes/Widgets/Form.php:143
@@ -5747,7 +5747,7 @@ msgid "Separator spacing"
 msgstr ""
 
 #: includes/Widgets/Breadcrumbs.php:224
-#: includes/Widgets/Button.php:237
+#: includes/Widgets/Button.php:238
 #: includes/Widgets/Flip_Box.php:409
 #: includes/Widgets/Hotspot.php:257
 #: includes/Widgets/Image_Gallery.php:302
@@ -5789,11 +5789,11 @@ msgstr ""
 msgid "Breadcrumb"
 msgstr ""
 
-#: includes/Widgets/Button.php:42
-#: includes/Widgets/Button.php:58
-#: includes/Widgets/Button.php:154
+#: includes/Widgets/Button.php:43
+#: includes/Widgets/Button.php:59
+#: includes/Widgets/Button.php:155
 #: includes/Widgets/Flip_Box.php:273
-#: includes/Widgets/Form.php:928
+#: includes/Widgets/Form.php:929
 #: includes/Widgets/Login.php:368
 #: includes/Widgets/Price_Table.php:238
 #: includes/Widgets/Price_Table.php:670
@@ -5802,46 +5802,46 @@ msgstr ""
 msgid "Button"
 msgstr ""
 
-#: includes/Widgets/Button.php:54
+#: includes/Widgets/Button.php:55
 msgid "Call-to-action link styled as a button. Variants: primary (Design System), secondary, outline, ghost, link."
 msgstr ""
 
-#: includes/Widgets/Button.php:64
+#: includes/Widgets/Button.php:65
 msgid "Click here"
 msgstr ""
 
-#: includes/Widgets/Button.php:85
+#: includes/Widgets/Button.php:86
 #: includes/Widgets/Call_To_Action.php:54
-#: includes/Widgets/Form.php:361
+#: includes/Widgets/Form.php:362
 #: includes/Widgets/Loop_Grid.php:321
 #: includes/Widgets/Nav_Menu.php:482
 #: includes/Widgets/Slides.php:126
 msgid "Primary"
 msgstr ""
 
-#: includes/Widgets/Button.php:86
+#: includes/Widgets/Button.php:87
 #: includes/Widgets/Call_To_Action.php:55
-#: includes/Widgets/Form.php:362
+#: includes/Widgets/Form.php:363
 #: includes/Widgets/Loop_Grid.php:322
 #: includes/Widgets/Nav_Menu.php:483
 #: includes/Widgets/Slides.php:127
 msgid "Secondary"
 msgstr ""
 
-#: includes/Widgets/Button.php:88
+#: includes/Widgets/Button.php:89
 #: includes/Widgets/Call_To_Action.php:57
-#: includes/Widgets/Form.php:364
+#: includes/Widgets/Form.php:365
 #: includes/Widgets/Loop_Grid.php:324
 #: includes/Widgets/Slides.php:129
 msgid "Ghost"
 msgstr ""
 
-#: includes/Widgets/Button.php:89
+#: includes/Widgets/Button.php:90
 #: includes/Widgets/Call_To_Action.php:58
 msgid "Text link"
 msgstr ""
 
-#: includes/Widgets/Button.php:115
+#: includes/Widgets/Button.php:116
 #: includes/Widgets/Form.php:348
 #: includes/Widgets/Image_Compare.php:100
 #: includes/Widgets/Off_Canvas.php:114
@@ -5850,7 +5850,7 @@ msgstr ""
 msgid "Before"
 msgstr ""
 
-#: includes/Widgets/Button.php:116
+#: includes/Widgets/Button.php:117
 #: includes/Widgets/Form.php:349
 #: includes/Widgets/Image_Compare.php:109
 #: includes/Widgets/Off_Canvas.php:115
@@ -5859,7 +5859,7 @@ msgstr ""
 msgid "After"
 msgstr ""
 
-#: includes/Widgets/Button.php:125
+#: includes/Widgets/Button.php:126
 #: includes/Widgets/Off_Canvas.php:320
 #: includes/Widgets/Post_Info.php:329
 #: includes/Widgets/Social_Icons.php:330
@@ -5867,9 +5867,10 @@ msgstr ""
 msgid "Icon spacing"
 msgstr ""
 
-#: includes/Widgets/Button.php:150
+#: includes/Widgets/Button.php:151
 #: includes/Widgets/Call_To_Action.php:457
 #: includes/Widgets/Featured_Image.php:213
+#: includes/Widgets/Form.php:354
 #: includes/Widgets/Icon_Box.php:315
 #: includes/Widgets/Image.php:269
 #: includes/Widgets/Image_Box.php:249
@@ -5881,16 +5882,16 @@ msgstr ""
 msgid "Hover effect"
 msgstr ""
 
-#: includes/Widgets/Button.php:151
+#: includes/Widgets/Button.php:152
 msgid "Button ID"
 msgstr ""
 
-#: includes/Widgets/Button.php:198
+#: includes/Widgets/Button.php:199
 #: includes/Widgets/Call_To_Action.php:712
 #: includes/Widgets/Call_To_Action.php:717
 #: includes/Widgets/Flip_Box.php:279
 #: includes/Widgets/Flip_Box.php:284
-#: includes/Widgets/Form.php:958
+#: includes/Widgets/Form.php:959
 #: includes/Widgets/Icon_Box.php:304
 #: includes/Widgets/Image_Box.php:238
 #: includes/Widgets/Link_In_Bio.php:632
@@ -5916,15 +5917,15 @@ msgstr ""
 msgid "Border color"
 msgstr ""
 
-#: includes/Widgets/Button.php:207
+#: includes/Widgets/Button.php:208
 msgid "Fill color"
 msgstr ""
 
-#: includes/Widgets/Button.php:208
+#: includes/Widgets/Button.php:209
 msgid "The color that sweeps in with the Fill hover effects."
 msgstr ""
 
-#: includes/Widgets/Button.php:250
+#: includes/Widgets/Button.php:251
 #: includes/Widgets/Flip_Box.php:391
 #: includes/Widgets/Hotspot.php:278
 #: includes/Widgets/Hotspot.php:296
@@ -5953,11 +5954,11 @@ msgstr ""
 msgid "Icon color"
 msgstr ""
 
-#: includes/Widgets/Button.php:259
+#: includes/Widgets/Button.php:260
 msgid "Puts the icon in a circle (size below)."
 msgstr ""
 
-#: includes/Widgets/Button.php:267
+#: includes/Widgets/Button.php:268
 msgid "Icon circle size"
 msgstr ""
 
@@ -6320,7 +6321,7 @@ msgid "Code snippet in a styled block (dark or light) with file name, language l
 msgstr ""
 
 #: includes/Widgets/Code_Highlight.php:55
-#: includes/Widgets/Form.php:542
+#: includes/Widgets/Form.php:543
 msgid "Plain text"
 msgstr ""
 
@@ -6552,7 +6553,7 @@ msgstr ""
 
 #: includes/Widgets/Countdown.php:193
 #: includes/Widgets/Form.php:104
-#: includes/Widgets/Form.php:619
+#: includes/Widgets/Form.php:620
 msgid "Message"
 msgstr ""
 
@@ -6603,7 +6604,7 @@ msgid "Digits"
 msgstr ""
 
 #: includes/Widgets/Countdown.php:294
-#: includes/Widgets/Form.php:789
+#: includes/Widgets/Form.php:790
 #: includes/Widgets/Image_Compare.php:278
 #: includes/Widgets/Login.php:273
 #: includes/Widgets/Post_Navigation.php:56
@@ -6907,8 +6908,8 @@ msgid "Events"
 msgstr ""
 
 #: includes/Widgets/Facebook_Embed.php:139
-#: includes/Widgets/Form.php:416
-#: includes/Widgets/Form.php:985
+#: includes/Widgets/Form.php:417
+#: includes/Widgets/Form.php:986
 msgid "Messages"
 msgstr ""
 
@@ -7208,7 +7209,7 @@ msgstr ""
 #: includes/Widgets/Flip_Box.php:109
 #: includes/Widgets/Flip_Box.php:271
 #: includes/Widgets/Form.php:326
-#: includes/Widgets/Form.php:1120
+#: includes/Widgets/Form.php:1121
 msgid "Back"
 msgstr ""
 
@@ -7303,7 +7304,7 @@ msgid "Shown in submissions and notification emails."
 msgstr ""
 
 #: includes/Widgets/Form.php:135
-#: includes/Widgets/Form.php:838
+#: includes/Widgets/Form.php:839
 #: includes/Widgets/Login.php:298
 msgid "Fields"
 msgstr ""
@@ -7468,7 +7469,7 @@ msgid "Value"
 msgstr ""
 
 #: includes/Widgets/Form.php:281
-#: includes/Widgets/Form.php:386
+#: includes/Widgets/Form.php:387
 #: includes/Widgets/Link_In_Bio.php:379
 msgid "Column width"
 msgstr ""
@@ -7515,149 +7516,149 @@ msgstr ""
 msgid "Send message"
 msgstr ""
 
-#: includes/Widgets/Form.php:421
+#: includes/Widgets/Form.php:422
 msgid "Success message"
 msgstr ""
 
-#: includes/Widgets/Form.php:422
+#: includes/Widgets/Form.php:423
 msgid "Thanks! Your message has been sent. We will get back to you soon."
 msgstr ""
 
-#: includes/Widgets/Form.php:429
+#: includes/Widgets/Form.php:430
 msgid "Error message"
 msgstr ""
 
-#: includes/Widgets/Form.php:437
+#: includes/Widgets/Form.php:438
 msgid "Required field message"
 msgstr ""
 
-#: includes/Widgets/Form.php:444
+#: includes/Widgets/Form.php:445
 msgid "Actions after submit"
 msgstr ""
 
-#: includes/Widgets/Form.php:449
+#: includes/Widgets/Form.php:450
 msgid "These settings stay on the server: they are never printed on the page."
 msgstr ""
 
-#: includes/Widgets/Form.php:456
+#: includes/Widgets/Form.php:457
 msgid "Save submissions"
 msgstr ""
 
-#: includes/Widgets/Form.php:458
+#: includes/Widgets/Form.php:459
 msgid "Listed under Uncoder → Submissions."
 msgstr ""
 
-#: includes/Widgets/Form.php:465
+#: includes/Widgets/Form.php:466
 msgid "Email notification"
 msgstr ""
 
-#: includes/Widgets/Form.php:473
+#: includes/Widgets/Form.php:474
 msgid "Send to"
 msgstr ""
 
-#: includes/Widgets/Form.php:474
+#: includes/Widgets/Form.php:475
 msgid "Site admin email"
 msgstr ""
 
-#: includes/Widgets/Form.php:475
+#: includes/Widgets/Form.php:476
 msgid "Separate several addresses with commas."
 msgstr ""
 
-#: includes/Widgets/Form.php:483
-#: includes/Widgets/Form.php:610
+#: includes/Widgets/Form.php:484
+#: includes/Widgets/Form.php:611
 msgid "Subject"
 msgstr ""
 
-#: includes/Widgets/Form.php:485
+#: includes/Widgets/Form.php:486
 msgid "Placeholders: [form_name], [site_name], [field_id]."
 msgstr ""
 
-#: includes/Widgets/Form.php:493
+#: includes/Widgets/Form.php:494
 msgid "Reply-to field"
 msgstr ""
 
-#: includes/Widgets/Form.php:495
-#: includes/Widgets/Form.php:602
+#: includes/Widgets/Form.php:496
+#: includes/Widgets/Form.php:603
 msgid "ID of the field holding the visitor's email. Empty: the first email field."
 msgstr ""
 
-#: includes/Widgets/Form.php:503
-#: includes/Widgets/Form.php:629
+#: includes/Widgets/Form.php:504
+#: includes/Widgets/Form.php:630
 msgid "From name"
 msgstr ""
 
-#: includes/Widgets/Form.php:512
+#: includes/Widgets/Form.php:513
 msgid "Email content"
 msgstr ""
 
-#: includes/Widgets/Form.php:515
+#: includes/Widgets/Form.php:516
 msgid "All fields"
 msgstr ""
 
-#: includes/Widgets/Form.php:516
+#: includes/Widgets/Form.php:517
 msgid "Custom template"
 msgstr ""
 
-#: includes/Widgets/Form.php:525
+#: includes/Widgets/Form.php:526
 #: includes/Widgets/Template.php:30
 #: includes/Widgets/Template.php:54
 msgid "Template"
 msgstr ""
 
-#: includes/Widgets/Form.php:527
+#: includes/Widgets/Form.php:528
 msgid "Placeholders: [field_id], [all-fields], [form_name], [page_url], [site_name]."
 msgstr ""
 
-#: includes/Widgets/Form.php:551
+#: includes/Widgets/Form.php:552
 msgid "Redirect after success"
 msgstr ""
 
-#: includes/Widgets/Form.php:553
+#: includes/Widgets/Form.php:554
 msgid "Optional page to open after a successful submission."
 msgstr ""
 
-#: includes/Widgets/Form.php:560
+#: includes/Widgets/Form.php:561
 msgid "Webhook URL"
 msgstr ""
 
-#: includes/Widgets/Form.php:562
+#: includes/Widgets/Form.php:563
 msgid "Optional. Each submission is POSTed here as JSON (https only)."
 msgstr ""
 
-#: includes/Widgets/Form.php:570
+#: includes/Widgets/Form.php:571
 msgid "Slack webhook"
 msgstr ""
 
-#: includes/Widgets/Form.php:572
+#: includes/Widgets/Form.php:573
 msgid "Optional. Posts each submission to a Slack channel (incoming webhook URL)."
 msgstr ""
 
-#: includes/Widgets/Form.php:579
+#: includes/Widgets/Form.php:580
 msgid "Discord webhook"
 msgstr ""
 
-#: includes/Widgets/Form.php:581
+#: includes/Widgets/Form.php:582
 msgid "Optional. Posts each submission to a Discord channel."
 msgstr ""
 
-#: includes/Widgets/Form.php:587
+#: includes/Widgets/Form.php:588
 msgid "Auto-reply email"
 msgstr ""
 
-#: includes/Widgets/Form.php:592
+#: includes/Widgets/Form.php:593
 msgid "Email the visitor a confirmation"
 msgstr ""
 
-#: includes/Widgets/Form.php:593
+#: includes/Widgets/Form.php:594
 msgid "Sent to the address the visitor typed."
 msgstr ""
 
-#: includes/Widgets/Form.php:600
-#: includes/Widgets/Form.php:678
+#: includes/Widgets/Form.php:601
+#: includes/Widgets/Form.php:679
 msgid "Email field"
 msgstr ""
 
-#: includes/Widgets/Form.php:620
+#: includes/Widgets/Form.php:621
 msgid ""
 "Hi [name],\n"
 "\n"
@@ -7666,107 +7667,107 @@ msgid ""
 "[site_name]"
 msgstr ""
 
-#: includes/Widgets/Form.php:621
+#: includes/Widgets/Form.php:622
 msgid "Placeholders: [field_id], [all-fields], [form_name], [site_name]."
 msgstr ""
 
-#: includes/Widgets/Form.php:638
+#: includes/Widgets/Form.php:639
 msgid "Reply-to address"
 msgstr ""
 
-#: includes/Widgets/Form.php:646
+#: includes/Widgets/Form.php:647
 msgid "Newsletter"
 msgstr ""
 
-#: includes/Widgets/Form.php:651
+#: includes/Widgets/Form.php:652
 msgid "Add to a mailing list"
 msgstr ""
 
-#: includes/Widgets/Form.php:652
+#: includes/Widgets/Form.php:653
 msgid "Connect Mailchimp, MailerLite, Brevo or ActiveCampaign in Uncoder → Settings → Forms."
 msgstr ""
 
-#: includes/Widgets/Form.php:659
+#: includes/Widgets/Form.php:660
 msgid "Service"
 msgstr ""
 
-#: includes/Widgets/Form.php:669
+#: includes/Widgets/Form.php:670
 msgid "List / group / audience ID"
 msgstr ""
 
-#: includes/Widgets/Form.php:670
+#: includes/Widgets/Form.php:671
 msgid "Mailchimp: audience ID. MailerLite: group ID. Brevo and ActiveCampaign: list number."
 msgstr ""
 
-#: includes/Widgets/Form.php:680
+#: includes/Widgets/Form.php:681
 msgid "Empty: the first email field."
 msgstr ""
 
-#: includes/Widgets/Form.php:688
+#: includes/Widgets/Form.php:689
 msgid "Name field"
 msgstr ""
 
-#: includes/Widgets/Form.php:697
+#: includes/Widgets/Form.php:698
 msgid "Consent checkbox field"
 msgstr ""
 
-#: includes/Widgets/Form.php:698
+#: includes/Widgets/Form.php:699
 msgid "Optional. When set, only visitors who tick this field are added."
 msgstr ""
 
-#: includes/Widgets/Form.php:706
+#: includes/Widgets/Form.php:707
 msgid "Double opt-in (Mailchimp)"
 msgstr ""
 
-#: includes/Widgets/Form.php:707
+#: includes/Widgets/Form.php:708
 msgid "New subscribers confirm by email first."
 msgstr ""
 
-#: includes/Widgets/Form.php:717
+#: includes/Widgets/Form.php:718
 msgid "Spam protection"
 msgstr ""
 
-#: includes/Widgets/Form.php:722
+#: includes/Widgets/Form.php:723
 msgid "A hidden honeypot field, a signed timestamp and a per-visitor rate limit are always on."
 msgstr ""
 
-#: includes/Widgets/Form.php:729
+#: includes/Widgets/Form.php:730
 msgid "Minimum fill time (seconds)"
 msgstr ""
 
-#: includes/Widgets/Form.php:733
+#: includes/Widgets/Form.php:734
 msgid "Faster submissions are treated as spam. 0 turns the check off."
 msgstr ""
 
-#: includes/Widgets/Form.php:740
+#: includes/Widgets/Form.php:741
 msgid "Block links in messages"
 msgstr ""
 
-#: includes/Widgets/Form.php:741
+#: includes/Widgets/Form.php:742
 msgid "Rejects text and textarea answers that contain links."
 msgstr ""
 
-#: includes/Widgets/Form.php:748
+#: includes/Widgets/Form.php:749
 msgid "CAPTCHA"
 msgstr ""
 
-#: includes/Widgets/Form.php:750
+#: includes/Widgets/Form.php:751
 msgid "Adds the CAPTCHA set up in Uncoder → Settings → Forms."
 msgstr ""
 
-#: includes/Widgets/Form.php:751
+#: includes/Widgets/Form.php:752
 msgid "Set up Turnstile, hCaptcha or reCAPTCHA v3 keys in Uncoder → Settings → Forms first."
 msgstr ""
 
-#: includes/Widgets/Form.php:758
+#: includes/Widgets/Form.php:759
 msgid "Allow file uploads"
 msgstr ""
 
-#: includes/Widgets/Form.php:759
+#: includes/Widgets/Form.php:760
 msgid "File upload fields only work when this is on. Files are stored privately and linked in the notification email."
 msgstr ""
 
-#: includes/Widgets/Form.php:770
+#: includes/Widgets/Form.php:771
 #: includes/Widgets/Icon_List.php:177
 #: includes/Widgets/Loop_Grid.php:363
 #: includes/Widgets/Posts.php:364
@@ -7774,111 +7775,111 @@ msgstr ""
 msgid "Column gap"
 msgstr ""
 
-#: includes/Widgets/Form.php:803
+#: includes/Widgets/Form.php:804
 #: includes/Widgets/Sitemap.php:286
 msgid "Space below"
 msgstr ""
 
-#: includes/Widgets/Form.php:813
+#: includes/Widgets/Form.php:814
 msgid "Required mark color"
 msgstr ""
 
-#: includes/Widgets/Form.php:821
+#: includes/Widgets/Form.php:822
 msgid "Option text color"
 msgstr ""
 
-#: includes/Widgets/Form.php:825
+#: includes/Widgets/Form.php:826
 msgid "Option typography"
 msgstr ""
 
-#: includes/Widgets/Form.php:830
+#: includes/Widgets/Form.php:831
 msgid "Help text color"
 msgstr ""
 
-#: includes/Widgets/Form.php:834
+#: includes/Widgets/Form.php:835
 msgid "Help text typography"
 msgstr ""
 
-#: includes/Widgets/Form.php:858
+#: includes/Widgets/Form.php:859
 #: includes/Widgets/Search_Form.php:258
 msgid "Placeholder color"
 msgstr ""
 
-#: includes/Widgets/Form.php:877
+#: includes/Widgets/Form.php:878
 #: includes/Widgets/Login.php:320
 #: includes/Widgets/Search_Form.php:273
 msgid "Focus"
 msgstr ""
 
-#: includes/Widgets/Form.php:890
+#: includes/Widgets/Form.php:891
 msgid "Focus color"
 msgstr ""
 
-#: includes/Widgets/Form.php:921
+#: includes/Widgets/Form.php:922
 msgid "Checkbox & radio color"
 msgstr ""
 
-#: includes/Widgets/Form.php:991
+#: includes/Widgets/Form.php:992
 msgid "Success color"
 msgstr ""
 
-#: includes/Widgets/Form.php:999
+#: includes/Widgets/Form.php:1000
 msgid "Success background"
 msgstr ""
 
-#: includes/Widgets/Form.php:1007
+#: includes/Widgets/Form.php:1008
 msgid "Error color"
 msgstr ""
 
-#: includes/Widgets/Form.php:1008
+#: includes/Widgets/Form.php:1009
 msgid "Also used for field errors and invalid field borders."
 msgstr ""
 
-#: includes/Widgets/Form.php:1016
+#: includes/Widgets/Form.php:1017
 msgid "Error background"
 msgstr ""
 
-#: includes/Widgets/Form.php:1020
+#: includes/Widgets/Form.php:1021
 msgid "Field error typography"
 msgstr ""
 
-#: includes/Widgets/Form.php:1048
+#: includes/Widgets/Form.php:1049
 msgid "Add fields to this form in the Form fields section."
 msgstr ""
 
 #. translators: %d: step number
-#: includes/Widgets/Form.php:1099
+#: includes/Widgets/Form.php:1100
 #, php-format
 msgid "Step %d"
 msgstr ""
 
-#: includes/Widgets/Form.php:1130
+#: includes/Widgets/Form.php:1131
 msgid "Leave this field empty"
 msgstr ""
 
 #. translators: %s: maximum file size, e.g. "2 MB"
-#: includes/Widgets/Form.php:1175
+#: includes/Widgets/Form.php:1176
 #, php-format
 msgid "max. %s"
 msgstr ""
 
-#: includes/Widgets/Form.php:1228
+#: includes/Widgets/Form.php:1229
 msgid "(required)"
 msgstr ""
 
-#: includes/Widgets/Form.php:1281
+#: includes/Widgets/Form.php:1282
 msgid "Select an option"
 msgstr ""
 
 #. translators: 1: current step, 2: number of steps.
 #. translators: 1: current step, 2: number of steps (filled in by the browser).
-#: includes/Widgets/Form.php:1351
-#: includes/Widgets/Form.php:1353
+#: includes/Widgets/Form.php:1352
+#: includes/Widgets/Form.php:1354
 #, php-format
 msgid "Step %1$d of %2$d"
 msgstr ""
 
-#: includes/Widgets/Form.php:1362
+#: includes/Widgets/Form.php:1363
 msgid "Send"
 msgstr ""
 

@@ -410,6 +410,11 @@ export const elementAnchor = (settings?: Settings): string =>
 /** Twin of Utils::element_selector(): the element's own class uncoder-{id} inside the document scope. */
 export const elementSelector = (id: string): string => `.uncoder .uncoder-${id}`;
 
+/** "selector" in custom CSS: the wrapper at the start of a selector, :is(wrapper) further in ("a:hover > selector img"),
+ *  where the wrapper's descendant combinator would break the selector. Twin of Generator::scope_custom_css(). */
+export const scopeCustomCss = (css: string, wrapper: string): string =>
+  css.replace(/(^|[{},;]\s*)selector/g, (_m, head: string) => head + wrapper).split('selector').join(`:is(${wrapper})`);
+
 export interface GeneratorOptions {
   docId: number | string;
   breakpoints: Breakpoint[];
@@ -633,7 +638,7 @@ export function stackCss(settings: Settings, wrapper: string, rules: Rules, devi
 export function customCss(settings: Settings, key: string, wrapper: string, rules: Rules, devices: string[]): void {
   for (const device of devices) {
     const custom = settings[key + suffix(device)];
-    if (typeof custom === 'string' && custom.trim()) rules.addRaw(sanitizeCustomCss(custom).split('selector').join(wrapper), device);
+    if (typeof custom === 'string' && custom.trim()) rules.addRaw(scopeCustomCss(sanitizeCustomCss(custom), wrapper), device);
   }
 }
 
