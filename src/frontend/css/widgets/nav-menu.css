@@ -395,6 +395,26 @@
   margin-inline: 0 var(--uncoder-nav-dd-offset);
 }
 
+/* Dropdown position (Dropdown position setting, top level of a horizontal menu; mega menus as wide as their content
+   too). Until nav-menu.ts has measured the panel, "center" and "menu" sit under the middle of the item and "end"
+   ends at the item; the script then sets --uncoder-nav-dd-x, which also keeps the panel on the screen. */
+.uncoder-nav-menu--dd-at-center .uncoder-menu--main > .uncoder-menu__item > :is(.uncoder-menu__sub, .uncoder-menu__mega:has(> .uncoder-mega--auto)),
+.uncoder-nav-menu--dd-at-menu .uncoder-menu--main > .uncoder-menu__item > :is(.uncoder-menu__sub, .uncoder-menu__mega:has(> .uncoder-mega--auto)) {
+  inset-inline: auto;
+  left: 50%;
+  translate: -50% 0;
+}
+
+.uncoder-nav-menu--dd-at-end .uncoder-menu--main > .uncoder-menu__item > :is(.uncoder-menu__sub, .uncoder-menu__mega:has(> .uncoder-mega--auto)) {
+  inset-inline: auto 0;
+}
+
+.uncoder-nav-menu .uncoder-menu--main > .uncoder-menu__item > :is(.uncoder-menu__sub, .uncoder-menu__mega).uncoder-menu__sub--placed {
+  inset-inline: auto;
+  left: var(--uncoder-nav-dd-x, 0px);
+  translate: none;
+}
+
 @media (hover: hover) {
   .uncoder-nav-menu--hover .uncoder-menu--main .uncoder-menu__item:hover > :is(.uncoder-menu__sub, .uncoder-menu__mega) {
     visibility: visible;
@@ -557,6 +577,52 @@
   display: grid;
   grid-template-columns: repeat(var(--uncoder-nav-dd-cols, 2), minmax(0, 1fr));
   column-gap: var(--uncoder-nav-dd-col-gap, 4px);
+  row-gap: var(--uncoder-nav-dd-row-gap, 0px);
+}
+
+/* Item spacing: a margin above every item but the first; dropdowns in columns use the grid's row gap instead. */
+.uncoder-menu--main .uncoder-menu__sub > .uncoder-menu__item + .uncoder-menu__item {
+  margin-top: var(--uncoder-nav-dd-row-gap, 0px);
+}
+
+.uncoder-nav-menu--dd-cols .uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__sub > .uncoder-menu__item {
+  margin-top: 0;
+}
+
+/* Column order "Down": each column fills from top to bottom before the next; the walker gives the dropdown as many
+   rows as its longest column (--uncoder-nav-dd-rows). */
+.uncoder-nav-menu--dd-down .uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__sub {
+  grid-auto-flow: column;
+  grid-template-rows: repeat(var(--uncoder-nav-dd-rows, 1), auto);
+}
+
+/* Column divider: a 1px line in the middle of each column gap, as tall as the items (background layers of the
+   dropdown, so it needs no markup; a percentage here is of the content width less the line). */
+.uncoder-nav-menu--dd-cols .uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__sub {
+  --uncoder-nav-dd-line: linear-gradient(var(--uncoder-nav-dd-rule, transparent), var(--uncoder-nav-dd-rule, transparent));
+  background-repeat: no-repeat;
+  background-origin: content-box;
+  background-size: 1px 100%;
+}
+
+.uncoder-nav-menu--dd-2 .uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__sub {
+  background-image: var(--uncoder-nav-dd-line);
+  background-position-x: 50%;
+}
+
+.uncoder-nav-menu--dd-3 .uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__sub {
+  background-image: var(--uncoder-nav-dd-line), var(--uncoder-nav-dd-line);
+  background-position-x:
+    calc(100% / 3 + var(--uncoder-nav-dd-col-gap, 4px) / 3 - var(--uncoder-nav-dd-col-gap, 4px) / 2 - 0.5px + 1px / 3),
+    calc(200% / 3 + var(--uncoder-nav-dd-col-gap, 4px) * 2 / 3 - var(--uncoder-nav-dd-col-gap, 4px) / 2 - 0.5px + 2px / 3);
+}
+
+.uncoder-nav-menu--dd-4 .uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__sub {
+  background-image: var(--uncoder-nav-dd-line), var(--uncoder-nav-dd-line), var(--uncoder-nav-dd-line);
+  background-position-x:
+    calc(25% + var(--uncoder-nav-dd-col-gap, 4px) / 4 - var(--uncoder-nav-dd-col-gap, 4px) / 2 - 0.25px),
+    50%,
+    calc(75% + var(--uncoder-nav-dd-col-gap, 4px) * 3 / 4 - var(--uncoder-nav-dd-col-gap, 4px) / 2 + 0.25px);
 }
 
 /* A dropdown hangs from a narrow item, so it would only be as wide as Min width: columns and descriptions

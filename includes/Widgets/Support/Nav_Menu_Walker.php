@@ -40,6 +40,9 @@ class Nav_Menu_Walker extends \Walker_Nav_Menu {
 	/** Id of the submenu opened by the next start_lvl() call. */
 	private string $pending_sub = '';
 
+	/** Number of items in the submenu opened by the next start_lvl() call. */
+	private int $pending_count = 0;
+
 	/** The current page has an item of its own on the top level (see walk()). */
 	private bool $top_current = false;
 
@@ -110,6 +113,7 @@ class Nav_Menu_Walker extends \Walker_Nav_Menu {
 			$this->extra[ $id ] = $extra;
 			$this->drop_branch( $id, $children_elements );
 		}
+		$this->pending_count = isset( $children_elements[ $id ] ) ? count( $children_elements[ $id ] ) : 0;
 		parent::display_element( $element, $children_elements, $max_depth, $depth, $args, $output );
 	}
 
@@ -137,9 +141,24 @@ class Nav_Menu_Walker extends \Walker_Nav_Menu {
 		$attrs = array(
 			'class' => 'uncoder-menu__sub uncoder-menu__sub--depth-' . ( (int) $depth + 1 ),
 			'id'    => '' !== $this->pending_sub ? $this->pending_sub : null,
+			'style' => $this->column_rows( (int) $depth ),
 		);
 		$this->pending_sub = '';
 		$output           .= '<ul' . Utils::attrs( $attrs ) . '>';
+	}
+
+	/**
+	 * Column order "Down": the top-level dropdown's grid gets as many rows as its longest column, so the items fill
+	 * each column from top to bottom (12 items in 3 columns: 4 rows).
+	 *
+	 * @param int $depth Depth of the parent item.
+	 */
+	private function column_rows( int $depth ): ?string {
+		$columns = max( 1, min( 4, (int) ( $this->settings['dd_columns'] ?? 1 ) ) );
+		if ( $this->mobile || 0 !== $depth || $columns < 2 || 'down' !== ( $this->settings['dd_column_order'] ?? 'across' ) || $this->pending_count < 1 ) {
+			return null;
+		}
+		return '--uncoder-nav-dd-rows: ' . (int) ceil( $this->pending_count / $columns );
 	}
 
 	/**

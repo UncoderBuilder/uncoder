@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-06T19:17:51+00:00\n"
+"POT-Creation-Date: 2026-10-07T08:25:30+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: uncoder\n"
@@ -42,7 +42,7 @@ msgstr ""
 #: includes/Admin/Admin.php:52
 #: includes/Widgets/Breadcrumbs.php:67
 #: includes/Widgets/Breadcrumbs.php:566
-#: includes/Widgets/Nav_Menu.php:1336
+#: includes/Widgets/Nav_Menu.php:1416
 #: includes/Widgets/Site_Logo.php:279
 msgid "Home"
 msgstr ""
@@ -163,8 +163,8 @@ msgstr ""
 #: includes/Widgets/Loop_Grid.php:556
 #: includes/Widgets/Marquee.php:251
 #: includes/Widgets/Marquee.php:324
-#: includes/Widgets/Nav_Menu.php:832
-#: includes/Widgets/Nav_Menu.php:850
+#: includes/Widgets/Nav_Menu.php:897
+#: includes/Widgets/Nav_Menu.php:915
 #: includes/Widgets/Off_Canvas.php:382
 #: includes/Widgets/Off_Canvas.php:422
 #: includes/Widgets/Off_Canvas.php:440
@@ -773,7 +773,7 @@ msgstr ""
 #: includes/Widgets/Login.php:446
 #: includes/Widgets/Loop_Filter.php:165
 #: includes/Widgets/Loop_Grid.php:543
-#: includes/Widgets/Nav_Menu.php:868
+#: includes/Widgets/Nav_Menu.php:933
 #: includes/Widgets/Off_Canvas.php:329
 #: includes/Widgets/Off_Canvas.php:359
 #: includes/Widgets/Post_Comments.php:236
@@ -822,7 +822,7 @@ msgstr ""
 #: includes/Widgets/Countdown.php:222
 #: includes/Widgets/Form.php:402
 #: includes/Widgets/Login.php:423
-#: includes/Widgets/Nav_Menu.php:1054
+#: includes/Widgets/Nav_Menu.php:1119
 #: includes/Widgets/Price_Table.php:281
 #: includes/Widgets/Tabs.php:191
 msgid "Full width"
@@ -865,8 +865,8 @@ msgstr ""
 #: includes/Widgets/Loop_Grid.php:335
 #: includes/Widgets/Marquee.php:212
 #: includes/Widgets/Nav_Menu.php:107
-#: includes/Widgets/Nav_Menu.php:213
-#: includes/Widgets/Nav_Menu.php:408
+#: includes/Widgets/Nav_Menu.php:245
+#: includes/Widgets/Nav_Menu.php:440
 #: includes/Widgets/Posts.php:340
 #: includes/Widgets/Post_Info.php:236
 #: includes/Widgets/Scheme_Switch.php:78
@@ -907,9 +907,9 @@ msgstr ""
 #: includes/Widgets/Lottie.php:167
 #: includes/Widgets/Marquee.php:213
 #: includes/Widgets/Nav_Menu.php:108
-#: includes/Widgets/Nav_Menu.php:214
-#: includes/Widgets/Nav_Menu.php:409
-#: includes/Widgets/Nav_Menu.php:967
+#: includes/Widgets/Nav_Menu.php:246
+#: includes/Widgets/Nav_Menu.php:441
+#: includes/Widgets/Nav_Menu.php:1032
 #: includes/Widgets/Off_Canvas.php:127
 #: includes/Widgets/Posts.php:341
 #: includes/Widgets/Posts.php:448
@@ -949,7 +949,7 @@ msgstr ""
 #: includes/Widgets/Loop_Grid.php:337
 #: includes/Widgets/Marquee.php:214
 #: includes/Widgets/Nav_Menu.php:109
-#: includes/Widgets/Nav_Menu.php:410
+#: includes/Widgets/Nav_Menu.php:442
 #: includes/Widgets/Posts.php:342
 #: includes/Widgets/Post_Info.php:238
 #: includes/Widgets/Scheme_Switch.php:80
@@ -1090,13 +1090,13 @@ msgstr ""
 #: includes/Widgets/Loop_Grid.php:448
 #: includes/Widgets/Loop_Grid.php:497
 #: includes/Widgets/Loop_Grid.php:515
-#: includes/Widgets/Nav_Menu.php:495
-#: includes/Widgets/Nav_Menu.php:513
-#: includes/Widgets/Nav_Menu.php:542
-#: includes/Widgets/Nav_Menu.php:645
-#: includes/Widgets/Nav_Menu.php:840
-#: includes/Widgets/Nav_Menu.php:858
-#: includes/Widgets/Nav_Menu.php:899
+#: includes/Widgets/Nav_Menu.php:527
+#: includes/Widgets/Nav_Menu.php:545
+#: includes/Widgets/Nav_Menu.php:574
+#: includes/Widgets/Nav_Menu.php:677
+#: includes/Widgets/Nav_Menu.php:905
+#: includes/Widgets/Nav_Menu.php:923
+#: includes/Widgets/Nav_Menu.php:964
 #: includes/Widgets/Off_Canvas.php:273
 #: includes/Widgets/Off_Canvas.php:292
 #: includes/Widgets/Off_Canvas.php:346
@@ -1195,9 +1195,9 @@ msgstr ""
 #: includes/Widgets/Login.php:388
 #: includes/Widgets/Logo_Grid.php:255
 #: includes/Widgets/Loop_Grid.php:529
-#: includes/Widgets/Nav_Menu.php:753
-#: includes/Widgets/Nav_Menu.php:882
-#: includes/Widgets/Nav_Menu.php:1027
+#: includes/Widgets/Nav_Menu.php:818
+#: includes/Widgets/Nav_Menu.php:947
+#: includes/Widgets/Nav_Menu.php:1092
 #: includes/Widgets/Off_Canvas.php:277
 #: includes/Widgets/Off_Canvas.php:364
 #: includes/Widgets/Posts.php:408
@@ -1258,8 +1258,8 @@ msgstr ""
 #: includes/Widgets/Loop_Grid.php:458
 #: includes/Widgets/Loop_Grid.php:534
 #: includes/Widgets/Marquee.php:399
-#: includes/Widgets/Nav_Menu.php:747
-#: includes/Widgets/Nav_Menu.php:877
+#: includes/Widgets/Nav_Menu.php:812
+#: includes/Widgets/Nav_Menu.php:942
 #: includes/Widgets/Off_Canvas.php:338
 #: includes/Widgets/Off_Canvas.php:369
 #: includes/Widgets/Posts.php:427
@@ -1462,8 +1462,8 @@ msgstr ""
 #: includes/Widgets/Logo_Grid.php:130
 #: includes/Widgets/Lottie.php:166
 #: includes/Widgets/Marquee.php:163
-#: includes/Widgets/Nav_Menu.php:311
-#: includes/Widgets/Nav_Menu.php:966
+#: includes/Widgets/Nav_Menu.php:343
+#: includes/Widgets/Nav_Menu.php:1031
 #: includes/Widgets/Off_Canvas.php:126
 #: includes/Widgets/Off_Canvas.php:163
 #: includes/Widgets/Posts.php:447
@@ -1520,8 +1520,8 @@ msgstr ""
 #: includes/Widgets/Logo_Grid.php:131
 #: includes/Widgets/Lottie.php:168
 #: includes/Widgets/Marquee.php:164
-#: includes/Widgets/Nav_Menu.php:312
-#: includes/Widgets/Nav_Menu.php:968
+#: includes/Widgets/Nav_Menu.php:344
+#: includes/Widgets/Nav_Menu.php:1033
 #: includes/Widgets/Off_Canvas.php:128
 #: includes/Widgets/Off_Canvas.php:164
 #: includes/Widgets/Posts.php:449
@@ -1664,10 +1664,10 @@ msgstr ""
 #: includes/Widgets/Loop_Grid.php:399
 #: includes/Widgets/Loop_Grid.php:484
 #: includes/Widgets/Marquee.php:246
-#: includes/Widgets/Nav_Menu.php:482
-#: includes/Widgets/Nav_Menu.php:632
-#: includes/Widgets/Nav_Menu.php:827
-#: includes/Widgets/Nav_Menu.php:904
+#: includes/Widgets/Nav_Menu.php:514
+#: includes/Widgets/Nav_Menu.php:664
+#: includes/Widgets/Nav_Menu.php:892
+#: includes/Widgets/Nav_Menu.php:969
 #: includes/Widgets/Off_Canvas.php:260
 #: includes/Widgets/Off_Canvas.php:417
 #: includes/Widgets/Posts.php:406
@@ -1723,10 +1723,10 @@ msgstr ""
 #: includes/Widgets/Loop_Grid.php:417
 #: includes/Widgets/Loop_Grid.php:502
 #: includes/Widgets/Marquee.php:256
-#: includes/Widgets/Nav_Menu.php:500
-#: includes/Widgets/Nav_Menu.php:650
-#: includes/Widgets/Nav_Menu.php:845
-#: includes/Widgets/Nav_Menu.php:914
+#: includes/Widgets/Nav_Menu.php:532
+#: includes/Widgets/Nav_Menu.php:682
+#: includes/Widgets/Nav_Menu.php:910
+#: includes/Widgets/Nav_Menu.php:979
 #: includes/Widgets/Off_Canvas.php:279
 #: includes/Widgets/Off_Canvas.php:435
 #: includes/Widgets/Posts.php:411
@@ -2943,7 +2943,7 @@ msgstr ""
 
 #: includes/Elements/Container.php:577
 #: includes/Widgets/Loop_Filter.php:164
-#: includes/Widgets/Nav_Menu.php:1032
+#: includes/Widgets/Nav_Menu.php:1097
 #: includes/Widgets/Post_Info.php:370
 msgid "Radius"
 msgstr ""
@@ -2991,15 +2991,15 @@ msgstr ""
 #: includes/Widgets/Loop_Grid.php:440
 #: includes/Widgets/Loop_Grid.php:489
 #: includes/Widgets/Loop_Grid.php:507
-#: includes/Widgets/Nav_Menu.php:487
-#: includes/Widgets/Nav_Menu.php:505
-#: includes/Widgets/Nav_Menu.php:533
-#: includes/Widgets/Nav_Menu.php:637
-#: includes/Widgets/Nav_Menu.php:655
-#: includes/Widgets/Nav_Menu.php:673
-#: includes/Widgets/Nav_Menu.php:909
-#: includes/Widgets/Nav_Menu.php:919
-#: includes/Widgets/Nav_Menu.php:937
+#: includes/Widgets/Nav_Menu.php:519
+#: includes/Widgets/Nav_Menu.php:537
+#: includes/Widgets/Nav_Menu.php:565
+#: includes/Widgets/Nav_Menu.php:669
+#: includes/Widgets/Nav_Menu.php:687
+#: includes/Widgets/Nav_Menu.php:705
+#: includes/Widgets/Nav_Menu.php:974
+#: includes/Widgets/Nav_Menu.php:984
+#: includes/Widgets/Nav_Menu.php:1002
 #: includes/Widgets/Off_Canvas.php:265
 #: includes/Widgets/Off_Canvas.php:284
 #: includes/Widgets/Off_Canvas.php:351
@@ -3609,7 +3609,7 @@ msgid "Content"
 msgstr ""
 
 #: includes/Patterns/Patterns.php:65
-#: includes/Widgets/Nav_Menu.php:1343
+#: includes/Widgets/Nav_Menu.php:1423
 msgid "Contact"
 msgstr ""
 
@@ -4635,7 +4635,7 @@ msgid "Adds FAQPage structured data (JSON-LD) built from the titles and the text
 msgstr ""
 
 #: includes/Widgets/Accordion.php:231
-#: includes/Widgets/Nav_Menu.php:581
+#: includes/Widgets/Nav_Menu.php:613
 #: includes/Widgets/Post_Info.php:280
 #: includes/Widgets/Price_List.php:198
 #: includes/Widgets/Sitemap.php:372
@@ -4678,8 +4678,8 @@ msgstr ""
 #: includes/Widgets/Image_Compare.php:212
 #: includes/Widgets/Image_Gallery.php:270
 #: includes/Widgets/Link_In_Bio.php:679
-#: includes/Widgets/Nav_Menu.php:754
-#: includes/Widgets/Nav_Menu.php:1026
+#: includes/Widgets/Nav_Menu.php:819
+#: includes/Widgets/Nav_Menu.php:1091
 #: includes/Widgets/Off_Canvas.php:374
 #: includes/Widgets/Posts.php:409
 #: includes/Widgets/Posts.php:420
@@ -4764,9 +4764,9 @@ msgstr ""
 #: includes/Widgets/Loop_Grid.php:482
 #: includes/Widgets/Loop_Grid.php:551
 #: includes/Widgets/Marquee.php:244
-#: includes/Widgets/Nav_Menu.php:480
-#: includes/Widgets/Nav_Menu.php:630
-#: includes/Widgets/Nav_Menu.php:894
+#: includes/Widgets/Nav_Menu.php:512
+#: includes/Widgets/Nav_Menu.php:662
+#: includes/Widgets/Nav_Menu.php:959
 #: includes/Widgets/Off_Canvas.php:258
 #: includes/Widgets/Posts.php:493
 #: includes/Widgets/Posts.php:529
@@ -4854,7 +4854,7 @@ msgstr ""
 #: includes/Widgets/Loop_Grid.php:333
 #: includes/Widgets/Lottie.php:164
 #: includes/Widgets/Nav_Menu.php:105
-#: includes/Widgets/Nav_Menu.php:964
+#: includes/Widgets/Nav_Menu.php:1029
 #: includes/Widgets/Off_Canvas.php:124
 #: includes/Widgets/Posts.php:338
 #: includes/Widgets/Post_Content.php:65
@@ -4941,7 +4941,7 @@ msgstr ""
 #: includes/Widgets/Accordion.php:406
 #: includes/Widgets/Button.php:258
 #: includes/Widgets/Flip_Box.php:400
-#: includes/Widgets/Nav_Menu.php:779
+#: includes/Widgets/Nav_Menu.php:844
 msgid "Icon background"
 msgstr ""
 
@@ -5017,7 +5017,7 @@ msgstr ""
 #: includes/Widgets/Form.php:363
 #: includes/Widgets/Link_In_Bio.php:249
 #: includes/Widgets/Loop_Grid.php:323
-#: includes/Widgets/Nav_Menu.php:452
+#: includes/Widgets/Nav_Menu.php:484
 #: includes/Widgets/Share_Buttons.php:225
 #: includes/Widgets/Slides.php:128
 #: includes/Widgets/Star_Rating.php:87
@@ -5158,14 +5158,14 @@ msgid "Title spacing"
 msgstr ""
 
 #: includes/Widgets/Alert.php:284
-#: includes/Widgets/Nav_Menu.php:784
+#: includes/Widgets/Nav_Menu.php:849
 #: includes/Widgets/Steps.php:347
 #: includes/Widgets/Timeline.php:340
 msgid "Description typography"
 msgstr ""
 
 #: includes/Widgets/Alert.php:289
-#: includes/Widgets/Nav_Menu.php:789
+#: includes/Widgets/Nav_Menu.php:854
 #: includes/Widgets/Steps.php:352
 #: includes/Widgets/Timeline.php:345
 #: includes/Widgets/Video_Playlist.php:470
@@ -5752,9 +5752,9 @@ msgstr ""
 #: includes/Widgets/Hotspot.php:257
 #: includes/Widgets/Image_Gallery.php:302
 #: includes/Widgets/Link_In_Bio.php:673
-#: includes/Widgets/Nav_Menu.php:600
-#: includes/Widgets/Nav_Menu.php:760
-#: includes/Widgets/Nav_Menu.php:808
+#: includes/Widgets/Nav_Menu.php:632
+#: includes/Widgets/Nav_Menu.php:825
+#: includes/Widgets/Nav_Menu.php:873
 #: includes/Widgets/Off_Canvas.php:310
 #: includes/Widgets/Post_Info.php:319
 #: includes/Widgets/Price_Table.php:454
@@ -5781,7 +5781,7 @@ msgid "Page %s"
 msgstr ""
 
 #: includes/Widgets/Breadcrumbs.php:504
-#: includes/Widgets/Nav_Menu.php:1342
+#: includes/Widgets/Nav_Menu.php:1422
 msgid "Journal"
 msgstr ""
 
@@ -5814,7 +5814,7 @@ msgstr ""
 #: includes/Widgets/Call_To_Action.php:54
 #: includes/Widgets/Form.php:361
 #: includes/Widgets/Loop_Grid.php:321
-#: includes/Widgets/Nav_Menu.php:450
+#: includes/Widgets/Nav_Menu.php:482
 #: includes/Widgets/Slides.php:126
 msgid "Primary"
 msgstr ""
@@ -5823,7 +5823,7 @@ msgstr ""
 #: includes/Widgets/Call_To_Action.php:55
 #: includes/Widgets/Form.php:362
 #: includes/Widgets/Loop_Grid.php:322
-#: includes/Widgets/Nav_Menu.php:451
+#: includes/Widgets/Nav_Menu.php:483
 #: includes/Widgets/Slides.php:127
 msgid "Secondary"
 msgstr ""
@@ -5875,7 +5875,7 @@ msgstr ""
 #: includes/Widgets/Image_Box.php:249
 #: includes/Widgets/Image_Carousel.php:172
 #: includes/Widgets/Image_Gallery.php:249
-#: includes/Widgets/Nav_Menu.php:199
+#: includes/Widgets/Nav_Menu.php:231
 #: includes/Widgets/Posts.php:392
 #: includes/Widgets/Share_Buttons.php:402
 msgid "Hover effect"
@@ -5934,7 +5934,7 @@ msgstr ""
 #: includes/Widgets/Icon_Box.php:378
 #: includes/Widgets/Icon_List.php:80
 #: includes/Widgets/Image_Gallery.php:293
-#: includes/Widgets/Nav_Menu.php:771
+#: includes/Widgets/Nav_Menu.php:836
 #: includes/Widgets/Post_Info.php:311
 #: includes/Widgets/Price_Table.php:182
 #: includes/Widgets/Price_Table.php:445
@@ -6035,7 +6035,7 @@ msgstr ""
 
 #: includes/Widgets/Call_To_Action.php:201
 #: includes/Widgets/Flip_Box.php:146
-#: includes/Widgets/Nav_Menu.php:435
+#: includes/Widgets/Nav_Menu.php:467
 #: includes/Widgets/Slides.php:249
 msgid "Button link"
 msgstr ""
@@ -6044,13 +6044,13 @@ msgstr ""
 #: includes/Widgets/Flip_Box.php:156
 #: includes/Widgets/Link_In_Bio.php:245
 #: includes/Widgets/Loop_Grid.php:318
-#: includes/Widgets/Nav_Menu.php:447
+#: includes/Widgets/Nav_Menu.php:479
 #: includes/Widgets/Slides.php:711
 msgid "Button style"
 msgstr ""
 
 #: includes/Widgets/Call_To_Action.php:219
-#: includes/Widgets/Nav_Menu.php:464
+#: includes/Widgets/Nav_Menu.php:496
 #: includes/Widgets/Search_Form.php:127
 msgid "Button icon"
 msgstr ""
@@ -6992,12 +6992,12 @@ msgid "Facade"
 msgstr ""
 
 #: includes/Widgets/Facebook_Embed.php:324
-#: includes/Widgets/Nav_Menu.php:1081
+#: includes/Widgets/Nav_Menu.php:1146
 msgid "Button background"
 msgstr ""
 
 #: includes/Widgets/Facebook_Embed.php:332
-#: includes/Widgets/Nav_Menu.php:1072
+#: includes/Widgets/Nav_Menu.php:1137
 msgid "Button text color"
 msgstr ""
 
@@ -8465,7 +8465,7 @@ msgid "Overrides the media library alt text. Leave empty when the image is decor
 msgstr ""
 
 #: includes/Widgets/Image_Box.php:102
-#: includes/Widgets/Nav_Menu.php:1339
+#: includes/Widgets/Nav_Menu.php:1419
 msgid "Brand strategy"
 msgstr ""
 
@@ -8564,7 +8564,7 @@ msgid "On hover"
 msgstr ""
 
 #: includes/Widgets/Image_Compare.php:122
-#: includes/Widgets/Nav_Menu.php:271
+#: includes/Widgets/Nav_Menu.php:303
 #: includes/Widgets/Steps.php:129
 msgid "Never"
 msgstr ""
@@ -8743,7 +8743,7 @@ msgid "Dim others"
 msgstr ""
 
 #: includes/Widgets/Image_Gallery.php:284
-#: includes/Widgets/Nav_Menu.php:999
+#: includes/Widgets/Nav_Menu.php:1064
 #: includes/Widgets/Slides.php:302
 msgid "Overlay color"
 msgstr ""
@@ -8782,8 +8782,8 @@ msgstr ""
 
 #: includes/Widgets/Language_Switcher.php:71
 #: includes/Widgets/Loop_Filter.php:106
-#: includes/Widgets/Nav_Menu.php:295
-#: includes/Widgets/Nav_Menu.php:629
+#: includes/Widgets/Nav_Menu.php:327
+#: includes/Widgets/Nav_Menu.php:661
 msgid "Dropdown"
 msgstr ""
 
@@ -8977,8 +8977,8 @@ msgid "Below the links"
 msgstr ""
 
 #: includes/Widgets/Link_In_Bio.php:343
-#: includes/Widgets/Nav_Menu.php:180
-#: includes/Widgets/Nav_Menu.php:353
+#: includes/Widgets/Nav_Menu.php:212
+#: includes/Widgets/Nav_Menu.php:385
 #: includes/Widgets/Social_Icons.php:60
 #: includes/Widgets/Social_Icons.php:191
 msgid "Icons"
@@ -9007,7 +9007,7 @@ msgid "Layout & background"
 msgstr ""
 
 #: includes/Widgets/Link_In_Bio.php:390
-#: includes/Widgets/Nav_Menu.php:1012
+#: includes/Widgets/Nav_Menu.php:1077
 msgid "Fill the screen"
 msgstr ""
 
@@ -9327,8 +9327,8 @@ msgid "Cells"
 msgstr ""
 
 #: includes/Widgets/Logo_Grid.php:269
-#: includes/Widgets/Nav_Menu.php:739
-#: includes/Widgets/Nav_Menu.php:956
+#: includes/Widgets/Nav_Menu.php:804
+#: includes/Widgets/Nav_Menu.php:1021
 #: includes/Widgets/Post_Comments.php:115
 #: includes/Widgets/Post_Info.php:299
 #: includes/Widgets/Post_Navigation.php:146
@@ -9699,9 +9699,9 @@ msgid "Pagination distance"
 msgstr ""
 
 #: includes/Widgets/Loop_Grid.php:435
-#: includes/Widgets/Nav_Menu.php:528
-#: includes/Widgets/Nav_Menu.php:668
-#: includes/Widgets/Nav_Menu.php:932
+#: includes/Widgets/Nav_Menu.php:560
+#: includes/Widgets/Nav_Menu.php:700
+#: includes/Widgets/Nav_Menu.php:997
 #: includes/Widgets/Posts.php:686
 #: includes/Widgets/Table_Of_Contents.php:288
 #: includes/Widgets/Tabs.php:367
@@ -9898,6 +9898,7 @@ msgid "Up"
 msgstr ""
 
 #: includes/Widgets/Marquee.php:166
+#: includes/Widgets/Nav_Menu.php:185
 msgid "Down"
 msgstr ""
 
@@ -10018,9 +10019,9 @@ msgstr ""
 
 #: includes/Widgets/Nav_Menu.php:76
 #: includes/Widgets/Nav_Menu.php:81
-#: includes/Widgets/Nav_Menu.php:279
-#: includes/Widgets/Nav_Menu.php:389
-#: includes/Widgets/Nav_Menu.php:1429
+#: includes/Widgets/Nav_Menu.php:311
+#: includes/Widgets/Nav_Menu.php:421
+#: includes/Widgets/Nav_Menu.php:1516
 #: includes/Widgets/Off_Canvas.php:60
 #: includes/Widgets/Off_Canvas.php:83
 #: includes/Widgets/Off_Canvas.php:150
@@ -10072,364 +10073,424 @@ msgstr ""
 msgid "Lay dropdowns out in columns, for example items with descriptions."
 msgstr ""
 
+#: includes/Widgets/Nav_Menu.php:180
+msgid "Column order"
+msgstr ""
+
 #: includes/Widgets/Nav_Menu.php:181
+msgid "Fill the columns row by row, or each column from top to bottom before the next."
+msgstr ""
+
+#: includes/Widgets/Nav_Menu.php:184
+msgid "Across"
+msgstr ""
+
+#: includes/Widgets/Nav_Menu.php:195
+msgid "Dropdown position"
+msgstr ""
+
+#: includes/Widgets/Nav_Menu.php:196
+msgid "Where dropdowns and mega menus open under the menu bar. They always stay on the screen."
+msgstr ""
+
+#: includes/Widgets/Nav_Menu.php:199
+msgid "From the item"
+msgstr ""
+
+#: includes/Widgets/Nav_Menu.php:200
+msgid "Centered under the item"
+msgstr ""
+
+#: includes/Widgets/Nav_Menu.php:201
+msgid "Centered under the menu"
+msgstr ""
+
+#: includes/Widgets/Nav_Menu.php:202
+msgid "Ending at the item"
+msgstr ""
+
+#: includes/Widgets/Nav_Menu.php:213
 msgid "The icons chosen for menu items in Appearance → Menus, before the label."
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:189
+#: includes/Widgets/Nav_Menu.php:221
 #: includes/Widgets/Video_Playlist.php:465
 msgid "Descriptions"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:190
+#: includes/Widgets/Nav_Menu.php:222
 msgid "The descriptions of menu items (Appearance → Menus), under the label in dropdowns and the mobile menu."
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:209
+#: includes/Widgets/Nav_Menu.php:241
 msgid "Line from"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:210
+#: includes/Widgets/Nav_Menu.php:242
 msgid "Start: the line draws in from the start of the item and leaves at the end. Center: it grows from the middle."
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:223
+#: includes/Widgets/Nav_Menu.php:255
 msgid "Flip by"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:226
+#: includes/Widgets/Nav_Menu.php:258
 msgid "Word"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:227
+#: includes/Widgets/Nav_Menu.php:259
 msgid "Letter"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:236
+#: includes/Widgets/Nav_Menu.php:268
 msgid "Pull"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:237
+#: includes/Widgets/Nav_Menu.php:269
 msgid "How far the item follows the pointer."
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:249
+#: includes/Widgets/Nav_Menu.php:281
 msgid "Dimmed opacity"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:250
+#: includes/Widgets/Nav_Menu.php:282
 msgid "How visible the other items stay. Empty: 0.35."
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:260
 #: includes/Widgets/Nav_Menu.php:292
-#: includes/Widgets/Nav_Menu.php:889
+#: includes/Widgets/Nav_Menu.php:324
+#: includes/Widgets/Nav_Menu.php:954
 msgid "Mobile menu"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:265
+#: includes/Widgets/Nav_Menu.php:297
 msgid "Show hamburger on"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:268
+#: includes/Widgets/Nav_Menu.php:300
 msgid "Tablet and mobile"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:269
+#: includes/Widgets/Nav_Menu.php:301
 msgid "Mobile only"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:270
+#: includes/Widgets/Nav_Menu.php:302
 msgid "All devices"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:280
+#: includes/Widgets/Nav_Menu.php:312
 msgid "Show a different menu in the mobile menu, for example a shorter one."
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:283
+#: includes/Widgets/Nav_Menu.php:315
 msgid "Same as the desktop menu"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:296
+#: includes/Widgets/Nav_Menu.php:328
 msgid "Panel under the header"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:297
+#: includes/Widgets/Nav_Menu.php:329
 msgid "Off-canvas drawer"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:298
+#: includes/Widgets/Nav_Menu.php:330
 msgid "Full screen"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:308
+#: includes/Widgets/Nav_Menu.php:340
 msgid "Drawer side"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:324
+#: includes/Widgets/Nav_Menu.php:356
 msgid "Full-width dropdown"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:325
+#: includes/Widgets/Nav_Menu.php:357
 msgid "Stretches the dropdown to the width of the screen."
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:337
+#: includes/Widgets/Nav_Menu.php:369
 msgid "Match the header row"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:338
+#: includes/Widgets/Nav_Menu.php:370
 msgid "Opens the dropdown right under the row the menu sits in, with the same width (for floating, rounded headers). Overrides Full-width dropdown."
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:350
+#: includes/Widgets/Nav_Menu.php:382
 msgid "Toggle style"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:354
+#: includes/Widgets/Nav_Menu.php:386
 msgid "Animated lines"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:364
+#: includes/Widgets/Nav_Menu.php:396
 #: includes/Widgets/Search_Form.php:192
 #: includes/Widgets/Search_Form.php:508
 msgid "Toggle icon"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:376
+#: includes/Widgets/Nav_Menu.php:408
 #: includes/Widgets/Off_Canvas.php:203
 msgid "Close icon"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:388
+#: includes/Widgets/Nav_Menu.php:420
 #: includes/Widgets/Search_Form.php:201
 msgid "Toggle label"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:397
+#: includes/Widgets/Nav_Menu.php:429
 #: includes/Widgets/Search_Form.php:99
 msgid "Show label"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:398
+#: includes/Widgets/Nav_Menu.php:430
 msgid "When off, the label is only read by screen readers."
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:406
+#: includes/Widgets/Nav_Menu.php:438
 msgid "Toggle alignment"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:425
+#: includes/Widgets/Nav_Menu.php:457
 msgid "Button in the menu"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:426
+#: includes/Widgets/Nav_Menu.php:458
 msgid "A full-width button at the end of the mobile menu, e.g. \"Get started\". Empty: no button."
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:465
+#: includes/Widgets/Nav_Menu.php:497
 msgid "Shown after the button text, e.g. an arrow."
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:479
-#: includes/Widgets/Nav_Menu.php:1383
+#: includes/Widgets/Nav_Menu.php:511
+#: includes/Widgets/Nav_Menu.php:1463
 msgid "Main menu"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:514
+#: includes/Widgets/Nav_Menu.php:546
 msgid "Also the pill of the Magnetic button and Sliding highlight effects."
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:522
-#: includes/Widgets/Nav_Menu.php:550
+#: includes/Widgets/Nav_Menu.php:554
+#: includes/Widgets/Nav_Menu.php:582
 msgid "Underline color"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:534
+#: includes/Widgets/Nav_Menu.php:566
 msgid "The current page and its parent items."
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:561
+#: includes/Widgets/Nav_Menu.php:593
 msgid "Underline thickness"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:572
-#: includes/Widgets/Nav_Menu.php:721
-#: includes/Widgets/Nav_Menu.php:947
+#: includes/Widgets/Nav_Menu.php:604
+#: includes/Widgets/Nav_Menu.php:775
+#: includes/Widgets/Nav_Menu.php:1012
 #: includes/Widgets/Price_List.php:216
 #: includes/Widgets/Video_Playlist.php:374
 msgid "Item padding"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:591
-#: includes/Widgets/Nav_Menu.php:730
+#: includes/Widgets/Nav_Menu.php:623
+#: includes/Widgets/Nav_Menu.php:795
 #: includes/Widgets/Price_List.php:247
 #: includes/Widgets/Video_Playlist.php:383
 msgid "Item radius"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:601
+#: includes/Widgets/Nav_Menu.php:633
 msgid "Icons of the menu bar items."
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:611
+#: includes/Widgets/Nav_Menu.php:643
 msgid "Indicator size"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:621
+#: includes/Widgets/Nav_Menu.php:653
 msgid "Indicator spacing"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:663
-#: includes/Widgets/Nav_Menu.php:681
-#: includes/Widgets/Nav_Menu.php:927
+#: includes/Widgets/Nav_Menu.php:695
+#: includes/Widgets/Nav_Menu.php:713
+#: includes/Widgets/Nav_Menu.php:992
 #: includes/Widgets/Price_List.php:227
 #: includes/Widgets/Price_List.php:237
 msgid "Item background"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:691
+#: includes/Widgets/Nav_Menu.php:723
 #: includes/Widgets/Search_Form.php:412
 msgid "Min width"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:701
+#: includes/Widgets/Nav_Menu.php:733
 msgid "Distance"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:702
+#: includes/Widgets/Nav_Menu.php:734
 msgid "Space between the menu and its dropdowns."
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:712
+#: includes/Widgets/Nav_Menu.php:744
+msgid "Column spacing"
+msgstr ""
+
+#: includes/Widgets/Nav_Menu.php:745
+msgid "Space between the columns of a dropdown."
+msgstr ""
+
+#: includes/Widgets/Nav_Menu.php:756
+msgid "Column divider"
+msgstr ""
+
+#: includes/Widgets/Nav_Menu.php:757
+msgid "A thin line between the columns, in the middle of the spacing."
+msgstr ""
+
+#: includes/Widgets/Nav_Menu.php:766
 msgid "Inner padding"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:755
+#: includes/Widgets/Nav_Menu.php:784
+msgid "Item spacing"
+msgstr ""
+
+#: includes/Widgets/Nav_Menu.php:785
+msgid "Space between the items of a dropdown."
+msgstr ""
+
+#: includes/Widgets/Nav_Menu.php:820
 msgid "Icons and descriptions"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:761
+#: includes/Widgets/Nav_Menu.php:826
 msgid "In dropdowns and the mobile menu."
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:780
+#: includes/Widgets/Nav_Menu.php:845
 msgid "Puts each icon on a small tile."
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:799
+#: includes/Widgets/Nav_Menu.php:864
 msgid "Hamburger toggle"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:818
+#: includes/Widgets/Nav_Menu.php:883
 msgid "Line thickness"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:825
+#: includes/Widgets/Nav_Menu.php:890
 #: includes/Widgets/Share_Buttons.php:367
 msgid "Label typography"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:977
+#: includes/Widgets/Nav_Menu.php:1042
 msgid "Distance from toggle"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:988
+#: includes/Widgets/Nav_Menu.php:1053
 msgid "Drawer width"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1008
+#: includes/Widgets/Nav_Menu.php:1073
 msgid "Panel height"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1009
+#: includes/Widgets/Nav_Menu.php:1074
 msgid "Fill the screen: the panel reaches the bottom of the screen and covers the page."
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1011
+#: includes/Widgets/Nav_Menu.php:1076
 msgid "Fit the menu"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1021
+#: includes/Widgets/Nav_Menu.php:1086
 msgid "Panel padding"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1041
+#: includes/Widgets/Nav_Menu.php:1106
 msgid "Button spacing"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1052
+#: includes/Widgets/Nav_Menu.php:1117
 msgid "Button width"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1055
+#: includes/Widgets/Nav_Menu.php:1120
 msgid "Fit the text, left"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1056
+#: includes/Widgets/Nav_Menu.php:1121
 msgid "Fit the text, centered"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1057
+#: includes/Widgets/Nav_Menu.php:1122
 msgid "Fit the text, right"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1090
+#: includes/Widgets/Nav_Menu.php:1155
 msgid "Button shadow"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1099
+#: includes/Widgets/Nav_Menu.php:1164
 #: includes/Widgets/Search_Form.php:619
 msgid "Close button color"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1108
+#: includes/Widgets/Nav_Menu.php:1173
 msgid "Close button size"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1125
+#: includes/Widgets/Nav_Menu.php:1190
 msgid "Animated underline"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1126
+#: includes/Widgets/Nav_Menu.php:1191
 msgid "Flip text"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1127
+#: includes/Widgets/Nav_Menu.php:1192
 msgid "Magnetic button"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1128
+#: includes/Widgets/Nav_Menu.php:1193
 msgid "Focus item"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1129
+#: includes/Widgets/Nav_Menu.php:1194
 msgid "Sliding highlight"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1130
+#: includes/Widgets/Nav_Menu.php:1195
 msgid "Color only"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1337
+#: includes/Widgets/Nav_Menu.php:1417
 msgid "About"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1338
+#: includes/Widgets/Nav_Menu.php:1418
 msgid "Services"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1340
+#: includes/Widgets/Nav_Menu.php:1420
 #: includes/Widgets/Progress_Bar.php:56
 msgid "Web design"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1341
+#: includes/Widgets/Nav_Menu.php:1421
 msgid "Development"
 msgstr ""
 
-#: includes/Widgets/Nav_Menu.php:1475
+#: includes/Widgets/Nav_Menu.php:1562
 msgid "Close menu"
 msgstr ""
 
@@ -12867,13 +12928,13 @@ msgid "Go to slide %s"
 msgstr ""
 
 #. translators: %s: menu item label.
-#: includes/Widgets/Support/Nav_Menu_Walker.php:263
+#: includes/Widgets/Support/Nav_Menu_Walker.php:282
 #, php-format
 msgid "Show submenu for %s"
 msgstr ""
 
 #. translators: %s: menu item label.
-#: includes/Widgets/Support/Nav_Menu_Walker.php:263
+#: includes/Widgets/Support/Nav_Menu_Walker.php:282
 msgid "this item"
 msgstr ""
 

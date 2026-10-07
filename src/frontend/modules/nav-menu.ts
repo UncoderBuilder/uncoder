@@ -3,7 +3,7 @@
 window.UncoderWB.register('nav-menu', (el, api) => {
   const root = (el.matches('.uncoder-nav-menu') ? (el as HTMLElement) : el.querySelector<HTMLElement>('.uncoder-nav-menu'));
   if (!root) return;
-  const s = api.settings<{ trigger?: 'hover' | 'click'; stretch?: boolean; row?: boolean; attach?: string; fx?: string; magnet?: number; letters?: boolean }>(el);
+  const s = api.settings<{ trigger?: 'hover' | 'click'; stretch?: boolean; row?: boolean; attach?: string; fx?: string; magnet?: number; letters?: boolean; align?: 'start' | 'center' | 'menu' | 'end' }>(el);
   const hover = s.trigger !== 'click';
   const main = root.querySelector<HTMLElement>('.uncoder-menu--main');
   const toggle = root.querySelector<HTMLButtonElement>('.uncoder-nav-menu__toggle');
@@ -27,11 +27,42 @@ window.UncoderWB.register('nav-menu', (el, api) => {
     if ((!rtl && rect.right > html.clientWidth - 8) || (rtl && rect.left < 8)) sub.classList.add('uncoder-menu__sub--flip');
   };
 
+  // Dropdown position "center", "menu" or "end": the top-level panel is measured and placed under the middle of its
+  // item, under the middle of the menu's items or ending at its item, then kept 8px inside the screen. Mega menus
+  // as wide as the screen or the container place themselves (mega-menu.ts).
+  const align = s.align && s.align !== 'start' ? s.align : '';
+  const placeable = (li: HTMLElement) => {
+    const sub = subOf(li);
+    if (!align || !sub || li.parentElement !== main) return null;
+    if (sub.classList.contains('uncoder-menu__mega') && !sub.querySelector(':scope > .uncoder-mega--auto')) return null;
+    return sub;
+  };
+  const place = (li: HTMLElement) => {
+    const sub = placeable(li);
+    if (!sub || !main) return;
+    const item = li.getBoundingClientRect();
+    const width = sub.offsetWidth; // The layout width: the opening animation's transform does not change it.
+    let left = item.left;
+    if (align === 'center') left = item.left + (item.width - width) / 2;
+    else if (align === 'end') left = item.right - width;
+    else if (align === 'menu') {
+      const items = Array.from(main.children).map((child) => child.getBoundingClientRect()).filter((r) => r.width > 0);
+      const from = Math.min(...items.map((r) => r.left));
+      const to = Math.max(...items.map((r) => r.right));
+      left = (from + to - width) / 2;
+    }
+    left = Math.max(8, Math.min(left, html.clientWidth - 8 - width));
+    sub.style.setProperty('--uncoder-nav-dd-x', `${Math.round(left - item.left)}px`);
+    sub.classList.add('uncoder-menu__sub--placed');
+  };
+  const placeAll = () => parents.forEach(place);
+
   const setOpen = (li: HTMLElement, open: boolean) => {
     li.classList.toggle('is-open', open);
     li.querySelector(':scope > .uncoder-menu__toggle')?.setAttribute('aria-expanded', String(open));
     if (open) {
-      flip(li);
+      if (placeable(li)) place(li);
+      else flip(li);
       li.parentElement?.querySelectorAll<HTMLElement>(':scope > .uncoder-menu__item.is-open').forEach((other) => {
         if (other !== li) setOpen(other, false);
       });
@@ -66,6 +97,16 @@ window.UncoderWB.register('nav-menu', (el, api) => {
       li.addEventListener('pointerenter', onPointerEnter);
       li.addEventListener('pointerleave', onPointerLeave);
     });
+  }
+  let placeFrame = 0;
+  const onPlaceResize = () => {
+    window.cancelAnimationFrame(placeFrame);
+    placeFrame = window.requestAnimationFrame(placeAll);
+  };
+  if (align) {
+    placeFrame = window.requestAnimationFrame(placeAll);
+    document.fonts?.ready.then(() => placeAll());
+    window.addEventListener('resize', onPlaceResize, { passive: true });
   }
 
   /* ---------------------------------------------------------------- Hover effects (main menu) */
@@ -371,6 +412,8 @@ window.UncoderWB.register('nav-menu', (el, api) => {
     document.removeEventListener('click', onDocumentClick);
     dialog?.removeEventListener('cancel', onCancel);
     window.removeEventListener('resize', onResize);
+    window.removeEventListener('resize', onPlaceResize);
+    window.cancelAnimationFrame(placeFrame);
     window.removeEventListener('scroll', onScroll);
     cancelAnimationFrame(scrollRaf);
     topLinks.forEach((link) => {

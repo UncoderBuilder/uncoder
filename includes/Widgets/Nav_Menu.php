@@ -174,6 +174,38 @@ class Nav_Menu extends Widget_Base {
 			)
 		);
 		$this->add_control(
+			'dd_column_order',
+			array(
+				'type'        => 'choose',
+				'label'       => __( 'Column order', 'uncoder' ),
+				'description' => __( 'Fill the columns row by row, or each column from top to bottom before the next.', 'uncoder' ),
+				'default'     => 'across',
+				'options'     => array(
+					'across' => array( 'label' => __( 'Across', 'uncoder' ), 'icon' => 'arrow-right' ),
+					'down'   => array( 'label' => __( 'Down', 'uncoder' ), 'icon' => 'arrow-down' ),
+				),
+				'condition'   => array( 'dd_columns!' => '1' ),
+				'ai'          => '"down" fills each column top to bottom (12 items in 3 columns: 1-4, 5-8, 9-12), like a sitemap-style "All pages" dropdown; "across" fills row by row. Style the columns with dd_col_gap and dd_col_divider.',
+			)
+		);
+		$this->add_control(
+			'dd_align',
+			array(
+				'type'        => 'select',
+				'label'       => __( 'Dropdown position', 'uncoder' ),
+				'description' => __( 'Where dropdowns and mega menus open under the menu bar. They always stay on the screen.', 'uncoder' ),
+				'default'     => 'start',
+				'options'     => array(
+					'start'  => __( 'From the item', 'uncoder' ),
+					'center' => __( 'Centered under the item', 'uncoder' ),
+					'menu'   => __( 'Centered under the menu', 'uncoder' ),
+					'end'    => __( 'Ending at the item', 'uncoder' ),
+				),
+				'condition'   => array( 'layout' => 'horizontal' ),
+				'ai'          => 'Top-level dropdowns and mega menus (width "auto"): "start" opens at the item\'s left edge (flipping at the screen edge), "center" centres the panel under the item, "menu" centres it under the whole menu bar (wide multi-column dropdowns and mega menus), "end" ends it at the item\'s right edge. Every position is kept inside the screen.',
+			)
+		);
+		$this->add_control(
 			'show_icons',
 			array(
 				'type'        => 'switch',
@@ -706,6 +738,28 @@ class Nav_Menu extends Widget_Base {
 			)
 		);
 		$this->add_control(
+			'dd_col_gap',
+			array(
+				'type'        => 'slider',
+				'label'       => __( 'Column spacing', 'uncoder' ),
+				'description' => __( 'Space between the columns of a dropdown.', 'uncoder' ),
+				'size_units'  => array( 'px', 'em' ),
+				'range'       => array( 'px' => array( 'min' => 0, 'max' => 120 ) ),
+				'condition'   => array( 'dd_columns!' => '1' ),
+				'selectors'   => array( '{{WRAPPER}}' => '--uncoder-nav-dd-col-gap: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'dd_col_divider',
+			array(
+				'type'        => 'color',
+				'label'       => __( 'Column divider', 'uncoder' ),
+				'description' => __( 'A thin line between the columns, in the middle of the spacing.', 'uncoder' ),
+				'condition'   => array( 'dd_columns!' => '1' ),
+				'selectors'   => array( '{{WRAPPER}}' => '--uncoder-nav-dd-rule: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
 			'dd_padding',
 			array(
 				'type'       => 'slider',
@@ -721,6 +775,17 @@ class Nav_Menu extends Widget_Base {
 				'label'      => __( 'Item padding', 'uncoder' ),
 				'size_units' => array( 'px', 'em', 'rem' ),
 				'selectors'  => array( '{{WRAPPER}}' => '--uncoder-nav-dd-pt: {{TOP}}{{UNIT}}; --uncoder-nav-dd-pr: {{RIGHT}}{{UNIT}}; --uncoder-nav-dd-pb: {{BOTTOM}}{{UNIT}}; --uncoder-nav-dd-pl: {{LEFT}}{{UNIT}}' ),
+			)
+		);
+		$this->add_control(
+			'dd_row_gap',
+			array(
+				'type'        => 'slider',
+				'label'       => __( 'Item spacing', 'uncoder' ),
+				'description' => __( 'Space between the items of a dropdown.', 'uncoder' ),
+				'size_units'  => array( 'px', 'em' ),
+				'range'       => array( 'px' => array( 'min' => 0, 'max' => 40 ) ),
+				'selectors'   => array( '{{WRAPPER}}' => '--uncoder-nav-dd-row-gap: {{VALUE}}' ),
 			)
 		);
 		$this->add_control(
@@ -1193,9 +1258,24 @@ class Nav_Menu extends Widget_Base {
 					'magnet'    => 'magnet' === self::effect( $s ) ? max( 0.05, min( 0.6, (float) ( $s['magnet_strength'] ?? 0.3 ) ) ) : 0,
 					'letters'   => 'flip' === self::effect( $s ) && 'letter' === ( $s['flip_by'] ?? 'word' ),
 					'scrollspy' => ! array_key_exists( 'highlight_anchors', $s ) || ! empty( $s['highlight_anchors'] ),
+					'align'     => self::dropdown_align( $s ),
 				)
 			),
 		);
+	}
+
+	/**
+	 * Where top-level dropdowns open: start, center, menu or end (start for vertical menus, whose dropdowns open
+	 * sideways).
+	 *
+	 * @param array<string,mixed> $s Settings.
+	 */
+	private static function dropdown_align( array $s ): string {
+		$align = (string) ( $s['dd_align'] ?? 'start' );
+		if ( 'vertical' === ( $s['layout'] ?? 'horizontal' ) || ! in_array( $align, array( 'center', 'menu', 'end' ), true ) ) {
+			return 'start';
+		}
+		return $align;
 	}
 
 	/**
@@ -1406,6 +1486,13 @@ class Nav_Menu extends Widget_Base {
 		if ( $columns > 1 ) {
 			$classes[] = 'uncoder-nav-menu--dd-cols';
 			$classes[] = 'uncoder-nav-menu--dd-' . $columns;
+			if ( 'down' === ( $s['dd_column_order'] ?? 'across' ) ) {
+				$classes[] = 'uncoder-nav-menu--dd-down';
+			}
+		}
+		$align = self::dropdown_align( $s );
+		if ( 'start' !== $align ) {
+			$classes[] = 'uncoder-nav-menu--dd-at-' . $align;
 		}
 		$panel_id = 'uncoder-' . $ctx->element_id . '-panel';
 
