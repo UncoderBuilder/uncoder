@@ -518,6 +518,11 @@ a.uncoder-container {
   flex-shrink: 0;
   vertical-align: middle;
 }
+/* Uploaded SVG icons drawn inline show strokes that run past their viewBox (an arrow's tip, a line's end), as design
+   tools draw them: browsers clip inline SVG at its box by default. */
+.uncoder-svg--inline {
+  overflow: visible;
+}
 
 img.uncoder-svg--img {
   object-fit: contain;
