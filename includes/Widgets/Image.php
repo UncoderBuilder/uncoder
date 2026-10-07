@@ -183,6 +183,50 @@ class Image extends Widget_Base {
 		);
 		$this->end_section();
 
+		$this->start_section( 'reveal', array( 'label' => __( 'Hover reveal', 'uncoder' ) ) );
+		$this->add_control(
+			'hover_reveal',
+			array(
+				'type'        => 'switch',
+				'label'       => __( 'Reveal a second image', 'uncoder' ),
+				'description' => __( 'Moving the pointer over the image paints a second one in under it, with a soft brush that fades away (a sketch turning into the finished render).', 'uncoder' ),
+				'ai'          => 'true with reveal_image (same proportions as the image) for a "paint to reveal" effect under the pointer. The first image stays the image everyone sees; the second is decoration.',
+			)
+		);
+		$this->add_control(
+			'reveal_image',
+			array(
+				'type'      => 'media',
+				'label'     => __( 'Second image', 'uncoder' ),
+				'default'   => array( 'id' => 0, 'url' => '' ),
+				'condition' => array( 'hover_reveal' => true ),
+			)
+		);
+		$this->add_control(
+			'reveal_size',
+			array(
+				'type'       => 'slider',
+				'label'      => __( 'Brush size', 'uncoder' ),
+				'size_units' => array( 'px' ),
+				'range'      => array( 'px' => array( 'min' => 20, 'max' => 400 ) ),
+				'default'    => array( 'size' => 110, 'unit' => 'px' ),
+				'condition'  => array( 'hover_reveal' => true ),
+			)
+		);
+		$this->add_control(
+			'reveal_fade',
+			array(
+				'type'        => 'number',
+				'label'       => __( 'Fade (ms)', 'uncoder' ),
+				'description' => __( 'How long a stroke stays before it has faded out.', 'uncoder' ),
+				'min'         => 200,
+				'max'         => 6000,
+				'default'     => 1400,
+				'condition'   => array( 'hover_reveal' => true ),
+			)
+		);
+		$this->end_section();
+
 		$this->start_section( 'style_image', array( 'label' => __( 'Image', 'uncoder' ), 'tab' => 'style' ) );
 		$this->add_responsive_control(
 			'width',
@@ -300,6 +344,38 @@ class Image extends Widget_Base {
 		$this->end_section();
 	}
 
+	/**
+	 * The second image's address for the hover reveal ('' when the reveal is off or has no image).
+	 *
+	 * @param array<string,mixed> $s Settings.
+	 */
+	public static function reveal_url( array $s ): string {
+		if ( empty( $s['hover_reveal'] ) || ! is_array( $s['reveal_image'] ?? null ) ) {
+			return '';
+		}
+		$media = $s['reveal_image'];
+		$url   = ! empty( $media['id'] ) ? wp_get_attachment_image_url( (int) $media['id'], 'full' ) : '';
+		return (string) ( $url ? $url : ( $media['url'] ?? '' ) );
+	}
+
+	public function wrapper_attributes( array $s, Render_Context $ctx ): array {
+		$reveal = self::reveal_url( $s );
+		if ( '' === $reveal ) {
+			return array();
+		}
+		$size = is_array( $s['reveal_size'] ?? null ) ? (float) ( $s['reveal_size']['size'] ?? 110 ) : (float) ( $s['reveal_size'] ?? 110 );
+		return array(
+			'data-uncoder-js' => 'image-reveal',
+			'data-settings'   => $this->json_attr(
+				array(
+					'src'  => esc_url_raw( $reveal ),
+					'size' => max( 20, min( 400, $size ? $size : 110 ) ),
+					'fade' => max( 200, min( 6000, (int) ( $s['reveal_fade'] ?? 1400 ) ) ),
+				)
+			),
+		);
+	}
+
 	protected function render( array $s, Render_Context $ctx ): void {
 		$media = is_array( $s['image'] ?? null ) ? $s['image'] : array();
 		$size  = sanitize_key( (string) ( $s['size'] ?? 'large' ) );
@@ -343,7 +419,7 @@ class Image extends Widget_Base {
 			$caption = (string) ( $s['caption'] ?? '' );
 		}
 
-		$classes = 'uncoder-image' . ( ! empty( $s['hover_effect'] ) ? ' uncoder-image--hover-' . sanitize_html_class( (string) $s['hover_effect'] ) : '' );
+		$classes = 'uncoder-image' . ( ! empty( $s['hover_effect'] ) ? ' uncoder-image--hover-' . sanitize_html_class( (string) $s['hover_effect'] ) : '' ) . ( '' !== self::reveal_url( $s ) ? ' uncoder-image--reveal' : '' );
 		echo '<figure class="' . esc_attr( $classes ) . '">';
 		if ( $link ) {
 			$link['class'] = 'uncoder-image__link';

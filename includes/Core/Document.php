@@ -379,6 +379,9 @@ final class Document {
 				if ( ! empty( $s['_interactions'] ) ) {
 					$scripts[] = 'interactions';
 				}
+				if ( 'image' === ( $node['type'] ?? '' ) && is_array( $s ) && '' !== \Uncoder\Builder\Widgets\Image::reveal_url( $s ) ) {
+					$scripts[] = 'image-reveal';
+				}
 			}
 		);
 		$compiled = array(
