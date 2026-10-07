@@ -1,0 +1,335 @@
+{
+	"id": "contact-details-form",
+	"title": "Contact: details and form",
+	"category": "contact",
+	"description": "Contact section: h2, intro and contact details (email, phone, address, hours) on the left; a contact form in a surface card on the right. Stacks on phones.",
+	"keywords": [
+		"contact",
+		"form",
+		"get in touch",
+		"email",
+		"phone",
+		"address",
+		"enquiry"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "Contact",
+			"settings": {
+				"direction": "row",
+				"direction_tablet": "column",
+				"direction_mobile": "column",
+				"gap": {
+					"size": 80,
+					"unit": "px"
+				},
+				"gap_tablet": {
+					"size": 48,
+					"unit": "px"
+				},
+				"gap_mobile": {
+					"size": 32,
+					"unit": "px"
+				}
+			},
+			"children": [
+				{
+					"type": "container",
+					"settings": {
+						"width": {
+							"size": 40,
+							"unit": "%"
+						},
+						"width_tablet": {
+							"size": 100,
+							"unit": "%"
+						},
+						"gap": {
+							"size": 20,
+							"unit": "px"
+						}
+					},
+					"children": [
+						{
+							"type": "heading",
+							"settings": {
+								"title": "Contact",
+								"tag": "p",
+								"typography": {
+									"preset": "eyebrow"
+								},
+								"color": "var(--uncoder-c-primary)"
+							}
+						},
+						{
+							"type": "heading",
+							"settings": {
+								"title": "Let’s talk about your project",
+								"tag": "h2",
+								"typography": {
+									"preset": "h2"
+								},
+								"text_wrap": "balance"
+							}
+						},
+						{
+							"type": "text-editor",
+							"settings": {
+								"content": "<p>Send us a few lines about what you need and we will get back to you within [one business day].</p>",
+								"max_width": {
+									"size": 44,
+									"unit": "ch"
+								}
+							}
+						},
+						{
+							"type": "container",
+							"settings": {
+								"layout": "grid",
+								"grid_columns": 1,
+								"grid_columns_tablet": 2,
+								"grid_columns_mobile": 1,
+								"gap": {
+									"size": 20,
+									"unit": "px"
+								},
+								"_margin": {
+									"top": 12,
+									"right": "",
+									"bottom": "",
+									"left": "",
+									"unit": "px",
+									"linked": false
+								}
+							},
+							"children": [
+								{
+									"type": "icon-box",
+									"settings": {
+										"icon": {
+											"library": "lucide",
+											"value": "mail"
+										},
+										"view": "stacked",
+										"shape": "rounded",
+										"icon_size": {
+											"size": 20,
+											"unit": "px"
+										},
+										"icon_padding": {
+											"size": 12,
+											"unit": "px"
+										},
+										"position": "left",
+										"vertical_align": "middle",
+										"icon_spacing": {
+											"size": 16,
+											"unit": "px"
+										},
+										"title": "Email",
+										"description": "[hello@yourcompany.com]",
+										"title_tag": "p",
+										"title_typography": {
+											"preset": "small",
+											"weight": "600"
+										},
+										"title_color": "var(--uncoder-c-heading)",
+										"title_spacing": {
+											"size": 2,
+											"unit": "px"
+										},
+										"description_color": "var(--uncoder-c-text)"
+									}
+								},
+								{
+									"type": "icon-box",
+									"settings": {
+										"icon": {
+											"library": "lucide",
+											"value": "phone"
+										},
+										"view": "stacked",
+										"shape": "rounded",
+										"icon_size": {
+											"size": 20,
+											"unit": "px"
+										},
+										"icon_padding": {
+											"size": 12,
+											"unit": "px"
+										},
+										"position": "left",
+										"vertical_align": "middle",
+										"icon_spacing": {
+											"size": 16,
+											"unit": "px"
+										},
+										"title": "Phone",
+										"description": "[+1 (555) 000-0000]",
+										"title_tag": "p",
+										"title_typography": {
+											"preset": "small",
+											"weight": "600"
+										},
+										"title_color": "var(--uncoder-c-heading)",
+										"title_spacing": {
+											"size": 2,
+											"unit": "px"
+										},
+										"description_color": "var(--uncoder-c-text)"
+									}
+								},
+								{
+									"type": "icon-box",
+									"settings": {
+										"icon": {
+											"library": "lucide",
+											"value": "map-pin"
+										},
+										"view": "stacked",
+										"shape": "rounded",
+										"icon_size": {
+											"size": 20,
+											"unit": "px"
+										},
+										"icon_padding": {
+											"size": 12,
+											"unit": "px"
+										},
+										"position": "left",
+										"vertical_align": "middle",
+										"icon_spacing": {
+											"size": 16,
+											"unit": "px"
+										},
+										"title": "Office",
+										"description": "[Street address, City]",
+										"title_tag": "p",
+										"title_typography": {
+											"preset": "small",
+											"weight": "600"
+										},
+										"title_color": "var(--uncoder-c-heading)",
+										"title_spacing": {
+											"size": 2,
+											"unit": "px"
+										},
+										"description_color": "var(--uncoder-c-text)"
+									}
+								},
+								{
+									"type": "icon-box",
+									"settings": {
+										"icon": {
+											"library": "lucide",
+											"value": "clock"
+										},
+										"view": "stacked",
+										"shape": "rounded",
+										"icon_size": {
+											"size": 20,
+											"unit": "px"
+										},
+										"icon_padding": {
+											"size": 12,
+											"unit": "px"
+										},
+										"position": "left",
+										"vertical_align": "middle",
+										"icon_spacing": {
+											"size": 16,
+											"unit": "px"
+										},
+										"title": "Hours",
+										"description": "[Mon–Fri, 9am–5pm]",
+										"title_tag": "p",
+										"title_typography": {
+											"preset": "small",
+											"weight": "600"
+										},
+										"title_color": "var(--uncoder-c-heading)",
+										"title_spacing": {
+											"size": 2,
+											"unit": "px"
+										},
+										"description_color": "var(--uncoder-c-text)"
+									}
+								}
+							]
+						}
+					]
+				},
+				{
+					"type": "container",
+					"settings": {
+						"width": {
+							"size": 60,
+							"unit": "%"
+						},
+						"width_tablet": {
+							"size": 100,
+							"unit": "%"
+						},
+						"gap": {
+							"size": 20,
+							"unit": "px"
+						},
+						"background": {
+							"type": "classic",
+							"color": "var(--uncoder-c-surface)"
+						},
+						"radius": {
+							"top": 24,
+							"right": 24,
+							"bottom": 24,
+							"left": 24,
+							"unit": "px",
+							"linked": true
+						},
+						"radius_mobile": {
+							"top": 16,
+							"right": 16,
+							"bottom": 16,
+							"left": 16,
+							"unit": "px",
+							"linked": true
+						},
+						"_padding": {
+							"top": 40,
+							"right": 40,
+							"bottom": 40,
+							"left": 40,
+							"unit": "px",
+							"linked": true
+						},
+						"_padding_mobile": {
+							"top": 24,
+							"right": 24,
+							"bottom": 24,
+							"left": 24,
+							"unit": "px",
+							"linked": true
+						}
+					},
+					"children": [
+						{
+							"type": "heading",
+							"settings": {
+								"title": "Send us a message",
+								"tag": "h3",
+								"typography": {
+									"preset": "h4"
+								}
+							}
+						},
+						{
+							"type": "form",
+							"settings": {}
+						}
+					]
+				}
+			]
+		}
+	]
+}

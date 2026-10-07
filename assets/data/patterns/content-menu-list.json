@@ -1,0 +1,308 @@
+{
+	"id": "content-menu-list",
+	"title": "Content: menu or price list",
+	"category": "content",
+	"description": "Centered intro on a surface background and two Price List widgets side by side, each under an h3 group title: four items with a name, a short muted description and a right-aligned price, divided by thin lines. One column on phones, where each item keeps its price on the right. Ends with a dietary note and a booking button. Use it for restaurant, café or bar menus — or any list of items with prices, such as treatments, classes or services; add, remove or reorder items in each list’s Items setting.",
+	"keywords": [
+		"menu",
+		"price list",
+		"restaurant",
+		"cafe",
+		"food",
+		"drinks",
+		"prices"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "Menu",
+			"settings": {
+				"gap": {
+					"size": 56,
+					"unit": "px"
+				},
+				"gap_mobile": {
+					"size": 40,
+					"unit": "px"
+				},
+				"background": {
+					"type": "classic",
+					"color": "var(--uncoder-c-surface)"
+				}
+			},
+			"children": [
+				{
+					"type": "container",
+					"settings": {
+						"gap": {
+							"size": 16,
+							"unit": "px"
+						},
+						"align": "center"
+					},
+					"children": [
+						{
+							"type": "heading",
+							"settings": {
+								"title": "Menu",
+								"tag": "p",
+								"typography": {
+									"preset": "eyebrow"
+								},
+								"color": "var(--uncoder-c-primary)",
+								"align": "center"
+							}
+						},
+						{
+							"type": "heading",
+							"settings": {
+								"title": "Seasonal favourites",
+								"tag": "h2",
+								"typography": {
+									"preset": "h2"
+								},
+								"align": "center",
+								"max_width": {
+									"size": 20,
+									"unit": "ch"
+								},
+								"text_wrap": "balance"
+							}
+						},
+						{
+							"type": "text-editor",
+							"settings": {
+								"content": "<p>A short selection from our menu. Dishes and prices change with the seasons — ask us about today’s specials.</p>",
+								"typography": {
+									"preset": "lead"
+								},
+								"align": "center",
+								"max_width": {
+									"size": 58,
+									"unit": "ch"
+								}
+							}
+						}
+					]
+				},
+				{
+					"type": "container",
+					"settings": {
+						"layout": "grid",
+						"grid_columns": 2,
+						"grid_columns_tablet": 2,
+						"grid_columns_mobile": 1,
+						"gap": {
+							"size": 64,
+							"unit": "px"
+						},
+						"gap_tablet": {
+							"size": 40,
+							"unit": "px"
+						},
+						"gap_mobile": {
+							"size": 40,
+							"unit": "px"
+						}
+					},
+					"children": [
+						{
+							"type": "container",
+							"settings": {
+								"gap": {
+									"size": 20,
+									"unit": "px"
+								}
+							},
+							"children": [
+								{
+									"type": "heading",
+									"settings": {
+										"title": "To start",
+										"tag": "h3",
+										"typography": {
+											"preset": "h4"
+										}
+									}
+								},
+								{
+									"type": "price-list",
+									"settings": {
+										"items": [
+											{
+												"title": "Soup of the day",
+												"price": "$9",
+												"description": "[Made fresh every morning — ask what is on today.]"
+											},
+											{
+												"title": "Garden salad",
+												"price": "$11",
+												"description": "Leaves, herbs, toasted seeds and a light lemon dressing."
+											},
+											{
+												"title": "Warm bread",
+												"price": "$6",
+												"description": "House bread with salted butter."
+											},
+											{
+												"title": "Crispy potatoes",
+												"price": "$8",
+												"description": "With garlic mayonnaise and chives."
+											}
+										],
+										"title_tag": "h4",
+										"leader": "none",
+										"dividers": true,
+										"row_gap": {
+											"size": 16,
+											"unit": "px"
+										},
+										"item_padding": {
+											"top": 0,
+											"right": 0,
+											"bottom": 16,
+											"left": 0,
+											"unit": "px",
+											"linked": false
+										},
+										"divider_color": "var(--uncoder-c-border)",
+										"title_typography": {
+											"preset": "h6"
+										},
+										"price_typography": {
+											"preset": "h6"
+										},
+										"price_color": "var(--uncoder-c-primary)",
+										"description_typography": {
+											"preset": "small"
+										},
+										"description_color": "var(--uncoder-c-muted)",
+										"description_spacing": {
+											"size": 4,
+											"unit": "px"
+										}
+									}
+								}
+							]
+						},
+						{
+							"type": "container",
+							"settings": {
+								"gap": {
+									"size": 20,
+									"unit": "px"
+								}
+							},
+							"children": [
+								{
+									"type": "heading",
+									"settings": {
+										"title": "Mains",
+										"tag": "h3",
+										"typography": {
+											"preset": "h4"
+										}
+									}
+								},
+								{
+									"type": "price-list",
+									"settings": {
+										"items": [
+											{
+												"title": "Roast of the week",
+												"price": "$24",
+												"description": "[Describe the cut, the sides and the sauce.]"
+											},
+											{
+												"title": "Market fish",
+												"price": "$26",
+												"description": "Today’s catch with seasonal vegetables."
+											},
+											{
+												"title": "Vegetable risotto",
+												"price": "$19",
+												"description": "Creamy rice, roasted squash and aged cheese."
+											},
+											{
+												"title": "House burger",
+												"price": "$18",
+												"description": "Toasted bun, pickles and fries on the side."
+											}
+										],
+										"title_tag": "h4",
+										"leader": "none",
+										"dividers": true,
+										"row_gap": {
+											"size": 16,
+											"unit": "px"
+										},
+										"item_padding": {
+											"top": 0,
+											"right": 0,
+											"bottom": 16,
+											"left": 0,
+											"unit": "px",
+											"linked": false
+										},
+										"divider_color": "var(--uncoder-c-border)",
+										"title_typography": {
+											"preset": "h6"
+										},
+										"price_typography": {
+											"preset": "h6"
+										},
+										"price_color": "var(--uncoder-c-primary)",
+										"description_typography": {
+											"preset": "small"
+										},
+										"description_color": "var(--uncoder-c-muted)",
+										"description_spacing": {
+											"size": 4,
+											"unit": "px"
+										}
+									}
+								}
+							]
+						}
+					]
+				},
+				{
+					"type": "container",
+					"settings": {
+						"gap": {
+							"size": 16,
+							"unit": "px"
+						},
+						"align": "center"
+					},
+					"children": [
+						{
+							"type": "text-editor",
+							"settings": {
+								"content": "<p>[Please tell us about any allergies or dietary needs — we are happy to adapt most dishes.]</p>",
+								"typography": {
+									"preset": "small"
+								},
+								"align": "center",
+								"color": "var(--uncoder-c-muted)",
+								"max_width": {
+									"size": 60,
+									"unit": "ch"
+								}
+							}
+						},
+						{
+							"type": "button",
+							"settings": {
+								"text": "Book a table",
+								"link": {
+									"url": "/contact"
+								}
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

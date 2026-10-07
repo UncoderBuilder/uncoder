@@ -1,0 +1,233 @@
+{
+	"id": "pricing-two-plans",
+	"title": "Pricing: two plans side by side",
+	"category": "pricing",
+	"description": "Centered intro and two pricing plans side by side in a narrower centered block (max 880px); the second plan is highlighted with a “Best value” badge. A small note with a contact link sits underneath. One column on phones. Use it for a basic/complete choice, memberships or monthly packages.",
+	"keywords": [
+		"pricing",
+		"two plans",
+		"plans",
+		"membership",
+		"packages",
+		"price table"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "Pricing",
+			"settings": {
+				"gap": {
+					"size": 48,
+					"unit": "px"
+				},
+				"gap_mobile": {
+					"size": 32,
+					"unit": "px"
+				},
+				"align": "center"
+			},
+			"children": [
+				{
+					"type": "container",
+					"settings": {
+						"gap": {
+							"size": 16,
+							"unit": "px"
+						},
+						"align": "center"
+					},
+					"children": [
+						{
+							"type": "heading",
+							"settings": {
+								"title": "Pricing",
+								"tag": "p",
+								"typography": {
+									"preset": "eyebrow"
+								},
+								"color": "var(--uncoder-c-primary)",
+								"align": "center"
+							}
+						},
+						{
+							"type": "heading",
+							"settings": {
+								"title": "Two simple plans, no hidden fees",
+								"tag": "h2",
+								"typography": {
+									"preset": "h2"
+								},
+								"align": "center",
+								"max_width": {
+									"size": 20,
+									"unit": "ch"
+								},
+								"text_wrap": "balance"
+							}
+						},
+						{
+							"type": "text-editor",
+							"settings": {
+								"content": "<p>Start with what you need today and switch plans whenever it suits you.</p>",
+								"typography": {
+									"preset": "lead"
+								},
+								"align": "center",
+								"max_width": {
+									"size": 58,
+									"unit": "ch"
+								}
+							}
+						}
+					]
+				},
+				{
+					"type": "container",
+					"settings": {
+						"layout": "grid",
+						"grid_columns": 2,
+						"grid_columns_tablet": 2,
+						"grid_columns_mobile": 1,
+						"gap": {
+							"size": 24,
+							"unit": "px"
+						},
+						"gap_mobile": {
+							"size": 16,
+							"unit": "px"
+						},
+						"align": "stretch",
+						"width": {
+							"size": 880,
+							"unit": "px"
+						},
+						"width_tablet": {
+							"size": 100,
+							"unit": "%"
+						},
+						"width_mobile": {
+							"size": 100,
+							"unit": "%"
+						}
+					},
+					"children": [
+						{
+							"type": "price-table",
+							"settings": {
+								"title": "Essential",
+								"subtitle": "For individuals and small teams",
+								"currency": "$",
+								"price": "29",
+								"period": "/month",
+								"features": [
+									{
+										"text": "Up to [3] projects",
+										"included": true
+									},
+									{
+										"text": "Email support",
+										"included": true
+									},
+									{
+										"text": "All core features",
+										"included": true
+									},
+									{
+										"text": "Monthly progress report",
+										"included": true
+									},
+									{
+										"text": "Priority support",
+										"included": false
+									},
+									{
+										"text": "Dedicated account manager",
+										"included": false
+									}
+								],
+								"button_text": "Choose Essential",
+								"link": {
+									"url": "/signup"
+								},
+								"button_variant": "outline",
+								"footer_note": "Billed monthly · cancel anytime",
+								"highlighted": false,
+								"align": "left",
+								"features_align": "left",
+								"title_typography": {
+									"preset": "h4"
+								},
+								"price_typography": {
+									"preset": "h1"
+								}
+							}
+						},
+						{
+							"type": "price-table",
+							"settings": {
+								"title": "Complete",
+								"subtitle": "Everything, for growing businesses",
+								"currency": "$",
+								"price": "59",
+								"period": "/month",
+								"features": [
+									{
+										"text": "Unlimited projects",
+										"included": true
+									},
+									{
+										"text": "Email and phone support",
+										"included": true
+									},
+									{
+										"text": "All features",
+										"included": true
+									},
+									{
+										"text": "Weekly progress report",
+										"included": true
+									},
+									{
+										"text": "Priority support",
+										"included": true
+									},
+									{
+										"text": "Dedicated account manager",
+										"included": true
+									}
+								],
+								"button_text": "Choose Complete",
+								"link": {
+									"url": "/signup"
+								},
+								"button_variant": "primary",
+								"footer_note": "Billed monthly · cancel anytime",
+								"highlighted": true,
+								"align": "left",
+								"features_align": "left",
+								"title_typography": {
+									"preset": "h4"
+								},
+								"price_typography": {
+									"preset": "h1"
+								},
+								"badge_text": "Best value"
+							}
+						}
+					]
+				},
+				{
+					"type": "text-editor",
+					"settings": {
+						"content": "<p>Prices exclude [tax]. Need something tailored? <a href=\"/contact\">Talk to us</a>.</p>",
+						"typography": {
+							"preset": "small"
+						},
+						"align": "center",
+						"color": "var(--uncoder-c-muted)"
+					}
+				}
+			]
+		}
+	]
+}

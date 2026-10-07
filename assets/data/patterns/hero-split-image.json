@@ -1,0 +1,227 @@
+{
+	"id": "hero-split-image",
+	"title": "Hero: text and image side by side",
+	"category": "hero",
+	"description": "Split hero on a surface background: eyebrow, h1, supporting paragraph, two buttons and a short reassurance list on the left, a large rounded image on the right. Stacks on phones.",
+	"keywords": [
+		"hero",
+		"split",
+		"image",
+		"intro",
+		"landing",
+		"above the fold"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "Hero",
+			"settings": {
+				"direction": "row",
+				"direction_mobile": "column",
+				"align": "center",
+				"gap": {
+					"size": 64,
+					"unit": "px"
+				},
+				"gap_tablet": {
+					"size": 40,
+					"unit": "px"
+				},
+				"gap_mobile": {
+					"size": 40,
+					"unit": "px"
+				},
+				"background": {
+					"type": "classic",
+					"color": "var(--uncoder-c-surface)"
+				}
+			},
+			"children": [
+				{
+					"type": "container",
+					"settings": {
+						"width": {
+							"size": 52,
+							"unit": "%"
+						},
+						"width_mobile": {
+							"size": 100,
+							"unit": "%"
+						},
+						"gap": {
+							"size": 24,
+							"unit": "px"
+						}
+					},
+					"children": [
+						{
+							"type": "heading",
+							"settings": {
+								"title": "[Your product or service category]",
+								"tag": "p",
+								"typography": {
+									"preset": "eyebrow"
+								},
+								"color": "var(--uncoder-c-primary)"
+							}
+						},
+						{
+							"type": "heading",
+							"settings": {
+								"title": "Do your best work, without the busywork",
+								"tag": "h1",
+								"typography": {
+									"preset": "display"
+								},
+								"text_wrap": "balance"
+							}
+						},
+						{
+							"type": "text-editor",
+							"settings": {
+								"content": "<p>[Product name] brings your projects, files and feedback into one calm workspace, so your team spends less time chasing updates and more time doing great work.</p>",
+								"typography": {
+									"preset": "lead"
+								},
+								"max_width": {
+									"size": 52,
+									"unit": "ch"
+								}
+							}
+						},
+						{
+							"type": "container",
+							"settings": {
+								"direction": "row",
+								"direction_mobile": "column",
+								"gap": {
+									"size": 12,
+									"unit": "px"
+								},
+								"wrap": "wrap",
+								"_margin": {
+									"top": 8,
+									"right": "",
+									"bottom": "",
+									"left": "",
+									"unit": "px",
+									"linked": false
+								}
+							},
+							"children": [
+								{
+									"type": "button",
+									"settings": {
+										"text": "Get started",
+										"link": {
+											"url": "/contact"
+										},
+										"size": "lg",
+										"align_mobile": "stretch"
+									}
+								},
+								{
+									"type": "button",
+									"settings": {
+										"text": "See how it works",
+										"link": {
+											"url": "#how-it-works"
+										},
+										"size": "lg",
+										"variant": "outline",
+										"align_mobile": "stretch"
+									}
+								}
+							]
+						},
+						{
+							"type": "icon-list",
+							"settings": {
+								"items": [
+									{
+										"text": "Quick to set up",
+										"icon": {
+											"library": "lucide",
+											"value": "check"
+										}
+									},
+									{
+										"text": "Friendly support",
+										"icon": {
+											"library": "lucide",
+											"value": "check"
+										}
+									},
+									{
+										"text": "Cancel anytime",
+										"icon": {
+											"library": "lucide",
+											"value": "check"
+										}
+									}
+								],
+								"icon_color": "var(--uncoder-c-primary)",
+								"gap": {
+									"size": 20,
+									"unit": "px"
+								},
+								"icon_gap": {
+									"size": 10,
+									"unit": "px"
+								},
+								"layout": "inline",
+								"text_typography": {
+									"preset": "small"
+								}
+							}
+						}
+					]
+				},
+				{
+					"type": "container",
+					"settings": {
+						"width": {
+							"size": 48,
+							"unit": "%"
+						},
+						"width_mobile": {
+							"size": 100,
+							"unit": "%"
+						}
+					},
+					"children": [
+						{
+							"type": "image",
+							"settings": {
+								"image": {
+									"id": 0,
+									"url": "{{placeholder_image}}"
+								},
+								"alt": "[Describe the hero image]",
+								"object_fit": "cover",
+								"loading": "eager",
+								"aspect_ratio": "4/3",
+								"radius": {
+									"top": 24,
+									"right": 24,
+									"bottom": 24,
+									"left": 24,
+									"unit": "px",
+									"linked": true
+								},
+								"radius_mobile": {
+									"top": 16,
+									"right": 16,
+									"bottom": 16,
+									"left": 16,
+									"unit": "px",
+									"linked": true
+								}
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

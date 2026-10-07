@@ -1,0 +1,187 @@
+{
+	"id": "cta-banner-gradient",
+	"title": "Call to action: gradient banner",
+	"category": "cta",
+	"description": "Full-width band with a diagonal primary-to-secondary gradient and white text: eyebrow, h2 and one sentence on the left, a light button and an outline button on the right. Stacks on tablets and phones. Use it as the closing call to action of a page, e.g. to book, reserve, sign up or get a quote.",
+	"keywords": [
+		"cta",
+		"call to action",
+		"gradient",
+		"banner",
+		"band",
+		"book",
+		"sign up"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "Call to action",
+			"settings": {
+				"direction": "row",
+				"direction_tablet": "column",
+				"direction_mobile": "column",
+				"justify": "space-between",
+				"align": "center",
+				"align_tablet": "flex-start",
+				"gap": {
+					"size": 48,
+					"unit": "px"
+				},
+				"gap_tablet": {
+					"size": 32,
+					"unit": "px"
+				},
+				"gap_mobile": {
+					"size": 28,
+					"unit": "px"
+				},
+				"background": {
+					"type": "gradient",
+					"color": "var(--uncoder-c-primary)",
+					"color_b": "var(--uncoder-c-secondary)",
+					"gradient_angle": {
+						"size": 135,
+						"unit": "deg"
+					}
+				},
+				"text_color": "var(--uncoder-c-white)",
+				"_padding": {
+					"top": 96,
+					"right": "",
+					"bottom": 96,
+					"left": "",
+					"unit": "px",
+					"linked": false
+				},
+				"_padding_tablet": {
+					"top": 80,
+					"right": "",
+					"bottom": 80,
+					"left": "",
+					"unit": "px",
+					"linked": false
+				},
+				"_padding_mobile": {
+					"top": 64,
+					"right": "",
+					"bottom": 64,
+					"left": "",
+					"unit": "px",
+					"linked": false
+				}
+			},
+			"children": [
+				{
+					"type": "container",
+					"settings": {
+						"width": {
+							"size": 60,
+							"unit": "%"
+						},
+						"width_tablet": {
+							"size": 100,
+							"unit": "%"
+						},
+						"gap": {
+							"size": 16,
+							"unit": "px"
+						}
+					},
+					"children": [
+						{
+							"type": "heading",
+							"settings": {
+								"title": "[Limited availability]",
+								"tag": "p",
+								"typography": {
+									"preset": "eyebrow"
+								},
+								"color": "color-mix(in srgb, var(--uncoder-c-white) 75%, transparent)"
+							}
+						},
+						{
+							"type": "heading",
+							"settings": {
+								"title": "Ready when you are — let’s make it happen",
+								"tag": "h2",
+								"typography": {
+									"preset": "h2"
+								},
+								"text_wrap": "balance"
+							}
+						},
+						{
+							"type": "text-editor",
+							"settings": {
+								"content": "<p>Tell us what you have in mind and we will reply with clear next steps within [one business day].</p>",
+								"typography": {
+									"preset": "lead"
+								},
+								"color": "color-mix(in srgb, var(--uncoder-c-white) 82%, transparent)",
+								"max_width": {
+									"size": 50,
+									"unit": "ch"
+								}
+							}
+						}
+					]
+				},
+				{
+					"type": "container",
+					"settings": {
+						"direction": "row",
+						"direction_mobile": "column",
+						"gap": {
+							"size": 12,
+							"unit": "px"
+						},
+						"wrap": "wrap",
+						"_flex_shrink": 0,
+						"_align_self_mobile": "stretch"
+					},
+					"children": [
+						{
+							"type": "button",
+							"settings": {
+								"text": "Book a call",
+								"link": {
+									"url": "/contact"
+								},
+								"size": "lg",
+								"background": {
+									"type": "classic",
+									"color": "var(--uncoder-c-white)"
+								},
+								"text_color": "var(--uncoder-c-heading)",
+								"hover_background": {
+									"type": "classic",
+									"color": "var(--uncoder-c-surface)"
+								},
+								"hover_text_color": "var(--uncoder-c-heading)",
+								"align_mobile": "stretch"
+							}
+						},
+						{
+							"type": "button",
+							"settings": {
+								"text": "Send a message",
+								"link": {
+									"url": "/contact"
+								},
+								"size": "lg",
+								"variant": "outline",
+								"text_color": "var(--uncoder-c-white)",
+								"hover_text_color": "var(--uncoder-c-white)",
+								"hover_background": {
+									"type": "classic",
+									"color": "color-mix(in srgb, var(--uncoder-c-white) 12%, transparent)"
+								},
+								"align_mobile": "stretch"
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

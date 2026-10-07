@@ -1,0 +1,287 @@
+{
+	"id": "footer-simple",
+	"title": "Footer: simple, light",
+	"category": "footer",
+	"description": "Compact light footer: logo, a single row of links and social icons, then copyright and legal links. Centered on phones. Use it in a footer template.",
+	"keywords": [
+		"footer",
+		"simple",
+		"light",
+		"minimal",
+		"links",
+		"copyright"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "Footer",
+			"settings": {
+				"tag": "footer",
+				"gap": {
+					"size": 32,
+					"unit": "px"
+				},
+				"gap_mobile": {
+					"size": 24,
+					"unit": "px"
+				},
+				"background": {
+					"type": "classic",
+					"color": "var(--uncoder-c-white)"
+				},
+				"border": {
+					"style": "solid",
+					"width": {
+						"top": 1,
+						"right": 0,
+						"bottom": 0,
+						"left": 0,
+						"unit": "px",
+						"linked": false
+					},
+					"color": "var(--uncoder-c-border)"
+				},
+				"_padding": {
+					"top": 48,
+					"right": "",
+					"bottom": 32,
+					"left": "",
+					"unit": "px",
+					"linked": false
+				},
+				"_padding_mobile": {
+					"top": 40,
+					"right": "",
+					"bottom": 24,
+					"left": "",
+					"unit": "px",
+					"linked": false
+				}
+			},
+			"children": [
+				{
+					"type": "container",
+					"settings": {
+						"direction": "row",
+						"direction_tablet": "column",
+						"direction_mobile": "column",
+						"justify": "space-between",
+						"align": "center",
+						"gap": {
+							"size": 24,
+							"unit": "px"
+						}
+					},
+					"children": [
+						{
+							"type": "site-logo",
+							"settings": {
+								"max_height": {
+									"size": 36,
+									"unit": "px"
+								},
+								"width": {
+									"size": "auto",
+									"unit": "custom"
+								},
+								"title_typography": {
+									"preset": "h5"
+								},
+								"title_color": "var(--uncoder-c-heading)"
+							}
+						},
+						{
+							"type": "icon-list",
+							"settings": {
+								"items": [
+									{
+										"text": "Features",
+										"icon": {
+											"library": "none",
+											"value": ""
+										},
+										"link": {
+											"url": "/features"
+										}
+									},
+									{
+										"text": "Pricing",
+										"icon": {
+											"library": "none",
+											"value": ""
+										},
+										"link": {
+											"url": "/pricing"
+										}
+									},
+									{
+										"text": "About",
+										"icon": {
+											"library": "none",
+											"value": ""
+										},
+										"link": {
+											"url": "/about"
+										}
+									},
+									{
+										"text": "Blog",
+										"icon": {
+											"library": "none",
+											"value": ""
+										},
+										"link": {
+											"url": "/blog"
+										}
+									},
+									{
+										"text": "Contact",
+										"icon": {
+											"library": "none",
+											"value": ""
+										},
+										"link": {
+											"url": "/contact"
+										}
+									}
+								],
+								"layout": "inline",
+								"align": "center",
+								"gap": {
+									"size": 28,
+									"unit": "px"
+								},
+								"gap_mobile": {
+									"size": 18,
+									"unit": "px"
+								},
+								"text_color": "var(--uncoder-c-text)",
+								"text_hover_color": "var(--uncoder-c-primary)"
+							}
+						},
+						{
+							"type": "social-icons",
+							"settings": {
+								"items": [
+									{
+										"network": "linkedin",
+										"link": {
+											"url": "https://www.linkedin.com/"
+										}
+									},
+									{
+										"network": "instagram",
+										"link": {
+											"url": "https://www.instagram.com/"
+										}
+									},
+									{
+										"network": "x",
+										"link": {
+											"url": "https://x.com/"
+										}
+									}
+								],
+								"view": "minimal",
+								"color_mode": "custom",
+								"primary_color": "var(--uncoder-c-muted)",
+								"hover_icon_color": "var(--uncoder-c-primary)",
+								"icon_size": {
+									"size": 18,
+									"unit": "px"
+								},
+								"gap": {
+									"size": 16,
+									"unit": "px"
+								}
+							}
+						}
+					]
+				},
+				{
+					"type": "container",
+					"settings": {
+						"direction": "row",
+						"direction_mobile": "column",
+						"justify": "space-between",
+						"align": "center",
+						"gap": {
+							"size": 12,
+							"unit": "px"
+						},
+						"border": {
+							"style": "solid",
+							"width": {
+								"top": 1,
+								"right": 0,
+								"bottom": 0,
+								"left": 0,
+								"unit": "px",
+								"linked": false
+							},
+							"color": "var(--uncoder-c-border)"
+						},
+						"_padding": {
+							"top": 24,
+							"right": "",
+							"bottom": "",
+							"left": "",
+							"unit": "px",
+							"linked": false
+						}
+					},
+					"children": [
+						{
+							"type": "text-editor",
+							"settings": {
+								"content": "<p>© [Year] [Company name]. All rights reserved.</p>",
+								"typography": {
+									"preset": "small"
+								},
+								"color": "var(--uncoder-c-muted)",
+								"align_mobile": "center"
+							}
+						},
+						{
+							"type": "icon-list",
+							"settings": {
+								"items": [
+									{
+										"text": "Privacy policy",
+										"icon": {
+											"library": "none",
+											"value": ""
+										},
+										"link": {
+											"url": "/privacy-policy"
+										}
+									},
+									{
+										"text": "Terms",
+										"icon": {
+											"library": "none",
+											"value": ""
+										},
+										"link": {
+											"url": "/terms"
+										}
+									}
+								],
+								"layout": "inline",
+								"gap": {
+									"size": 24,
+									"unit": "px"
+								},
+								"text_typography": {
+									"preset": "small"
+								},
+								"text_color": "var(--uncoder-c-muted)",
+								"text_hover_color": "var(--uncoder-c-primary)"
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

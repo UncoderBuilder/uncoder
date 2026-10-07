@@ -1,0 +1,660 @@
+{
+	"id": "footer-newsletter-columns",
+	"title": "Footer: newsletter band and columns, dark",
+	"category": "footer",
+	"description": "Dark footer that opens with a newsletter band (title, one line and an inline sign-up form with an email field and a light Subscribe button), then the site name with a short description and social links beside three columns (two link lists and visit details), and a bottom bar with copyright and legal links. Columns go 2-up on phones. Sign-ups are saved under Uncoder → Submissions; to add them to a mailing list, turn on Newsletter in the form’s settings and connect Mailchimp, MailerLite or Brevo. Use it in a footer template when you want to grow a mailing list.",
+	"keywords": [
+		"footer",
+		"newsletter",
+		"dark",
+		"columns",
+		"links",
+		"subscribe",
+		"social"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "Footer",
+			"settings": {
+				"tag": "footer",
+				"gap": {
+					"size": 56,
+					"unit": "px"
+				},
+				"gap_mobile": {
+					"size": 40,
+					"unit": "px"
+				},
+				"background": {
+					"type": "classic",
+					"color": "var(--uncoder-c-secondary)"
+				},
+				"text_color": "var(--uncoder-c-white)",
+				"link_color": "color-mix(in srgb, var(--uncoder-c-white) 72%, transparent)",
+				"_padding": {
+					"top": 72,
+					"right": "",
+					"bottom": 32,
+					"left": "",
+					"unit": "px",
+					"linked": false
+				},
+				"_padding_mobile": {
+					"top": 56,
+					"right": "",
+					"bottom": 24,
+					"left": "",
+					"unit": "px",
+					"linked": false
+				}
+			},
+			"children": [
+				{
+					"type": "container",
+					"settings": {
+						"direction": "row",
+						"direction_tablet": "column",
+						"direction_mobile": "column",
+						"justify": "space-between",
+						"align": "center",
+						"align_tablet": "flex-start",
+						"align_mobile": "stretch",
+						"gap": {
+							"size": 32,
+							"unit": "px"
+						},
+						"gap_mobile": {
+							"size": 20,
+							"unit": "px"
+						},
+						"border": {
+							"style": "solid",
+							"width": {
+								"top": 0,
+								"right": 0,
+								"bottom": 1,
+								"left": 0,
+								"unit": "px",
+								"linked": false
+							},
+							"color": "color-mix(in srgb, var(--uncoder-c-white) 14%, transparent)"
+						},
+						"_padding": {
+							"top": "",
+							"right": "",
+							"bottom": 48,
+							"left": "",
+							"unit": "px",
+							"linked": false
+						},
+						"_padding_mobile": {
+							"top": "",
+							"right": "",
+							"bottom": 40,
+							"left": "",
+							"unit": "px",
+							"linked": false
+						}
+					},
+					"children": [
+						{
+							"type": "container",
+							"settings": {
+								"width": {
+									"size": 60,
+									"unit": "%"
+								},
+								"width_tablet": {
+									"size": 100,
+									"unit": "%"
+								},
+								"gap": {
+									"size": 8,
+									"unit": "px"
+								}
+							},
+							"children": [
+								{
+									"type": "heading",
+									"settings": {
+										"title": "Stay in the loop",
+										"tag": "p",
+										"typography": {
+											"preset": "h3"
+										},
+										"color": "var(--uncoder-c-white)"
+									}
+								},
+								{
+									"type": "text-editor",
+									"settings": {
+										"content": "<p>[News, offers and new arrivals — one email a month, never more.]</p>",
+										"color": "color-mix(in srgb, var(--uncoder-c-white) 72%, transparent)"
+									}
+								}
+							]
+						},
+						{
+							"type": "form",
+							"settings": {
+								"form_name": "Footer newsletter",
+								"fields": [
+									{
+										"type": "email",
+										"label": "Email address",
+										"field_id": "email",
+										"placeholder": "Your email address",
+										"required": true,
+										"autocomplete": "email",
+										"width": "66"
+									}
+								],
+								"show_labels": false,
+								"button_text": "Subscribe",
+								"button_size": "md",
+								"button_width": "33",
+								"button_align": "stretch",
+								"success_message": "Thanks for subscribing! Look out for our next email in your inbox.",
+								"column_gap": {
+									"size": 10,
+									"unit": "px"
+								},
+								"row_gap": {
+									"size": 10,
+									"unit": "px"
+								},
+								"field_color": "var(--uncoder-c-white)",
+								"placeholder_color": "color-mix(in srgb, var(--uncoder-c-white) 60%, transparent)",
+								"field_bg": "color-mix(in srgb, var(--uncoder-c-white) 8%, transparent)",
+								"field_border": {
+									"style": "solid",
+									"width": {
+										"top": 1,
+										"right": 1,
+										"bottom": 1,
+										"left": 1,
+										"unit": "px",
+										"linked": true
+									},
+									"color": "color-mix(in srgb, var(--uncoder-c-white) 24%, transparent)"
+								},
+								"focus_color": "var(--uncoder-c-white)",
+								"button_color": "var(--uncoder-c-heading)",
+								"button_background": {
+									"type": "classic",
+									"color": "var(--uncoder-c-white)"
+								},
+								"button_border": {
+									"style": "solid",
+									"width": {
+										"top": 1,
+										"right": 1,
+										"bottom": 1,
+										"left": 1,
+										"unit": "px",
+										"linked": true
+									},
+									"color": "var(--uncoder-c-white)"
+								},
+								"button_hover_color": "var(--uncoder-c-heading)",
+								"button_hover_background": {
+									"type": "classic",
+									"color": "var(--uncoder-c-surface)"
+								},
+								"button_hover_border_color": "var(--uncoder-c-surface)",
+								"success_color": "var(--uncoder-c-white)",
+								"success_bg": "color-mix(in srgb, var(--uncoder-c-white) 10%, transparent)",
+								"error_color": "var(--uncoder-c-white)",
+								"error_bg": "color-mix(in srgb, var(--uncoder-c-white) 10%, transparent)",
+								"_width": "custom",
+								"_custom_width": {
+									"size": 40,
+									"unit": "%"
+								},
+								"_width_tablet": "full",
+								"_flex_shrink": 0
+							}
+						}
+					]
+				},
+				{
+					"type": "container",
+					"settings": {
+						"direction": "row",
+						"direction_tablet": "column",
+						"direction_mobile": "column",
+						"gap": {
+							"size": 64,
+							"unit": "px"
+						},
+						"gap_tablet": {
+							"size": 40,
+							"unit": "px"
+						},
+						"gap_mobile": {
+							"size": 36,
+							"unit": "px"
+						}
+					},
+					"children": [
+						{
+							"type": "container",
+							"settings": {
+								"width": {
+									"size": 34,
+									"unit": "%"
+								},
+								"width_tablet": {
+									"size": 100,
+									"unit": "%"
+								},
+								"gap": {
+									"size": 20,
+									"unit": "px"
+								},
+								"align": "flex-start"
+							},
+							"children": [
+								{
+									"type": "site-title",
+									"settings": {
+										"tag": "p",
+										"typography": {
+											"preset": "h4"
+										},
+										"color": "var(--uncoder-c-white)",
+										"hover_color": "color-mix(in srgb, var(--uncoder-c-white) 80%, transparent)"
+									}
+								},
+								{
+									"type": "text-editor",
+									"settings": {
+										"content": "<p>[Company name] is a [type of business] in [city] — [one line about what makes you worth a visit].</p>",
+										"color": "color-mix(in srgb, var(--uncoder-c-white) 72%, transparent)",
+										"max_width": {
+											"size": 40,
+											"unit": "ch"
+										}
+									}
+								},
+								{
+									"type": "social-icons",
+									"settings": {
+										"items": [
+											{
+												"network": "instagram",
+												"link": {
+													"url": "https://www.instagram.com/"
+												}
+											},
+											{
+												"network": "linkedin",
+												"link": {
+													"url": "https://www.linkedin.com/"
+												}
+											},
+											{
+												"network": "x",
+												"link": {
+													"url": "https://x.com/"
+												}
+											}
+										],
+										"view": "framed",
+										"shape": "circle",
+										"color_mode": "custom",
+										"primary_color": "color-mix(in srgb, var(--uncoder-c-white) 72%, transparent)",
+										"hover_icon_color": "var(--uncoder-c-white)",
+										"hover_border_color": "var(--uncoder-c-white)",
+										"icon_size": {
+											"size": 16,
+											"unit": "px"
+										},
+										"icon_padding": {
+											"size": 10,
+											"unit": "px"
+										},
+										"border_width": {
+											"size": 1,
+											"unit": "px"
+										},
+										"gap": {
+											"size": 8,
+											"unit": "px"
+										}
+									}
+								}
+							]
+						},
+						{
+							"type": "container",
+							"settings": {
+								"width": {
+									"size": 66,
+									"unit": "%"
+								},
+								"width_tablet": {
+									"size": 100,
+									"unit": "%"
+								},
+								"layout": "grid",
+								"grid_columns": 3,
+								"grid_columns_tablet": 3,
+								"grid_columns_mobile": 2,
+								"gap": {
+									"size": 32,
+									"unit": "px"
+								},
+								"gap_mobile": {
+									"size": 24,
+									"unit": "px"
+								}
+							},
+							"children": [
+								{
+									"type": "container",
+									"settings": {
+										"gap": {
+											"size": 16,
+											"unit": "px"
+										}
+									},
+									"children": [
+										{
+											"type": "heading",
+											"settings": {
+												"title": "Explore",
+												"tag": "p",
+												"typography": {
+													"preset": "eyebrow"
+												},
+												"color": "var(--uncoder-c-white)"
+											}
+										},
+										{
+											"type": "icon-list",
+											"settings": {
+												"items": [
+													{
+														"text": "Services",
+														"icon": {
+															"library": "none",
+															"value": ""
+														},
+														"link": {
+															"url": "/services"
+														}
+													},
+													{
+														"text": "Pricing",
+														"icon": {
+															"library": "none",
+															"value": ""
+														},
+														"link": {
+															"url": "/pricing"
+														}
+													},
+													{
+														"text": "About",
+														"icon": {
+															"library": "none",
+															"value": ""
+														},
+														"link": {
+															"url": "/about"
+														}
+													},
+													{
+														"text": "Blog",
+														"icon": {
+															"library": "none",
+															"value": ""
+														},
+														"link": {
+															"url": "/blog"
+														}
+													}
+												],
+												"gap": {
+													"size": 10,
+													"unit": "px"
+												},
+												"text_color": "color-mix(in srgb, var(--uncoder-c-white) 72%, transparent)",
+												"text_hover_color": "var(--uncoder-c-white)"
+											}
+										}
+									]
+								},
+								{
+									"type": "container",
+									"settings": {
+										"gap": {
+											"size": 16,
+											"unit": "px"
+										}
+									},
+									"children": [
+										{
+											"type": "heading",
+											"settings": {
+												"title": "Company",
+												"tag": "p",
+												"typography": {
+													"preset": "eyebrow"
+												},
+												"color": "var(--uncoder-c-white)"
+											}
+										},
+										{
+											"type": "icon-list",
+											"settings": {
+												"items": [
+													{
+														"text": "Contact",
+														"icon": {
+															"library": "none",
+															"value": ""
+														},
+														"link": {
+															"url": "/contact"
+														}
+													},
+													{
+														"text": "FAQ",
+														"icon": {
+															"library": "none",
+															"value": ""
+														},
+														"link": {
+															"url": "/faq"
+														}
+													},
+													{
+														"text": "Careers",
+														"icon": {
+															"library": "none",
+															"value": ""
+														},
+														"link": {
+															"url": "/careers"
+														}
+													},
+													{
+														"text": "Press",
+														"icon": {
+															"library": "none",
+															"value": ""
+														},
+														"link": {
+															"url": "/press"
+														}
+													}
+												],
+												"gap": {
+													"size": 10,
+													"unit": "px"
+												},
+												"text_color": "color-mix(in srgb, var(--uncoder-c-white) 72%, transparent)",
+												"text_hover_color": "var(--uncoder-c-white)"
+											}
+										}
+									]
+								},
+								{
+									"type": "container",
+									"settings": {
+										"gap": {
+											"size": 16,
+											"unit": "px"
+										}
+									},
+									"children": [
+										{
+											"type": "heading",
+											"settings": {
+												"title": "Visit",
+												"tag": "p",
+												"typography": {
+													"preset": "eyebrow"
+												},
+												"color": "var(--uncoder-c-white)"
+											}
+										},
+										{
+											"type": "icon-list",
+											"settings": {
+												"items": [
+													{
+														"text": "[Street address, City]",
+														"icon": {
+															"library": "lucide",
+															"value": "map-pin"
+														}
+													},
+													{
+														"text": "[Mon–Sat, 9am–6pm]",
+														"icon": {
+															"library": "lucide",
+															"value": "clock"
+														}
+													},
+													{
+														"text": "[+1 (555) 000-0000]",
+														"icon": {
+															"library": "lucide",
+															"value": "phone"
+														}
+													}
+												],
+												"gap": {
+													"size": 10,
+													"unit": "px"
+												},
+												"icon_gap": {
+													"size": 10,
+													"unit": "px"
+												},
+												"icon_size": {
+													"size": 16,
+													"unit": "px"
+												},
+												"icon_color": "color-mix(in srgb, var(--uncoder-c-white) 60%, transparent)",
+												"text_color": "color-mix(in srgb, var(--uncoder-c-white) 72%, transparent)",
+												"icon_valign": "top"
+											}
+										}
+									]
+								}
+							]
+						}
+					]
+				},
+				{
+					"type": "container",
+					"settings": {
+						"direction": "row",
+						"direction_mobile": "column",
+						"justify": "space-between",
+						"align": "center",
+						"align_mobile": "flex-start",
+						"gap": {
+							"size": 16,
+							"unit": "px"
+						},
+						"border": {
+							"style": "solid",
+							"width": {
+								"top": 1,
+								"right": 0,
+								"bottom": 0,
+								"left": 0,
+								"unit": "px",
+								"linked": false
+							},
+							"color": "color-mix(in srgb, var(--uncoder-c-white) 14%, transparent)"
+						},
+						"_padding": {
+							"top": 24,
+							"right": "",
+							"bottom": "",
+							"left": "",
+							"unit": "px",
+							"linked": false
+						}
+					},
+					"children": [
+						{
+							"type": "text-editor",
+							"settings": {
+								"content": "<p>© [Year] [Company name]. All rights reserved.</p>",
+								"typography": {
+									"preset": "small"
+								},
+								"color": "color-mix(in srgb, var(--uncoder-c-white) 60%, transparent)"
+							}
+						},
+						{
+							"type": "icon-list",
+							"settings": {
+								"items": [
+									{
+										"text": "Privacy policy",
+										"icon": {
+											"library": "none",
+											"value": ""
+										},
+										"link": {
+											"url": "/privacy-policy"
+										}
+									},
+									{
+										"text": "Terms",
+										"icon": {
+											"library": "none",
+											"value": ""
+										},
+										"link": {
+											"url": "/terms"
+										}
+									}
+								],
+								"layout": "inline",
+								"gap": {
+									"size": 24,
+									"unit": "px"
+								},
+								"text_typography": {
+									"preset": "small"
+								},
+								"text_color": "color-mix(in srgb, var(--uncoder-c-white) 60%, transparent)",
+								"text_hover_color": "var(--uncoder-c-white)"
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

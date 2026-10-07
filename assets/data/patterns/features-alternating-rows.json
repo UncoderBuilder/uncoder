@@ -1,0 +1,458 @@
+{
+	"id": "features-alternating-rows",
+	"title": "Features: alternating image and text rows",
+	"category": "features",
+	"description": "Centered intro and two feature rows that alternate image and text sides (image on top on phones). Each row has an eyebrow, h3, paragraph, checklist and a text link.",
+	"keywords": [
+		"features",
+		"alternating",
+		"zigzag",
+		"image",
+		"text",
+		"rows",
+		"benefits"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "Features",
+			"settings": {
+				"gap": {
+					"size": 72,
+					"unit": "px"
+				},
+				"gap_mobile": {
+					"size": 48,
+					"unit": "px"
+				}
+			},
+			"children": [
+				{
+					"type": "container",
+					"settings": {
+						"gap": {
+							"size": 16,
+							"unit": "px"
+						},
+						"align": "center"
+					},
+					"children": [
+						{
+							"type": "heading",
+							"settings": {
+								"title": "Product tour",
+								"tag": "p",
+								"typography": {
+									"preset": "eyebrow"
+								},
+								"color": "var(--uncoder-c-primary)",
+								"align": "center"
+							}
+						},
+						{
+							"type": "heading",
+							"settings": {
+								"title": "Designed around the way your team works",
+								"tag": "h2",
+								"typography": {
+									"preset": "h2"
+								},
+								"align": "center",
+								"max_width": {
+									"size": 20,
+									"unit": "ch"
+								},
+								"text_wrap": "balance"
+							}
+						},
+						{
+							"type": "text-editor",
+							"settings": {
+								"content": "<p>Start small, then add structure as you grow. Everything stays connected along the way.</p>",
+								"typography": {
+									"preset": "lead"
+								},
+								"align": "center",
+								"max_width": {
+									"size": 58,
+									"unit": "ch"
+								}
+							}
+						}
+					]
+				},
+				{
+					"type": "container",
+					"settings": {
+						"gap": {
+							"size": 96,
+							"unit": "px"
+						},
+						"gap_tablet": {
+							"size": 72,
+							"unit": "px"
+						},
+						"gap_mobile": {
+							"size": 56,
+							"unit": "px"
+						}
+					},
+					"children": [
+						{
+							"type": "container",
+							"settings": {
+								"direction": "row",
+								"direction_mobile": "column",
+								"align": "center",
+								"gap": {
+									"size": 80,
+									"unit": "px"
+								},
+								"gap_tablet": {
+									"size": 48,
+									"unit": "px"
+								},
+								"gap_mobile": {
+									"size": 32,
+									"unit": "px"
+								}
+							},
+							"children": [
+								{
+									"type": "container",
+									"settings": {
+										"width": {
+											"size": 50,
+											"unit": "%"
+										},
+										"width_mobile": {
+											"size": 100,
+											"unit": "%"
+										}
+									},
+									"children": [
+										{
+											"type": "image",
+											"settings": {
+												"image": {
+													"id": 0,
+													"url": "{{placeholder_image}}"
+												},
+												"alt": "[Describe the planning screenshot]",
+												"object_fit": "cover",
+												"aspect_ratio": "4/3",
+												"radius": {
+													"top": 20,
+													"right": 20,
+													"bottom": 20,
+													"left": 20,
+													"unit": "px",
+													"linked": true
+												},
+												"radius_mobile": {
+													"top": 16,
+													"right": 16,
+													"bottom": 16,
+													"left": 16,
+													"unit": "px",
+													"linked": true
+												}
+											}
+										}
+									]
+								},
+								{
+									"type": "container",
+									"settings": {
+										"width": {
+											"size": 50,
+											"unit": "%"
+										},
+										"width_mobile": {
+											"size": 100,
+											"unit": "%"
+										},
+										"gap": {
+											"size": 16,
+											"unit": "px"
+										}
+									},
+									"children": [
+										{
+											"type": "heading",
+											"settings": {
+												"title": "Plan",
+												"tag": "p",
+												"typography": {
+													"preset": "eyebrow"
+												},
+												"color": "var(--uncoder-c-primary)"
+											}
+										},
+										{
+											"type": "heading",
+											"settings": {
+												"title": "Turn scattered ideas into a clear plan",
+												"tag": "h3",
+												"typography": {
+													"preset": "h3"
+												},
+												"text_wrap": "balance"
+											}
+										},
+										{
+											"type": "text-editor",
+											"settings": {
+												"content": "<p>Collect requests, set priorities and agree on what happens next — all in one shared view that everyone can follow.</p>",
+												"max_width": {
+													"size": 50,
+													"unit": "ch"
+												}
+											}
+										},
+										{
+											"type": "icon-list",
+											"settings": {
+												"items": [
+													{
+														"text": "Shared priorities everyone can see",
+														"icon": {
+															"library": "lucide",
+															"value": "check"
+														}
+													},
+													{
+														"text": "Deadlines and owners on every task",
+														"icon": {
+															"library": "lucide",
+															"value": "check"
+														}
+													},
+													{
+														"text": "Templates for recurring work",
+														"icon": {
+															"library": "lucide",
+															"value": "check"
+														}
+													}
+												],
+												"icon_color": "var(--uncoder-c-primary)",
+												"gap": {
+													"size": 10,
+													"unit": "px"
+												},
+												"icon_gap": {
+													"size": 10,
+													"unit": "px"
+												},
+												"_margin": {
+													"top": 4,
+													"right": "",
+													"bottom": 8,
+													"left": "",
+													"unit": "px",
+													"linked": false
+												}
+											}
+										},
+										{
+											"type": "button",
+											"settings": {
+												"text": "Learn more",
+												"link": {
+													"url": "/features"
+												},
+												"variant": "link",
+												"icon": {
+													"library": "lucide",
+													"value": "arrow-right"
+												},
+												"hover_effect": "arrow"
+											}
+										}
+									]
+								}
+							]
+						},
+						{
+							"type": "container",
+							"settings": {
+								"direction": "row-reverse",
+								"direction_mobile": "column",
+								"align": "center",
+								"gap": {
+									"size": 80,
+									"unit": "px"
+								},
+								"gap_tablet": {
+									"size": 48,
+									"unit": "px"
+								},
+								"gap_mobile": {
+									"size": 32,
+									"unit": "px"
+								}
+							},
+							"children": [
+								{
+									"type": "container",
+									"settings": {
+										"width": {
+											"size": 50,
+											"unit": "%"
+										},
+										"width_mobile": {
+											"size": 100,
+											"unit": "%"
+										}
+									},
+									"children": [
+										{
+											"type": "image",
+											"settings": {
+												"image": {
+													"id": 0,
+													"url": "{{placeholder_image}}"
+												},
+												"alt": "[Describe the tracking screenshot]",
+												"object_fit": "cover",
+												"aspect_ratio": "4/3",
+												"radius": {
+													"top": 20,
+													"right": 20,
+													"bottom": 20,
+													"left": 20,
+													"unit": "px",
+													"linked": true
+												},
+												"radius_mobile": {
+													"top": 16,
+													"right": 16,
+													"bottom": 16,
+													"left": 16,
+													"unit": "px",
+													"linked": true
+												}
+											}
+										}
+									]
+								},
+								{
+									"type": "container",
+									"settings": {
+										"width": {
+											"size": 50,
+											"unit": "%"
+										},
+										"width_mobile": {
+											"size": 100,
+											"unit": "%"
+										},
+										"gap": {
+											"size": 16,
+											"unit": "px"
+										}
+									},
+									"children": [
+										{
+											"type": "heading",
+											"settings": {
+												"title": "Track",
+												"tag": "p",
+												"typography": {
+													"preset": "eyebrow"
+												},
+												"color": "var(--uncoder-c-primary)"
+											}
+										},
+										{
+											"type": "heading",
+											"settings": {
+												"title": "Know where everything stands, at a glance",
+												"tag": "h3",
+												"typography": {
+													"preset": "h3"
+												},
+												"text_wrap": "balance"
+											}
+										},
+										{
+											"type": "text-editor",
+											"settings": {
+												"content": "<p>Progress updates itself as work moves forward, so status meetings get shorter and surprises get rarer.</p>",
+												"max_width": {
+													"size": 50,
+													"unit": "ch"
+												}
+											}
+										},
+										{
+											"type": "icon-list",
+											"settings": {
+												"items": [
+													{
+														"text": "Live progress across projects",
+														"icon": {
+															"library": "lucide",
+															"value": "check"
+														}
+													},
+													{
+														"text": "Automatic reminders before due dates",
+														"icon": {
+															"library": "lucide",
+															"value": "check"
+														}
+													},
+													{
+														"text": "Reports you can share in one click",
+														"icon": {
+															"library": "lucide",
+															"value": "check"
+														}
+													}
+												],
+												"icon_color": "var(--uncoder-c-primary)",
+												"gap": {
+													"size": 10,
+													"unit": "px"
+												},
+												"icon_gap": {
+													"size": 10,
+													"unit": "px"
+												},
+												"_margin": {
+													"top": 4,
+													"right": "",
+													"bottom": 8,
+													"left": "",
+													"unit": "px",
+													"linked": false
+												}
+											}
+										},
+										{
+											"type": "button",
+											"settings": {
+												"text": "Learn more",
+												"link": {
+													"url": "/features"
+												},
+												"variant": "link",
+												"icon": {
+													"library": "lucide",
+													"value": "arrow-right"
+												},
+												"hover_effect": "arrow"
+											}
+										}
+									]
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+}

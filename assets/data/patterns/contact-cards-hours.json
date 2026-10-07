@@ -1,0 +1,872 @@
+{
+	"id": "contact-cards-hours",
+	"title": "Contact: info cards, map and opening hours",
+	"category": "contact",
+	"description": "Visit-us section: eyebrow, h2 and directions text above four white contact cards (address, phone, email, getting here) in a 2×2 grid with an embedded Google map below them, and a dark opening-hours card with day/time rows, a note and a button beside them. Stacks on tablets and phones: cards, map, then hours. Type your own address into the Google Maps widget’s Location (no API key needed). Use it for businesses people visit in person — restaurants, cafés, shops, gyms, salons and clinics.",
+	"keywords": [
+		"contact",
+		"opening hours",
+		"map",
+		"address",
+		"visit",
+		"location",
+		"phone",
+		"hours"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "Contact",
+			"settings": {
+				"gap": {
+					"size": 40,
+					"unit": "px"
+				},
+				"gap_mobile": {
+					"size": 32,
+					"unit": "px"
+				}
+			},
+			"children": [
+				{
+					"type": "container",
+					"settings": {
+						"gap": {
+							"size": 16,
+							"unit": "px"
+						}
+					},
+					"children": [
+						{
+							"type": "heading",
+							"settings": {
+								"title": "Visit us",
+								"tag": "p",
+								"typography": {
+									"preset": "eyebrow"
+								},
+								"color": "var(--uncoder-c-primary)"
+							}
+						},
+						{
+							"type": "heading",
+							"settings": {
+								"title": "Come and say hello",
+								"tag": "h2",
+								"typography": {
+									"preset": "h2"
+								},
+								"text_wrap": "balance"
+							}
+						},
+						{
+							"type": "text-editor",
+							"settings": {
+								"content": "<p>[One or two lines about finding you — a nearby landmark, parking, public transport or step-free access.]</p>",
+								"max_width": {
+									"size": 56,
+									"unit": "ch"
+								}
+							}
+						}
+					]
+				},
+				{
+					"type": "container",
+					"settings": {
+						"direction": "row",
+						"direction_tablet": "column",
+						"direction_mobile": "column",
+						"gap": {
+							"size": 24,
+							"unit": "px"
+						},
+						"gap_tablet": {
+							"size": 20,
+							"unit": "px"
+						},
+						"gap_mobile": {
+							"size": 16,
+							"unit": "px"
+						}
+					},
+					"children": [
+						{
+							"type": "container",
+							"settings": {
+								"width": {
+									"size": 58,
+									"unit": "%"
+								},
+								"width_tablet": {
+									"size": 100,
+									"unit": "%"
+								},
+								"gap": {
+									"size": 16,
+									"unit": "px"
+								}
+							},
+							"children": [
+								{
+									"type": "container",
+									"settings": {
+										"layout": "grid",
+										"grid_columns": 2,
+										"grid_columns_tablet": 2,
+										"grid_columns_mobile": 1,
+										"gap": {
+											"size": 16,
+											"unit": "px"
+										}
+									},
+									"children": [
+										{
+											"type": "icon-box",
+											"settings": {
+												"icon": {
+													"library": "lucide",
+													"value": "map-pin"
+												},
+												"view": "stacked",
+												"shape": "rounded",
+												"icon_size": {
+													"size": 20,
+													"unit": "px"
+												},
+												"icon_padding": {
+													"size": 12,
+													"unit": "px"
+												},
+												"icon_spacing": {
+													"size": 16,
+													"unit": "px"
+												},
+												"title": "Address",
+												"description": "[Street address, City, Postcode]",
+												"title_tag": "h3",
+												"title_typography": {
+													"preset": "h5"
+												},
+												"title_color": "var(--uncoder-c-heading)",
+												"title_spacing": {
+													"size": 4,
+													"unit": "px"
+												},
+												"description_color": "var(--uncoder-c-text)",
+												"_background": {
+													"type": "classic",
+													"color": "var(--uncoder-c-white)"
+												},
+												"_border": {
+													"style": "solid",
+													"width": {
+														"top": 1,
+														"right": 1,
+														"bottom": 1,
+														"left": 1,
+														"unit": "px",
+														"linked": true
+													},
+													"color": "var(--uncoder-c-border)"
+												},
+												"_radius": {
+													"top": 16,
+													"right": 16,
+													"bottom": 16,
+													"left": 16,
+													"unit": "px",
+													"linked": true
+												},
+												"_padding": {
+													"top": 24,
+													"right": 24,
+													"bottom": 24,
+													"left": 24,
+													"unit": "px",
+													"linked": true
+												},
+												"_padding_mobile": {
+													"top": 20,
+													"right": 20,
+													"bottom": 20,
+													"left": 20,
+													"unit": "px",
+													"linked": true
+												}
+											}
+										},
+										{
+											"type": "icon-box",
+											"settings": {
+												"icon": {
+													"library": "lucide",
+													"value": "phone"
+												},
+												"view": "stacked",
+												"shape": "rounded",
+												"icon_size": {
+													"size": 20,
+													"unit": "px"
+												},
+												"icon_padding": {
+													"size": 12,
+													"unit": "px"
+												},
+												"icon_spacing": {
+													"size": 16,
+													"unit": "px"
+												},
+												"title": "Phone",
+												"description": "[+1 (555) 000-0000]",
+												"title_tag": "h3",
+												"title_typography": {
+													"preset": "h5"
+												},
+												"title_color": "var(--uncoder-c-heading)",
+												"title_spacing": {
+													"size": 4,
+													"unit": "px"
+												},
+												"description_color": "var(--uncoder-c-text)",
+												"_background": {
+													"type": "classic",
+													"color": "var(--uncoder-c-white)"
+												},
+												"_border": {
+													"style": "solid",
+													"width": {
+														"top": 1,
+														"right": 1,
+														"bottom": 1,
+														"left": 1,
+														"unit": "px",
+														"linked": true
+													},
+													"color": "var(--uncoder-c-border)"
+												},
+												"_radius": {
+													"top": 16,
+													"right": 16,
+													"bottom": 16,
+													"left": 16,
+													"unit": "px",
+													"linked": true
+												},
+												"_padding": {
+													"top": 24,
+													"right": 24,
+													"bottom": 24,
+													"left": 24,
+													"unit": "px",
+													"linked": true
+												},
+												"_padding_mobile": {
+													"top": 20,
+													"right": 20,
+													"bottom": 20,
+													"left": 20,
+													"unit": "px",
+													"linked": true
+												}
+											}
+										},
+										{
+											"type": "icon-box",
+											"settings": {
+												"icon": {
+													"library": "lucide",
+													"value": "mail"
+												},
+												"view": "stacked",
+												"shape": "rounded",
+												"icon_size": {
+													"size": 20,
+													"unit": "px"
+												},
+												"icon_padding": {
+													"size": 12,
+													"unit": "px"
+												},
+												"icon_spacing": {
+													"size": 16,
+													"unit": "px"
+												},
+												"title": "Email",
+												"description": "[hello@yourbusiness.com]",
+												"title_tag": "h3",
+												"title_typography": {
+													"preset": "h5"
+												},
+												"title_color": "var(--uncoder-c-heading)",
+												"title_spacing": {
+													"size": 4,
+													"unit": "px"
+												},
+												"description_color": "var(--uncoder-c-text)",
+												"_background": {
+													"type": "classic",
+													"color": "var(--uncoder-c-white)"
+												},
+												"_border": {
+													"style": "solid",
+													"width": {
+														"top": 1,
+														"right": 1,
+														"bottom": 1,
+														"left": 1,
+														"unit": "px",
+														"linked": true
+													},
+													"color": "var(--uncoder-c-border)"
+												},
+												"_radius": {
+													"top": 16,
+													"right": 16,
+													"bottom": 16,
+													"left": 16,
+													"unit": "px",
+													"linked": true
+												},
+												"_padding": {
+													"top": 24,
+													"right": 24,
+													"bottom": 24,
+													"left": 24,
+													"unit": "px",
+													"linked": true
+												},
+												"_padding_mobile": {
+													"top": 20,
+													"right": 20,
+													"bottom": 20,
+													"left": 20,
+													"unit": "px",
+													"linked": true
+												}
+											}
+										},
+										{
+											"type": "icon-box",
+											"settings": {
+												"icon": {
+													"library": "lucide",
+													"value": "car"
+												},
+												"view": "stacked",
+												"shape": "rounded",
+												"icon_size": {
+													"size": 20,
+													"unit": "px"
+												},
+												"icon_padding": {
+													"size": 12,
+													"unit": "px"
+												},
+												"icon_spacing": {
+													"size": 16,
+													"unit": "px"
+												},
+												"title": "Getting here",
+												"description": "[Parking, bus or train details]",
+												"title_tag": "h3",
+												"title_typography": {
+													"preset": "h5"
+												},
+												"title_color": "var(--uncoder-c-heading)",
+												"title_spacing": {
+													"size": 4,
+													"unit": "px"
+												},
+												"description_color": "var(--uncoder-c-text)",
+												"_background": {
+													"type": "classic",
+													"color": "var(--uncoder-c-white)"
+												},
+												"_border": {
+													"style": "solid",
+													"width": {
+														"top": 1,
+														"right": 1,
+														"bottom": 1,
+														"left": 1,
+														"unit": "px",
+														"linked": true
+													},
+													"color": "var(--uncoder-c-border)"
+												},
+												"_radius": {
+													"top": 16,
+													"right": 16,
+													"bottom": 16,
+													"left": 16,
+													"unit": "px",
+													"linked": true
+												},
+												"_padding": {
+													"top": 24,
+													"right": 24,
+													"bottom": 24,
+													"left": 24,
+													"unit": "px",
+													"linked": true
+												},
+												"_padding_mobile": {
+													"top": 20,
+													"right": 20,
+													"bottom": 20,
+													"left": 20,
+													"unit": "px",
+													"linked": true
+												}
+											}
+										}
+									]
+								},
+								{
+									"type": "google-maps",
+									"settings": {
+										"address": "Main Street 1, Springfield",
+										"zoom": 15,
+										"height": {
+											"size": 200,
+											"unit": "px"
+										},
+										"height_tablet": {
+											"size": 360,
+											"unit": "px"
+										},
+										"height_mobile": {
+											"size": 280,
+											"unit": "px"
+										},
+										"radius": {
+											"top": 16,
+											"right": 16,
+											"bottom": 16,
+											"left": 16,
+											"unit": "px",
+											"linked": true
+										},
+										"border": {
+											"style": "solid",
+											"width": {
+												"top": 1,
+												"right": 1,
+												"bottom": 1,
+												"left": 1,
+												"unit": "px",
+												"linked": true
+											},
+											"color": "var(--uncoder-c-border)"
+										},
+										"_flex_grow": 1
+									}
+								}
+							]
+						},
+						{
+							"type": "container",
+							"settings": {
+								"width": {
+									"size": 42,
+									"unit": "%"
+								},
+								"width_tablet": {
+									"size": 100,
+									"unit": "%"
+								},
+								"gap": {
+									"size": 16,
+									"unit": "px"
+								},
+								"align": "flex-start",
+								"background": {
+									"type": "classic",
+									"color": "var(--uncoder-c-secondary)"
+								},
+								"text_color": "var(--uncoder-c-white)",
+								"radius": {
+									"top": 24,
+									"right": 24,
+									"bottom": 24,
+									"left": 24,
+									"unit": "px",
+									"linked": true
+								},
+								"radius_mobile": {
+									"top": 16,
+									"right": 16,
+									"bottom": 16,
+									"left": 16,
+									"unit": "px",
+									"linked": true
+								},
+								"_padding": {
+									"top": 40,
+									"right": 40,
+									"bottom": 40,
+									"left": 40,
+									"unit": "px",
+									"linked": true
+								},
+								"_padding_mobile": {
+									"top": 24,
+									"right": 24,
+									"bottom": 24,
+									"left": 24,
+									"unit": "px",
+									"linked": true
+								}
+							},
+							"children": [
+								{
+									"type": "icon",
+									"settings": {
+										"icon": {
+											"library": "lucide",
+											"value": "clock"
+										},
+										"view": "stacked",
+										"shape": "rounded",
+										"size": {
+											"size": 22,
+											"unit": "px"
+										},
+										"padding": {
+											"size": 13,
+											"unit": "px"
+										},
+										"color": "var(--uncoder-c-white)",
+										"shape_color": "color-mix(in srgb, var(--uncoder-c-white) 14%, transparent)"
+									}
+								},
+								{
+									"type": "heading",
+									"settings": {
+										"title": "Opening hours",
+										"tag": "h3",
+										"typography": {
+											"preset": "h4"
+										}
+									}
+								},
+								{
+									"type": "container",
+									"settings": {
+										"gap": {
+											"size": 0,
+											"unit": "px"
+										},
+										"_align_self": "stretch"
+									},
+									"children": [
+										{
+											"type": "container",
+											"settings": {
+												"direction": "row",
+												"direction_mobile": "row",
+												"justify": "space-between",
+												"align": "center",
+												"gap": {
+													"size": 16,
+													"unit": "px"
+												},
+												"border": {
+													"style": "solid",
+													"width": {
+														"top": 0,
+														"right": 0,
+														"bottom": 1,
+														"left": 0,
+														"unit": "px",
+														"linked": false
+													},
+													"color": "color-mix(in srgb, var(--uncoder-c-white) 14%, transparent)"
+												},
+												"_padding": {
+													"top": 12,
+													"right": "",
+													"bottom": 12,
+													"left": "",
+													"unit": "px",
+													"linked": false
+												}
+											},
+											"children": [
+												{
+													"type": "text-editor",
+													"settings": {
+														"content": "<p>Monday – Thursday</p>",
+														"color": "color-mix(in srgb, var(--uncoder-c-white) 82%, transparent)"
+													}
+												},
+												{
+													"type": "text-editor",
+													"settings": {
+														"content": "<p>[11:00 – 22:00]</p>",
+														"typography": {
+															"preset": "body",
+															"weight": "600"
+														}
+													}
+												}
+											]
+										},
+										{
+											"type": "container",
+											"settings": {
+												"direction": "row",
+												"direction_mobile": "row",
+												"justify": "space-between",
+												"align": "center",
+												"gap": {
+													"size": 16,
+													"unit": "px"
+												},
+												"border": {
+													"style": "solid",
+													"width": {
+														"top": 0,
+														"right": 0,
+														"bottom": 1,
+														"left": 0,
+														"unit": "px",
+														"linked": false
+													},
+													"color": "color-mix(in srgb, var(--uncoder-c-white) 14%, transparent)"
+												},
+												"_padding": {
+													"top": 12,
+													"right": "",
+													"bottom": 12,
+													"left": "",
+													"unit": "px",
+													"linked": false
+												}
+											},
+											"children": [
+												{
+													"type": "text-editor",
+													"settings": {
+														"content": "<p>Friday</p>",
+														"color": "color-mix(in srgb, var(--uncoder-c-white) 82%, transparent)"
+													}
+												},
+												{
+													"type": "text-editor",
+													"settings": {
+														"content": "<p>[11:00 – 23:00]</p>",
+														"typography": {
+															"preset": "body",
+															"weight": "600"
+														}
+													}
+												}
+											]
+										},
+										{
+											"type": "container",
+											"settings": {
+												"direction": "row",
+												"direction_mobile": "row",
+												"justify": "space-between",
+												"align": "center",
+												"gap": {
+													"size": 16,
+													"unit": "px"
+												},
+												"border": {
+													"style": "solid",
+													"width": {
+														"top": 0,
+														"right": 0,
+														"bottom": 1,
+														"left": 0,
+														"unit": "px",
+														"linked": false
+													},
+													"color": "color-mix(in srgb, var(--uncoder-c-white) 14%, transparent)"
+												},
+												"_padding": {
+													"top": 12,
+													"right": "",
+													"bottom": 12,
+													"left": "",
+													"unit": "px",
+													"linked": false
+												}
+											},
+											"children": [
+												{
+													"type": "text-editor",
+													"settings": {
+														"content": "<p>Saturday</p>",
+														"color": "color-mix(in srgb, var(--uncoder-c-white) 82%, transparent)"
+													}
+												},
+												{
+													"type": "text-editor",
+													"settings": {
+														"content": "<p>[10:00 – 23:00]</p>",
+														"typography": {
+															"preset": "body",
+															"weight": "600"
+														}
+													}
+												}
+											]
+										},
+										{
+											"type": "container",
+											"settings": {
+												"direction": "row",
+												"direction_mobile": "row",
+												"justify": "space-between",
+												"align": "center",
+												"gap": {
+													"size": 16,
+													"unit": "px"
+												},
+												"border": {
+													"style": "solid",
+													"width": {
+														"top": 0,
+														"right": 0,
+														"bottom": 1,
+														"left": 0,
+														"unit": "px",
+														"linked": false
+													},
+													"color": "color-mix(in srgb, var(--uncoder-c-white) 14%, transparent)"
+												},
+												"_padding": {
+													"top": 12,
+													"right": "",
+													"bottom": 12,
+													"left": "",
+													"unit": "px",
+													"linked": false
+												}
+											},
+											"children": [
+												{
+													"type": "text-editor",
+													"settings": {
+														"content": "<p>Sunday</p>",
+														"color": "color-mix(in srgb, var(--uncoder-c-white) 82%, transparent)"
+													}
+												},
+												{
+													"type": "text-editor",
+													"settings": {
+														"content": "<p>[10:00 – 16:00]</p>",
+														"typography": {
+															"preset": "body",
+															"weight": "600"
+														}
+													}
+												}
+											]
+										},
+										{
+											"type": "container",
+											"settings": {
+												"direction": "row",
+												"direction_mobile": "row",
+												"justify": "space-between",
+												"align": "center",
+												"gap": {
+													"size": 16,
+													"unit": "px"
+												},
+												"border": {
+													"style": "solid",
+													"width": {
+														"top": 0,
+														"right": 0,
+														"bottom": 1,
+														"left": 0,
+														"unit": "px",
+														"linked": false
+													},
+													"color": "color-mix(in srgb, var(--uncoder-c-white) 14%, transparent)"
+												},
+												"_padding": {
+													"top": 12,
+													"right": "",
+													"bottom": 12,
+													"left": "",
+													"unit": "px",
+													"linked": false
+												}
+											},
+											"children": [
+												{
+													"type": "text-editor",
+													"settings": {
+														"content": "<p>Public holidays</p>",
+														"color": "color-mix(in srgb, var(--uncoder-c-white) 82%, transparent)"
+													}
+												},
+												{
+													"type": "text-editor",
+													"settings": {
+														"content": "<p>[Closed]</p>",
+														"typography": {
+															"preset": "body",
+															"weight": "600"
+														}
+													}
+												}
+											]
+										}
+									]
+								},
+								{
+									"type": "text-editor",
+									"settings": {
+										"content": "<p>[Hours can change around holidays — check our social pages for updates.]</p>",
+										"typography": {
+											"preset": "small"
+										},
+										"color": "color-mix(in srgb, var(--uncoder-c-white) 72%, transparent)"
+									}
+								},
+								{
+									"type": "button",
+									"settings": {
+										"text": "Plan your visit",
+										"link": {
+											"url": "/contact"
+										},
+										"size": "md",
+										"background": {
+											"type": "classic",
+											"color": "var(--uncoder-c-white)"
+										},
+										"text_color": "var(--uncoder-c-heading)",
+										"hover_background": {
+											"type": "classic",
+											"color": "var(--uncoder-c-surface)"
+										},
+										"hover_text_color": "var(--uncoder-c-heading)",
+										"align_mobile": "stretch",
+										"_margin": {
+											"top": 8,
+											"right": "",
+											"bottom": "",
+											"left": "",
+											"unit": "px",
+											"linked": false
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+}

@@ -1,0 +1,115 @@
+{
+  "id": "header-sticky",
+  "title": "Header: logo, menu and button",
+  "category": "header",
+  "description": "Sticky site header: logo on the left, the main menu in the middle (a hamburger on tablets and phones) and a call-to-action button on the right. Use it in a header template.",
+  "keywords": [
+    "header",
+    "navigation",
+    "menu",
+    "logo",
+    "sticky",
+    "nav"
+  ],
+  "elements": [
+    {
+      "type": "container",
+      "label": "Header",
+      "settings": {
+        "tag": "header",
+        "direction": "row",
+        "direction_mobile": "row",
+        "justify": "space-between",
+        "align": "center",
+        "gap": {
+          "size": 32,
+          "unit": "px"
+        },
+        "gap_mobile": {
+          "size": 16,
+          "unit": "px"
+        },
+        "background": {
+          "type": "classic",
+          "color": "var(--uncoder-c-white)"
+        },
+        "border": {
+          "style": "solid",
+          "width": {
+            "top": 0,
+            "right": 0,
+            "bottom": 1,
+            "left": 0,
+            "unit": "px",
+            "linked": false
+          },
+          "color": "var(--uncoder-c-border)"
+        },
+        "_padding": {
+          "top": 14,
+          "right": "",
+          "bottom": 14,
+          "left": "",
+          "unit": "px",
+          "linked": false
+        },
+        "_padding_mobile": {
+          "top": 10,
+          "right": "",
+          "bottom": 10,
+          "left": "",
+          "unit": "px",
+          "linked": false
+        },
+        "_sticky": "top",
+        "_z_index": 100,
+        "gap_tablet": {
+          "size": 16,
+          "unit": "px"
+        }
+      },
+      "children": [
+        {
+          "type": "site-logo",
+          "settings": {
+            "max_height": {
+              "size": 40,
+              "unit": "px"
+            },
+            "width": {
+              "size": "auto",
+              "unit": "custom"
+            },
+            "align": "left",
+            "title_typography": {
+              "preset": "h5"
+            },
+            "title_color": "var(--uncoder-c-heading)",
+            "_flex_shrink": 0,
+            "_flex_grow_tablet": 1
+          }
+        },
+        {
+          "type": "nav-menu",
+          "settings": {
+            "align": "center",
+            "toggle_align": "end",
+            "_flex_grow": 1,
+            "_order_tablet": 3
+          }
+        },
+        {
+          "type": "button",
+          "settings": {
+            "text": "Get started",
+            "link": {
+              "url": "/contact"
+            },
+            "size": "sm",
+            "_hide_mobile": true
+          }
+        }
+      ]
+    }
+  ]
+}

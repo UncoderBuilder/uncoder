@@ -1,0 +1,40 @@
+<wpml-config>
+	<!--
+		Uncoder. A translation starts as a copy of the original design and is then edited in
+		Uncoder on its own (copy-once). Generated CSS and caches are rebuilt per page, so they are not copied.
+	-->
+	<custom-types>
+		<custom-type translate="1">uncoder_template</custom-type>
+	</custom-types>
+	<custom-fields>
+		<custom-field action="copy-once">_uncoder_wb_data</custom-field>
+		<custom-field action="copy-once">_uncoder_wb_mode</custom-field>
+		<custom-field action="copy-once">_uncoder_wb_page</custom-field>
+		<custom-field action="copy-once">_uncoder_wb_type</custom-field>
+		<custom-field action="copy-once">_uncoder_wb_conditions</custom-field>
+		<custom-field action="copy-once">_uncoder_wb_template_settings</custom-field>
+		<custom-field action="translate">_uncoder_wb_seo_title</custom-field>
+		<custom-field action="translate">_uncoder_wb_seo_description</custom-field>
+		<custom-field action="copy">_uncoder_wb_mega</custom-field>
+		<custom-field action="copy">_uncoder_wb_generated</custom-field>
+		<custom-field action="ignore">_uncoder_wb_css_ver</custom-field>
+		<custom-field action="ignore">_uncoder_wb_css_inline</custom-field>
+		<custom-field action="ignore">_uncoder_wb_assets</custom-field>
+		<custom-field action="ignore">_uncoder_wb_rev</custom-field>
+		<custom-field action="ignore">_uncoder_wb_notes</custom-field>
+		<custom-field action="ignore">_uncoder_wb_autosave</custom-field>
+		<custom-field action="ignore">_uncoder_wb_snapshots</custom-field>
+		<custom-field action="ignore">_uncoder_wb_ai_change</custom-field>
+	</custom-fields>
+	<admin-texts>
+		<key name="uncoder_wb_settings">
+			<key name="consent">
+				<key name="title" />
+				<key name="message" />
+				<key name="accept_label" />
+				<key name="reject_label" />
+				<key name="prefs_label" />
+			</key>
+		</key>
+	</admin-texts>
+</wpml-config>

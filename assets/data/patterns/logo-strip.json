@@ -1,0 +1,117 @@
+{
+	"id": "logo-strip",
+	"title": "Logo strip",
+	"category": "social-proof",
+	"description": "Compact band with a short label and a row of six customer or partner logos (grayscale until hovered). Replace the placeholder images with real logos you have permission to show.",
+	"keywords": [
+		"logos",
+		"clients",
+		"customers",
+		"partners",
+		"trusted by",
+		"brands"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "Logos",
+			"settings": {
+				"align": "center",
+				"gap": {
+					"size": 28,
+					"unit": "px"
+				},
+				"_padding": {
+					"top": 56,
+					"right": "",
+					"bottom": 56,
+					"left": "",
+					"unit": "px",
+					"linked": false
+				},
+				"_padding_mobile": {
+					"top": 40,
+					"right": "",
+					"bottom": 40,
+					"left": "",
+					"unit": "px",
+					"linked": false
+				}
+			},
+			"children": [
+				{
+					"type": "heading",
+					"settings": {
+						"title": "Trusted by teams at",
+						"tag": "p",
+						"typography": {
+							"preset": "small"
+						},
+						"align": "center",
+						"color": "var(--uncoder-c-muted)"
+					}
+				},
+				{
+					"type": "logo-grid",
+					"settings": {
+						"logos": [
+							{
+								"id": 0,
+								"url": "{{placeholder_image}}",
+								"alt": "[Company name]"
+							},
+							{
+								"id": 0,
+								"url": "{{placeholder_image}}",
+								"alt": "[Company name]"
+							},
+							{
+								"id": 0,
+								"url": "{{placeholder_image}}",
+								"alt": "[Company name]"
+							},
+							{
+								"id": 0,
+								"url": "{{placeholder_image}}",
+								"alt": "[Company name]"
+							},
+							{
+								"id": 0,
+								"url": "{{placeholder_image}}",
+								"alt": "[Company name]"
+							},
+							{
+								"id": 0,
+								"url": "{{placeholder_image}}",
+								"alt": "[Company name]"
+							}
+						],
+						"columns": 6,
+						"columns_tablet": 3,
+						"columns_mobile": 3,
+						"logo_height": {
+							"size": 36,
+							"unit": "px"
+						},
+						"logo_height_mobile": {
+							"size": 30,
+							"unit": "px"
+						},
+						"gap": {
+							"size": 40,
+							"unit": "px"
+						},
+						"gap_mobile": {
+							"size": 24,
+							"unit": "px"
+						},
+						"grayscale": true,
+						"opacity": 0.7,
+						"hover_opacity": 1,
+						"_align_self": "stretch"
+					}
+				}
+			]
+		}
+	]
+}

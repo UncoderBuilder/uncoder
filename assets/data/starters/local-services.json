@@ -1,0 +1,33 @@
+{
+	"id": "local-services",
+	"title": "Local services",
+	"description": "For contractors, trades and home services: bold hero photo, services, how it works, reviews, FAQ and a quote request form.",
+	"kit": {
+		"colors": [
+			{ "id": "primary", "value": "#d9481f" },
+			{ "id": "secondary", "value": "#13233f" },
+			{ "id": "accent", "value": "#f2b134" },
+			{ "id": "heading", "value": "#0f1b2d" },
+			{ "id": "text", "value": "#3b4555" },
+			{ "id": "muted", "value": "#667085" },
+			{ "id": "surface", "value": "#f5f2ed" },
+			{ "id": "border", "value": "#e4ded4" }
+		],
+		"fonts": [
+			{ "id": "heading", "family": "Archivo" },
+			{ "id": "body", "family": "Inter" }
+		],
+		"buttons": {
+			"radius": { "top": 6, "right": 6, "bottom": 6, "left": 6, "unit": "px", "linked": true },
+			"hover_effect": "lift"
+		}
+	},
+	"header": "header-sticky",
+	"footer": "footer-columns-dark",
+	"pages": [
+		{ "title": "Home", "front": true, "sections": ["hero-background-image", "logo-strip", "services-image-cards", "process-steps", "stats-band", "testimonials-cards", "faq-two-column", "cta-dark-band"] },
+		{ "title": "Services", "sections": ["hero-centered-badge", "features-alternating-rows", "pricing-three-tiers", "faq-two-column", "cta-dark-band"] },
+		{ "title": "About", "sections": ["about-story-image", "timeline-milestones", "team-grid", "cta-split-image"] },
+		{ "title": "Contact", "sections": ["contact-details-form"] }
+	]
+}

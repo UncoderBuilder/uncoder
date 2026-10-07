@@ -1,0 +1,457 @@
+{
+	"id": "content-image-text-zigzag",
+	"title": "Content: zigzag story rows",
+	"category": "content",
+	"description": "Centered intro and three numbered chapters (large 01–03 number, h3, paragraph) beside wide 3:2 photos, alternating left and right; image on top on phones. No lists or buttons, so it reads like a story. Use it for your story, your approach, a case study or three signature dishes, classes or services.",
+	"keywords": [
+		"zigzag",
+		"alternating",
+		"story",
+		"image and text",
+		"about",
+		"approach",
+		"chapters"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "Story",
+			"settings": {
+				"gap": {
+					"size": 72,
+					"unit": "px"
+				},
+				"gap_mobile": {
+					"size": 48,
+					"unit": "px"
+				}
+			},
+			"children": [
+				{
+					"type": "container",
+					"settings": {
+						"gap": {
+							"size": 16,
+							"unit": "px"
+						},
+						"align": "center"
+					},
+					"children": [
+						{
+							"type": "heading",
+							"settings": {
+								"title": "Our approach",
+								"tag": "p",
+								"typography": {
+									"preset": "eyebrow"
+								},
+								"color": "var(--uncoder-c-primary)",
+								"align": "center"
+							}
+						},
+						{
+							"type": "heading",
+							"settings": {
+								"title": "A closer look at how we work",
+								"tag": "h2",
+								"typography": {
+									"preset": "h2"
+								},
+								"align": "center",
+								"max_width": {
+									"size": 20,
+									"unit": "ch"
+								},
+								"text_wrap": "balance"
+							}
+						},
+						{
+							"type": "text-editor",
+							"settings": {
+								"content": "<p>Three short chapters about what makes your business different. Swap in your own photos and words.</p>",
+								"typography": {
+									"preset": "lead"
+								},
+								"align": "center",
+								"max_width": {
+									"size": 58,
+									"unit": "ch"
+								}
+							}
+						}
+					]
+				},
+				{
+					"type": "container",
+					"settings": {
+						"gap": {
+							"size": 96,
+							"unit": "px"
+						},
+						"gap_tablet": {
+							"size": 72,
+							"unit": "px"
+						},
+						"gap_mobile": {
+							"size": 56,
+							"unit": "px"
+						}
+					},
+					"children": [
+						{
+							"type": "container",
+							"settings": {
+								"direction": "row",
+								"direction_mobile": "column",
+								"align": "center",
+								"gap": {
+									"size": 80,
+									"unit": "px"
+								},
+								"gap_tablet": {
+									"size": 48,
+									"unit": "px"
+								},
+								"gap_mobile": {
+									"size": 28,
+									"unit": "px"
+								}
+							},
+							"children": [
+								{
+									"type": "container",
+									"settings": {
+										"width": {
+											"size": 55,
+											"unit": "%"
+										},
+										"width_mobile": {
+											"size": 100,
+											"unit": "%"
+										}
+									},
+									"children": [
+										{
+											"type": "image",
+											"settings": {
+												"image": {
+													"id": 0,
+													"url": "{{placeholder_image}}"
+												},
+												"alt": "[Describe the first photo]",
+												"object_fit": "cover",
+												"aspect_ratio": "3/2",
+												"radius": {
+													"top": 24,
+													"right": 24,
+													"bottom": 24,
+													"left": 24,
+													"unit": "px",
+													"linked": true
+												},
+												"radius_mobile": {
+													"top": 16,
+													"right": 16,
+													"bottom": 16,
+													"left": 16,
+													"unit": "px",
+													"linked": true
+												},
+												"aspect_ratio_mobile": "4/3"
+											}
+										}
+									]
+								},
+								{
+									"type": "container",
+									"settings": {
+										"width": {
+											"size": 45,
+											"unit": "%"
+										},
+										"width_mobile": {
+											"size": 100,
+											"unit": "%"
+										},
+										"gap": {
+											"size": 16,
+											"unit": "px"
+										}
+									},
+									"children": [
+										{
+											"type": "heading",
+											"settings": {
+												"title": "01",
+												"tag": "p",
+												"typography": {
+													"preset": "h1"
+												},
+												"color": "var(--uncoder-c-primary)"
+											}
+										},
+										{
+											"type": "heading",
+											"settings": {
+												"title": "We start by understanding what matters to you",
+												"tag": "h3",
+												"typography": {
+													"preset": "h3"
+												},
+												"text_wrap": "balance"
+											}
+										},
+										{
+											"type": "text-editor",
+											"settings": {
+												"content": "<p>[Describe the first stage of working with you. What do you ask, what do you look at, and why does it lead to a better outcome?]</p>",
+												"max_width": {
+													"size": 48,
+													"unit": "ch"
+												}
+											}
+										}
+									]
+								}
+							]
+						},
+						{
+							"type": "container",
+							"settings": {
+								"direction": "row-reverse",
+								"direction_mobile": "column",
+								"align": "center",
+								"gap": {
+									"size": 80,
+									"unit": "px"
+								},
+								"gap_tablet": {
+									"size": 48,
+									"unit": "px"
+								},
+								"gap_mobile": {
+									"size": 28,
+									"unit": "px"
+								}
+							},
+							"children": [
+								{
+									"type": "container",
+									"settings": {
+										"width": {
+											"size": 55,
+											"unit": "%"
+										},
+										"width_mobile": {
+											"size": 100,
+											"unit": "%"
+										}
+									},
+									"children": [
+										{
+											"type": "image",
+											"settings": {
+												"image": {
+													"id": 0,
+													"url": "{{placeholder_image}}"
+												},
+												"alt": "[Describe the second photo]",
+												"object_fit": "cover",
+												"aspect_ratio": "3/2",
+												"radius": {
+													"top": 24,
+													"right": 24,
+													"bottom": 24,
+													"left": 24,
+													"unit": "px",
+													"linked": true
+												},
+												"radius_mobile": {
+													"top": 16,
+													"right": 16,
+													"bottom": 16,
+													"left": 16,
+													"unit": "px",
+													"linked": true
+												},
+												"aspect_ratio_mobile": "4/3"
+											}
+										}
+									]
+								},
+								{
+									"type": "container",
+									"settings": {
+										"width": {
+											"size": 45,
+											"unit": "%"
+										},
+										"width_mobile": {
+											"size": 100,
+											"unit": "%"
+										},
+										"gap": {
+											"size": 16,
+											"unit": "px"
+										}
+									},
+									"children": [
+										{
+											"type": "heading",
+											"settings": {
+												"title": "02",
+												"tag": "p",
+												"typography": {
+													"preset": "h1"
+												},
+												"color": "var(--uncoder-c-primary)"
+											}
+										},
+										{
+											"type": "heading",
+											"settings": {
+												"title": "Careful work by people who love the craft",
+												"tag": "h3",
+												"typography": {
+													"preset": "h3"
+												},
+												"text_wrap": "balance"
+											}
+										},
+										{
+											"type": "text-editor",
+											"settings": {
+												"content": "<p>[Explain how the work actually gets done: the skills, tools, materials or ingredients you rely on, and the standards you hold yourself to.]</p>",
+												"max_width": {
+													"size": 48,
+													"unit": "ch"
+												}
+											}
+										}
+									]
+								}
+							]
+						},
+						{
+							"type": "container",
+							"settings": {
+								"direction": "row",
+								"direction_mobile": "column",
+								"align": "center",
+								"gap": {
+									"size": 80,
+									"unit": "px"
+								},
+								"gap_tablet": {
+									"size": 48,
+									"unit": "px"
+								},
+								"gap_mobile": {
+									"size": 28,
+									"unit": "px"
+								}
+							},
+							"children": [
+								{
+									"type": "container",
+									"settings": {
+										"width": {
+											"size": 55,
+											"unit": "%"
+										},
+										"width_mobile": {
+											"size": 100,
+											"unit": "%"
+										}
+									},
+									"children": [
+										{
+											"type": "image",
+											"settings": {
+												"image": {
+													"id": 0,
+													"url": "{{placeholder_image}}"
+												},
+												"alt": "[Describe the third photo]",
+												"object_fit": "cover",
+												"aspect_ratio": "3/2",
+												"radius": {
+													"top": 24,
+													"right": 24,
+													"bottom": 24,
+													"left": 24,
+													"unit": "px",
+													"linked": true
+												},
+												"radius_mobile": {
+													"top": 16,
+													"right": 16,
+													"bottom": 16,
+													"left": 16,
+													"unit": "px",
+													"linked": true
+												},
+												"aspect_ratio_mobile": "4/3"
+											}
+										}
+									]
+								},
+								{
+									"type": "container",
+									"settings": {
+										"width": {
+											"size": 45,
+											"unit": "%"
+										},
+										"width_mobile": {
+											"size": 100,
+											"unit": "%"
+										},
+										"gap": {
+											"size": 16,
+											"unit": "px"
+										}
+									},
+									"children": [
+										{
+											"type": "heading",
+											"settings": {
+												"title": "03",
+												"tag": "p",
+												"typography": {
+													"preset": "h1"
+												},
+												"color": "var(--uncoder-c-primary)"
+											}
+										},
+										{
+											"type": "heading",
+											"settings": {
+												"title": "Here for the long run, not just the first visit",
+												"tag": "h3",
+												"typography": {
+													"preset": "h3"
+												},
+												"text_wrap": "balance"
+											}
+										},
+										{
+											"type": "text-editor",
+											"settings": {
+												"content": "<p>[Describe what happens afterwards — follow-ups, guarantees, loyalty perks or simply being easy to reach.]</p>",
+												"max_width": {
+													"size": 48,
+													"unit": "ch"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+}

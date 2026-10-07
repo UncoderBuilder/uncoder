@@ -1,0 +1,139 @@
+{
+	"id": "blog-latest-posts",
+	"title": "Blog: latest posts",
+	"category": "blog",
+	"description": "Section header (h2 with a “View all posts” button) and the three latest blog posts as cards (image, date, title, excerpt), pulled automatically with the Posts widget.",
+	"keywords": [
+		"blog",
+		"posts",
+		"news",
+		"articles",
+		"latest",
+		"journal",
+		"insights"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "Blog",
+			"settings": {
+				"gap": {
+					"size": 48,
+					"unit": "px"
+				},
+				"gap_mobile": {
+					"size": 32,
+					"unit": "px"
+				}
+			},
+			"children": [
+				{
+					"type": "container",
+					"settings": {
+						"direction": "row",
+						"direction_mobile": "column",
+						"justify": "space-between",
+						"align": "flex-end",
+						"align_mobile": "flex-start",
+						"gap": {
+							"size": 24,
+							"unit": "px"
+						},
+						"gap_mobile": {
+							"size": 16,
+							"unit": "px"
+						}
+					},
+					"children": [
+						{
+							"type": "container",
+							"settings": {
+								"gap": {
+									"size": 16,
+									"unit": "px"
+								}
+							},
+							"children": [
+								{
+									"type": "heading",
+									"settings": {
+										"title": "Blog",
+										"tag": "p",
+										"typography": {
+											"preset": "eyebrow"
+										},
+										"color": "var(--uncoder-c-primary)"
+									}
+								},
+								{
+									"type": "heading",
+									"settings": {
+										"title": "Latest from the blog",
+										"tag": "h2",
+										"typography": {
+											"preset": "h2"
+										}
+									}
+								}
+							]
+						},
+						{
+							"type": "button",
+							"settings": {
+								"text": "View all posts",
+								"link": {
+									"url": "/blog"
+								},
+								"variant": "outline",
+								"_flex_shrink": 0
+							}
+						}
+					]
+				},
+				{
+					"type": "posts",
+					"settings": {
+						"query": {
+							"source": "posts",
+							"post_type": "post",
+							"posts_per_page": 3,
+							"orderby": "date",
+							"order": "desc"
+						},
+						"layout": "cards",
+						"columns": 3,
+						"columns_tablet": 2,
+						"columns_mobile": 1,
+						"image_ratio": "16/9",
+						"meta_items": [
+							"date"
+						],
+						"excerpt_length": 18,
+						"show_read_more": false,
+						"card_link": true,
+						"column_gap": {
+							"size": 24,
+							"unit": "px"
+						},
+						"row_gap": {
+							"size": 24,
+							"unit": "px"
+						},
+						"card_radius": {
+							"top": 16,
+							"right": 16,
+							"bottom": 16,
+							"left": 16,
+							"unit": "px",
+							"linked": true
+						},
+						"title_typography": {
+							"preset": "h5"
+						},
+						"hover_effect": "lift-zoom"
+					}
+				}
+			]
+		}
+	]
+}

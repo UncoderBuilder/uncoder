@@ -1,0 +1,33 @@
+{
+	"id": "saas",
+	"title": "Software & SaaS",
+	"description": "For software products and apps: a centered product hero, customer logos, numbered benefits, a bento feature grid, ratings, two simple plans, FAQ and a newsletter sign-up.",
+	"kit": {
+		"colors": [
+			{ "id": "primary", "value": "#4f46e5" },
+			{ "id": "secondary", "value": "#1e1b4b" },
+			{ "id": "accent", "value": "#f59e0b" },
+			{ "id": "heading", "value": "#0f172a" },
+			{ "id": "text", "value": "#334155" },
+			{ "id": "muted", "value": "#64748b" },
+			{ "id": "surface", "value": "#f4f6ff" },
+			{ "id": "border", "value": "#e2e8f0" }
+		],
+		"fonts": [
+			{ "id": "heading", "family": "Plus Jakarta Sans" },
+			{ "id": "body", "family": "Inter" }
+		],
+		"buttons": {
+			"radius": { "top": 10, "right": 10, "bottom": 10, "left": 10, "unit": "px", "linked": true },
+			"hover_effect": "lift"
+		}
+	},
+	"header": "header-sticky",
+	"footer": "footer-newsletter-columns",
+	"pages": [
+		{ "title": "Home", "front": true, "sections": ["hero-centered-badge", "logo-strip", "features-numbers-grid", "features-bento-grid", "testimonials-logos-rating", "features-checklist-split", "cta-banner-gradient"] },
+		{ "title": "Features", "sections": ["hero-minimal-text", "features-icon-cards", "features-alternating-rows", "process-steps", "cta-banner-gradient"] },
+		{ "title": "Pricing", "sections": ["pricing-two-plans", "faq-accordion-centered", "cta-dark-band"] },
+		{ "title": "Blog", "sections": ["blog-featured-post", "cta-newsletter-signup"] }
+	]
+}

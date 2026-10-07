@@ -1,0 +1,348 @@
+{
+	"id": "stats-band",
+	"title": "Stats band: 4 numbers",
+	"category": "social-proof",
+	"description": "Primary-colored band with an intro (h2 + short text) and four animated counters. 2 columns on tablets and phones. Replace the sample numbers with figures you can back up.",
+	"keywords": [
+		"stats",
+		"numbers",
+		"counters",
+		"metrics",
+		"results",
+		"band",
+		"achievements"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "Stats",
+			"settings": {
+				"gap": {
+					"size": 56,
+					"unit": "px"
+				},
+				"gap_mobile": {
+					"size": 40,
+					"unit": "px"
+				},
+				"background": {
+					"type": "classic",
+					"color": "var(--uncoder-c-primary)"
+				},
+				"text_color": "var(--uncoder-c-white)"
+			},
+			"children": [
+				{
+					"type": "container",
+					"settings": {
+						"direction": "row",
+						"direction_mobile": "column",
+						"justify": "space-between",
+						"align": "flex-end",
+						"align_mobile": "flex-start",
+						"gap": {
+							"size": 48,
+							"unit": "px"
+						},
+						"gap_mobile": {
+							"size": 16,
+							"unit": "px"
+						}
+					},
+					"children": [
+						{
+							"type": "container",
+							"settings": {
+								"width": {
+									"size": 56,
+									"unit": "%"
+								},
+								"width_mobile": {
+									"size": 100,
+									"unit": "%"
+								},
+								"gap": {
+									"size": 16,
+									"unit": "px"
+								}
+							},
+							"children": [
+								{
+									"type": "heading",
+									"settings": {
+										"title": "By the numbers",
+										"tag": "p",
+										"typography": {
+											"preset": "eyebrow"
+										},
+										"color": "color-mix(in srgb, var(--uncoder-c-white) 75%, transparent)"
+									}
+								},
+								{
+									"type": "heading",
+									"settings": {
+										"title": "Results we are proud of",
+										"tag": "h2",
+										"typography": {
+											"preset": "h2"
+										},
+										"text_wrap": "balance"
+									}
+								}
+							]
+						},
+						{
+							"type": "container",
+							"settings": {
+								"width": {
+									"size": 38,
+									"unit": "%"
+								},
+								"width_mobile": {
+									"size": 100,
+									"unit": "%"
+								}
+							},
+							"children": [
+								{
+									"type": "text-editor",
+									"settings": {
+										"content": "<p>[One sentence that gives these numbers context — what they measure and since when.]</p>",
+										"color": "color-mix(in srgb, var(--uncoder-c-white) 82%, transparent)"
+									}
+								}
+							]
+						}
+					]
+				},
+				{
+					"type": "container",
+					"settings": {
+						"layout": "grid",
+						"grid_columns": 4,
+						"grid_columns_tablet": 2,
+						"grid_columns_mobile": 2,
+						"gap": {
+							"size": 32,
+							"unit": "px"
+						},
+						"gap_mobile": {
+							"size": 16,
+							"unit": "px"
+						},
+						"row_gap_mobile": {
+							"size": 32,
+							"unit": "px"
+						}
+					},
+					"children": [
+						{
+							"type": "counter",
+							"settings": {
+								"end": 1200,
+								"suffix": "+",
+								"decimals": 0,
+								"title": "[Customers served]",
+								"align": "left",
+								"number_typography": {
+									"preset": "h1"
+								},
+								"number_color": "var(--uncoder-c-white)",
+								"affix_color": "var(--uncoder-c-white)",
+								"title_color": "color-mix(in srgb, var(--uncoder-c-white) 80%, transparent)",
+								"title_typography": {
+									"preset": "body"
+								},
+								"title_spacing": {
+									"size": 6,
+									"unit": "px"
+								},
+								"_border": {
+									"style": "solid",
+									"width": {
+										"top": 0,
+										"right": 0,
+										"bottom": 0,
+										"left": 1,
+										"unit": "px",
+										"linked": false
+									},
+									"color": "color-mix(in srgb, var(--uncoder-c-white) 24%, transparent)"
+								},
+								"_padding": {
+									"top": "",
+									"right": "",
+									"bottom": "",
+									"left": 24,
+									"unit": "px",
+									"linked": false
+								},
+								"_padding_mobile": {
+									"top": "",
+									"right": "",
+									"bottom": "",
+									"left": 16,
+									"unit": "px",
+									"linked": false
+								}
+							}
+						},
+						{
+							"type": "counter",
+							"settings": {
+								"end": 98,
+								"suffix": "%",
+								"decimals": 0,
+								"title": "[Satisfaction rate]",
+								"align": "left",
+								"number_typography": {
+									"preset": "h1"
+								},
+								"number_color": "var(--uncoder-c-white)",
+								"affix_color": "var(--uncoder-c-white)",
+								"title_color": "color-mix(in srgb, var(--uncoder-c-white) 80%, transparent)",
+								"title_typography": {
+									"preset": "body"
+								},
+								"title_spacing": {
+									"size": 6,
+									"unit": "px"
+								},
+								"_border": {
+									"style": "solid",
+									"width": {
+										"top": 0,
+										"right": 0,
+										"bottom": 0,
+										"left": 1,
+										"unit": "px",
+										"linked": false
+									},
+									"color": "color-mix(in srgb, var(--uncoder-c-white) 24%, transparent)"
+								},
+								"_padding": {
+									"top": "",
+									"right": "",
+									"bottom": "",
+									"left": 24,
+									"unit": "px",
+									"linked": false
+								},
+								"_padding_mobile": {
+									"top": "",
+									"right": "",
+									"bottom": "",
+									"left": 16,
+									"unit": "px",
+									"linked": false
+								}
+							}
+						},
+						{
+							"type": "counter",
+							"settings": {
+								"end": 15,
+								"suffix": "",
+								"decimals": 0,
+								"title": "[Years in business]",
+								"align": "left",
+								"number_typography": {
+									"preset": "h1"
+								},
+								"number_color": "var(--uncoder-c-white)",
+								"affix_color": "var(--uncoder-c-white)",
+								"title_color": "color-mix(in srgb, var(--uncoder-c-white) 80%, transparent)",
+								"title_typography": {
+									"preset": "body"
+								},
+								"title_spacing": {
+									"size": 6,
+									"unit": "px"
+								},
+								"_border": {
+									"style": "solid",
+									"width": {
+										"top": 0,
+										"right": 0,
+										"bottom": 0,
+										"left": 1,
+										"unit": "px",
+										"linked": false
+									},
+									"color": "color-mix(in srgb, var(--uncoder-c-white) 24%, transparent)"
+								},
+								"_padding": {
+									"top": "",
+									"right": "",
+									"bottom": "",
+									"left": 24,
+									"unit": "px",
+									"linked": false
+								},
+								"_padding_mobile": {
+									"top": "",
+									"right": "",
+									"bottom": "",
+									"left": 16,
+									"unit": "px",
+									"linked": false
+								}
+							}
+						},
+						{
+							"type": "counter",
+							"settings": {
+								"end": 40,
+								"suffix": "+",
+								"decimals": 0,
+								"title": "[Countries reached]",
+								"align": "left",
+								"number_typography": {
+									"preset": "h1"
+								},
+								"number_color": "var(--uncoder-c-white)",
+								"affix_color": "var(--uncoder-c-white)",
+								"title_color": "color-mix(in srgb, var(--uncoder-c-white) 80%, transparent)",
+								"title_typography": {
+									"preset": "body"
+								},
+								"title_spacing": {
+									"size": 6,
+									"unit": "px"
+								},
+								"_border": {
+									"style": "solid",
+									"width": {
+										"top": 0,
+										"right": 0,
+										"bottom": 0,
+										"left": 1,
+										"unit": "px",
+										"linked": false
+									},
+									"color": "color-mix(in srgb, var(--uncoder-c-white) 24%, transparent)"
+								},
+								"_padding": {
+									"top": "",
+									"right": "",
+									"bottom": "",
+									"left": 24,
+									"unit": "px",
+									"linked": false
+								},
+								"_padding_mobile": {
+									"top": "",
+									"right": "",
+									"bottom": "",
+									"left": 16,
+									"unit": "px",
+									"linked": false
+								}
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

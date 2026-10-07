@@ -1,0 +1,33 @@
+{
+	"id": "restaurant",
+	"title": "Restaurant & café",
+	"description": "For restaurants, cafés and bakeries: an inviting photo hero, your story, the menu with prices, a food gallery, guest ratings, opening hours and a table-booking call to action.",
+	"kit": {
+		"colors": [
+			{ "id": "primary", "value": "#9a3b1f" },
+			{ "id": "secondary", "value": "#2b1d16" },
+			{ "id": "accent", "value": "#d9a441" },
+			{ "id": "heading", "value": "#231710" },
+			{ "id": "text", "value": "#4a3b33" },
+			{ "id": "muted", "value": "#7b6a60" },
+			{ "id": "surface", "value": "#f7f0e6" },
+			{ "id": "border", "value": "#e8dccb" }
+		],
+		"fonts": [
+			{ "id": "heading", "family": "Playfair Display" },
+			{ "id": "body", "family": "Karla" }
+		],
+		"buttons": {
+			"radius": { "top": 4, "right": 4, "bottom": 4, "left": 4, "unit": "px", "linked": true },
+			"hover_effect": "grow"
+		}
+	},
+	"header": "header-centered-logo",
+	"footer": "footer-newsletter-columns",
+	"pages": [
+		{ "title": "Home", "front": true, "sections": ["hero-background-image", "about-story-image", "content-menu-list", "content-gallery-grid", "testimonials-logos-rating", "cta-banner-gradient"] },
+		{ "title": "Menu", "sections": ["hero-minimal-text", "content-menu-list", "reviews-masonry", "faq-accordion-centered", "cta-banner-gradient"] },
+		{ "title": "About", "sections": ["content-image-text-zigzag", "testimonial-big-quote", "team-grid", "cta-newsletter-signup"] },
+		{ "title": "Visit", "sections": ["contact-cards-hours", "contact-details-form"] }
+	]
+}

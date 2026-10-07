@@ -1,0 +1,33 @@
+{
+	"id": "agency",
+	"title": "Agency & consultancy",
+	"description": "For agencies, consultants and professional firms: a bold typographic hero, client logos, services, selected work, ratings, a clear process with packages and an easy way to start a project.",
+	"kit": {
+		"colors": [
+			{ "id": "primary", "value": "#1f4e79" },
+			{ "id": "secondary", "value": "#0b1f33" },
+			{ "id": "accent", "value": "#e0a93b" },
+			{ "id": "heading", "value": "#0b1726" },
+			{ "id": "text", "value": "#3b4757" },
+			{ "id": "muted", "value": "#6b7684" },
+			{ "id": "surface", "value": "#f4f1ec" },
+			{ "id": "border", "value": "#e3ded6" }
+		],
+		"fonts": [
+			{ "id": "heading", "family": "Sora" },
+			{ "id": "body", "family": "Manrope" }
+		],
+		"buttons": {
+			"radius": { "top": 2, "right": 2, "bottom": 2, "left": 2, "unit": "px", "linked": true },
+			"hover_effect": "lift"
+		}
+	},
+	"header": "header-centered-logo",
+	"footer": "footer-simple",
+	"pages": [
+		{ "title": "Home", "front": true, "sections": ["hero-minimal-text", "logo-strip", "services-image-cards", "content-gallery-grid", "testimonials-logos-rating", "cta-banner-gradient"] },
+		{ "title": "Services", "sections": ["features-numbers-grid", "features-checklist-split", "process-steps", "pricing-two-plans", "faq-accordion-centered", "cta-split-image"] },
+		{ "title": "Work", "sections": ["content-image-text-zigzag", "stats-band", "reviews-masonry", "cta-dark-band"] },
+		{ "title": "Contact", "sections": ["contact-details-form"] }
+	]
+}

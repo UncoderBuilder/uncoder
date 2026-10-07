@@ -1,0 +1,260 @@
+{
+	"id": "hero-minimal-text",
+	"title": "Hero: minimal, text only",
+	"category": "hero",
+	"description": "Typographic hero without an image: a small pill badge, an extra-large left-aligned h1 with a highlighted phrase, then the lead paragraph on the left and two buttons on the right, and a short inline trust list. Stacks on phones. Use it when you have no strong photo — agencies, consultants, software feature pages or inner-page intros.",
+	"keywords": [
+		"hero",
+		"minimal",
+		"text only",
+		"typography",
+		"no image",
+		"intro",
+		"agency"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "Hero",
+			"settings": {
+				"align": "flex-start",
+				"gap": {
+					"size": 28,
+					"unit": "px"
+				},
+				"gap_mobile": {
+					"size": 20,
+					"unit": "px"
+				},
+				"border": {
+					"style": "solid",
+					"width": {
+						"top": 0,
+						"right": 0,
+						"bottom": 1,
+						"left": 0,
+						"unit": "px",
+						"linked": false
+					},
+					"color": "var(--uncoder-c-border)"
+				},
+				"_padding": {
+					"top": 136,
+					"right": "",
+					"bottom": 104,
+					"left": "",
+					"unit": "px",
+					"linked": false
+				},
+				"_padding_tablet": {
+					"top": 112,
+					"right": "",
+					"bottom": 88,
+					"left": "",
+					"unit": "px",
+					"linked": false
+				},
+				"_padding_mobile": {
+					"top": 80,
+					"right": "",
+					"bottom": 64,
+					"left": "",
+					"unit": "px",
+					"linked": false
+				}
+			},
+			"children": [
+				{
+					"type": "heading",
+					"settings": {
+						"title": "<strong>New</strong> · [A short announcement or availability note]",
+						"tag": "p",
+						"typography": {
+							"preset": "small"
+						},
+						"color": "var(--uncoder-c-text)",
+						"highlight_color": "var(--uncoder-c-primary)",
+						"_background": {
+							"type": "classic",
+							"color": "var(--uncoder-c-surface)"
+						},
+						"_border": {
+							"style": "solid",
+							"width": {
+								"top": 1,
+								"right": 1,
+								"bottom": 1,
+								"left": 1,
+								"unit": "px",
+								"linked": true
+							},
+							"color": "var(--uncoder-c-border)"
+						},
+						"_radius": {
+							"top": 999,
+							"right": 999,
+							"bottom": 999,
+							"left": 999,
+							"unit": "px",
+							"linked": true
+						},
+						"_padding": {
+							"top": 6,
+							"right": 16,
+							"bottom": 6,
+							"left": 16,
+							"unit": "px",
+							"linked": false
+						}
+					}
+				},
+				{
+					"type": "heading",
+					"settings": {
+						"title": "Thoughtful work for people who <strong>care about the details</strong>",
+						"tag": "h1",
+						"typography": {
+							"preset": "display"
+						},
+						"highlight_color": "var(--uncoder-c-primary)",
+						"max_width": {
+							"size": 18,
+							"unit": "ch"
+						},
+						"text_wrap": "balance"
+					}
+				},
+				{
+					"type": "container",
+					"settings": {
+						"direction": "row",
+						"direction_mobile": "column",
+						"justify": "space-between",
+						"align": "flex-end",
+						"align_mobile": "flex-start",
+						"gap": {
+							"size": 48,
+							"unit": "px"
+						},
+						"gap_mobile": {
+							"size": 28,
+							"unit": "px"
+						},
+						"_align_self": "stretch",
+						"_margin": {
+							"top": 16,
+							"right": "",
+							"bottom": "",
+							"left": "",
+							"unit": "px",
+							"linked": false
+						}
+					},
+					"children": [
+						{
+							"type": "text-editor",
+							"settings": {
+								"content": "<p>[Company name] helps [who you serve] with [what you offer]. Use one or two plain sentences to tell the right visitor why they should keep reading.</p>",
+								"typography": {
+									"preset": "lead"
+								},
+								"max_width": {
+									"size": 52,
+									"unit": "ch"
+								}
+							}
+						},
+						{
+							"type": "container",
+							"settings": {
+								"direction": "row",
+								"direction_mobile": "column",
+								"gap": {
+									"size": 12,
+									"unit": "px"
+								},
+								"wrap": "wrap",
+								"_flex_shrink": 0,
+								"_align_self_mobile": "stretch"
+							},
+							"children": [
+								{
+									"type": "button",
+									"settings": {
+										"text": "Start a project",
+										"link": {
+											"url": "/contact"
+										},
+										"size": "lg",
+										"align_mobile": "stretch"
+									}
+								},
+								{
+									"type": "button",
+									"settings": {
+										"text": "See our work",
+										"link": {
+											"url": "/work"
+										},
+										"size": "lg",
+										"variant": "outline",
+										"align_mobile": "stretch"
+									}
+								}
+							]
+						}
+					]
+				},
+				{
+					"type": "icon-list",
+					"settings": {
+						"items": [
+							{
+								"text": "Taking on new work for [month]",
+								"icon": {
+									"library": "lucide",
+									"value": "check"
+								}
+							},
+							{
+								"text": "Replies within [one business day]",
+								"icon": {
+									"library": "lucide",
+									"value": "check"
+								}
+							},
+							{
+								"text": "[City] and remote",
+								"icon": {
+									"library": "lucide",
+									"value": "check"
+								}
+							}
+						],
+						"icon_color": "var(--uncoder-c-primary)",
+						"gap": {
+							"size": 20,
+							"unit": "px"
+						},
+						"icon_gap": {
+							"size": 10,
+							"unit": "px"
+						},
+						"layout": "inline",
+						"text_typography": {
+							"preset": "small"
+						},
+						"_margin": {
+							"top": 8,
+							"right": "",
+							"bottom": "",
+							"left": "",
+							"unit": "px",
+							"linked": false
+						}
+					}
+				}
+			]
+		}
+	]
+}

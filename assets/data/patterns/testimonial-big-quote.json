@@ -1,0 +1,71 @@
+{
+	"id": "testimonial-big-quote",
+	"title": "Testimonial: large single quote",
+	"category": "social-proof",
+	"description": "One large, centered customer quote with a quotation mark, the customer’s name, role and photo. Use a real quote you have permission to publish.",
+	"keywords": [
+		"testimonial",
+		"quote",
+		"review",
+		"customer",
+		"large",
+		"featured"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "Quote",
+			"settings": {
+				"align": "center"
+			},
+			"children": [
+				{
+					"type": "testimonial",
+					"settings": {
+						"quote": "<p>“[Put your strongest customer quote here — one or two sentences about the difference you made, in their own words.]”</p>",
+						"name": "[Customer name]",
+						"role": "[Role, Company]",
+						"image": {
+							"id": 0,
+							"url": "{{placeholder_image}}"
+						},
+						"show_quote_icon": true,
+						"layout": "left",
+						"align": "center",
+						"gap": {
+							"size": 28,
+							"unit": "px"
+						},
+						"quote_typography": {
+							"preset": "h3",
+							"weight": "500"
+						},
+						"quote_color": "var(--uncoder-c-heading)",
+						"quote_max_width": {
+							"size": 40,
+							"unit": "ch"
+						},
+						"quote_icon_color": "var(--uncoder-c-primary)",
+						"quote_icon_size": {
+							"size": 44,
+							"unit": "px"
+						},
+						"image_width": {
+							"size": 64,
+							"unit": "px"
+						},
+						"name_typography": {
+							"preset": "body",
+							"weight": "600"
+						},
+						"role_typography": {
+							"preset": "small"
+						},
+						"role_color": "var(--uncoder-c-muted)",
+						"_width": "full"
+					}
+				}
+			]
+		}
+	]
+}

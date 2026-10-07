@@ -1,0 +1,265 @@
+{
+	"id": "features-checklist-split",
+	"title": "Features: text with checklist card",
+	"category": "features",
+	"description": "Two columns: eyebrow, h2, a short paragraph and a button on the left; a rounded surface card on the right with an h3 and six check-marked benefits in two columns. Stacks on tablets and phones. Use it to list what is included in a service, plan or membership.",
+	"keywords": [
+		"features",
+		"checklist",
+		"benefits",
+		"included",
+		"split",
+		"why us"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "Features",
+			"settings": {
+				"direction": "row",
+				"direction_tablet": "column",
+				"direction_mobile": "column",
+				"align": "center",
+				"gap": {
+					"size": 80,
+					"unit": "px"
+				},
+				"gap_tablet": {
+					"size": 48,
+					"unit": "px"
+				},
+				"gap_mobile": {
+					"size": 32,
+					"unit": "px"
+				}
+			},
+			"children": [
+				{
+					"type": "container",
+					"settings": {
+						"width": {
+							"size": 42,
+							"unit": "%"
+						},
+						"width_tablet": {
+							"size": 100,
+							"unit": "%"
+						},
+						"gap": {
+							"size": 20,
+							"unit": "px"
+						},
+						"align": "flex-start"
+					},
+					"children": [
+						{
+							"type": "heading",
+							"settings": {
+								"title": "Why choose us",
+								"tag": "p",
+								"typography": {
+									"preset": "eyebrow"
+								},
+								"color": "var(--uncoder-c-primary)"
+							}
+						},
+						{
+							"type": "heading",
+							"settings": {
+								"title": "Everything included, with no surprises later",
+								"tag": "h2",
+								"typography": {
+									"preset": "h2"
+								},
+								"text_wrap": "balance"
+							}
+						},
+						{
+							"type": "text-editor",
+							"settings": {
+								"content": "<p>Sum up your offer in a few words: who it is for, what is included and what makes the way you work different from the alternatives.</p>",
+								"max_width": {
+									"size": 46,
+									"unit": "ch"
+								}
+							}
+						},
+						{
+							"type": "button",
+							"settings": {
+								"text": "Get started",
+								"link": {
+									"url": "/contact"
+								},
+								"_margin": {
+									"top": 8,
+									"right": "",
+									"bottom": "",
+									"left": "",
+									"unit": "px",
+									"linked": false
+								}
+							}
+						}
+					]
+				},
+				{
+					"type": "container",
+					"settings": {
+						"width": {
+							"size": 58,
+							"unit": "%"
+						},
+						"width_tablet": {
+							"size": 100,
+							"unit": "%"
+						},
+						"gap": {
+							"size": 24,
+							"unit": "px"
+						},
+						"background": {
+							"type": "classic",
+							"color": "var(--uncoder-c-surface)"
+						},
+						"radius": {
+							"top": 24,
+							"right": 24,
+							"bottom": 24,
+							"left": 24,
+							"unit": "px",
+							"linked": true
+						},
+						"radius_mobile": {
+							"top": 16,
+							"right": 16,
+							"bottom": 16,
+							"left": 16,
+							"unit": "px",
+							"linked": true
+						},
+						"_padding": {
+							"top": 40,
+							"right": 40,
+							"bottom": 40,
+							"left": 40,
+							"unit": "px",
+							"linked": true
+						},
+						"_padding_mobile": {
+							"top": 24,
+							"right": 24,
+							"bottom": 24,
+							"left": 24,
+							"unit": "px",
+							"linked": true
+						}
+					},
+					"children": [
+						{
+							"type": "heading",
+							"settings": {
+								"title": "What you get",
+								"tag": "h3",
+								"typography": {
+									"preset": "h4"
+								}
+							}
+						},
+						{
+							"type": "container",
+							"settings": {
+								"layout": "grid",
+								"grid_columns": 2,
+								"grid_columns_tablet": 2,
+								"grid_columns_mobile": 1,
+								"gap": {
+									"size": 16,
+									"unit": "px"
+								}
+							},
+							"children": [
+								{
+									"type": "icon-list",
+									"settings": {
+										"items": [
+											{
+												"text": "<strong>A free first consultation</strong> — talk it through before you commit.",
+												"icon": {
+													"library": "lucide",
+													"value": "circle-check"
+												}
+											},
+											{
+												"text": "<strong>Clear, fixed pricing</strong> — a written quote before any work starts.",
+												"icon": {
+													"library": "lucide",
+													"value": "circle-check"
+												}
+											},
+											{
+												"text": "<strong>One point of contact</strong> — the same person from start to finish.",
+												"icon": {
+													"library": "lucide",
+													"value": "circle-check"
+												}
+											}
+										],
+										"icon_color": "var(--uncoder-c-primary)",
+										"gap": {
+											"size": 16,
+											"unit": "px"
+										},
+										"icon_gap": {
+											"size": 12,
+											"unit": "px"
+										},
+										"icon_valign": "top"
+									}
+								},
+								{
+									"type": "icon-list",
+									"settings": {
+										"items": [
+											{
+												"text": "<strong>Flexible scheduling</strong> — [evenings and weekends on request].",
+												"icon": {
+													"library": "lucide",
+													"value": "circle-check"
+												}
+											},
+											{
+												"text": "<strong>Our quality promise</strong> — [describe your guarantee in a few words].",
+												"icon": {
+													"library": "lucide",
+													"value": "circle-check"
+												}
+											},
+											{
+												"text": "<strong>Support afterwards</strong> — help is one message away.",
+												"icon": {
+													"library": "lucide",
+													"value": "circle-check"
+												}
+											}
+										],
+										"icon_color": "var(--uncoder-c-primary)",
+										"gap": {
+											"size": 16,
+											"unit": "px"
+										},
+										"icon_gap": {
+											"size": 12,
+											"unit": "px"
+										},
+										"icon_valign": "top"
+									}
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+}

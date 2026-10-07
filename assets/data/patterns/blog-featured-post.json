@@ -1,0 +1,371 @@
+{
+	"id": "blog-featured-post",
+	"title": "Blog: featured post and latest posts",
+	"category": "blog",
+	"description": "Section header with an “All articles” button, one large featured-article card on a surface background (image beside category, h3 title, summary, author line and a read link), then “More articles” with the three latest posts pulled automatically by the Posts widget. Stacks on phones. The featured card is static: point its copy, image and link at the article you want to highlight.",
+	"keywords": [
+		"blog",
+		"featured post",
+		"articles",
+		"news",
+		"journal",
+		"latest posts",
+		"editorial"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "Blog",
+			"settings": {
+				"gap": {
+					"size": 48,
+					"unit": "px"
+				},
+				"gap_mobile": {
+					"size": 32,
+					"unit": "px"
+				}
+			},
+			"children": [
+				{
+					"type": "container",
+					"settings": {
+						"direction": "row",
+						"direction_mobile": "column",
+						"justify": "space-between",
+						"align": "flex-end",
+						"align_mobile": "flex-start",
+						"gap": {
+							"size": 24,
+							"unit": "px"
+						},
+						"gap_mobile": {
+							"size": 16,
+							"unit": "px"
+						}
+					},
+					"children": [
+						{
+							"type": "container",
+							"settings": {
+								"gap": {
+									"size": 16,
+									"unit": "px"
+								}
+							},
+							"children": [
+								{
+									"type": "heading",
+									"settings": {
+										"title": "Journal",
+										"tag": "p",
+										"typography": {
+											"preset": "eyebrow"
+										},
+										"color": "var(--uncoder-c-primary)"
+									}
+								},
+								{
+									"type": "heading",
+									"settings": {
+										"title": "Stories, tips and news",
+										"tag": "h2",
+										"typography": {
+											"preset": "h2"
+										}
+									}
+								}
+							]
+						},
+						{
+							"type": "button",
+							"settings": {
+								"text": "All articles",
+								"link": {
+									"url": "/blog"
+								},
+								"variant": "outline",
+								"_flex_shrink": 0
+							}
+						}
+					]
+				},
+				{
+					"type": "container",
+					"settings": {
+						"direction": "row",
+						"direction_mobile": "column",
+						"align": "center",
+						"gap": {
+							"size": 48,
+							"unit": "px"
+						},
+						"gap_tablet": {
+							"size": 32,
+							"unit": "px"
+						},
+						"gap_mobile": {
+							"size": 20,
+							"unit": "px"
+						},
+						"background": {
+							"type": "classic",
+							"color": "var(--uncoder-c-surface)"
+						},
+						"radius": {
+							"top": 24,
+							"right": 24,
+							"bottom": 24,
+							"left": 24,
+							"unit": "px",
+							"linked": true
+						},
+						"radius_mobile": {
+							"top": 20,
+							"right": 20,
+							"bottom": 20,
+							"left": 20,
+							"unit": "px",
+							"linked": true
+						},
+						"_padding": {
+							"top": 16,
+							"right": 16,
+							"bottom": 16,
+							"left": 16,
+							"unit": "px",
+							"linked": true
+						},
+						"_padding_mobile": {
+							"top": 12,
+							"right": 12,
+							"bottom": 12,
+							"left": 12,
+							"unit": "px",
+							"linked": true
+						}
+					},
+					"children": [
+						{
+							"type": "container",
+							"settings": {
+								"width": {
+									"size": 55,
+									"unit": "%"
+								},
+								"width_mobile": {
+									"size": 100,
+									"unit": "%"
+								}
+							},
+							"children": [
+								{
+									"type": "image",
+									"settings": {
+										"image": {
+											"id": 0,
+											"url": "{{placeholder_image}}"
+										},
+										"alt": "[Describe the featured article image]",
+										"object_fit": "cover",
+										"aspect_ratio": "4/3",
+										"radius": {
+											"top": 16,
+											"right": 16,
+											"bottom": 16,
+											"left": 16,
+											"unit": "px",
+											"linked": true
+										},
+										"radius_mobile": {
+											"top": 12,
+											"right": 12,
+											"bottom": 12,
+											"left": 12,
+											"unit": "px",
+											"linked": true
+										},
+										"aspect_ratio_mobile": "16/9",
+										"width": {
+											"size": 100,
+											"unit": "%"
+										}
+									}
+								}
+							]
+						},
+						{
+							"type": "container",
+							"settings": {
+								"width": {
+									"size": 45,
+									"unit": "%"
+								},
+								"width_mobile": {
+									"size": 100,
+									"unit": "%"
+								},
+								"gap": {
+									"size": 16,
+									"unit": "px"
+								},
+								"align": "flex-start",
+								"_padding": {
+									"top": 24,
+									"right": 32,
+									"bottom": 24,
+									"left": 8,
+									"unit": "px",
+									"linked": false
+								},
+								"_padding_tablet": {
+									"top": 16,
+									"right": 16,
+									"bottom": 16,
+									"left": 0,
+									"unit": "px",
+									"linked": false
+								},
+								"_padding_mobile": {
+									"top": 4,
+									"right": 8,
+									"bottom": 12,
+									"left": 8,
+									"unit": "px",
+									"linked": false
+								}
+							},
+							"children": [
+								{
+									"type": "heading",
+									"settings": {
+										"title": "Featured · [Category]",
+										"tag": "p",
+										"typography": {
+											"preset": "eyebrow"
+										},
+										"color": "var(--uncoder-c-primary)"
+									}
+								},
+								{
+									"type": "heading",
+									"settings": {
+										"title": "[The title of the article you want to highlight]",
+										"tag": "h3",
+										"typography": {
+											"preset": "h3"
+										},
+										"text_wrap": "balance"
+									}
+								},
+								{
+									"type": "text-editor",
+									"settings": {
+										"content": "<p>[Two sentences that make people want to read on: who the article is for and what they will take away from it.]</p>",
+										"max_width": {
+											"size": 48,
+											"unit": "ch"
+										}
+									}
+								},
+								{
+									"type": "text-editor",
+									"settings": {
+										"content": "<p>By [Author name] · [Date] · [5] min read</p>",
+										"typography": {
+											"preset": "small"
+										},
+										"color": "var(--uncoder-c-muted)"
+									}
+								},
+								{
+									"type": "button",
+									"settings": {
+										"text": "Read the article",
+										"link": {
+											"url": "/blog"
+										},
+										"variant": "link",
+										"icon": {
+											"library": "lucide",
+											"value": "arrow-right"
+										},
+										"hover_effect": "arrow"
+									}
+								}
+							]
+						}
+					]
+				},
+				{
+					"type": "container",
+					"settings": {
+						"gap": {
+							"size": 24,
+							"unit": "px"
+						},
+						"gap_mobile": {
+							"size": 16,
+							"unit": "px"
+						}
+					},
+					"children": [
+						{
+							"type": "heading",
+							"settings": {
+								"title": "More articles",
+								"tag": "h3",
+								"typography": {
+									"preset": "h4"
+								}
+							}
+						},
+						{
+							"type": "posts",
+							"settings": {
+								"query": {
+									"source": "posts",
+									"post_type": "post",
+									"posts_per_page": 3,
+									"orderby": "date",
+									"order": "desc"
+								},
+								"layout": "cards",
+								"columns": 3,
+								"columns_tablet": 2,
+								"columns_mobile": 1,
+								"image_ratio": "16/9",
+								"meta_items": [
+									"date"
+								],
+								"excerpt_length": 18,
+								"show_read_more": false,
+								"card_link": true,
+								"column_gap": {
+									"size": 24,
+									"unit": "px"
+								},
+								"row_gap": {
+									"size": 24,
+									"unit": "px"
+								},
+								"card_radius": {
+									"top": 16,
+									"right": 16,
+									"bottom": 16,
+									"left": 16,
+									"unit": "px",
+									"linked": true
+								},
+								"title_typography": {
+									"preset": "h5"
+								},
+								"hover_effect": "lift-zoom"
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}

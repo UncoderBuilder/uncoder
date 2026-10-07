@@ -1,0 +1,287 @@
+{
+	"id": "cta-newsletter-signup",
+	"title": "Call to action: newsletter sign-up card",
+	"category": "cta",
+	"description": "Rounded primary-colored card with a mail icon, an h2 and a short promise on the left, and an inline sign-up form (one required email field and a light Subscribe button) with a “No spam / Unsubscribe anytime” note on the right. Stacks on tablets and phones, where the button goes full width under the field. Sign-ups are saved under Uncoder → Submissions; to add them to a mailing list, turn on Newsletter in the form’s settings and connect Mailchimp, MailerLite or Brevo. Use it to grow a mailing list.",
+	"keywords": [
+		"newsletter",
+		"subscribe",
+		"email",
+		"sign up",
+		"mailing list",
+		"form",
+		"cta"
+	],
+	"elements": [
+		{
+			"type": "container",
+			"label": "Newsletter",
+			"settings": {},
+			"children": [
+				{
+					"type": "container",
+					"settings": {
+						"direction": "row",
+						"direction_tablet": "column",
+						"direction_mobile": "column",
+						"justify": "space-between",
+						"align": "center",
+						"align_tablet": "flex-start",
+						"gap": {
+							"size": 48,
+							"unit": "px"
+						},
+						"gap_tablet": {
+							"size": 32,
+							"unit": "px"
+						},
+						"gap_mobile": {
+							"size": 24,
+							"unit": "px"
+						},
+						"background": {
+							"type": "classic",
+							"color": "var(--uncoder-c-primary)"
+						},
+						"text_color": "var(--uncoder-c-white)",
+						"radius": {
+							"top": 28,
+							"right": 28,
+							"bottom": 28,
+							"left": 28,
+							"unit": "px",
+							"linked": true
+						},
+						"radius_mobile": {
+							"top": 20,
+							"right": 20,
+							"bottom": 20,
+							"left": 20,
+							"unit": "px",
+							"linked": true
+						},
+						"_padding": {
+							"top": 56,
+							"right": 56,
+							"bottom": 56,
+							"left": 56,
+							"unit": "px",
+							"linked": true
+						},
+						"_padding_tablet": {
+							"top": 44,
+							"right": 44,
+							"bottom": 44,
+							"left": 44,
+							"unit": "px",
+							"linked": true
+						},
+						"_padding_mobile": {
+							"top": 28,
+							"right": 28,
+							"bottom": 28,
+							"left": 28,
+							"unit": "px",
+							"linked": true
+						}
+					},
+					"children": [
+						{
+							"type": "container",
+							"settings": {
+								"width": {
+									"size": 58,
+									"unit": "%"
+								},
+								"width_tablet": {
+									"size": 100,
+									"unit": "%"
+								},
+								"gap": {
+									"size": 16,
+									"unit": "px"
+								},
+								"align": "flex-start"
+							},
+							"children": [
+								{
+									"type": "icon",
+									"settings": {
+										"icon": {
+											"library": "lucide",
+											"value": "mail"
+										},
+										"view": "stacked",
+										"shape": "rounded",
+										"size": {
+											"size": 22,
+											"unit": "px"
+										},
+										"padding": {
+											"size": 13,
+											"unit": "px"
+										},
+										"color": "var(--uncoder-c-white)",
+										"shape_color": "color-mix(in srgb, var(--uncoder-c-white) 14%, transparent)"
+									}
+								},
+								{
+									"type": "heading",
+									"settings": {
+										"title": "Get [useful tips and news] in your inbox",
+										"tag": "h2",
+										"typography": {
+											"preset": "h2"
+										},
+										"text_wrap": "balance"
+									}
+								},
+								{
+									"type": "text-editor",
+									"settings": {
+										"content": "<p>One short email [a month] with [what subscribers get — news, offers or ideas]. No spam, and you can unsubscribe at any time.</p>",
+										"color": "color-mix(in srgb, var(--uncoder-c-white) 82%, transparent)",
+										"max_width": {
+											"size": 48,
+											"unit": "ch"
+										}
+									}
+								}
+							]
+						},
+						{
+							"type": "container",
+							"settings": {
+								"width": {
+									"size": 42,
+									"unit": "%"
+								},
+								"width_tablet": {
+									"size": 100,
+									"unit": "%"
+								},
+								"gap": {
+									"size": 14,
+									"unit": "px"
+								},
+								"align": "stretch",
+								"_flex_shrink": 0
+							},
+							"children": [
+								{
+									"type": "form",
+									"settings": {
+										"form_name": "Newsletter sign-up",
+										"fields": [
+											{
+												"type": "email",
+												"label": "Email address",
+												"field_id": "email",
+												"placeholder": "Your email address",
+												"required": true,
+												"autocomplete": "email",
+												"width": "66"
+											}
+										],
+										"show_labels": false,
+										"button_text": "Subscribe",
+										"button_size": "md",
+										"button_width": "33",
+										"button_align": "stretch",
+										"success_message": "Thanks for subscribing! Look out for our next email in your inbox.",
+										"column_gap": {
+											"size": 10,
+											"unit": "px"
+										},
+										"row_gap": {
+											"size": 10,
+											"unit": "px"
+										},
+										"field_color": "var(--uncoder-c-white)",
+										"placeholder_color": "color-mix(in srgb, var(--uncoder-c-white) 70%, transparent)",
+										"field_bg": "color-mix(in srgb, var(--uncoder-c-white) 12%, transparent)",
+										"field_border": {
+											"style": "solid",
+											"width": {
+												"top": 1,
+												"right": 1,
+												"bottom": 1,
+												"left": 1,
+												"unit": "px",
+												"linked": true
+											},
+											"color": "color-mix(in srgb, var(--uncoder-c-white) 30%, transparent)"
+										},
+										"focus_color": "var(--uncoder-c-white)",
+										"button_color": "var(--uncoder-c-heading)",
+										"button_background": {
+											"type": "classic",
+											"color": "var(--uncoder-c-white)"
+										},
+										"button_border": {
+											"style": "solid",
+											"width": {
+												"top": 1,
+												"right": 1,
+												"bottom": 1,
+												"left": 1,
+												"unit": "px",
+												"linked": true
+											},
+											"color": "var(--uncoder-c-white)"
+										},
+										"button_hover_color": "var(--uncoder-c-heading)",
+										"button_hover_background": {
+											"type": "classic",
+											"color": "var(--uncoder-c-surface)"
+										},
+										"button_hover_border_color": "var(--uncoder-c-surface)",
+										"success_color": "var(--uncoder-c-white)",
+										"success_bg": "color-mix(in srgb, var(--uncoder-c-white) 14%, transparent)",
+										"error_color": "var(--uncoder-c-white)",
+										"error_bg": "color-mix(in srgb, var(--uncoder-c-white) 14%, transparent)"
+									}
+								},
+								{
+									"type": "icon-list",
+									"settings": {
+										"items": [
+											{
+												"text": "No spam, ever",
+												"icon": {
+													"library": "lucide",
+													"value": "check"
+												}
+											},
+											{
+												"text": "Unsubscribe in one click",
+												"icon": {
+													"library": "lucide",
+													"value": "check"
+												}
+											}
+										],
+										"icon_color": "color-mix(in srgb, var(--uncoder-c-white) 70%, transparent)",
+										"text_color": "color-mix(in srgb, var(--uncoder-c-white) 82%, transparent)",
+										"layout": "inline",
+										"gap": {
+											"size": 20,
+											"unit": "px"
+										},
+										"icon_gap": {
+											"size": 8,
+											"unit": "px"
+										},
+										"text_typography": {
+											"preset": "small"
+										}
+									}
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	]
+}
