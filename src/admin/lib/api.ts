@@ -290,7 +290,6 @@ export interface PluginSettings {
   captcha: { provider: '' | 'turnstile' | 'hcaptcha' | 'recaptcha' | 'recaptcha_v2'; site_key: string; has_secret: boolean; min_score?: number };
   integrations?: Record<'mailchimp' | 'mailerlite' | 'brevo' | 'activecampaign', { connected: boolean; url?: string }>;
   disabledWidgets?: string[];
-  aiImages?: { enabled: boolean; model: string; endpoint: string; has_key: boolean };
   widgets?: Array<{ name: string; title: string; category: string; icon: string }>;
   widgetCategories?: Record<string, string>;
   consent: ConsentSettings;
@@ -298,8 +297,6 @@ export interface PluginSettings {
   business: BusinessSettings;
   businessTypes: Record<string, string>;
   seoPlugin: string;
-  ai: { enabled: boolean; model: string; has_key: boolean };
-  aiModels: Record<string, string>;
   maintenancePage: { id: number; title: string; status: string; edit: string } | null;
   roles: Array<{ value: string; label: string; /** Can edit posts (relevant to the role manager). */ edits: boolean }>;
 }

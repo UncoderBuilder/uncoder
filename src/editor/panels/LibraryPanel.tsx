@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
-import type { ElementNode } from '@shared/types';
+import type { ElementNode, KitClass } from '@shared/types';
+import { CLOUD_KIND_ICON, CLOUD_KIND_LABEL, type CloudItem, type CloudList } from '@shared/cloud';
+import { useKit } from '../store/kit';
 import { api } from '../lib/api';
 import { STRUCTURES, structureTree } from '../canvas/CanvasApp';
 import { insertElements, useDoc } from '../store/doc';
@@ -8,6 +10,7 @@ import { refreshLookup, useLookup } from '../controls/lookup';
 import { revealAdded } from '../app/smart';
 import { Icon } from '../ui/Icon';
 import { PatternThumb, type PatternShape } from './PatternThumb';
+import { PremiumSections } from './PremiumSections';
 import { config } from '../lib/config';
 import { isTemplate } from '../lib/docInfo';
 
@@ -195,6 +198,10 @@ export function LibraryPanel() {
       {patterns && !visible.length && <p className="uncoder-ui-note">No pattern matches “{pq}”.</p>}
       {patterns && <p className="uncoder-ui-note">Inserted after the selected section, or at the end of the page.</p>}
 
+      {config.licensing && <PremiumSections insert={(nodes, label) => insert(nodes, label, insertionIndex())} />}
+
+      {config.cloud?.read && <CloudSections insert={(nodes, label) => insert(nodes, label, insertionIndex())} />}
+
       <div className="uncoder-ui-kit__label">Saved sections</div>
       <label className="uncoder-ui-search">
         <Icon name="search" size={14} />
@@ -233,5 +240,83 @@ export function LibraryPanel() {
         {sections && !sections.length && <p className="uncoder-ui-note">No saved sections yet. Right-click any element and choose “Save as template”, or ask your AI client to create one.</p>}
       </div>
     </div>
+  );
+}
+
+/**
+ * The agency's private cloud library (Site\Cloud_Library): sections, pages and templates saved from any site on the
+ * licence. Inserting copies their images into this site and adds the global classes this site does not have.
+ */
+function CloudSections({ insert }: { insert: (nodes: ElementNode[], label: string) => void }) {
+  const [list, setList] = useState<CloudList | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [q, setQ] = useState('');
+  const [busy, setBusy] = useState<number | null>(null);
+
+  useEffect(() => {
+    let live = true;
+    api<CloudList>('cloud')
+      .then((res) => live && setList(res))
+      .catch((e: any) => live && setError(e?.message ?? 'Could not load the cloud library.'));
+    return () => {
+      live = false;
+    };
+  }, []);
+
+  const items = useMemo(() => {
+    const words = q.toLowerCase().split(/\s+/).filter(Boolean);
+    return (list?.items ?? []).filter((i) => i.kind !== 'kit' && words.every((w) => i.title.toLowerCase().includes(w)));
+  }, [list, q]);
+
+  const put = async (item: CloudItem) => {
+    setBusy(item.id);
+    try {
+      const res = await api<{ elements: ElementNode[]; classes: KitClass[]; images: number; failed: number }>(`cloud/${item.id}/elements`);
+      if (res.classes?.length) {
+        // Added to the Design System on the server: show them here too, without touching unsaved style edits.
+        useKit.setState((s) => {
+          const have = new Set((s.kit.classes ?? []).map((c) => c.id));
+          return { kit: { ...s.kit, classes: [...(s.kit.classes ?? []), ...res.classes.filter((c) => !have.has(c.id))] } };
+        });
+      }
+      insert(res.elements, `Insert “${item.title}”`);
+      const notes = [res.images ? `${res.images} image${res.images === 1 ? '' : 's'} copied` : '', res.classes?.length ? `${res.classes.length} class${res.classes.length === 1 ? '' : 'es'} added` : ''].filter(Boolean);
+      if (notes.length || res.failed) toast(`Inserted “${item.title}”${notes.length ? ': ' + notes.join(', ') : ''}${res.failed ? `. ${res.failed} image${res.failed === 1 ? '' : 's'} still load from the original site.` : ''}`, res.failed ? 'info' : 'success');
+    } catch (e: any) {
+      toast(`Could not insert: ${e.message}`, 'error');
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  return (
+    <>
+      <div className="uncoder-ui-kit__label">Cloud library</div>
+      {list && list.items.some((i) => i.kind !== 'kit') && (
+        <label className="uncoder-ui-search">
+          <Icon name="search" size={14} />
+          <input type="search" placeholder="Search the cloud library" value={q} onChange={(e) => setQ(e.currentTarget.value)} aria-label="Search the cloud library" />
+        </label>
+      )}
+      <div className="uncoder-ui-library__list">
+        {items.map((item) => (
+          <div key={item.id} className="uncoder-ui-library__item" aria-busy={busy === item.id}>
+            <Icon name={CLOUD_KIND_ICON[item.kind]} size={14} />
+            <span className="uncoder-ui-library__name" title={`${CLOUD_KIND_LABEL[item.kind]} · from ${item.site}`}>
+              {item.title}
+            </span>
+            <button type="button" className="uncoder-ui-library__act" aria-label={`Insert “${item.title}”`} data-tip="Insert" disabled={busy !== null} onClick={() => put(item)}>
+              <Icon name={busy === item.id ? 'loader' : 'plus'} size={14} />
+            </button>
+          </div>
+        ))}
+        {!list && !error && <p className="uncoder-ui-note">Loading the cloud library…</p>}
+        {error && <p className="uncoder-ui-note">{error}</p>}
+        {list && !items.length && (
+          <p className="uncoder-ui-note">{q ? `Nothing matches “${q}”.` : 'Nothing saved yet. Right-click an element, choose “Save as template” and pick Cloud library: it is then here on every site of your licence.'}</p>
+        )}
+        {list && !list.write && <p className="uncoder-ui-note">Your licence has ended: the cloud library is read-only.</p>}
+      </div>
+    </>
   );
 }

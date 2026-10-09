@@ -173,12 +173,18 @@ final class Updater {
 		foreach ( array_slice( $list, 0, 5 ) as $release ) {
 			$changelog .= '<h4>' . esc_html( $release['version'] ) . '</h4>' . wpautop( esc_html( $release['notes'] ) );
 		}
+		$name = \Uncoder\Builder\Core\Brand::name();
+		$home = \Uncoder\Builder\Core\Brand::url();
+		if ( \Uncoder\Builder\Site\White_Label::active() ) {
+			// White-label: the "View details" popup names the agency's builder.
+			$changelog = (string) \Uncoder\Builder\Site\White_Label::rename( $changelog );
+		}
 		return (object) array(
-			'name'          => 'Uncoder',
+			'name'          => $name,
 			'slug'          => 'uncoder',
 			'version'       => $list[0]['version'],
-			'author'        => '<a href="https://uncoderbuilder.com">Uncoder</a>',
-			'homepage'      => 'https://uncoderbuilder.com',
+			'author'        => '<a href="' . esc_url( $home ) . '">' . esc_html( $name ) . '</a>',
+			'homepage'      => $home,
 			'requires'      => '6.6',
 			'requires_php'  => UNCODER_WB_MIN_PHP,
 			'last_updated'  => $list[0]['date'],

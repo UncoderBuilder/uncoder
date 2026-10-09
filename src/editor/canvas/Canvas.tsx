@@ -1,5 +1,6 @@
 // Hosts the canvas iframe (the real front-end page in preview mode) and mounts <CanvasApp/> into it.
 import { useEffect, useRef, useState } from 'react';
+import { NAME } from '@shared/brand';
 import { Loader } from '../ui/Brand';
 import { createRoot, type Root } from 'react-dom/client';
 import { config } from '../lib/config';
@@ -69,7 +70,7 @@ export function Canvas() {
     if (!doc || !mount) {
       setError(
         doc
-          ? 'The page preview loaded, but the theme did not print the page content, so there is nowhere to mount the canvas. Switch the page template to “Uncoder Canvas” or “Uncoder Full Width” in Page settings.'
+          ? `The page preview loaded, but the theme did not print the page content, so there is nowhere to mount the canvas. Switch the page template to “${NAME} Canvas” or “${NAME} Full Width” in Page settings.`
           : 'The page preview could not be loaded.',
       );
       useUi.setState({ canvasReady: false });

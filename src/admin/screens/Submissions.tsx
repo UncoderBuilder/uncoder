@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Icon } from '@editor/ui/Icon';
 import { Button } from '@editor/ui/primitives';
+import { NAME } from '@shared/brand';
 import { api, type Submission, type SubmissionList } from '../lib/api';
 import { can } from '../lib/config';
 import { absoluteTime, cx, relativeTime } from '../lib/format';
@@ -241,7 +242,7 @@ export function SubmissionsScreen() {
     <>
       <PageHeader
         title="Form submissions"
-        description="Messages sent through Uncoder forms on your site."
+        description={`Messages sent through ${NAME} forms on your site.`}
         actions={
           admin ? (
             <Button icon="download" onClick={exportCsv} loading={exporting} disabled={!d || d.total === 0}>

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Icon } from '@editor/ui/Icon';
 import { Menu, type MenuItem } from '@editor/ui/Popover';
 import { IconButton } from '@editor/ui/primitives';
+import { NAME } from '@shared/brand';
 import { templatesApi, type Template } from '../lib/api';
 import { absoluteTime, cx, relativeTime } from '../lib/format';
 import { copyText } from '../lib/hooks';
@@ -230,7 +231,7 @@ function LanguageChips({ t }: { t: Template }) {
             {tr.code.toUpperCase()}
           </a>
         ) : t.canEdit ? (
-          <a key={tr.code} className="uncoder-ui-langchip is-missing" href={tr.translateUrl} title={`Translate into ${tr.name}: opens a copy in Uncoder`}>
+          <a key={tr.code} className="uncoder-ui-langchip is-missing" href={tr.translateUrl} title={`Translate into ${tr.name}: opens a copy in ${NAME}`}>
             <Icon name="plus" size={10} />
             {tr.code.toUpperCase()}
           </a>

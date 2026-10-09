@@ -7,15 +7,14 @@ import { useHashState, useResource } from '../lib/hooks';
 import { toast, toastError } from '../lib/toast';
 import { confirmDialog } from '../ui/Dialog';
 import { Callout, CopyField, ErrorState, PageHeader, TabPanel, Tabs, useSubCrumb } from '../ui/kit';
-import { AiWritingPanel } from '../ai/Writing';
 import { ActivityPanel } from '../ai/Activity';
 import { CreateKeyDialog, GrantsPanel, KeysPanel, SecretDialog } from '../ai/Access';
 import { ConnectPanel, type FreshKey, type FreshLink } from '../ai/Connect';
 import type { ClientId } from '../ai/snippets';
 import { McpSettingsPanel } from '../ai/McpSettings';
 
-const TABS = ['connect', 'keys', 'apps', 'activity', 'settings', 'writing'] as const;
-const TAB_LABEL: Record<(typeof TABS)[number], string> = { connect: 'Connect a client', keys: 'API keys', apps: 'Connected apps', activity: 'Activity', settings: 'Server settings', writing: 'AI writing' };
+const TABS = ['connect', 'keys', 'apps', 'activity', 'settings'] as const;
+const TAB_LABEL: Record<(typeof TABS)[number], string> = { connect: 'Connect a client', keys: 'API keys', apps: 'Connected apps', activity: 'Activity', settings: 'Server settings' };
 type Tab = (typeof TABS)[number];
 
 export function AiScreen() {
@@ -140,7 +139,6 @@ export function AiScreen() {
           { id: 'apps', label: 'Connected apps', icon: 'plug', count: grants.data?.length ?? null },
           { id: 'activity', label: 'Activity', icon: 'activity' },
           { id: 'settings', label: 'Server settings', icon: 'settings' },
-          { id: 'writing', label: 'AI writing', icon: 'pen-line' },
         ]}
       />
       <TabPanel idBase="uncoder-ui-ai" active={tab}>
@@ -166,7 +164,6 @@ export function AiScreen() {
         {tab === 'keys' && <KeysPanel keys={keys} freshKey={freshKey} onCreate={() => setCreateFor('')} />}
         {tab === 'apps' && <GrantsPanel grants={grants} />}
         {tab === 'activity' && <ActivityPanel toolNames={s?.tool_names ?? []} />}
-        {tab === 'writing' && <AiWritingPanel />}
         {tab === 'settings' && (
           <McpSettingsPanel
             status={s}

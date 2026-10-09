@@ -13,10 +13,16 @@ import { setDevice } from '../store/ui';
 import { Icon } from '../ui/Icon';
 import { useLookup } from './lookup';
 
+/**
+ * Inline-HTML text (a heading's title, a button's text) saved before 0.1.1, or written by an AI app, can hold "&amp;"
+ * where the person means "&": the field shows the "&" the page shows.
+ */
+const shown = (control: ControlProps<string>['control'], value: string | undefined): string => (control.html === 'inline' && value ? value.replace(/&amp;/g, '&') : (value ?? ''));
+
 export function TextControl({ control, value, placeholder, onChange }: ControlProps<string>) {
   const input = (
     <TextInput
-      value={value ?? ''}
+      value={shown(control, value)}
       placeholder={(placeholder as string) ?? control.placeholder ?? ''}
       onChange={(v) => onChange(v)}
       aria-label={control.label}
@@ -55,10 +61,10 @@ export function DateTimeControl({ control, value, onChange }: ControlProps<strin
 }
 
 export function TextareaControl({ control, value, placeholder, onChange }: ControlProps<string>) {
-  const [text, setText] = useState(value ?? '');
+  const [text, setText] = useState(shown(control, value));
   const focused = useRef(false);
   useEffect(() => {
-    if (!focused.current) setText(value ?? '');
+    if (!focused.current) setText(shown(control, value));
   }, [value]);
   return (
     <textarea

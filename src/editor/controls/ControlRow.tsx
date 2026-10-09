@@ -10,7 +10,6 @@ import { Popover } from '../ui/Popover';
 import { IconButton } from '../ui/primitives';
 import { controlComponent, GROUP_TYPES, STACKED, STACKED_UI } from './registry';
 import { ControlForm } from './ControlForm';
-import { AiTextButton, aiWritable } from './AiAssist';
 import { stateValues, withStateValue } from '../lib/states';
 import { varGroup, varId, VarPicker } from '../ui/VarPicker';
 
@@ -76,7 +75,7 @@ export const ControlRow = memo(function ControlRow({ id, keyName, control, contr
         : updateSettings(id, { [k]: v }, { mergeKey });
   const onChange = (v: any) => write(v, `${id}:${isGroup ? keyName : wk}`);
   const stacked = STACKED.has(control.type) || STACKED_UI.has(control.ui ?? '') || (control.type === 'textarea' && (control.rows ?? 3) > 1) || control.label === undefined;
-  const tools = !dynamic && (aiWritable(control, keyName) || !!control.dynamic);
+  const tools = !dynamic && !!control.dynamic;
   const layout = rowLayout(control, stacked || (tools && control.type === 'text'));
   // Content text shows its default as editable text (not as a faded placeholder).
   const textDefault = !read.own && read.from === null && control.tab === 'content' && ['text', 'textarea', 'wysiwyg'].includes(control.type);
@@ -85,19 +84,18 @@ export const ControlRow = memo(function ControlRow({ id, keyName, control, contr
     <div className={`uncoder-ui-ctl uncoder-ui-ctl--t-${control.type} uncoder-ui-ctl--${layout}${isGroup ? ' uncoder-ui-ctl--group' : ''}${read.own ? ' is-set' : ''}`} data-control={keyName}>
       {control.label !== undefined && (
         <div className="uncoder-ui-ctl__label">
-          <ValueDot own={read.own} from={read.from} device={device} onReset={() => write(undefined)} />
           <span className="uncoder-ui-ctl__text" title={control.label}>
             {control.label}
           </span>
+          <ValueDot own={read.own} from={read.from} device={device} onReset={() => write(undefined)} />
           {control.description && <HelpTip text={control.description} />}
           {mixed && (
             <span className="uncoder-ui-ctl__mixed" data-tip="The selected elements have different values">
               Mixed
             </span>
           )}
-          {/* Helpers (AI, dynamic data, design variables) show on hover or focus of the row, or while in use. */}
+          {/* Helpers (dynamic data, design variables) show on hover or focus of the row, or while in use. */}
           <span className="uncoder-ui-ctl__tools">
-            {!dynamic && aiWritable(control, keyName) && <AiTextButton control={control} value={typeof read.value === 'string' ? read.value : ''} onApply={(v) => updateSettings(id, { [wk]: v })} />}
             {control.dynamic && !dynamic && <DynamicButton id={id} keyName={keyName} control={control} />}
             {(control.type === 'slider' || control.type === 'dimensions') && (
               <VarPicker

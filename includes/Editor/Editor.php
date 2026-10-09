@@ -291,6 +291,11 @@ final class Editor {
 
 		return array(
 			'version'     => UNCODER_WB_VERSION,
+			'brand'       => \Uncoder\Builder\Site\White_Label::brand(),
+			'handoff'     => \Uncoder\Builder\Site\Handoff::notice(),
+			'cloud'       => \Uncoder\Builder\Site\Cloud_Library::client_config(),
+			// Paid plans launched (Licence::enabled()): Insert → Sections shows the premium sections.
+			'licensing'   => \Uncoder\Builder\Licence\Licence::enabled(),
 			'post'        => array(
 				'id'           => $post->ID,
 				'title'        => $post->post_title, // Raw: the editable title (get_the_title() is texturized and entity-encoded).
@@ -356,10 +361,6 @@ final class Editor {
 			'site'        => array(
 				'name' => get_bloginfo( 'name' ),
 				'lang' => get_bloginfo( 'language' ),
-			),
-			'ai'          => array(
-				'enabled' => \Uncoder\Builder\Site\Ai_Writer::ready(),
-				'images'  => \Uncoder\Builder\Site\Ai_Images::ready() && current_user_can( 'upload_files' ),
 			),
 		);
 	}

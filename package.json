@@ -1,7 +1,7 @@
 {
   "name": "uncoder",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Build setup for the compiled scripts in assets/build (sources in src/).",
   "license": "GPL-2.0-or-later",
   "type": "module",

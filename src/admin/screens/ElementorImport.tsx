@@ -3,6 +3,7 @@
 import { useMemo, useRef, useState, type DragEvent } from 'react';
 import { Icon } from '@editor/ui/Icon';
 import { Button, Segmented, Toggle } from '@editor/ui/primitives';
+import { NAME } from '@shared/brand';
 import { api, ApiError } from '../lib/api';
 import { cfg } from '../lib/config';
 import { cx, relativeTime } from '../lib/format';
@@ -195,7 +196,7 @@ export function ElementorImportCard() {
         flush
         className="uncoder-ui-elimp"
         title="Import from Elementor"
-        description="Rebuild pages and templates made with Elementor as Uncoder designs. Elementor’s own data is left exactly as it is, so you can compare both versions or switch back at any time."
+        description={`Rebuild pages and templates made with Elementor as ${NAME} designs. Elementor’s own data is left exactly as it is, so you can compare both versions or switch back at any time.`}
         actions={
           <Button size="sm" variant="ghost" icon="refresh-cw" onClick={() => scan.reload()} disabled={scan.loading || !!progress}>
             Rescan
@@ -234,7 +235,7 @@ export function ElementorImportCard() {
                       <th>Title</th>
                       <th>Type</th>
                       <th className="uncoder-ui-col-status">Status</th>
-                      <th>In Uncoder</th>
+                      <th>In {NAME}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -261,12 +262,12 @@ export function ElementorImportCard() {
                           <span className="uncoder-ui-elimp__type">
                             {item.typeLabel}
                             {item.template && (
-                              <Badge tone="info" title={`Becomes an Uncoder ${TEMPLATE_LABEL[item.templateAs] ?? item.templateAs} template`}>
+                              <Badge tone="info" title={`Becomes a ${TEMPLATE_LABEL[item.templateAs] ?? item.templateAs} template in ${NAME}`}>
                                 {TEMPLATE_LABEL[item.template] ?? item.template}
                               </Badge>
                             )}
                           </span>
-                          {!item.copyable && <span className="uncoder-ui-muted uncoder-ui-elimp__why">Enable Uncoder for this post type first</span>}
+                          {!item.copyable && <span className="uncoder-ui-muted uncoder-ui-elimp__why">Enable {NAME} for this post type first</span>}
                         </td>
                         <td className="uncoder-ui-col-status">
                           <PostStatus status={item.status} />
@@ -319,16 +320,16 @@ export function ElementorImportCard() {
                 />
                 <span className="uncoder-ui-muted">
                   {mode === 'copy'
-                    ? 'Each page becomes a new draft named “… (Uncoder)”. The original stays live.'
-                    : 'The page itself switches to its Uncoder design (same address). Its Elementor data is kept to go back.'}{' '}
-                  Templates always become new Uncoder templates.
+                    ? `Each page becomes a new draft named “… (${NAME})”. The original stays live.`
+                    : `The page itself switches to its ${NAME} design (same address). Its Elementor data is kept to go back.`}{' '}
+                  Templates always become new {NAME} templates.
                 </span>
               </div>
             </div>
 
             {overwrites > 0 && (
               <div className="uncoder-ui-elimp__pad">
-                <Callout tone="warning" title={`${plural(overwrites, 'page')} already ${overwrites === 1 ? 'has' : 'have'} an Uncoder design`}>
+                <Callout tone="warning" title={`${plural(overwrites, 'page')} already ${overwrites === 1 ? 'has' : 'have'} a design in ${NAME}`}>
                   Replacing converts them again and overwrites that design (revisions keep the previous one).
                 </Callout>
               </div>
@@ -352,7 +353,7 @@ export function ElementorImportCard() {
               <div className="uncoder-ui-elimp__results uncoder-ui-elimp__pad">
                 {kitResult && <KitSummary result={kitResult} />}
                 {results.map((r) => (
-                  <ResultRow key={`${r.id}-${r.target ?? 0}`} title={r.title} ok={r.ok} message={r.message} report={r.report} kind={r.mode === 'template' ? 'Uncoder template' : r.mode === 'replace' ? 'Replaced in place' : 'Draft copy'} editUrl={r.editUrl} viewUrl={r.viewUrl} />
+                  <ResultRow key={`${r.id}-${r.target ?? 0}`} title={r.title} ok={r.ok} message={r.message} report={r.report} kind={r.mode === 'template' ? `${NAME} template` : r.mode === 'replace' ? 'Replaced in place' : 'Draft copy'} editUrl={r.editUrl} viewUrl={r.viewUrl} />
                 ))}
               </div>
             )}

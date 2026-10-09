@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react';
 import { AppIcon } from '../ui/Brand';
 import { config, contentOnly } from '../lib/config';
 import { DEVICE_ICON, deviceLabel } from '../lib/devices';
-import { setTitle, useDoc } from '../store/doc';
+import { isDirty, setTitle, useDoc } from '../store/doc';
 import { useKit } from '../store/kit';
-import { breakpoints, setDevice, togglePanel, useUi } from '../store/ui';
+import { breakpoints, setDevice, toast, togglePanel, useUi } from '../store/ui';
 import { Icon } from '../ui/Icon';
 import { Menu, Popover, usePopover, type MenuItem } from '../ui/Popover';
 import { TextInput } from '../ui/inputs';
 import { doRedo, doUndo, previewPage, save } from './actions';
+import { api } from '../lib/api';
 import { MOD } from './shortcuts';
 import { STATUS_LABEL } from '../lib/labels';
 import { hasConditions, settingsTitle } from '../lib/docInfo';
@@ -104,6 +105,7 @@ export function TopBar() {
             { label: 'History', icon: 'history', onSelect: () => togglePanel('history') },
             { label: 'Find & replace', icon: 'replace-all', onSelect: () => togglePanel('find'), disabled: contentOnly() },
             ...(config.user.caps.edit_theme ? [{ label: 'Theme Builder', icon: 'layout-template', onSelect: () => window.open(`${config.urls.admin}admin.php?page=uncoder-templates`, '_blank') } as MenuItem] : []),
+            ...(config.cloud?.write ? [{ label: 'Save to cloud library', icon: 'cloud-upload', onSelect: () => void saveToCloud() } as MenuItem] : []),
             'separator',
             { label: theme === 'dark' ? 'Paper (light) interface' : 'Petrol night (dark) interface', icon: theme === 'dark' ? 'sun' : 'moon', onSelect: () => useUi.setState({ theme: theme === 'dark' ? 'light' : 'dark' }) },
             { label: 'Edge-to-edge panels', icon: 'panels-top-left', checked: layout === 'dock', onSelect: () => useUi.setState({ layout: layout === 'dock' ? 'float' : 'dock' }) },
@@ -267,4 +269,18 @@ function DocPopover({ open, onClose, anchor }: { open: boolean; onClose: () => v
       </div>
     </Popover>
   );
+}
+
+/** The whole page or template, as last saved (saved first when it has changes), into the cloud library. */
+async function saveToCloud(): Promise<void> {
+  if (isDirty() && !(await save())) {
+    toast('Save the page first, then try again.', 'error');
+    return;
+  }
+  try {
+    const res = await api<{ item: { title: string } }>('cloud/document', { body: { id: config.post.id, title: useDoc.getState().title } });
+    toast(`Saved “${res.item.title}” to the cloud library`, 'success');
+  } catch (e: any) {
+    toast(`Could not save to the cloud library: ${e.message}`, 'error');
+  }
 }

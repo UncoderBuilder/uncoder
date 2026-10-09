@@ -1,4 +1,5 @@
 import { config } from '../lib/config';
+import { NAME } from '@shared/brand';
 import { getTree } from '../store/doc';
 import { toast } from '../store/ui';
 import { Icon } from '../ui/Icon';
@@ -20,7 +21,7 @@ export function AiPanel() {
           <Icon name="sparkles" size={16} />
         </span>
         <h3>Build this site with AI</h3>
-        <p>Uncoder ships an MCP server. Claude, ChatGPT, Cursor, VS Code and other clients can read and edit this page, the Design System, templates, menus and media — every change lands here as editable elements and can be undone.</p>
+        <p>{NAME} ships an MCP server. Claude, ChatGPT, Cursor, VS Code and other clients can read and edit this page, the Design System, templates, menus and media — every change lands here as editable elements and can be undone.</p>
       </div>
       <div className="uncoder-ui-kit__label">Server URL</div>
       <div className="uncoder-ui-copyrow">

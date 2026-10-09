@@ -16,7 +16,7 @@ export function PrefsDialog() {
   const close = () => useUi.setState({ prefsOpen: false });
 
   const rows: Array<{ key: 'autoPanels' | 'handles' | 'hints'; title: string; text: string }> = [
-    { key: 'autoPanels', title: 'Panel follows the selection', text: 'Selecting an element opens Layers; selecting an empty container opens Insert.' },
+    { key: 'autoPanels', title: 'Panel follows the selection', text: 'Selecting an element on the page shows it in Layers.' },
     { key: 'handles', title: 'Spacing handles on the canvas', text: 'Drag padding, margin, gap and column width directly on the selected element.' },
     { key: 'hints', title: 'Tooltips on hover', text: 'Names and shortcuts of buttons. Keyboard focus and ⓘ icons always show them.' },
   ];

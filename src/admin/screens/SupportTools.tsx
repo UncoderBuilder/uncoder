@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Toggle } from '@editor/ui/primitives';
+import { NAME } from '@shared/brand';
 import { api } from '../lib/api';
 import { copyText, useResource } from '../lib/hooks';
 import { toast, toastError } from '../lib/toast';
@@ -7,6 +8,9 @@ import { confirmDialog } from '../ui/Dialog';
 import { Callout, Card, SettingRow, SkeletonRows } from '../ui/kit';
 
 type Info = Record<string, Record<string, string>>;
+
+/** Session flag (and window event) set by the app bar's "System info": open that card and bring it into view. */
+export const OPEN_FLAG = 'uncoder-ui-open';
 
 /** Settings → Tools: system info, safe mode, version rollback (Site\Support_Tools). */
 export function SupportToolsCards() {
@@ -21,6 +25,24 @@ export function SupportToolsCards() {
 
 function SystemInfoCard() {
   const [open, setOpen] = useState(false);
+  // Arriving from the app bar's "System info" (a new page load or a tab switch): open and scroll to the card.
+  useEffect(() => {
+    const check = () => {
+      let wanted = false;
+      try {
+        wanted = sessionStorage.getItem(OPEN_FLAG) === 'system-info';
+        if (wanted) sessionStorage.removeItem(OPEN_FLAG);
+      } catch {
+        /* storage blocked */
+      }
+      if (!wanted) return;
+      setOpen(true);
+      window.setTimeout(() => document.getElementById('system-info')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+    };
+    check();
+    window.addEventListener(OPEN_FLAG, check);
+    return () => window.removeEventListener(OPEN_FLAG, check);
+  }, []);
   const info = useResource((signal) => (open ? api<Info>('system-info', { signal }) : Promise.resolve(null)), [open]);
   const text = (data: Info) =>
     Object.entries(data)
@@ -28,8 +50,9 @@ function SystemInfoCard() {
       .join('\n\n');
   return (
     <Card
+      id="system-info"
       title="System info"
-      description="Versions and settings support needs to help: WordPress, server, theme, plugins and Uncoder. Nothing is sent anywhere; copy it into your message."
+      description={`Versions and settings support needs to help: WordPress, server, theme, plugins and ${NAME}. Nothing is sent anywhere; copy it into your message.`}
       actions={
         open && info.data ? (
           <Button size="sm" icon="copy" onClick={() => copyText(text(info.data!), 'System info copied')}>
@@ -88,7 +111,7 @@ function SafeModeCard() {
     }
   };
   return (
-    <Card title="Safe mode" description="If the builder does not load or behaves oddly, turn this on and open the builder again. It then runs with only Uncoder active and a default theme — just for you, in this browser. Visitors and other editors see the site as usual.">
+    <Card title="Safe mode" description={`If the builder does not load or behaves oddly, turn this on and open the builder again. It then runs with only ${NAME} active and a default theme — just for you, in this browser. Visitors and other editors see the site as usual.`}>
       {!s ? (
         <SkeletonRows rows={1} cols={2} />
       ) : (
@@ -117,11 +140,11 @@ function RollbackCard() {
   const d = data.data;
   const run = async () => {
     if (!version) return;
-    if (!(await confirmDialog({ title: `Reinstall Uncoder ${version}?`, body: `Uncoder ${d?.current} is replaced with ${version}. Your designs and settings stay. Update again from the Plugins screen at any time.`, confirmLabel: 'Reinstall', danger: true }))) return;
+    if (!(await confirmDialog({ title: `Reinstall ${NAME} ${version}?`, body: `${NAME} ${d?.current} is replaced with ${version}. Your designs and settings stay. Update again from the Plugins screen at any time.`, confirmLabel: 'Reinstall', danger: true }))) return;
     setBusy(true);
     try {
       await api('rollback', { body: { version } });
-      toast(`Uncoder ${version} is installed. Reloading…`, 'success');
+      toast(`${NAME} ${version} is installed. Reloading…`, 'success');
       window.setTimeout(() => window.location.reload(), 1200);
     } catch (e) {
       toastError(e);
@@ -129,7 +152,7 @@ function RollbackCard() {
     }
   };
   return (
-    <Card title="Version rollback" description="Had a problem after an update? Download an earlier Uncoder version from GitHub and upload it under Plugins → Add New. Back up the site first.">
+    <Card title="Version rollback" description={`Had a problem after an update? Download an earlier ${NAME} version from GitHub and upload it under Plugins → Add New. Back up the site first.`}>
       {!d ? (
         <SkeletonRows rows={1} cols={2} />
       ) : d.versions.length ? (

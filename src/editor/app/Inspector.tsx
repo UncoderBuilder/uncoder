@@ -120,15 +120,30 @@ function PageSummary() {
       <p className="uncoder-ui-insp-empty__meta">
         {config.post.typeLabel} · {count} element{count === 1 ? '' : 's'}
       </p>
-      <p className="uncoder-ui-insp-empty__text">Select an element on the canvas or in Layers to edit it here.</p>
-      <div className="uncoder-ui-insp-empty__actions">
-        <Button icon="plus" onClick={() => useUi.setState({ panel: 'add' })}>
-          Insert elements
-        </Button>
-        <Button icon="file-cog" onClick={() => useUi.setState({ panel: 'page' })}>
-          {settingsTitle()}
-        </Button>
-      </div>
+      {contentOnly() ? (
+        // Content only (a role setting, or a handed-over site): texts, images and links; the design is locked.
+        <>
+          <p className="uncoder-ui-insp-empty__text">Select a text, image or link on the canvas to change it. Layout and styles are locked.</p>
+          {config.handoff && (config.handoff.by || config.handoff.contact) && (
+            <p className="uncoder-ui-insp-empty__text">
+              {config.handoff.by ? `Designed by ${config.handoff.by}.` : ''}
+              {config.handoff.contact ? ` For design changes, contact ${config.handoff.contact}.` : ''}
+            </p>
+          )}
+        </>
+      ) : (
+        <>
+          <p className="uncoder-ui-insp-empty__text">Select an element on the canvas or in Layers to edit it here.</p>
+          <div className="uncoder-ui-insp-empty__actions">
+            <Button icon="plus" onClick={() => useUi.setState({ panel: 'add' })}>
+              Insert elements
+            </Button>
+            <Button icon="file-cog" onClick={() => useUi.setState({ panel: 'page' })}>
+              {settingsTitle()}
+            </Button>
+          </div>
+        </>
+      )}
       <dl className="uncoder-ui-insp-empty__keys">
         <div>
           <dt>

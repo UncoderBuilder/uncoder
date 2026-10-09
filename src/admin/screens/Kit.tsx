@@ -3,6 +3,7 @@ import { Icon } from '@editor/ui/Icon';
 import { Button } from '@editor/ui/primitives';
 import { fontStack } from '@shared/css';
 import type { Kit, Settings } from '@shared/types';
+import { NAME } from '@shared/brand';
 import { api, type Overview } from '../lib/api';
 import { can, cfg, editorUrl } from '../lib/config';
 import { copyText, useHashState, useResource } from '../lib/hooks';
@@ -58,7 +59,7 @@ export function DesignSystemScreen() {
   useSubCrumb(tab === 'fonts' ? 'Custom fonts' : tab === 'icons' ? 'Custom icons' : null);
   return (
     <>
-      <PageHeader title="Design System" description="Global colors, fonts and text styles shared by every Uncoder page and template. Change them once, everywhere updates." />
+      <PageHeader title="Design System" description={`Global colors, fonts and text styles shared by every ${NAME} page and template. Change them once, everywhere updates.`} />
       <Tabs<KitTab>
         idBase="uncoder-ui-kit"
         label="Design System sections"
@@ -105,7 +106,7 @@ function KitStyles() {
                 Edit in the builder
               </a>
             ) : (
-              <Button variant="primary" icon="palette" disabled title="Create a page with Uncoder first">
+              <Button variant="primary" icon="palette" disabled title={`Create a page with ${NAME} first`}>
                 Edit in the builder
               </Button>
             )}
@@ -113,7 +114,7 @@ function KitStyles() {
         }
       />
       <Callout tone="info" icon="info">
-        To change it, open any Uncoder page and choose <strong>Styles</strong> in the left panel{target ? <> (the button opens “{target.title || 'Untitled'}”)</> : null}.
+        To change it, open any {NAME} page and choose <strong>Styles</strong> in the left panel{target ? <> (the button opens “{target.title || 'Untitled'}”)</> : null}.
       </Callout>
 
       <div className="uncoder-ui-kit" style={vars}>
@@ -194,7 +195,7 @@ function KitStyles() {
                     </span>
                   </div>
                   <div className="uncoder-ui-typelist__sample" style={styleOf(v)}>
-                    {t.id === 'eyebrow' ? 'Section eyebrow' : t.id === 'button' ? 'Book a demo' : t.id.startsWith('h') || t.id === 'display' ? 'Build the site you imagine' : 'Uncoder turns ideas into fast, accessible pages without code.'}
+                    {t.id === 'eyebrow' ? 'Section eyebrow' : t.id === 'button' ? 'Book a demo' : t.id.startsWith('h') || t.id === 'display' ? 'Build the site you imagine' : `${NAME} turns ideas into fast, accessible pages without code.`}
                   </div>
                 </li>
               );

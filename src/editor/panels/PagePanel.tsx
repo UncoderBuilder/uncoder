@@ -1,4 +1,5 @@
 import type { ControlDef } from '@shared/types';
+import { NAME } from '@shared/brand';
 import { config } from '../lib/config';
 import { setPageSettings, setTitle, useDoc } from '../store/doc';
 import { ControlForm } from '../controls/ControlForm';
@@ -21,7 +22,7 @@ export function PagePanel() {
           template: {
             type: 'select',
             label: 'Page template',
-            options: { '': 'Theme default', 'uncoder-full-width': 'Uncoder Full Width', 'uncoder-canvas': 'Uncoder Canvas (no header/footer)' },
+            options: { '': 'Theme default', 'uncoder-full-width': `${NAME} Full Width`, 'uncoder-canvas': `${NAME} Canvas (no header/footer)` },
             description: 'Full Width keeps your header and footer; Canvas is a blank page for landing pages.',
           },
           hide_title: { type: 'switch', label: 'Hide page title', description: 'Hides the theme’s title above the content.' },

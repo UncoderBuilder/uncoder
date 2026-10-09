@@ -223,6 +223,6 @@ final class Privacy {
 			. '<p><strong class="privacy-policy-tutorial">' . esc_html__( 'Suggested text:', 'uncoder' ) . '</strong> '
 			. esc_html__( 'When you send a form on this website, we store the information you enter (and any file you attach), the page you sent it from, the time, your browser type and an anonymized version of your IP address. We use it to answer you and to protect the form from spam. Messages marked as spam are deleted automatically after 30 days. You can ask us for a copy of your submissions or ask us to delete them.', 'uncoder' )
 			. '</p><p>' . esc_html__( 'If this website uses a CAPTCHA (Cloudflare Turnstile, hCaptcha or Google reCAPTCHA) on a form, that service receives your IP address and browser details when the form loads and is sent. If a form sends its answers to a newsletter or chat service (Mailchimp, MailerLite, Brevo, ActiveCampaign, Slack, Discord) or to a webhook, the answers are passed to that service.', 'uncoder' ) . '</p>';
-		wp_add_privacy_policy_content( 'Uncoder – AI-Powered Website Builder', wp_kses_post( $text ) );
+		wp_add_privacy_policy_content( \Uncoder\Builder\Site\White_Label::active() ? \Uncoder\Builder\Core\Brand::name() : 'Uncoder – AI-Powered Website Builder', wp_kses_post( $text ) );
 	}
 }

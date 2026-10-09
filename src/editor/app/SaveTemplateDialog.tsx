@@ -1,19 +1,24 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { api } from '../lib/api';
-import { schemaOf } from '../lib/config';
+import { config, schemaOf } from '../lib/config';
 import { subtree } from '../lib/tree';
 import { useDoc } from '../store/doc';
 import { toast, useUi } from '../store/ui';
 import { refreshLookup } from '../controls/lookup';
 import { Icon } from '../ui/Icon';
-import { Button } from '../ui/primitives';
+import { Button, Segmented } from '../ui/primitives';
 
-/** Saves the chosen element (with its children) as a reusable section template. */
+/**
+ * Saves the chosen element (with its children) as a reusable section template on this site, or (Agency licence) in
+ * the private cloud library, for every site on the licence (Site\Cloud_Library).
+ */
 export function SaveTemplateDialog() {
   const id = useUi((s) => s.saveTemplate);
   const [name, setName] = useState('');
   const [busy, setBusy] = useState(false);
+  const cloud = !!config.cloud?.write;
+  const [where, setWhere] = useState<'site' | 'cloud'>('site');
   const node = useDoc((s) => (id ? s.doc.nodes[id] : null));
 
   useEffect(() => {
@@ -28,6 +33,12 @@ export function SaveTemplateDialog() {
     if (!tree || !name.trim()) return;
     setBusy(true);
     try {
+      if (where === 'cloud') {
+        await api('cloud/section', { body: { title: name.trim(), elements: [tree] } });
+        toast(`Saved “${name.trim()}” to the cloud library`, 'success', { label: 'Show', run: () => useUi.setState({ panel: 'library' }) }, 5000);
+        close();
+        return;
+      }
       const tpl = await api<{ id: number }>('templates', { body: { type: 'section', title: name.trim() } });
       await api(`documents/${tpl.id}`, { body: { elements: [tree], status: 'publish' } });
       refreshLookup('templates');
@@ -61,7 +72,25 @@ export function SaveTemplateDialog() {
           <span className="uncoder-ui-field__label">Template name</span>
           <input className="uncoder-ui-input" autoFocus value={name} onChange={(e) => setName(e.currentTarget.value)} maxLength={120} />
         </label>
-        <p className="uncoder-ui-note">Saved sections appear under Insert → Sections on every page, and can be embedded with the Template widget so one edit updates them everywhere.</p>
+        {cloud && (
+          <div className="uncoder-ui-field">
+            <span className="uncoder-ui-field__label">Save to</span>
+            <Segmented
+              ariaLabel="Save to"
+              value={where}
+              onChange={(v) => setWhere(v as 'site' | 'cloud')}
+              options={[
+                { value: 'site', label: 'This site' },
+                { value: 'cloud', label: 'Cloud library' },
+              ]}
+            />
+          </div>
+        )}
+        <p className="uncoder-ui-note">
+          {where === 'cloud'
+            ? 'Saved to your private cloud library: insert it on every site of your licence from Insert → Sections. Its global classes go along; images are copied when it is inserted.'
+            : 'Saved sections appear under Insert → Sections on every page, and can be embedded with the Template widget so one edit updates them everywhere.'}
+        </p>
         <div className="uncoder-ui-dialog__foot">
           <Button type="button" onClick={close}>
             Cancel

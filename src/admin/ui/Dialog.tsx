@@ -9,9 +9,11 @@ const portalRoot = () => (document.querySelector('.uncoder-ui-admin-root .uncode
 const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 /** Focus trap + Escape + focus restore, shared by dialogs and drawers. */
-function useModal(open: boolean, onClose: () => void, ref: React.RefObject<HTMLDivElement | null>) {
+function useModal(open: boolean, onClose: () => void, ref: React.RefObject<HTMLDivElement | null>, locked = false) {
   const closeRef = useRef(onClose);
   closeRef.current = onClose;
+  const lockedRef = useRef(locked);
+  lockedRef.current = locked;
   useEffect(() => {
     if (!open) return;
     const previous = document.activeElement as HTMLElement | null;
@@ -33,7 +35,8 @@ function useModal(open: boolean, onClose: () => void, ref: React.RefObject<HTMLD
       // A popover inside the modal closes first.
       if (document.querySelector('.uncoder-ui-admin-root .uncoder-ui-pop')) return;
       e.stopPropagation();
-      closeRef.current();
+      // Locked (an import running): Escape does nothing.
+      if (!lockedRef.current) closeRef.current();
       return;
     }
     if (e.key !== 'Tab') return;
@@ -63,19 +66,21 @@ interface DialogProps {
   width?: number;
   /** Clicking the backdrop closes (off for forms with typed input). */
   dismissable?: boolean;
+  /** Work in progress that must not be interrupted (a site import): no Close button, Escape and the backdrop do nothing. */
+  locked?: boolean;
   className?: string;
 }
 
-export function Dialog({ open, onClose, title, description, children, footer, width = 520, dismissable = true, className }: DialogProps) {
+export function Dialog({ open, onClose, title, description, children, footer, width = 520, dismissable = true, locked = false, className }: DialogProps) {
   const ref = useRef<HTMLDivElement>(null);
   const id = useId();
-  const onKeyDown = useModal(open, onClose, ref);
+  const onKeyDown = useModal(open, onClose, ref, locked);
   if (!open) return null;
   return createPortal(
     <div
       className="uncoder-ui-modal-scrim"
       onPointerDown={(e) => {
-        if (dismissable && e.target === e.currentTarget) onClose();
+        if (dismissable && !locked && e.target === e.currentTarget) onClose();
       }}
     >
       <div
@@ -83,6 +88,7 @@ export function Dialog({ open, onClose, title, description, children, footer, wi
         className={cx('uncoder-ui-modal', className)}
         role="dialog"
         aria-modal="true"
+        aria-busy={locked || undefined}
         aria-labelledby={id + '-t'}
         aria-describedby={description ? id + '-d' : undefined}
         tabIndex={-1}
@@ -100,7 +106,7 @@ export function Dialog({ open, onClose, title, description, children, footer, wi
               </p>
             )}
           </div>
-          <IconButton icon="x" label="Close" onClick={onClose} />
+          {!locked && <IconButton icon="x" label="Close" onClick={onClose} />}
         </header>
         {children !== undefined && <div className="uncoder-ui-modal__body">{children}</div>}
         {footer && <footer className="uncoder-ui-modal__foot">{footer}</footer>}

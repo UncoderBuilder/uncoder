@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { NAME } from '@shared/brand';
 import { schemaOf } from '../lib/config';
 import { replaceInSettings, type FindHit, type FindOptions, type Scope } from '../lib/findReplace';
 import { commit, useDoc } from '../store/doc';
@@ -102,7 +103,7 @@ export function FindPanel() {
           </li>
         ))}
       </ul>
-      <p className="uncoder-ui-note">Searches this page. To replace across the whole site, use Uncoder → Settings → Tools.</p>
+      <p className="uncoder-ui-note">Searches this page. To replace across the whole site, use {NAME} → Settings → Tools.</p>
     </div>
   );
 }

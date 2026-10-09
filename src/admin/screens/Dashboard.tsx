@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Icon } from '@editor/ui/Icon';
 import { Button } from '@editor/ui/primitives';
+import { NAME } from '@shared/brand';
 import { api, mcpApi, type Overview } from '../lib/api';
 import { can, cfg, screenUrl } from '../lib/config';
 import { absoluteTime, relativeTime } from '../lib/format';
@@ -45,82 +46,103 @@ export function DashboardScreen() {
   const [starters, setStarters] = useState(false);
   const first = cfg.user.name.split(' ')[0] || cfg.user.name;
   const o = overview.data;
+  // A handed-over site (Site\Handoff): the client changes content; the design screens stay with the builders.
+  const handed = cfg.handoff ?? null;
 
   return (
     <>
       <PageHeader
         eyebrow={cfg.site.name}
         title={`${greeting()}, ${first}`}
-        description="Design pages visually, build your theme, or let an AI assistant do it for you."
+        description={handed ? 'Change the texts, images and links of your pages. Open a page below and choose Edit.' : 'Design pages visually, build your theme, or let an AI assistant do it for you.'}
         actions={
-          <Button variant="primary" icon="plus" onClick={() => setCreating(true)} disabled={!can('edit_pages')}>
-            New page
-          </Button>
+          handed ? undefined : (
+            <Button variant="primary" icon="plus" onClick={() => setCreating(true)} disabled={!can('edit_pages')}>
+              New page
+            </Button>
+          )
         }
       />
 
-      <div className="uncoder-ui-quick">
-        <button type="button" className="uncoder-ui-quick__card" onClick={() => setCreating(true)} disabled={!can('edit_pages')}>
-          <span className="uncoder-ui-quick__icon uncoder-ui-quick__icon--accent">
-            <Icon name="file-text" size={18} />
-          </span>
-          <span className="uncoder-ui-quick__text">
-            <strong>Create a page</strong>
-            <span>Start from a blank canvas in the builder</span>
-          </span>
-          <Icon name="arrow-right" size={15} className="uncoder-ui-quick__arrow" />
-        </button>
-        {can('edit_theme_options') && can('edit_pages') && (
-          <button type="button" className="uncoder-ui-quick__card" onClick={() => setStarters(true)}>
-            <span className="uncoder-ui-quick__icon">
-              <Icon name="layout-dashboard" size={18} />
+      {handed && (
+        <Callout tone="info" icon="lock-keyhole" title={handed.by ? `Designed and looked after by ${handed.by}` : 'The design of this site is locked'}>
+          You can change texts, images and links on every page. Layout, styles and the theme stay as they were built.
+          {handed.contact ? ` For design changes, contact ${handed.contact}.` : ''}
+        </Callout>
+      )}
+
+      {!handed && (
+        <div className="uncoder-ui-quick">
+          <button type="button" className="uncoder-ui-quick__card" onClick={() => setCreating(true)} disabled={!can('edit_pages')}>
+            <span className="uncoder-ui-quick__icon uncoder-ui-quick__icon--accent">
+              <Icon name="file-text" size={18} />
             </span>
             <span className="uncoder-ui-quick__text">
-              <strong>Starter sites</strong>
-              <span>Header, footer, pages and styles in one go</span>
+              <strong>Create a page</strong>
+              <span>Start from a blank canvas in the builder</span>
             </span>
             <Icon name="arrow-right" size={15} className="uncoder-ui-quick__arrow" />
           </button>
-        )}
-        {can('edit_theme_options') && (
-          <a className="uncoder-ui-quick__card" href={screenUrl('uncoder-templates')}>
-            <span className="uncoder-ui-quick__icon">
-              <Icon name="layout-template" size={18} />
-            </span>
-            <span className="uncoder-ui-quick__text">
-              <strong>Theme Builder</strong>
-              <span>Header, footer, layouts and popups</span>
-            </span>
-            <Icon name="arrow-right" size={15} className="uncoder-ui-quick__arrow" />
-          </a>
-        )}
-        {can('manage_options') && (
-          <a className="uncoder-ui-quick__card" href={screenUrl('uncoder-ai')}>
-            <span className="uncoder-ui-quick__icon uncoder-ui-quick__icon--ai">
-              <Icon name="sparkles" size={18} />
-            </span>
-            <span className="uncoder-ui-quick__text">
-              <strong>Connect AI</strong>
-              <span>Claude, ChatGPT, Cursor and more via MCP</span>
-            </span>
-            <Icon name="arrow-right" size={15} className="uncoder-ui-quick__arrow" />
-          </a>
-        )}
-      </div>
+          {/* With the starter-site library (Licence::enabled()), its screen for those who may open it (hidden for the
+              others); before that, the built-in starters. */}
+          {(cfg.library ? 'uncoder-starters' in cfg.pages : can('edit_theme_options') && can('edit_pages')) && (
+            <button
+              type="button"
+              className="uncoder-ui-quick__card"
+              onClick={() => (cfg.library ? (window.location.href = screenUrl('uncoder-starters')) : setStarters(true))}
+            >
+              <span className="uncoder-ui-quick__icon">
+                <Icon name="layout-dashboard" size={18} />
+              </span>
+              <span className="uncoder-ui-quick__text">
+                <strong>Starter sites</strong>
+                <span>Header, footer, pages and styles in one go</span>
+              </span>
+              <Icon name="arrow-right" size={15} className="uncoder-ui-quick__arrow" />
+            </button>
+          )}
+          {can('edit_theme_options') && (
+            <a className="uncoder-ui-quick__card" href={screenUrl('uncoder-templates')}>
+              <span className="uncoder-ui-quick__icon">
+                <Icon name="layout-template" size={18} />
+              </span>
+              <span className="uncoder-ui-quick__text">
+                <strong>Theme Builder</strong>
+                <span>Header, footer, layouts and popups</span>
+              </span>
+              <Icon name="arrow-right" size={15} className="uncoder-ui-quick__arrow" />
+            </a>
+          )}
+          {can('manage_options') && (
+            <a className="uncoder-ui-quick__card" href={screenUrl('uncoder-ai')}>
+              <span className="uncoder-ui-quick__icon uncoder-ui-quick__icon--ai">
+                <Icon name="sparkles" size={18} />
+              </span>
+              <span className="uncoder-ui-quick__text">
+                <strong>Connect AI</strong>
+                <span>Claude, ChatGPT, Cursor and more via MCP</span>
+              </span>
+              <Icon name="arrow-right" size={15} className="uncoder-ui-quick__arrow" />
+            </a>
+          )}
+        </div>
+      )}
 
-      <SetupChecklist o={o ?? null} ai={can('manage_options') ? (ai.data ?? null) : undefined} onCreate={() => setCreating(true)} />
+      {!handed && <SetupChecklist o={o ?? null} ai={can('manage_options') ? (ai.data ?? null) : undefined} onCreate={() => setCreating(true)} />}
 
       <div className="uncoder-ui-stats">
-        <Stat label="Pages built with Uncoder" value={o?.pages} icon="file-text" href={cfg.urls.pages} linkLabel="All pages" />
-        <Stat
-          label="Active templates"
-          value={o?.activeTemplates}
-          icon="layout-template"
-          href={can('edit_theme_options') ? screenUrl('uncoder-templates') : undefined}
-          linkLabel="Theme Builder"
-          sub={o ? `${o.templates} total · ${o.activePopups} popup${o.activePopups === 1 ? '' : 's'} live` : undefined}
-        />
-        {can('manage_options') && (
+        <Stat label={`Pages built with ${NAME}`} value={o?.pages} icon="file-text" href={cfg.urls.pages} linkLabel="All pages" />
+        {!handed && (
+          <Stat
+            label="Active templates"
+            value={o?.activeTemplates}
+            icon="layout-template"
+            href={can('edit_theme_options') ? screenUrl('uncoder-templates') : undefined}
+            linkLabel="Theme Builder"
+            sub={o ? `${o.templates} total · ${o.activePopups} popup${o.activePopups === 1 ? '' : 's'} live` : undefined}
+          />
+        )}
+        {can('manage_options') && !handed && (
           <Stat
             label="AI connections"
             value={ai.data ? ai.data.connections : ai.error ? '—' : undefined}
@@ -154,7 +176,7 @@ export function DashboardScreen() {
       <Card
         flush
         title="Recently edited"
-        description="Pages and posts built with Uncoder."
+        description={`Pages and posts built with ${NAME}.`}
         actions={
           <a className="uncoder-ui-btn uncoder-ui-btn--ghost uncoder-ui-btn--sm" href={cfg.urls.pages}>
             All pages
@@ -169,14 +191,16 @@ export function DashboardScreen() {
         ) : o.recent.length === 0 ? (
           <EmptyState
             icon="file-text"
-            title="No pages built with Uncoder yet"
+            title={`No pages built with ${NAME} yet`}
             action={
-              <Button variant="primary" icon="plus" onClick={() => setCreating(true)} disabled={!can('edit_pages')}>
-                Create your first page
-              </Button>
+              handed ? undefined : (
+                <Button variant="primary" icon="plus" onClick={() => setCreating(true)} disabled={!can('edit_pages')}>
+                  Create your first page
+                </Button>
+              )
             }
           >
-            Create one here, or open any page and choose “Edit with Uncoder”.
+            {handed ? 'Pages appear here once they are built.' : <>Create one here, or open any page and choose “Edit with {NAME}”.</>}
           </EmptyState>
         ) : (
           <ul className="uncoder-ui-recent">
@@ -347,7 +371,7 @@ function CreatePageDialog({ open, onClose, enabled }: { open: boolean; onClose: 
       }
     >
       <form className="uncoder-ui-form-stack" onSubmit={submit}>
-        {!enabled && <Callout tone="warning">Uncoder is not enabled for pages. Turn it on in Uncoder → Settings.</Callout>}
+        {!enabled && <Callout tone="warning">{NAME} is not enabled for pages. Turn it on in {NAME} → Settings.</Callout>}
         {error && <Callout tone="danger">{error}</Callout>}
         <div className="uncoder-ui-fld">
           <label className="uncoder-ui-fld__label" htmlFor="uncoder-ui-new-page">

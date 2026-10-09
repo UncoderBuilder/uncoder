@@ -34,6 +34,9 @@ window.UncoderWB.register('accordion', (el, api) => {
   if (!items.length) return;
 
   const easing = 'cubic-bezier(0.2, 0.8, 0.2, 1)';
+  // Clip the panel while its height animates. "clip" (not "hidden") keeps margins collapsing as they do once the
+  // animation ends, so an answer with a negative top margin doesn't make everything below jump at the end.
+  const clip = typeof CSS !== 'undefined' && CSS.supports?.('overflow', 'clip') ? 'clip' : 'hidden';
   const duration = () => (api.reducedMotion() ? 0 : Math.max(0, Math.min(2000, Number(s.duration ?? 300) || 0)));
 
   const finish = (item: Item) => {
@@ -57,16 +60,20 @@ window.UncoderWB.register('accordion', (el, api) => {
     }
     details.classList.toggle('is-closing', !open);
     details.open = true;
-    const to = open ? panel.scrollHeight : 0;
-    if (Math.abs(to - from) < 1) {
+    // A panel pulled up under its title by a negative top margin (collapsing through it) is "closed" at that height:
+    // the items below then neither dip at the start of opening nor jump at the end of closing.
+    const lift = Math.max(0, item.summary.getBoundingClientRect().bottom - panel.getBoundingClientRect().top);
+    const start = from > 0 ? from : lift;
+    const to = open ? panel.scrollHeight : lift;
+    if (Math.abs(to - start) < 1) {
       details.open = open;
       finish(item);
       return;
     }
-    panel.style.overflow = 'hidden';
+    panel.style.overflow = clip;
     const anim = panel.animate(
       [
-        { height: `${from}px`, opacity: open && from === 0 ? 0 : 1 },
+        { height: `${start}px`, opacity: open && from === 0 ? 0 : 1 },
         { height: `${to}px`, opacity: open ? 1 : 0 },
       ],
       { duration: ms, easing },

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button, Segmented, Toggle } from '@editor/ui/primitives';
+import { NAME } from '@shared/brand';
 import { api } from '../lib/api';
 import { toast } from '../lib/toast';
 import { Dialog } from './Dialog';
@@ -54,7 +55,7 @@ export function FindReplaceDialog({ open, onClose }: { open: boolean; onClose: (
       onClose={onClose}
       width={620}
       title="Find & replace across the site"
-      description="Every Uncoder page, post and template. Texts, links and colors are matched by setting type, so layout values are never touched. Each changed document keeps a revision."
+      description={`Every ${NAME} page, post and template. Texts, links and colors are matched by setting type, so layout values are never touched. Each changed document keeps a revision.`}
       footer={
         <>
           <Button variant="ghost" onClick={onClose}>

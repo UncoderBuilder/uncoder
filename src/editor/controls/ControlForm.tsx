@@ -38,14 +38,14 @@ export function ControlForm({ controls, values, onChange, only, elementId = '' }
           <div key={key} className={`uncoder-ui-ctl uncoder-ui-ctl--t-${control.type} uncoder-ui-ctl--${layout}${read.own ? ' is-set' : ''}`}>
             {control.label !== undefined && (
               <div className="uncoder-ui-ctl__label">
+                <span className="uncoder-ui-ctl__text" title={control.label}>
+                  {control.label}
+                </span>
                 {read.own ? (
                   <button type="button" className="uncoder-ui-ctl__dot is-set" aria-label={`Reset ${control.label}`} data-tip="Set · click to reset" onClick={() => onChange(isGroup ? key : wk, undefined)} />
                 ) : (
                   <span className="uncoder-ui-ctl__dot is-default" aria-hidden />
                 )}
-                <span className="uncoder-ui-ctl__text" title={control.label}>
-                  {control.label}
-                </span>
                 {control.description && <HelpTip text={control.description} />}
                 {control.responsive && control.type !== 'code' && device !== 'desktop' && (
                   <span className="uncoder-ui-devsw is-device is-static" aria-hidden>

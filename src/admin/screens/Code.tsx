@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Icon } from '@editor/ui/Icon';
 import { Button, IconButton, Toggle } from '@editor/ui/primitives';
+import { NAME } from '@shared/brand';
 import { api, cleanConditions, templatesMeta, type Condition, type TemplatesMeta } from '../lib/api';
 import { cfg } from '../lib/config';
 import { absoluteTime, cx, relativeTime } from '../lib/format';
@@ -234,7 +235,7 @@ export function CodeScreen() {
         </div>
       ) : items.length === 0 ? (
         <EmptyState icon="code-xml" title="No custom code yet" action={<Button variant="primary" icon="plus" onClick={() => open()}>Add snippet</Button>}>
-          Snippets are printed as written on the pages you choose. Uncoder never loads them inside the editor.
+          Snippets are printed as written on the pages you choose. {NAME} never loads them inside the editor.
         </EmptyState>
       ) : (
         <div className="uncoder-ui-tablewrap">

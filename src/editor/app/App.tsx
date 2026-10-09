@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { NAME } from '@shared/brand';
 import { Canvas } from '../canvas/Canvas';
 import { frame } from '../canvas/frame';
 import { config } from '../lib/config';
@@ -73,7 +74,7 @@ export function App() {
     <div ref={ref} className={`uncoder-ui-app${preview ? ' is-preview' : ''}${layout === 'dock' || narrow ? ' is-docked' : ''}`} data-uncoder-ui-theme={theme}>
       {config.safeMode && (
         <div className="uncoder-ui-safemode" role="status">
-          Safe mode: only Uncoder is active and a default theme is used, for this browser only.{' '}
+          Safe mode: only {NAME} is active and a default theme is used, for this browser only.{' '}
           <a href={`${config.urls.admin}admin.php?page=uncoder-settings#tools`}>Turn it off in Settings → Tools</a>
         </div>
       )}

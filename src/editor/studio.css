@@ -987,6 +987,20 @@ html.uncoder-ui-moving-panel iframe {
   font-family: var(--uncoder-ui-mono);
   font-size: 10.5px;
 }
+/* The inspector (Content / Design / Behaviour) reads one step darker than the rest of the editor: its labels, tabs,
+   units and hints are small, and must stay easy to read for people with low vision (labels about 11:1, hints 5:1). */
+.uncoder-ui-app[data-uncoder-ui-theme='light'] .uncoder-ui-inspector {
+  --uncoder-ui-tx-1: #262322;
+  --uncoder-ui-tx-2: #3b3837;
+  --uncoder-ui-tx-3: #4f4b49;
+  --uncoder-ui-tx-4: #6f6b69;
+}
+.uncoder-ui-app[data-uncoder-ui-theme='dark'] .uncoder-ui-inspector {
+  --uncoder-ui-tx-1: #f1ece9;
+  --uncoder-ui-tx-2: #e4dedb;
+  --uncoder-ui-tx-3: #c9c3c0;
+  --uncoder-ui-tx-4: #a8a3a1;
+}
 .uncoder-ui-inspector .uncoder-ui-tabs {
   padding: 0 16px;
 }
@@ -1159,9 +1173,10 @@ html.uncoder-ui-moving-panel iframe {
 }
 
 /* Control rows. One anatomy everywhere (sections, Normal/Hover boxes, group popovers, repeater rows):
-   [● gutter dot]  Label (?)  ·· helpers  |  input
-   The dot is the only "changed" signal: it sits in the gutter left of the label, so nothing shifts when a
-   value is set, and clicking it resets. Helpers (AI, dynamic data, design variables) appear on hover or focus.
+   Label ● (?)  ·· helpers  |  input
+   The dot is the only "changed" signal: it sits right after the label, in a space every label keeps, so nothing
+   shifts when a value is set, and clicking it resets. Helpers (dynamic data, design variables) appear on hover or
+   focus.
    Layouts (rowLayout): inline = label column + input · stacked = label above a full-width input ·
    slider = label and value on one line, the slider below · switch = label left, switch right. */
 .uncoder-ui-ctl {
@@ -1196,21 +1211,13 @@ html.uncoder-ui-moving-panel iframe {
   color: var(--uncoder-ui-tx-strong);
 }
 
-/* The set dot, in the gutter. Its offset follows the padding of what holds the row. */
-.uncoder-ui-sec__body {
-  --uncoder-ui-dot-x: -11px;
-}
-.uncoder-ui-ctabs,
-.uncoder-ui-form {
-  --uncoder-ui-dot-x: -9px;
-}
+/* The set dot, right after the label. Every label keeps its space (hidden when nothing is set). */
 .uncoder-ui-ctl__dot {
-  position: absolute;
-  top: 50%;
-  left: var(--uncoder-ui-dot-x, -9px);
-  width: 6px;
-  height: 6px;
-  margin-top: -3px;
+  position: relative;
+  flex: none;
+  width: 5px;
+  height: 5px;
+  margin: 0 -1px 0 -1px;
   padding: 0;
   border: 0;
   border-radius: 50%;
@@ -1223,7 +1230,7 @@ html.uncoder-ui-moving-panel iframe {
 .uncoder-ui-ctl__dot.is-set::after {
   content: '';
   position: absolute;
-  inset: -6px;
+  inset: -7px;
   border-radius: 50%;
 }
 .uncoder-ui-ctl__dot.is-set:hover {
@@ -1237,7 +1244,7 @@ html.uncoder-ui-moving-panel iframe {
   box-shadow: inset 0 0 0 1.5px var(--uncoder-ui-tx-4);
 }
 .uncoder-ui-ctl__dot.is-default {
-  display: none;
+  visibility: hidden;
 }
 .uncoder-ui-app[data-uncoder-ui-theme='dark'] .uncoder-ui-ctl__dot.is-set {
   background: var(--uncoder-ui-accent-tx);
@@ -3481,40 +3488,6 @@ html.uncoder-ui-moving-panel iframe {
 .uncoder-ui-safemode a {
   color: inherit;
   font-weight: 600;
-}
-
-/* Image field → Generate with AI */
-.uncoder-ui-dialog.uncoder-ui-aiimg {
-  width: min(560px, 94vw);
-  max-width: none;
-}
-.uncoder-ui-aiimg__prompt {
-  width: 100%;
-  min-height: 92px;
-  resize: vertical;
-}
-.uncoder-ui-aiimg__row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-}
-.uncoder-ui-aiimg__result {
-  margin: 0;
-}
-.uncoder-ui-aiimg__result img {
-  display: block;
-  width: 100%;
-  max-height: 320px;
-  object-fit: contain;
-  border-radius: 10px;
-  background: var(--uncoder-ui-bg-2);
-}
-.uncoder-ui-aiimg__result figcaption {
-  margin-top: 6px;
-  color: var(--uncoder-ui-tx-3);
-  font-size: var(--uncoder-ui-fs-sm);
 }
 .uncoder-ui-note.is-error {
   color: var(--uncoder-ui-danger, #b42318);

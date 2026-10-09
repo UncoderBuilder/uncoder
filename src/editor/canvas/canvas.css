@@ -12,8 +12,10 @@
   position: absolute;
   top: 0;
   left: 0;
+  /* Sized to the page by Overlay (fitLayer): what pokes out is clipped, so the canvas never gets extra scrollbars. */
   width: 0;
   height: 0;
+  overflow: clip;
   z-index: 2147483000;
   pointer-events: none;
 }
@@ -139,6 +141,17 @@
   top: 6px;
   left: 6px;
   transform-origin: left top;
+}
+/* Near the right edge of the page: the toolbar ends at the selection's right edge instead. */
+.uncoder-ui-ov__sel.is-bar-right .uncoder-ui-ov__bar {
+  left: auto;
+  right: -2px;
+  transform-origin: right bottom;
+}
+.uncoder-ui-ov__sel.is-top.is-bar-right .uncoder-ui-ov__bar {
+  left: auto;
+  right: 6px;
+  transform-origin: right top;
 }
 /* Drop feedback */
 .uncoder-ui-ov__target {

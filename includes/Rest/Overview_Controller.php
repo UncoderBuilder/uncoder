@@ -65,7 +65,10 @@ final class Overview_Controller {
 		$count = 0;
 		$items = array();
 		if ( $types ) {
-			$query = new WP_Query(
+			// "editable" over several post types checks a capability no role has (edit_others_multiple_post_types), so it
+			// would show everyone only their own pages: only users who cannot edit others' posts get that filter.
+			$others = array_filter( $types, static fn( string $t ): bool => ( $o = get_post_type_object( $t ) ) && current_user_can( $o->cap->edit_others_posts ) );
+			$query  = new WP_Query(
 				array(
 					'post_type'              => $types,
 					'post_status'            => self::STATUSES,
@@ -75,8 +78,7 @@ final class Overview_Controller {
 					'meta_key'               => Utils::META_MODE, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 					'meta_value'             => 'builder', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 					'update_post_term_cache' => false,
-					'perm'                   => 'editable',
-				)
+				) + ( count( $others ) === count( $types ) ? array() : array( 'perm' => 'editable' ) )
 			);
 			$count = (int) $query->found_posts;
 			foreach ( $query->posts as $post ) {

@@ -7,6 +7,9 @@ Cursor and other AI apps can build and edit your site with the same widgets you 
 - Theme Builder: headers, footers, post layouts, archives, 404 pages, popups and mega menus
 - Design System: colors, fonts, text styles and buttons every page — and every AI — uses
 - 58 MCP tools with permissions, an activity log and one-click undo
+- Optional [Pro and Agency licences](https://uncoderbuilder.com/pricing/): the starter-site library, premium sections,
+  “Make it yours” through your own AI app, and agency tools (white-label, client handoff, a private cloud library,
+  branded reports). The builder itself is the same on every plan.
 
 **Website:** [uncoderbuilder.com](https://uncoderbuilder.com) · **Documentation:** [docs.uncoderbuilder.com](https://docs.uncoderbuilder.com)
 

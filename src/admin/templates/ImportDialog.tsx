@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Icon } from '@editor/ui/Icon';
 import { Button } from '@editor/ui/primitives';
+import { NAME } from '@shared/brand';
 import { api } from '../lib/api';
 import { cfg } from '../lib/config';
 import { readExportFile, type ExportFile, type ImportResult } from '../lib/transfer';
@@ -64,7 +65,7 @@ export function ImportDialog({ open, onClose, onImported }: { open: boolean; onC
       onClose={onClose}
       width={560}
       title={result ? 'Import finished' : 'Import templates'}
-      description={result ? undefined : 'Bring in templates, pages and a Design System exported from any site running Uncoder. Everything is created as a draft.'}
+      description={result ? undefined : `Bring in templates, pages and a Design System exported from any site running ${NAME}. Everything is created as a draft.`}
       footer={
         result ? (
           <Button variant="primary" onClick={onClose}>
@@ -117,7 +118,7 @@ export function ImportDialog({ open, onClose, onImported }: { open: boolean; onC
             <Button icon="file-up" onClick={() => input.current?.click()}>
               {file ? 'Choose another file' : 'Choose export file'}
             </Button>
-            <span className="uncoder-ui-filepick__name">{name || 'A .json file from Uncoder → Export'}</span>
+            <span className="uncoder-ui-filepick__name">{name || `A .json file from ${NAME} → Export`}</span>
           </div>
           {file && (
             <>

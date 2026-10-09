@@ -176,3 +176,42 @@
     animation: none;
   }
 }
+
+/* ------------------------------------------------------------------ White-label (Site\White_Label)
+   The agency's icon replaces the mark; the loader is a plain disc that breathes, with the icon in it. */
+
+.uncoder-ui-appicon--custom,
+.uncoder-ui-brandmark--custom {
+  object-fit: contain;
+}
+.uncoder-ui-loader--plain .uncoder-ui-loader__disc {
+  animation: uncoder-ui-loader-breathe 1.6s ease-in-out infinite;
+}
+.uncoder-ui-loader--plain .uncoder-ui-loader__disc::after {
+  animation: none;
+}
+.uncoder-ui-loader__img {
+  position: relative;
+  z-index: 1;
+  width: 54%;
+  height: 54%;
+  object-fit: contain;
+}
+
+@keyframes uncoder-ui-loader-breathe {
+  0%,
+  100% {
+    transform: scale(0.94);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uncoder-ui-loader--plain .uncoder-ui-loader__disc {
+    animation: uncoder-ui-loader-glow 2.4s ease-in-out infinite;
+  }
+}

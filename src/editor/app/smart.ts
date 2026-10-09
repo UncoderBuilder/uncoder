@@ -7,8 +7,8 @@ import { elementFor, frame } from '../canvas/frame';
 import { startInline } from '../canvas/inline';
 import { usePrefs } from '../store/prefs';
 
-/** Build-panel views that follow the selection; Styles, Page and the tool views stay where the user put them. */
-const FOLLOWING: LeftPanel[] = ['add', 'library', 'layers'];
+/** Panels that make way for Layers when you pick an element; the tool views (History, Find, Notes…) stay put. */
+const FOLLOWING: LeftPanel[] = ['add', 'library', 'layers', 'kit', 'page'];
 
 /** A container (or a tab / accordion / slide slot) with nothing in it yet: the next step there is adding something. */
 export function isEmptyContainer(id: string | null | undefined): boolean {
@@ -17,20 +17,15 @@ export function isEmptyContainer(id: string | null | undefined): boolean {
 }
 
 /**
- * Selects what the user pointed at (canvas, breadcrumbs, section handle, keyboard) and lets the build panel
- * follow: Layers for an element, Insert for an empty container. Selections the editor makes itself (after
- * inserting, pasting, undo) and clicks in the Layers tree use select() and leave the panel alone.
+ * Selects what the user pointed at (canvas, breadcrumbs, section handle, keyboard) and shows it in Layers, empty
+ * containers too (their toolbar's + opens Insert). Selections the editor makes itself (after inserting, pasting,
+ * undo) and clicks in the Layers tree use select() and leave the panel alone.
  */
 export function pick(id: string | null, additive = false): void {
   select(id, additive);
   if (additive || !id || !usePrefs.getState().autoPanels) return;
   const panel = useUi.getState().panel;
-  if (!FOLLOWING.includes(panel)) return;
-  if (isEmptyContainer(id) && !contentOnly()) {
-    if (panel !== 'add') useUi.setState({ panel: 'add' });
-  } else if (panel !== 'layers') {
-    useUi.setState({ panel: 'layers' });
-  }
+  if (FOLLOWING.includes(panel) && panel !== 'layers') useUi.setState({ panel: 'layers' });
 }
 
 /** The first empty container in a subtree (depth first), e.g. the first column of a new two-column layout. */

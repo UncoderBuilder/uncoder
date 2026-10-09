@@ -61,8 +61,10 @@ final class Role_Manager {
 		if ( ! $user || ! $user->exists() ) {
 			return 'none';
 		}
+		// A handed-over site (Handoff): content only for everyone but the builders, administrators included.
+		$handed = Handoff::restricts( $user );
 		if ( user_can( $user, 'manage_options' ) ) {
-			return 'full';
+			return $handed ? 'content' : 'full';
 		}
 		$map  = self::settings();
 		$best = null;
@@ -72,7 +74,8 @@ final class Role_Manager {
 				$best = $level;
 			}
 		}
-		return $best ?? 'full';
+		$best = $best ?? 'full';
+		return $handed && 'full' === $best ? 'content' : $best;
 	}
 
 	public static function can_use(): bool {

@@ -5,11 +5,27 @@ import { useRef, useState, type ReactNode, type RefObject } from 'react';
 import { AppIcon } from '@editor/ui/Brand';
 import { Icon } from '@editor/ui/Icon';
 import { Menu, Popover, usePopover, type MenuItem } from '@editor/ui/Popover';
-import { DOCS_URL, SUPPORT_URL } from '@shared/brand';
+import { BRAND, DOCS_URL, NAME, SUPPORT_URL } from '@shared/brand';
 import UPDATES from '../../../assets/data/updates.json';
 import { api } from '../lib/api';
 import { can, cfg, screenUrl } from '../lib/config';
 import { useCrumb } from './kit';
+import { OPEN_FLAG } from '../screens/SupportTools';
+
+/** Opens Settings → Tools → System info: flags the card to open, then goes there (or just switches tab). */
+function openSystemInfo() {
+  try {
+    sessionStorage.setItem(OPEN_FLAG, 'system-info');
+  } catch {
+    /* storage blocked: the tab still opens */
+  }
+  if (new URLSearchParams(window.location.search).get('page') === 'uncoder-settings') {
+    window.location.hash = 'tools';
+    window.dispatchEvent(new Event(OPEN_FLAG));
+  } else {
+    window.location.href = screenUrl('uncoder-settings', 'tools');
+  }
+}
 
 interface Release {
   version: string;
@@ -117,34 +133,53 @@ export function AppBar() {
     setPanel(null);
   };
 
-  const helpItems: MenuItem[] = [
-    { label: 'Getting started', icon: 'rocket', onSelect: () => window.open(DOCS_URL + 'getting-started/first-page/', '_blank', 'noreferrer') },
-    { label: 'Documentation', icon: 'book-open', onSelect: () => window.open(DOCS_URL, '_blank', 'noreferrer') },
-    'separator',
-    { label: 'Email support', icon: 'life-buoy', onSelect: () => (window.location.href = SUPPORT_URL) },
-    ...(can('manage_options') ? (['separator', { label: 'System info', icon: 'clipboard-list', onSelect: () => (window.location.href = screenUrl('uncoder-settings', 'tools')) }] as MenuItem[]) : []),
-  ];
+  // White-label "hide links": no docs, support, changelog or announcements from uncoderbuilder.com.
+  const links = !BRAND.hideLinks;
+  // Settings → Tools with the System info card open and scrolled to (SupportTools.tsx reads the flag).
+  const systemInfo: MenuItem = { label: 'System info', icon: 'clipboard-list', onSelect: openSystemInfo };
+  const helpItems: MenuItem[] = links
+    ? [
+        { label: 'Getting started', icon: 'rocket', onSelect: () => window.open(DOCS_URL + 'getting-started/first-page/', '_blank', 'noreferrer') },
+        { label: 'Documentation', icon: 'book-open', onSelect: () => window.open(DOCS_URL, '_blank', 'noreferrer') },
+        'separator',
+        { label: 'Email support', icon: 'life-buoy', onSelect: () => (window.location.href = SUPPORT_URL) },
+        ...(can('manage_options') ? (['separator', systemInfo] as MenuItem[]) : []),
+      ]
+    : can('manage_options')
+      ? [systemInfo]
+      : [];
 
   return (
     <header className="uncoder-ui-admin__bar">
       <div className="uncoder-ui-admin__lockup">
-        <a className="uncoder-ui-admin__brand" href={screenUrl('uncoder')} aria-label="Uncoder home">
-          <AppIcon size={26} />
-          <span className="uncoder-ui-admin__word">Uncoder</span>
+        <a className="uncoder-ui-admin__brand" href={screenUrl('uncoder')} aria-label={`${NAME} home`}>
+          {BRAND.logo ? (
+            // White-label: the agency's logo (its own mark and wordmark).
+            <img className="uncoder-ui-admin__logo" src={BRAND.logo} alt="" />
+          ) : (
+            <>
+              <AppIcon size={26} />
+              <span className="uncoder-ui-admin__word">{NAME}</span>
+            </>
+          )}
         </a>
         <span className="uncoder-ui-admin__divider" aria-hidden />
-        <button
-          ref={versionRef}
-          type="button"
-          className="uncoder-ui-admin__ver"
-          aria-label={`Version ${cfg.version}: open the changelog`}
-          aria-haspopup="dialog"
-          aria-expanded={panel?.from === versionRef}
-          data-tip="Changelog"
-          onClick={() => open('log', versionRef)}
-        >
-          {cfg.version}
-        </button>
+        {links ? (
+          <button
+            ref={versionRef}
+            type="button"
+            className="uncoder-ui-admin__ver"
+            aria-label={`Version ${cfg.version}: open the changelog`}
+            aria-haspopup="dialog"
+            aria-expanded={panel?.from === versionRef}
+            data-tip="Changelog"
+            onClick={() => open('log', versionRef)}
+          >
+            {cfg.version}
+          </button>
+        ) : (
+          <span className="uncoder-ui-admin__ver">{cfg.version}</span>
+        )}
       </div>
 
       {/* Only inside a section: on the screen itself its title is the page heading right below. */}
@@ -163,25 +198,33 @@ export function AppBar() {
       <span className="uncoder-ui-admin__spacer" />
 
       <div className="uncoder-ui-admin__tools" role="group" aria-label="Help and updates">
-        <BarButton
-          buttonRef={newsRef}
-          icon="megaphone"
-          tip="What's new"
-          label={unread.length ? `What's new, ${unread.length} unread` : "What's new"}
-          expanded={panel?.from === newsRef}
-          dot={unread.length > 0}
-          onClick={() => open('news', newsRef)}
-        />
-        <BarButton buttonRef={logRef} icon="scroll-text" tip="Changelog" label="Changelog" expanded={panel?.from === logRef} className="uncoder-ui-admin__tool--log" onClick={() => open('log', logRef)} />
-        <a className="uncoder-ui-admin__tool" href={docsUrl(cfg.page)} {...external} data-tip={home ? 'Documentation' : `Docs: ${sub ?? title}`}>
-          <Icon name="book-open" size={17} />
-          <span className="screen-reader-text">
-            {home ? 'Documentation' : `Documentation for ${sub ?? title}`}
-            <NewTab />
-          </span>
-        </a>
-        <BarButton buttonRef={help.anchorRef} icon="circle-help" tip="Help" label="Help" expanded={help.open} haspopup="menu" onClick={help.toggle} />
-        <Menu anchor={help.anchorRef} open={help.open} onClose={help.close} items={helpItems} placement="bottom-end" width={210} />
+        {links && (
+          <>
+            <BarButton
+              buttonRef={newsRef}
+              icon="megaphone"
+              tip="What's new"
+              label={unread.length ? `What's new, ${unread.length} unread` : "What's new"}
+              expanded={panel?.from === newsRef}
+              dot={unread.length > 0}
+              onClick={() => open('news', newsRef)}
+            />
+            <BarButton buttonRef={logRef} icon="scroll-text" tip="Changelog" label="Changelog" expanded={panel?.from === logRef} className="uncoder-ui-admin__tool--log" onClick={() => open('log', logRef)} />
+            <a className="uncoder-ui-admin__tool" href={docsUrl(cfg.page)} {...external} data-tip={home ? 'Documentation' : `Docs: ${sub ?? title}`}>
+              <Icon name="book-open" size={17} />
+              <span className="screen-reader-text">
+                {home ? 'Documentation' : `Documentation for ${sub ?? title}`}
+                <NewTab />
+              </span>
+            </a>
+          </>
+        )}
+        {helpItems.length > 0 && (
+          <>
+            <BarButton buttonRef={help.anchorRef} icon="circle-help" tip="Help" label="Help" expanded={help.open} haspopup="menu" onClick={help.toggle} />
+            <Menu anchor={help.anchorRef} open={help.open} onClose={help.close} items={helpItems} placement="bottom-end" width={210} />
+          </>
+        )}
       </div>
 
       <span className="uncoder-ui-admin__divider uncoder-ui-admin__divider--tools" aria-hidden />

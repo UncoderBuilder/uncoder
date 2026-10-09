@@ -1,5 +1,5 @@
 // Hover/selection outlines, element toolbar and drop indicators, drawn inside the canvas document.
-import { useEffect, useReducer, useRef } from 'react';
+import { useEffect, useLayoutEffect, useReducer, useRef, useState } from 'react';
 import { schemaOf } from '../lib/config';
 import { iconSvg } from '../lib/icons';
 import { duplicateElement, insertElements, lockedBy, removeElements, toggleLocked, useDoc } from '../store/doc';
@@ -50,6 +50,25 @@ function useGeometryTick() {
   }, []);
 }
 
+/**
+ * Keeps the overlay layer exactly as big as the page and clips what pokes out of it. Toolbars, handles and badges at
+ * an edge then never add scrollbars to the canvas (a scrollbar narrowed the page, the selection moved, the scrollbar
+ * went away again: the canvas shook).
+ */
+function fitLayer(): void {
+  const root = frame.overlay;
+  const doc = frame.doc;
+  if (!root || !doc) return;
+  const page = (doc.scrollingElement ?? doc.documentElement) as HTMLElement;
+  // Collapsed, the layer adds nothing: what is left is the page's own size.
+  root.style.width = '0px';
+  root.style.height = '0px';
+  const w = page.scrollWidth;
+  const h = page.scrollHeight;
+  root.style.width = `${w}px`;
+  root.style.height = `${h}px`;
+}
+
 const Svg = ({ name, size = 12 }: { name: string; size?: number }) => <span className="uncoder-ui-ov__ic" dangerouslySetInnerHTML={{ __html: iconSvg(name, size, 2.4) }} />;
 
 export function Overlay() {
@@ -63,6 +82,9 @@ export function Overlay() {
   const nodes = useDoc((s) => s.doc.nodes);
   const zoom = useUi((s) => s.zoom * s.fit);
 
+  useLayoutEffect(fitLayer);
+  const [barRight, setBarRight] = useState(false);
+
   const primary = selected[0] ?? null;
   const selNode = primary ? nodes[primary] : null;
   const hoverNode = hovered ? nodes[hovered] : null;
@@ -75,6 +97,20 @@ export function Overlay() {
   const parentRect = parentOfSel && selected.length === 1 ? rectOf(parentOfSel.id) : null;
   const isSlot = !!(parentOfSel && schemaOf(parentOfSel.type)?.nested);
   const selLock = primary ? lockedBy(primary) : null;
+
+  // The toolbar starts at the selection's left edge; when that runs past the right edge of the page, it ends at the
+  // selection's right edge instead. Its width does not depend on the side, so the choice is stable.
+  useLayoutEffect(() => {
+    const bar = toolbarRef.current;
+    const win = frame.win;
+    const vw = frame.doc?.documentElement.clientWidth ?? 0;
+    if (!bar || !win || !primaryRect || !vw) return;
+    const w = bar.getBoundingClientRect().width;
+    const left = primaryRect.x - win.scrollX - 2;
+    const right = left + 4 + primaryRect.w;
+    const flip = left + w > vw && right - w >= 0;
+    if (flip !== barRight) setBarRight(flip);
+  });
 
   const title = (id: string) => {
     const n = nodes[id];
@@ -111,7 +147,7 @@ export function Overlay() {
       {!dragging &&
         selRects.map(({ id, rect }, i) =>
           rect ? (
-            <div key={id} className={`uncoder-ui-ov__sel${isContainer(id) ? ' is-container' : ''}${editing === id ? ' is-editing' : ''}${rect.y < 40 ? ' is-top' : ''}`} style={box(rect)}>
+            <div key={id} className={`uncoder-ui-ov__sel${isContainer(id) ? ' is-container' : ''}${editing === id ? ' is-editing' : ''}${rect.y < 40 ? ' is-top' : ''}${i === 0 && barRight ? ' is-bar-right' : ''}`} style={box(rect)}>
               {i === 0 && editing !== id && (
                 <div className="uncoder-ui-ov__bar" ref={toolbarRef} data-uncoder-ui-for={id}>
                   <span className="uncoder-ui-ov__name">{title(id)}</span>
@@ -235,13 +271,15 @@ export function Overlay() {
       {!dragging &&
         [...noted].map(([nid, count]) => {
           const r = rectOf(nid);
+          // Inside the page, also for full-width elements.
+          const maxX = (frame.win?.scrollX ?? 0) + (frame.doc?.documentElement.clientWidth ?? Infinity) - 34;
           return r ? (
             <button
               key={`note-${nid}`}
               type="button"
               className="uncoder-ui-ov__note"
               title={`${count} open note${count === 1 ? '' : 's'}`}
-              style={{ translate: `${Math.round(r.x + r.w - 10)}px ${Math.round(r.y - 10)}px` }}
+              style={{ translate: `${Math.round(Math.min(r.x + r.w - 10, maxX))}px ${Math.round(Math.max(r.y - 10, 0))}px` }}
               onClick={() => {
                 select(nid);
                 useUi.setState({ panel: 'notes' });

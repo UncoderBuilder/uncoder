@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Button, Toggle } from '@editor/ui/primitives';
+import { NAME } from '@shared/brand';
 import { api } from '../lib/api';
 import { useResource } from '../lib/hooks';
 import { Card, SkeletonRows } from '../ui/kit';
@@ -53,7 +54,7 @@ export function ElementManager({
     <Card
       id="elements"
       title="Element manager"
-      description="Turn off widgets you don’t use to keep the editor’s Insert panel short. Pages that already use a widget keep showing it; it just can’t be added again. Counts cover every page, post and template built with Uncoder."
+      description={`Turn off widgets you don’t use to keep the editor’s Insert panel short. Pages that already use a widget keep showing it; it just can’t be added again. Counts cover every page, post and template built with ${NAME}.`}
     >
       <div className="uncoder-ui-elmgr__bar">
         <input className="uncoder-ui-input" type="search" placeholder={`Search ${widgets.length} widgets`} value={query} onChange={(e) => setQuery(e.currentTarget.value)} aria-label="Search widgets" />

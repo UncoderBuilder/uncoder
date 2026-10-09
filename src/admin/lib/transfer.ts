@@ -1,4 +1,5 @@
 import { api } from './api';
+import { NAME } from '@shared/brand';
 import { toast, toastError } from './toast';
 
 export interface ExportFile {
@@ -53,6 +54,6 @@ export async function readExportFile(file: File): Promise<ExportFile> {
   } catch {
     throw new Error('This file is not valid JSON.');
   }
-  if (!data || data.format !== 'uncoder-export' || !Array.isArray(data.items)) throw new Error('This is not an Uncoder export file.');
+  if (!data || data.format !== 'uncoder-export' || !Array.isArray(data.items)) throw new Error(`This is not an export file from ${NAME}.`);
   return data as ExportFile;
 }

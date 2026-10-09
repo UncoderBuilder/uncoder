@@ -1,9 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Button, Toggle } from '@editor/ui/primitives';
+import { NAME } from '@shared/brand';
 import { api, type PluginSettings } from '../lib/api';
+import { cfg } from '../lib/config';
 import { formatMs } from '../lib/format';
 import { useHashState, useResource, useUnsavedGuard } from '../lib/hooks';
 import { SiteKitCard } from './SiteKit';
+import { LicenceCard } from './Licence';
+import { WhiteLabelCard } from './WhiteLabel';
+import { HandoffCard } from './Handoff';
 import { ElementorImportCard } from './ElementorImport';
 import { ElementManager } from './Elements';
 import { SupportToolsCards } from './SupportTools';
@@ -73,10 +78,13 @@ const MODES: Array<{ value: Draft['maintenance']['mode']; label: string; help: s
   { value: 'maintenance', label: 'Maintenance', help: 'Visitors see a notice with HTTP 503, so search engines keep your pages and check back later.' },
 ];
 
-const SECTIONS = ['general', 'access', 'privacy', 'forms', 'seo', 'elements', 'transfer', 'code', 'tools', 'advanced'] as const;
+const SECTIONS = ['general', 'licence', 'white-label', 'handoff', 'access', 'privacy', 'forms', 'seo', 'elements', 'transfer', 'code', 'tools', 'advanced'] as const;
 type Section = (typeof SECTIONS)[number];
 const SECTION_LABEL: Record<Section, string> = {
   general: 'General',
+  licence: 'Licence',
+  'white-label': 'White-label',
+  handoff: 'Client handoff',
   access: 'Access & roles',
   privacy: 'Cookie consent',
   forms: 'Forms',
@@ -172,7 +180,7 @@ export function SettingsScreen() {
     flagLabel: changed.has(id) ? 'Unsaved changes' : id === 'access' && s?.maintenance.mode ? 'The site is closed to visitors' : undefined,
   });
   const nav: Array<NavGroup<Section>> = [
-    { items: [item('general', 'sliders-horizontal'), item('access', 'lock-keyhole')] },
+    { items: [item('general', 'sliders-horizontal'), ...(cfg.licensing ? [item('licence', 'key-round'), item('white-label', 'tag'), item('handoff', 'hand-helping')] : []), item('access', 'lock-keyhole')] },
     { label: 'Visitors', items: [item('privacy', 'cookie'), item('forms', 'shield-check'), item('seo', 'building-2')] },
     { label: 'Site', items: [item('elements', 'blocks'), item('transfer', 'arrow-left-right')] },
     { label: 'Developer', items: [item('code', 'code-xml'), item('tools', 'wrench'), item('advanced', 'settings-2')] },
@@ -183,9 +191,15 @@ export function SettingsScreen() {
 
   return (
     <>
-      <PageHeader title="Settings" description="How Uncoder works on this site." />
+      <PageHeader title="Settings" description={`How ${NAME} works on this site.`} />
       <Workspace nav={<SectionNav<Section> label="Settings sections" groups={nav} value={section} onChange={setSection} />}>
-        {section === 'code' ? (
+        {section === 'licence' && cfg.licensing ? (
+          <LicenceCard />
+        ) : section === 'white-label' && cfg.licensing ? (
+          <WhiteLabelCard />
+        ) : section === 'handoff' && cfg.licensing ? (
+          <HandoffCard />
+        ) : section === 'code' ? (
           <Embedded>
             <CodeScreen />
           </Embedded>
@@ -202,9 +216,9 @@ export function SettingsScreen() {
           <div className="uncoder-ui-stack">
             {section === 'general' && (
               <>
-                <Card title="Builder" description="Content types that can be edited with Uncoder. Theme templates are always enabled.">
+                <Card title="Builder" description={`Content types that can be edited with ${NAME}. Theme templates are always enabled.`}>
                   <div className="uncoder-ui-setlist">
-                    <SettingRow title="Post types" description="Adds “Edit with Uncoder” to these types. Disabling a type keeps existing designs; they just can’t be opened in the builder.">
+                    <SettingRow title="Post types" description={`Adds “Edit with ${NAME}” to these types. Disabling a type keeps existing designs; they just can’t be opened in the builder.`}>
                       <div className="uncoder-ui-checklist">
                         {s.availablePostTypes.map((pt) => (
                           <Checkbox
@@ -230,8 +244,8 @@ export function SettingsScreen() {
                         ))}
                       </select>
                     </SettingRow>
-                    <SettingRow title="Load Uncoder styles on every page" description="Loads the base CSS and your Design System (colors, fonts, theme styles for text, links and buttons) on all front-end pages, not only on pages built with Uncoder.">
-                      <Toggle checked={draft.applyKit} onChange={(v) => set('applyKit', v)} label="Load Uncoder styles on every page" />
+                    <SettingRow title={`Load ${NAME} styles on every page`} description={`Loads the base CSS and your Design System (colors, fonts, theme styles for text, links and buttons) on all front-end pages, not only on pages built with ${NAME}.`}>
+                      <Toggle checked={draft.applyKit} onChange={(v) => set('applyKit', v)} label={`Load ${NAME} styles on every page`} />
                     </SettingRow>
                   </div>
                 </Card>
@@ -265,7 +279,7 @@ export function SettingsScreen() {
                     </SettingRow>
                     {draft.maintenance.mode !== '' && (
                       <>
-                        <SettingRow title="Page to show" description="Any page built with Uncoder (a draft keeps it out of menus and sitemaps). Leave empty for a simple built-in notice.">
+                        <SettingRow title="Page to show" description={`Any page built with ${NAME} (a draft keeps it out of menus and sitemaps). Leave empty for a simple built-in notice.`}>
                           <div className="uncoder-ui-stack uncoder-ui-stack--tight">
                             <LookupSelect
                               source="posts"
@@ -281,7 +295,7 @@ export function SettingsScreen() {
                             />
                             {s.maintenancePage && s.maintenancePage.id === draft.maintenance.page && (
                               <a className="uncoder-ui-link" href={s.maintenancePage.edit}>
-                                Edit “{s.maintenancePage.title}” with Uncoder
+                                Edit “{s.maintenancePage.title}” with {NAME}
                               </a>
                             )}
                           </div>
@@ -312,7 +326,7 @@ export function SettingsScreen() {
                     )}
                   </div>
                 </Card>
-                <Card id="roles" title="Roles" description="Who can use Uncoder. “Content only” lets people change texts, images and links of existing designs — not add, move, delete or restyle anything. Administrators always have full access.">
+                <Card id="roles" title="Roles" description={`Who can use ${NAME}. “Content only” lets people change texts, images and links of existing designs — not add, move, delete or restyle anything. Administrators always have full access.`}>
                   <div className="uncoder-ui-setlist">
                     {s.roles
                       .filter((r) => r.value !== 'administrator' && r.edits)
@@ -436,7 +450,7 @@ export function SettingsScreen() {
                     )}
                   </div>
                 </Card>
-                <Card id="retention" title="Stored submissions" description="Form submissions are kept in WordPress (Uncoder → Submissions) and covered by the personal data export and erase tools under Tools. Keep them only as long as you need them.">
+                <Card id="retention" title="Stored submissions" description={`Form submissions are kept in WordPress (${NAME} → Submissions) and covered by the personal data export and erase tools under Tools. Keep them only as long as you need them.`}>
                   <div className="uncoder-ui-setlist">
                     <SettingRow title="Delete submissions after" htmlFor="uncoder-ui-retention" description={draft.formRetentionDays > 0 ? `Submissions (and their uploaded files) older than ${draft.formRetentionDays} days are deleted automatically once a day. Spam is always deleted after 30 days.` : 'Keep submissions until you delete them. Spam is always deleted after 30 days.'}>
                       <div className="uncoder-ui-inline">
@@ -531,7 +545,7 @@ export function SettingsScreen() {
               <>
                 <Card title="Tools">
                   <div className="uncoder-ui-setlist">
-                    <SettingRow title="Regenerate CSS" description={regen.result ?? 'Rebuilds the stylesheet of every Uncoder page and template, and the Design System. Use it after migrating the site or if styles look outdated.'}>
+                    <SettingRow title="Regenerate CSS" description={regen.result ?? `Rebuilds the stylesheet of every ${NAME} page and template, and the Design System. Use it after migrating the site or if styles look outdated.`}>
                       <Button icon="refresh-cw" onClick={regenerate} loading={regen.busy}>
                         Regenerate CSS
                       </Button>
@@ -554,7 +568,7 @@ export function SettingsScreen() {
                         Export
                       </Button>
                     </SettingRow>
-                    <SettingRow title="Import design" description="Adds templates, pages and a Design System from an Uncoder export file. Everything arrives as a draft; the Design System is only replaced if you choose so.">
+                    <SettingRow title="Import design" description={`Adds templates, pages and a Design System from a file exported with ${NAME}. Everything arrives as a draft; the Design System is only replaced if you choose so.`}>
                       <Button icon="upload" onClick={() => setImporting(true)}>
                         Import…
                       </Button>

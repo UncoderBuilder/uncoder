@@ -37,6 +37,9 @@ final class Site_Kit {
 	/** @var int[] Posts written by the running import (never matched as "already here"). */
 	private array $written = array();
 
+	/** @var array<int,string> New page id => the slug the kit gave it (set again once the page has its parent). */
+	private array $slugs = array();
+
 	public const FORMAT  = 'uncoder-site-kit';
 	public const VERSION = 1;
 	/** Parts a kit can carry (all optional). */
@@ -74,6 +77,11 @@ final class Site_Kit {
 	}
 
 	/* ------------------------------------------------------------------ Shared */
+
+	/** The zip a finished export left in the working folder (Cloud_Library uploads it). */
+	public static function export_file( string $token ): string {
+		return self::dir( preg_replace( '/[^a-z0-9]/', '', $token ) . '.zip' );
+	}
 
 	/** Private working folder for kits (not listed, cleared after a day). */
 	private static function dir( string $sub = '' ): string {
@@ -665,16 +673,27 @@ final class Site_Kit {
 	/* ------------------------------------------------------------------ Import: upload + preview */
 
 	public function upload( WP_REST_Request $request ) {
-		self::cleanup();
 		$file = $request->get_file_params()['file'] ?? null;
 		if ( ! is_array( $file ) || ! empty( $file['error'] ) || empty( $file['tmp_name'] ) ) {
 			return new WP_Error( 'uncoder_upload', __( 'The file did not arrive. It may be larger than the server allows.', 'uncoder' ), array( 'status' => 400 ) );
 		}
+		return $this->stage_zip( (string) $file['tmp_name'] );
+	}
+
+	/**
+	 * Unpacks a site kit zip into a private folder and answers its preview ({ token, … }), which the import step
+	 * then reads. For uploads, and for kits downloaded from the starter-site library (Site\Library).
+	 *
+	 * @param string $path The zip file.
+	 * @return WP_REST_Response|WP_Error
+	 */
+	public function stage_zip( string $path ) {
+		self::cleanup();
 		if ( ! class_exists( '\ZipArchive' ) ) {
 			return new WP_Error( 'uncoder_no_zip', __( 'This server cannot open zip files (the PHP zip extension is missing).', 'uncoder' ), array( 'status' => 500 ) );
 		}
 		$zip = new \ZipArchive();
-		if ( true !== $zip->open( (string) $file['tmp_name'] ) ) {
+		if ( true !== $zip->open( $path ) ) {
 			return new WP_Error( 'uncoder_bad_zip', __( 'This is not a zip file.', 'uncoder' ), array( 'status' => 400 ) );
 		}
 		if ( $zip->numFiles > self::MAX_ENTRIES ) {
@@ -1082,6 +1101,13 @@ final class Site_Kit {
 			$update = array( 'ID' => $new );
 			if ( ! empty( $item['parent'] ) && isset( $ids[ (int) $item['parent'] ] ) ) {
 				$update['post_parent'] = $ids[ (int) $item['parent'] ];
+				// Every page was created at the top level, where its slug may have clashed with another page or a
+				// media file ("projects/mill-house-kitchen" became "mill-house-kitchen-2" beside the photo
+				// mill-house-kitchen.webp). Asking for the kit's slug again with the parent set keeps it, unless a
+				// sibling really has it.
+				if ( isset( $this->slugs[ $new ] ) && get_post_field( 'post_name', $new ) !== $this->slugs[ $new ] ) {
+					$update['post_name'] = $this->slugs[ $new ];
+				}
 			}
 			if ( count( $update ) > 1 ) {
 				wp_update_post( $update );
@@ -1189,6 +1215,9 @@ final class Site_Kit {
 		++$report[ $replace ? 'replaced' : 'added' ];
 		$id              = (int) $id;
 		$this->written[] = $id;
+		if ( isset( $post['post_name'] ) ) {
+			$this->slugs[ $id ] = $post['post_name'];
+		}
 		update_post_meta( $id, Utils::META_MODE, 'builder' );
 		if ( $is_template ) {
 			update_post_meta( $id, Utils::META_TYPE, $type );
@@ -1340,11 +1369,12 @@ final class Site_Kit {
 			if ( ! empty( $seo['title'] ) || ! empty( $seo['description'] ) ) {
 				Seo::set( $id, ! empty( $seo['title'] ) ? (string) $seo['title'] : null, ! empty( $seo['description'] ) ? (string) $seo['description'] : null );
 			}
-			// Custom fields: public keys only, values filtered like post text.
+			// Custom fields: public keys only, values filtered like post text, links to the old site and its media
+			// pointed here.
 			foreach ( (array) ( $item['meta'] ?? array() ) as $key => $value ) {
 				$key = sanitize_key( (string) $key );
 				if ( '' !== $key && ! is_protected_meta( $key, 'post' ) && is_scalar( $value ) ) {
-					update_post_meta( $id, $key, wp_slash( wp_kses_post( (string) $value ) ) );
+					update_post_meta( $id, $key, wp_slash( wp_kses_post( self::relink_text( (string) $value, $state, $old_home ) ) ) );
 				}
 			}
 			$report['created'][] = array(
@@ -1458,10 +1488,21 @@ final class Site_Kit {
 	 */
 	private function import_fonts( string $dir, array &$report ): void {
 		$fonts = self::read( $dir, 'fonts.json' );
-		if ( ! $fonts ) {
-			return;
+		if ( $fonts ) {
+			self::install_fonts( (array) $fonts, $dir . '/fonts' );
 		}
-		$base = trailingslashit( wp_upload_dir( null, false )['basedir'] ) . 'uncoder/fonts/custom/';
+	}
+
+	/**
+	 * Adds uploaded fonts (fonts.json entries: family => { c, faces: [{ weight, style, file }], p? }) whose files are
+	 * in $files, checked like an upload (also used by Section_Library for premium sections).
+	 *
+	 * @param array<string,mixed> $fonts Fonts.
+	 * @return string[] Families added or updated.
+	 */
+	public static function install_fonts( array $fonts, string $files ): array {
+		$added = array();
+		$base  = trailingslashit( wp_upload_dir( null, false )['basedir'] ) . 'uncoder/fonts/custom/';
 		wp_mkdir_p( $base );
 		$all = Custom_Fonts::all();
 		foreach ( $fonts as $family => $font ) {
@@ -1476,7 +1517,7 @@ final class Site_Kit {
 				}
 				// Same rules as an upload: a generated-looking name, a real font file (read from its signature).
 				$file = basename( (string) ( $face['file'] ?? '' ) );
-				$src  = $dir . '/fonts/' . $file;
+				$src  = $files . '/' . $file;
 				if ( ! preg_match( '/^[a-z0-9_\-]+\.(woff2|woff|ttf|otf)$/', $file ) || ! is_readable( $src ) || filesize( $src ) > Custom_Fonts::MAX_BYTES ) {
 					continue;
 				}
@@ -1510,8 +1551,10 @@ final class Site_Kit {
 				$entry['p'] = $font['p'];
 			}
 			$all[ $family ] = $entry;
+			$added[]        = $family;
 		}
 		Custom_Fonts::save_all( $all );
+		return $added;
 	}
 
 	/**

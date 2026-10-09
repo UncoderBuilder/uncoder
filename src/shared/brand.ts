@@ -2,6 +2,22 @@
 // Two paths draw the U in a 92 × 96 box; BOLT is the cut itself, used by the loader to flash it.
 // PHP twin: includes/Core/Brand.php.
 
+/** White-label (Site\White_Label::brand()), from the admin or editor config; Uncoder's own brand otherwise. */
+export interface BrandInfo {
+  white: boolean;
+  name: string;
+  logo: string;
+  icon: string;
+  url: string;
+  hideLinks: boolean;
+}
+const page = globalThis as { UncoderAdmin?: { brand?: Partial<BrandInfo> }; UncoderEditor?: { brand?: Partial<BrandInfo> } };
+export const BRAND: BrandInfo = { white: false, name: 'Uncoder', logo: '', icon: '', url: '', hideLinks: false, ...(page.UncoderAdmin?.brand ?? page.UncoderEditor?.brand) };
+/** The builder's name in the interface: "Uncoder", or the agency's. */
+export const NAME = BRAND.name;
+/** "Uncoder" → the brand name in a fixed text. */
+export const branded = (text: string): string => (BRAND.white ? text.split('Uncoder').join(NAME) : text);
+
 export const BRAND_URL = 'https://uncoderbuilder.com';
 export const DOCS_URL = 'https://docs.uncoderbuilder.com/';
 /** WordPress.org support forum and reviews (slug `uncoder`). */

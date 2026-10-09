@@ -1,6 +1,7 @@
 // Connection instructions per MCP client, generated with the real endpoint and, once created, the client's own
 // connection link (one URL that carries its own key: …/mcp?token=uncoder_link_…). The link is the default way for
 // every client; signing in (OAuth) and API keys in a header stay as alternatives.
+import { NAME } from '@shared/brand';
 
 export type ClientId = 'claude' | 'chatgpt' | 'cursor' | 'vscode' | 'windsurf' | 'other';
 
@@ -79,7 +80,7 @@ export function clients(c: Ctx): ClientDef[] {
   const bearer = `Bearer ${c.key}`;
   const link = (id: ClientId) => c.links[id] || LINK_PLACEHOLDER;
   const create = (who: string): Step => ({ text: `Create a connection link for ${who} and copy it:`, link: true });
-  const try_ = `Try: “Read the Uncoder build guide, then design a home page for ${c.site}.”`;
+  const try_ = `Try: “Read the ${NAME} build guide, then design a home page for ${c.site}.”`;
   const keepPrivate = 'Keep the link private, like a password: anyone who has it can use these permissions. Revoke it any time under API keys.';
 
   // mcp-remote refuses plain http except to localhost, so local .test/.local sites need --allow-http.

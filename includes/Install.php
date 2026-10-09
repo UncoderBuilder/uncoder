@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  */
 final class Install {
 
-	public const DB_VERSION        = '1.4.0';
+	public const DB_VERSION        = '1.5.0';
 	public const DB_VERSION_OPTION = 'uncoder_wb_db_version';
 	public const MCP_CAP           = 'uncoder_wb_use_mcp';
 

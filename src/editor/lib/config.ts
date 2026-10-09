@@ -1,3 +1,4 @@
+import type { CloudAccess } from '@shared/cloud';
 import type { Breakpoint, DynamicTagSchema, ElementNode, ElementSchema, Kit, Settings } from '@shared/types';
 
 export interface EditorConfig {
@@ -43,6 +44,12 @@ export interface EditorConfig {
   styleBookNonce?: string;
   /** Settings → Tools → Safe mode is running for this browser (only Uncoder active, default theme). */
   safeMode?: boolean;
+  /** Set when the site was handed over and this user edits content only (Site\Handoff::notice()). */
+  handoff?: { by: string; contact: string } | null;
+  /** The private cloud library (Site\Cloud_Library::client_config()): null when not offered to this user. */
+  cloud?: CloudAccess;
+  /** Paid plans launched (Licence::enabled()): premium sections in Insert → Sections. */
+  licensing?: boolean;
   user: {
     id: number;
     name: string;
@@ -52,8 +59,6 @@ export interface EditorConfig {
     contentOnly?: boolean;
   };
   site: { name: string; lang: string };
-  /** AI writing tools (Settings → AI writing): available when an API key is set. */
-  ai?: { enabled: boolean; images?: boolean };
 }
 
 declare global {

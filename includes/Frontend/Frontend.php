@@ -223,7 +223,7 @@ final class Frontend {
 				'theme_' . $type . '_templates',
 				static function ( $templates ) {
 					foreach ( self::PAGE_TEMPLATES as $slug => $label ) {
-						$templates[ $slug ] = $label;
+						$templates[ $slug ] = (string) \Uncoder\Builder\Site\White_Label::rename( $label );
 					}
 					return $templates;
 				}

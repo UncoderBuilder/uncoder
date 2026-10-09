@@ -5,8 +5,6 @@ import { Icon } from '../ui/Icon';
 import { Button, IconButton } from '../ui/primitives';
 import { TextInput } from '../ui/inputs';
 import type { ControlProps } from './ControlRow';
-import { aiAltText } from './AiAssist';
-import { AiImageDialog } from './AiImageDialog';
 
 type WpAttachment = { id: number; url: string; alt?: string; sizes?: Record<string, { url: string }>; type?: string; mime?: string };
 
@@ -43,8 +41,6 @@ const thumb = (a: { url: string; sizes?: Record<string, { url: string }> }) => a
 
 export function MediaControl({ control, value, placeholder, onChange }: ControlProps<MediaValue>) {
   const [urlMode, setUrlMode] = useState(false);
-  const [writingAlt, setWritingAlt] = useState(false);
-  const [generating, setGenerating] = useState(false);
   const v = value ?? (placeholder as MediaValue | undefined);
   const hasImage = !!v?.url;
   const isVideo = /\.(mp4|webm|ogv|mov)(\?|$)/i.test(v?.url ?? '');
@@ -87,32 +83,8 @@ export function MediaControl({ control, value, placeholder, onChange }: ControlP
           </Button>
         )}
         <IconButton icon="link" label="Use a URL" size={13} active={urlMode} onClick={() => setUrlMode((m) => !m)} />
-        {config.ai?.images && noun === 'image' && <IconButton icon="wand-sparkles" label="Generate with AI" size={13} onClick={() => setGenerating(true)} />}
-        {config.ai?.enabled && noun === 'image' && !!v?.id && !isFile && !isVideo && (
-          <IconButton
-            icon={writingAlt ? 'loader-circle' : 'sparkles'}
-            label="Write alt text with AI"
-            size={13}
-            disabled={writingAlt}
-            onClick={async () => {
-              setWritingAlt(true);
-              const alt = await aiAltText(v!.id);
-              setWritingAlt(false);
-              if (alt !== null && v) onChange({ ...v, alt });
-            }}
-          />
-        )}
         {value && <IconButton icon="trash-2" label={`Remove ${noun}`} size={13} tone="danger" onClick={() => onChange(undefined)} />}
       </div>
-      {generating && (
-        <AiImageDialog
-          onClose={() => setGenerating(false)}
-          onUse={(img) => {
-            onChange({ id: img.id, url: img.url, ...(img.alt ? { alt: img.alt } : {}) });
-            setGenerating(false);
-          }}
-        />
-      )}
       {urlMode && (
         <TextInput
           className="uncoder-ui-input--mono"

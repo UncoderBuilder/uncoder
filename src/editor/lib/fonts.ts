@@ -53,6 +53,24 @@ export const fonts = {
     loaded.clear();
     links.length = 0;
   },
+  /**
+   * Uploaded fonts installed during the session (a premium section brought them): their @font-face rules go into the
+   * canvas, and the picker lists them as uploaded fonts.
+   */
+  addUploaded(css: string, custom: Record<string, { c: string; w: string[]; custom?: boolean }> | null) {
+    if (custom) {
+      config.customFonts = { ...(config.customFonts ?? {}), ...custom };
+      if (catalog) catalog = { ...catalog, ...custom };
+    }
+    if (!canvasDoc || !css) return;
+    let style = canvasDoc.getElementById('uncoder-ui-session-fonts') as HTMLStyleElement | null;
+    if (!style) {
+      style = canvasDoc.createElement('style');
+      style.id = 'uncoder-ui-session-fonts';
+      canvasDoc.head.appendChild(style);
+    }
+    style.textContent = css;
+  },
   /** Loads the given families (with weights) into the canvas document. */
   ensure(used: Map<string, Set<string>>) {
     if (!canvasDoc || !catalog || config.kit.settings?.font_delivery === 'none') return;

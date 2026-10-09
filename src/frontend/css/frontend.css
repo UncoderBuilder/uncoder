@@ -671,26 +671,31 @@ img.uncoder-svg--img {
 }
 /* Slide icon through: the icon leaves at the end side and comes back in from the start (Framer's two-arrow buttons);
    the icon's own circle stays put. */
+.uncoder-hover-swap svg.uncoder-btn__icon {
+  /* The icon leaves and comes back inside its own box, never over the label. */
+  overflow: hidden;
+}
 .uncoder-hover-swap:is(:hover, :focus-visible) svg.uncoder-btn__icon > * {
   animation: uncoder-swap 0.6s ease;
 }
 .uncoder-hover-swap:is(:hover, :focus-visible) img.uncoder-btn__icon {
   animation: uncoder-swap-img 0.6s ease;
 }
+/* The icon box clips: one icon width out and back is enough (no empty moment in between). */
 @keyframes uncoder-swap {
   45% {
-    transform: translateX(160%);
+    transform: translateX(100%);
   }
   45.01% {
-    transform: translateX(-160%);
+    transform: translateX(-100%);
   }
 }
 @keyframes uncoder-swap-img {
   45% {
-    object-position: calc(50% + var(--uncoder-btn-icon, 1em) * 1.6) 50%;
+    object-position: calc(50% + var(--uncoder-btn-icon, 1em)) 50%;
   }
   45.01% {
-    object-position: calc(50% - var(--uncoder-btn-icon, 1em) * 1.6) 50%;
+    object-position: calc(50% - var(--uncoder-btn-icon, 1em)) 50%;
   }
 }
 /* Reveal icon: the label stands alone (centred) until the pointer arrives; then the icon fades in beside it and the
@@ -790,19 +795,25 @@ img.uncoder-svg--img {
 }
 /* Text roll: the label is drawn twice as text shadows (one in place, one a line below) and clipped to its
    own line; on hover both move up, so the text rolls out at the top while the copy rolls in from below.
-   CSS only, so it also works site-wide (button-fx.json) and on buttons inside other widgets. */
+   CSS only, so it also works site-wide (button-fx.json) and on buttons inside other widgets. The label stays on one
+   line and never shrinks (a second line would show the copy, a narrower box would cut letters off) and the copy waits exactly one line box below (1lh + the padding), so a
+   tall line height never lets it peek in; 1.6em is the fallback where lh is unknown. */
 .uncoder-hover-flip .uncoder-btn__text {
   display: inline-block;
   overflow: hidden;
   vertical-align: top;
+  white-space: nowrap;
+  flex-shrink: 0;
   padding-block: 0.15em;
   margin-block: -0.15em;
   -webkit-text-fill-color: transparent;
   text-shadow: 0 0 currentColor, 0 1.6em currentColor;
+  text-shadow: 0 0 currentColor, 0 calc(1lh + 0.3em) currentColor;
   transition: text-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .uncoder-hover-flip:is(:hover, :focus-visible) .uncoder-btn__text {
   text-shadow: 0 -1.6em currentColor, 0 0 currentColor;
+  text-shadow: 0 calc(-1lh - 0.3em) currentColor, 0 0 currentColor;
 }
 /* High-contrast mode drops text shadows: show the plain label (also for the site-wide text roll). */
 @media (forced-colors: active) {
