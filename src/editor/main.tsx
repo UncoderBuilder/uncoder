@@ -16,8 +16,12 @@ async function boot() {
   document.body.appendChild(portal);
 
   await Promise.all([loadIcons(), fonts.load()]);
-  const { App } = await import('./app/App');
-  createRoot(rootEl).render(<App />);
+  const [{ App }, { EditorBoundary }] = await Promise.all([import('./app/App'), import('./app/recovery')]);
+  createRoot(rootEl).render(
+    <EditorBoundary>
+      <App />
+    </EditorBoundary>,
+  );
 }
 
 boot().catch((e) => {

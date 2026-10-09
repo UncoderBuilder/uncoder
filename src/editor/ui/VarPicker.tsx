@@ -2,7 +2,7 @@
 // shows which variable a value uses.
 import type { ControlDef, KitVariable } from '@shared/types';
 import { useKit } from '../store/kit';
-import { useUi } from '../store/ui';
+import { useUi, showPanel } from '../store/ui';
 import { Menu, usePopover, type MenuItem } from './Popover';
 import { IconButton } from './primitives';
 
@@ -22,7 +22,7 @@ export function varGroup(control: ControlDef, key: string): KitVariable['group']
 
 /** Opens Styles → Variables. */
 export function manageVariables(): void {
-  useUi.setState({ panel: 'kit' });
+  showPanel('kit');
   window.setTimeout(() => window.dispatchEvent(new CustomEvent('uncoder-ui:kit-tab', { detail: 'variables' })), 0);
 }
 

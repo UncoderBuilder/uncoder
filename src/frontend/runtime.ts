@@ -129,7 +129,7 @@ declare global {
     }
   }
 
-  // Lazy backgrounds (Settings → Performance): load a background image when its element nears the screen.
+  // Lazy backgrounds (Settings → Performance & fonts): load a background image when its element nears the screen.
   let bgObserver: IntersectionObserver | null = null;
   function lazyBackgrounds(root: ParentNode) {
     const els = root.querySelectorAll<HTMLElement>('.uncoder-lazy-bg:not(.is-bg-in)');

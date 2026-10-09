@@ -4,17 +4,16 @@ import { config, contentOnly } from '../lib/config';
 import { DEVICE_ICON, deviceLabel } from '../lib/devices';
 import { isDirty, setTitle, useDoc } from '../store/doc';
 import { useKit } from '../store/kit';
-import { breakpoints, setDevice, toast, togglePanel, useUi } from '../store/ui';
+import { breakpoints, setDevice, toast, togglePanel, useUi, showPanel } from '../store/ui';
 import { Icon } from '../ui/Icon';
 import { Menu, Popover, usePopover, type MenuItem } from '../ui/Popover';
 import { TextInput } from '../ui/inputs';
-import { doRedo, doUndo, previewPage, save } from './actions';
+import { doRedo, doUndo, goBack, previewPage, save } from './actions';
 import { api } from '../lib/api';
 import { MOD } from './shortcuts';
 import { STATUS_LABEL } from '../lib/labels';
 import { hasConditions, settingsTitle } from '../lib/docInfo';
 import { loadTemplate, useTemplate } from '../store/template';
-import { useNotes } from '../store/notes';
 
 /** Device that a canvas width belongs to (so responsive editing follows the chosen width). */
 function deviceForWidth(w: number): string {
@@ -51,9 +50,6 @@ export function TopBar() {
   const theme = useUi((s) => s.theme);
   const layout = useUi((s) => s.layout);
   const preview = useUi((s) => s.preview);
-  const checks = useUi((s) => s.checksCount);
-  const openNotes = useNotes((s) => (s.notes ?? []).filter((n) => !n.resolved).length);
-  const panel = useUi((s) => s.panel);
   const canUndo = useDoc((s) => s.past.length > 0);
   const canRedo = useDoc((s) => s.future.length > 0);
   const docDirty = useDoc((s) => s.version !== s.savedVersion);
@@ -85,7 +81,8 @@ export function TopBar() {
     ...(breakpoints.some((b) => b.id === 'tablet') ? [1024, 820, 768].map((w) => ({ label: `${w} px · tablet`, onSelect: () => setWidth(w) }) as MenuItem) : []),
     ...(breakpoints.some((b) => b.id === 'mobile') ? [430, 390, 360].map((w) => ({ label: `${w} px · mobile`, onSelect: () => setWidth(w) }) as MenuItem) : []),
   ];
-  const tool = (id: typeof panel) => panel === id;
+  // At 100 % the page is fitted to the window (scaled down to show a real desktop width when the canvas is narrow).
+  const zoomLabel = zoom === 1 ? 'Fit' : `${Math.round(zoom * fit * 100)}%`;
 
   return (
     <header className="uncoder-ui-topbar uncoder-ui-island">
@@ -99,9 +96,9 @@ export function TopBar() {
           onClose={mainMenu.close}
           width={250}
           items={[
-            { label: 'Layers', icon: 'layers', shortcut: `${MOD}I`, onSelect: () => useUi.setState({ panel: 'layers' }) },
-            { label: 'Styles (Design System)', icon: 'palette', onSelect: () => useUi.setState({ panel: 'kit' }), disabled: contentOnly() },
-            { label: settingsTitle(), icon: 'file-cog', onSelect: () => useUi.setState({ panel: 'page' }), disabled: contentOnly() },
+            { label: 'Layers', icon: 'layers', shortcut: `${MOD}I`, onSelect: () => showPanel('layers') },
+            { label: 'Styles (Design System)', icon: 'palette', onSelect: () => showPanel('kit'), disabled: contentOnly() },
+            { label: settingsTitle(), icon: 'file-cog', onSelect: () => showPanel('page'), disabled: contentOnly() },
             { label: 'History', icon: 'history', onSelect: () => togglePanel('history') },
             { label: 'Find & replace', icon: 'replace-all', onSelect: () => togglePanel('find'), disabled: contentOnly() },
             ...(config.user.caps.edit_theme ? [{ label: 'Theme Builder', icon: 'layout-template', onSelect: () => window.open(`${config.urls.admin}admin.php?page=uncoder-templates`, '_blank') } as MenuItem] : []),
@@ -116,6 +113,17 @@ export function TopBar() {
             { label: 'Exit to WordPress', icon: 'log-out', onSelect: () => (window.location.href = config.post.exitUrl) },
           ]}
         />
+        {config.post.returnTo && (
+          <>
+            <button type="button" className="uncoder-ui-backbtn" onClick={() => void goBack()} data-tip={`Back to editing ${config.post.returnTo.title}`}>
+              <Icon name="arrow-left" size={14} />
+              <span>{config.post.returnTo.title}</span>
+            </button>
+            <span className="uncoder-ui-crumbsep" aria-hidden>
+              /
+            </span>
+          </>
+        )}
         <button ref={docMenu.anchorRef} type="button" className="uncoder-ui-pagebtn" onClick={docMenu.toggle} aria-haspopup="dialog" aria-label={`Page: ${title || 'Untitled'}`}>
           <span className="uncoder-ui-pagebtn__title">{title || 'Untitled'}</span>
           <Icon name="chevron-down" size={13} />
@@ -127,24 +135,26 @@ export function TopBar() {
       <div className="uncoder-ui-topbar__center">
         {!preview && (
           <>
-            <div className="uncoder-ui-devseg" role="radiogroup" aria-label="Device">
-              {breakpoints.map((bp) => (
-                <button key={bp.id} type="button" role="radio" aria-checked={device === bp.id} aria-label={bp.label} className={`uncoder-ui-devseg__item${device === bp.id ? ' is-active' : ''}`} data-tip={deviceLabel(bp.id)} onClick={() => setDevice(bp.id)}>
-                  <Icon name={DEVICE_ICON[bp.id] ?? 'monitor'} size={15} />
-                  <span className="uncoder-ui-devseg__label">{bp.label}</span>
-                </button>
-              ))}
+            <div className="uncoder-ui-viewctl">
+              <div className="uncoder-ui-devseg" role="radiogroup" aria-label="Device">
+                {breakpoints.map((bp) => (
+                  <button key={bp.id} type="button" role="radio" aria-checked={device === bp.id} aria-label={bp.label} className={`uncoder-ui-devseg__item${device === bp.id ? ' is-active' : ''}`} data-tip={deviceLabel(bp.id)} onClick={() => setDevice(bp.id)}>
+                    <Icon name={DEVICE_ICON[bp.id] ?? 'monitor'} size={15} />
+                    <span className="uncoder-ui-devseg__label">{bp.label}</span>
+                  </button>
+                ))}
+              </div>
+              <button ref={widthMenu.anchorRef} type="button" className="uncoder-ui-viewctl__width" onClick={widthMenu.toggle} aria-label={`Canvas width: ${canvasWidth || 'automatic'} pixels`} aria-haspopup="menu" data-tip="Canvas width">
+                {canvasWidth || '—'}
+                <Icon name="chevron-down" size={12} />
+              </button>
             </div>
-            <button ref={widthMenu.anchorRef} type="button" className="uncoder-ui-chipbtn" onClick={widthMenu.toggle} aria-label="Canvas width" data-tip="Canvas width">
-              {canvasWidth ? `${canvasWidth} px` : '—'}
-              <Icon name="chevron-down" size={12} />
-            </button>
             <Menu anchor={widthMenu.anchorRef} open={widthMenu.open} onClose={widthMenu.close} width={190} items={widths} />
-            <button ref={zoomMenu.anchorRef} type="button" className="uncoder-ui-chipbtn" onClick={zoomMenu.toggle} aria-label="Zoom" data-tip={fit < 1 ? 'Zoom (scaled to show a real desktop width)' : 'Zoom'}>
-              {Math.round(zoom * fit * 100)}%
+            <button ref={zoomMenu.anchorRef} type="button" className="uncoder-ui-chipbtn" onClick={zoomMenu.toggle} aria-label={`Zoom: ${zoomLabel}`} aria-haspopup="menu" data-tip={fit < 1 ? `Zoom · ${Math.round(zoom * fit * 100)}% (fitted to show a real desktop width)` : 'Zoom'}>
+              {zoomLabel}
               <Icon name="chevron-down" size={12} />
             </button>
-            <Menu anchor={zoomMenu.anchorRef} open={zoomMenu.open} onClose={zoomMenu.close} width={150} items={[1, 0.75, 0.67, 0.5].map((z) => ({ label: z === 1 ? '100% (fit)' : `${Math.round(z * 100)}%`, checked: zoom === z, onSelect: () => useUi.setState({ zoom: z }) }))} />
+            <Menu anchor={zoomMenu.anchorRef} open={zoomMenu.open} onClose={zoomMenu.close} width={170} items={[1, 0.75, 0.67, 0.5].map((z) => ({ label: z === 1 ? `Fit to window${fit < 1 ? ` (${Math.round(fit * 100)}%)` : ''}` : `${Math.round(z * fit * 100)}%`, checked: zoom === z, onSelect: () => useUi.setState({ zoom: z }) }))} />
           </>
         )}
       </div>
@@ -157,18 +167,6 @@ export function TopBar() {
             </button>
             <button type="button" className="uncoder-ui-tbtn" aria-label="Redo" data-tip={`Redo  ${MOD}⇧Z`} disabled={!canRedo} onClick={doRedo}>
               <Icon name="redo-2" size={17} stroke={1.6} />
-            </button>
-            <button type="button" className={`uncoder-ui-tbtn${tool('a11y') ? ' is-active' : ''}`} aria-label={checks ? `Checks: ${checks} to review` : 'Checks'} data-tip={checks ? `${checks} accessibility check${checks === 1 ? '' : 's'} to review` : 'Checks'} onClick={() => togglePanel('a11y')}>
-              <Icon name="shield-check" size={17} stroke={1.6} />
-              {checks > 0 && <span className="uncoder-ui-badge">{checks > 99 ? '99+' : checks}</span>}
-            </button>
-            <button type="button" className={`uncoder-ui-tbtn${tool('notes') ? ' is-active' : ''}`} aria-label={openNotes ? `Notes: ${openNotes} open` : 'Notes'} data-tip={openNotes ? `${openNotes} open note${openNotes === 1 ? '' : 's'}` : 'Notes for your team'} onClick={() => togglePanel('notes')}>
-              <Icon name="message-square-text" size={17} stroke={1.6} />
-              {openNotes > 0 && <span className="uncoder-ui-badge">{openNotes > 99 ? '99+' : openNotes}</span>}
-            </button>
-            <button type="button" className={`uncoder-ui-aibtn-top${tool('ai') ? ' is-active' : ''}`} onClick={() => togglePanel('ai')}>
-              <Icon name="sparkles" size={15} stroke={1.7} />
-              Ask AI
             </button>
             <span className={`uncoder-ui-savestate${dirty ? ' is-dirty' : ''}`} role="status">
               {saving ? 'Saving…' : dirty ? 'Unsaved changes' : lastSaved ? `Saved ${ago(lastSaved)}` : 'Saved'}
@@ -259,7 +257,7 @@ function DocPopover({ open, onClose, anchor }: { open: boolean; onClose: () => v
           <a href={config.post.permalink} target="_blank" rel="noreferrer">
             <Icon name="external-link" size={13} /> View page
           </a>
-          <button type="button" onClick={() => (useUi.setState({ panel: 'page' }), onClose())}>
+          <button type="button" onClick={() => (showPanel('page'), onClose())}>
             <Icon name="settings-2" size={13} /> {settingsTitle()}
           </button>
           <a href={config.post.exitUrl}>

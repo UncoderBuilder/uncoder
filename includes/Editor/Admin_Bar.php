@@ -141,7 +141,7 @@ final class Admin_Bar {
 		}
 		unset( $doc );
 		$links = array();
-		if ( current_user_can( 'edit_posts' ) ) {
+		if ( current_user_can( 'edit_theme_options' ) ) {
 			$links[] = array(
 				'icon'  => 'templates',
 				'label' => __( 'Theme Builder', 'uncoder' ),

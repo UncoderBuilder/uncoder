@@ -10,9 +10,9 @@ import { dismissToast, useToasts } from '../lib/toast';
 
 /** The sub-view a screen shows (“Popups” in Theme Builder), for the breadcrumb in the app bar. */
 export const useCrumb = create<{ sub: string | null }>(() => ({ sub: null }));
-export function useSubCrumb(label: string | null) {
+export function useSubCrumb(label: string | null | undefined) {
   useEffect(() => {
-    useCrumb.setState({ sub: label });
+    if (label !== undefined) useCrumb.setState({ sub: label });
   }, [label]);
 }
 
@@ -281,6 +281,21 @@ export interface TabDef<T extends string> {
 
 /** Underline tabs with roving keyboard focus (arrow keys). Panels are rendered by the caller. */
 export function Tabs<T extends string>({ tabs, value, onChange, label, idBase }: { tabs: Array<TabDef<T>>; value: T; onChange: (v: T) => void; label: string; idBase: string }) {
+  const bar = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    // On a narrow screen the bar scrolls sideways: center the active tab (a link can open any tab). Again once the
+    // fonts are in, since they change the tabs' widths.
+    const fit = () => {
+      const el = bar.current;
+      const tab = el?.querySelector<HTMLElement>('[aria-selected="true"]');
+      if (!el || !tab || el.scrollWidth <= el.clientWidth) return;
+      const b = el.getBoundingClientRect();
+      const t = tab.getBoundingClientRect();
+      el.scrollLeft += t.left + t.width / 2 - (b.left + b.width / 2);
+    };
+    fit();
+    void document.fonts?.ready.then(fit);
+  }, [value]);
   const onKeyDown = (e: React.KeyboardEvent) => {
     const i = tabs.findIndex((t) => t.id === value);
     let next = -1;
@@ -294,7 +309,7 @@ export function Tabs<T extends string>({ tabs, value, onChange, label, idBase }:
     requestAnimationFrame(() => document.getElementById(`${idBase}-tab-${tabs[next].id}`)?.focus());
   };
   return (
-    <div className="uncoder-ui-tabbar" role="tablist" aria-label={label} onKeyDown={onKeyDown}>
+    <div ref={bar} className="uncoder-ui-tabbar" role="tablist" aria-label={label} onKeyDown={onKeyDown}>
       {tabs.map((t) => {
         const active = t.id === value;
         return (

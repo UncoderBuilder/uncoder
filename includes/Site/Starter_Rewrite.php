@@ -373,7 +373,7 @@ final class Starter_Rewrite {
 			. "3. Replace the template's business name, places and people with mine, in the texts and the image alt texts. Phone (tel:) and email (mailto:) links, in texts and on buttons, get my phone and email; map widgets and directions links get my address or area. Never invent prices, numbers, years, awards, certifications, client or staff names, addresses, phone numbers or testimonials: where the template shows such a specific and my details do not give it, write a short placeholder in square brackets that starts with a capital letter, like [Client name], [Price] or [Year founded]. Leave figures such as \"18+\" as they are and list them for me to check. Do not edit HTML or code widgets (such as an \"open now\" badge with opening hours): list them for me instead.\n"
 			. "4. set_seo_meta for each page: a title with my business name (at most 60 characters) and a description of 140–160 characters, without placeholders. update_site_settings with a tagline of at most 60 characters.\n"
 			. "5. When done, list every [placeholder], every figure and every HTML widget left for me, page by page, and remind me to replace the logo and the photos with my own.\n\n"
-			. "Uncoder kept a copy of every page before you start: I can put any page back with Undo in Uncoder → Starter sites → Make it yours.";
+			. "Uncoder kept a copy of every page before you start: I can put any page back with Undo in Uncoder → Library → Starter sites → Make it yours.";
 	}
 
 	/**

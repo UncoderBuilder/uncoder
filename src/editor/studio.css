@@ -108,6 +108,36 @@
 .uncoder-ui-logo:active {
   transform: scale(0.95);
 }
+/* "← Home /" before a template opened from a page: the way back to it. */
+.uncoder-ui-backbtn {
+  height: 28px;
+  min-width: 0;
+  max-width: 180px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 9px 0 7px;
+  border: 1px solid var(--uncoder-ui-line);
+  border-radius: 14px;
+  background: var(--uncoder-ui-bg-1);
+  color: var(--uncoder-ui-tx-1);
+  font-size: var(--uncoder-ui-fs-sm);
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.uncoder-ui-backbtn > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.uncoder-ui-backbtn:hover {
+  border-color: var(--uncoder-ui-line-3);
+  background: var(--uncoder-ui-bg-3);
+  color: var(--uncoder-ui-tx-strong);
+}
+.uncoder-ui-crumbsep {
+  color: var(--uncoder-ui-tx-4);
+}
 .uncoder-ui-pagebtn {
   min-width: 0;
   height: 32px;
@@ -167,6 +197,47 @@
 }
 
 /* Device segment: icon and label (a page is built per width, so say which); narrow windows keep the icon. */
+.uncoder-ui-viewctl {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding-right: 2px;
+  border-radius: 9px;
+  background: var(--uncoder-ui-bg-3);
+  box-shadow: inset 0 0 0 1px var(--uncoder-ui-line);
+}
+.uncoder-ui-viewctl .uncoder-ui-devseg {
+  background: none;
+  box-shadow: none;
+}
+.uncoder-ui-devseg__item:not(.is-active) .uncoder-ui-devseg__label {
+  display: none;
+}
+.uncoder-ui-devseg__item:not(.is-active) {
+  padding: 0 8px;
+}
+.uncoder-ui-viewctl__width {
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0 6px 0 8px;
+  border: 0;
+  border-left: 1px solid var(--uncoder-ui-line-2);
+  border-radius: 0 7px 7px 0;
+  background: transparent;
+  color: var(--uncoder-ui-tx-2);
+  font-size: var(--uncoder-ui-fs-sm);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+}
+.uncoder-ui-viewctl__width:hover {
+  color: var(--uncoder-ui-tx-strong);
+}
+.uncoder-ui-viewctl__width .uncoder-ui-icon {
+  color: var(--uncoder-ui-tx-3);
+}
 .uncoder-ui-devseg {
   display: inline-flex;
   gap: 2px;
@@ -251,8 +322,8 @@
   cursor: default;
 }
 .uncoder-ui-tbtn.is-active {
-  background: var(--uncoder-ui-accent-soft);
-  color: var(--uncoder-ui-accent-tx);
+  background: var(--uncoder-ui-select-soft);
+  color: var(--uncoder-ui-select-tx);
 }
 .uncoder-ui-badge {
   position: absolute;
@@ -467,10 +538,118 @@
   bottom: -1px;
   height: 2px;
   border-radius: 2px 2px 0 0;
-  background: var(--uncoder-ui-accent);
+  background: var(--uncoder-ui-tx-strong);
 }
 
-/* ------------------------------------------------------------------ Build panel (left island) */
+/* ------------------------------------------------------------------ Build side: rail + collapsible panel */
+
+.uncoder-ui-app {
+  --uncoder-ui-rail-w: 48px;
+  /* Side padding of everything in the build panel, and the scrollbar width it makes room for. */
+  --uncoder-ui-pad: 14px;
+  --uncoder-ui-sb: 10px;
+}
+/* Views that scroll as a whole: the scrollbar's room is always kept (stable gutter) and taken out of the right
+   padding, so content sits 14px from both edges whether or not it scrolls. */
+.uncoder-ui-panel__body:is(.is-page, .is-history, .is-find, .is-a11y, .is-notes, .is-ai) {
+  scrollbar-gutter: stable;
+  overflow-x: hidden;
+}
+.uncoder-ui-panel__body:is(.is-page, .is-history, .is-find, .is-a11y, .is-notes, .is-ai) > * {
+  padding-left: var(--uncoder-ui-pad);
+  padding-right: calc(var(--uncoder-ui-pad) - var(--uncoder-ui-sb));
+}
+
+.uncoder-ui-build {
+  flex-shrink: 0;
+  display: flex;
+  min-height: 0;
+  overflow: hidden;
+}
+.uncoder-ui-rail {
+  width: var(--uncoder-ui-rail-w);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.uncoder-ui-build.is-open .uncoder-ui-rail {
+  border-right: 1px solid var(--uncoder-ui-line);
+}
+.uncoder-ui-rail__btn {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: var(--uncoder-ui-r-lg);
+  background: transparent;
+  color: var(--uncoder-ui-tx-2);
+  cursor: pointer;
+  transition: background-color var(--uncoder-ui-t-fast), color var(--uncoder-ui-t-fast);
+}
+.uncoder-ui-rail__btn:hover {
+  background: var(--uncoder-ui-bg-3);
+  color: var(--uncoder-ui-tx-strong);
+}
+.uncoder-ui-rail__btn.is-active {
+  background: var(--uncoder-ui-select-soft);
+  color: var(--uncoder-ui-select);
+}
+.uncoder-ui-rail__btn.is-ai:not(.is-active) {
+  color: var(--uncoder-ui-accent);
+}
+.uncoder-ui-rail__btn .uncoder-ui-badge {
+  top: 1px;
+  right: 0;
+}
+.uncoder-ui-rail__sep {
+  flex-shrink: 0;
+  width: 24px;
+  height: 1px;
+  margin: 6px 0;
+  background: var(--uncoder-ui-line);
+}
+.uncoder-ui-rail__spacer {
+  flex: 1;
+  min-height: 8px;
+}
+.uncoder-ui-panel__head {
+  height: 48px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 var(--uncoder-ui-pad);
+  border-bottom: 1px solid var(--uncoder-ui-line);
+}
+/* An icon button at the end lines its icon (not its hover box) up with the content edge. */
+.uncoder-ui-panel__actions > .uncoder-ui-iconbtn:last-child {
+  margin-right: -6px;
+}
+.uncoder-ui-panel__actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.uncoder-ui-panel__count {
+  padding: 0 4px;
+  color: var(--uncoder-ui-tx-3);
+  font-size: var(--uncoder-ui-fs-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ------------------------------------------------------------------ Build panel */
 
 .uncoder-ui-panel {
   width: var(--uncoder-ui-panel-w);
@@ -511,7 +690,7 @@
   color: var(--uncoder-ui-tx-2);
 }
 .uncoder-ui-tabs__tab.is-active .uncoder-ui-tabs__icon {
-  color: var(--uncoder-ui-accent);
+  color: var(--uncoder-ui-select);
 }
 .uncoder-ui-panel__tool {
   height: 50px;
@@ -535,6 +714,11 @@
   overflow: auto;
   display: flex;
   flex-direction: column;
+  /* Room between the panel's title bar and its first line of content. */
+  padding-top: 12px;
+}
+.uncoder-ui-panel__body.is-layers {
+  padding-top: 6px;
 }
 .uncoder-ui-insert {
   flex: 1;
@@ -546,6 +730,9 @@
   flex-shrink: 0;
   width: auto;
   margin: 12px 12px 10px;
+}
+.uncoder-ui-panel__head .uncoder-ui-seg {
+  width: auto;
 }
 .uncoder-ui-wgroup__head {
   color: var(--uncoder-ui-tx-2);
@@ -632,8 +819,8 @@
   background: var(--uncoder-ui-bg-3);
 }
 .uncoder-ui-nav__row.is-selected {
-  background: var(--uncoder-ui-sel-fill);
-  color: var(--uncoder-ui-on-sel-fill);
+  background: var(--uncoder-ui-select-soft);
+  color: var(--uncoder-ui-select-tx);
 }
 .uncoder-ui-nav__row.is-disabled .uncoder-ui-nav__label {
   text-decoration: line-through;
@@ -688,7 +875,7 @@
 .uncoder-ui-nav__row.is-selected .uncoder-ui-nav__vis,
 .uncoder-ui-nav__row.is-selected .uncoder-ui-nav__locate,
 .uncoder-ui-nav__row.is-selected .uncoder-ui-nav__flag {
-  color: rgb(255 255 255 / 0.75);
+  color: var(--uncoder-ui-select);
 }
 .uncoder-ui-nav__label {
   flex: 1;
@@ -696,6 +883,26 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+/* "Heading  Calm, lived-in interiors…": the type (or your name for it) and, muted, what it says or holds. */
+.uncoder-ui-nav__name {
+  color: var(--uncoder-ui-tx-1);
+}
+.uncoder-ui-nav__label.is-named .uncoder-ui-nav__name,
+.uncoder-ui-nav__label.is-top .uncoder-ui-nav__name {
+  color: var(--uncoder-ui-tx-strong);
+  font-weight: 600;
+}
+.uncoder-ui-nav__sub {
+  margin-left: 6px;
+  color: var(--uncoder-ui-tx-3);
+}
+.uncoder-ui-nav__row.is-selected .uncoder-ui-nav__name {
+  color: var(--uncoder-ui-select-tx);
+  font-weight: 600;
+}
+.uncoder-ui-nav__row.is-selected .uncoder-ui-nav__sub {
+  color: var(--uncoder-ui-select);
 }
 .uncoder-ui-nav__rename {
   flex: 1;
@@ -724,9 +931,15 @@
   background: var(--uncoder-ui-dynamic-soft);
   color: var(--uncoder-ui-dynamic-tx);
 }
+.uncoder-ui-nav__badge.is-h1 {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--uncoder-ui-line-2);
+  color: var(--uncoder-ui-tx-2);
+}
 .uncoder-ui-nav__row.is-selected .uncoder-ui-nav__badge {
-  background: rgb(255 255 255 / 0.16);
-  color: #fff;
+  background: transparent;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--uncoder-ui-select) 45%, transparent);
+  color: var(--uncoder-ui-select-tx);
 }
 .uncoder-ui-nav__flag {
   display: inline-flex;
@@ -757,8 +970,8 @@
 }
 .uncoder-ui-nav__row.is-selected .uncoder-ui-nav__vis:hover,
 .uncoder-ui-nav__row.is-selected .uncoder-ui-nav__locate:hover {
-  background: rgb(255 255 255 / 0.14);
-  color: #fff;
+  background: rgb(31 111 235 / 0.12);
+  color: var(--uncoder-ui-select-tx);
 }
 
 /* ------------------------------------------------------------------ Canvas and path bar */
@@ -866,7 +1079,7 @@
   position: fixed;
   z-index: 40;
   top: calc(var(--uncoder-ui-topbar-h) + var(--uncoder-ui-gutter) + 16px);
-  left: calc(var(--uncoder-ui-panel-w) + var(--uncoder-ui-gutter) * 2 + 16px);
+  left: calc(var(--uncoder-ui-rail-w) + var(--uncoder-ui-panel-w) + var(--uncoder-ui-gutter) * 2 + 16px);
   height: calc(100vh - var(--uncoder-ui-topbar-h) - var(--uncoder-ui-gutter) * 2 - 48px);
   min-height: 320px;
   max-height: calc(100vh - var(--uncoder-ui-topbar-h) - 16px);
@@ -925,9 +1138,9 @@ html.uncoder-ui-moving-panel iframe {
 .uncoder-ui-dockghost {
   position: fixed;
   z-index: 39;
-  border: 2px dashed color-mix(in srgb, var(--uncoder-ui-accent) 70%, transparent);
+  border: 2px dashed color-mix(in srgb, var(--uncoder-ui-select) 70%, transparent);
   border-radius: var(--uncoder-ui-r-xl);
-  background: color-mix(in srgb, var(--uncoder-ui-accent) 8%, transparent);
+  background: color-mix(in srgb, var(--uncoder-ui-select) 8%, transparent);
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--uncoder-ui-t-fast) var(--uncoder-ui-ease);
@@ -948,7 +1161,7 @@ html.uncoder-ui-moving-panel iframe {
   flex-direction: column;
 }
 .uncoder-ui-insp__head {
-  height: 50px;
+  height: 48px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -990,16 +1203,16 @@ html.uncoder-ui-moving-panel iframe {
 /* The inspector (Content / Design / Behaviour) reads one step darker than the rest of the editor: its labels, tabs,
    units and hints are small, and must stay easy to read for people with low vision (labels about 11:1, hints 5:1). */
 .uncoder-ui-app[data-uncoder-ui-theme='light'] .uncoder-ui-inspector {
-  --uncoder-ui-tx-1: #262322;
-  --uncoder-ui-tx-2: #3b3837;
-  --uncoder-ui-tx-3: #4f4b49;
-  --uncoder-ui-tx-4: #6f6b69;
+  --uncoder-ui-tx-1: #1d1f23;
+  --uncoder-ui-tx-2: #2e3034;
+  --uncoder-ui-tx-3: #3f4147;
+  --uncoder-ui-tx-4: #5f6168;
 }
 .uncoder-ui-app[data-uncoder-ui-theme='dark'] .uncoder-ui-inspector {
-  --uncoder-ui-tx-1: #f1ece9;
-  --uncoder-ui-tx-2: #e4dedb;
-  --uncoder-ui-tx-3: #c9c3c0;
-  --uncoder-ui-tx-4: #a8a3a1;
+  --uncoder-ui-tx-1: #f2f3f5;
+  --uncoder-ui-tx-2: #e3e4e7;
+  --uncoder-ui-tx-3: #c6c8cd;
+  --uncoder-ui-tx-4: #a4a7ad;
 }
 .uncoder-ui-inspector .uncoder-ui-tabs {
   padding: 0 16px;
@@ -1020,6 +1233,11 @@ html.uncoder-ui-moving-panel iframe {
   align-items: center;
   gap: 6px;
 }
+/* The device picker never truncates ("Desktop", "Mobile"); the state picker gives way first. */
+.uncoder-ui-context__row > .uncoder-ui-ctxsel:first-of-type {
+  flex-shrink: 0;
+  min-width: 92px;
+}
 .uncoder-ui-context__label {
   margin-right: 2px;
   color: var(--uncoder-ui-tx-3);
@@ -1027,6 +1245,7 @@ html.uncoder-ui-moving-panel iframe {
 }
 .uncoder-ui-ctxsel {
   height: 26px;
+  flex: 0 1 auto;
   min-width: 0;
   padding: 0 22px 0 8px;
   border: 1px solid var(--uncoder-ui-line-2);
@@ -1046,10 +1265,57 @@ html.uncoder-ui-moving-panel iframe {
   opacity: 0.5;
   cursor: default;
 }
+/* Off desktop (or in a state): the picker stands out, so it is clear where an edit lands. */
 .uncoder-ui-ctxsel.is-scoped {
-  border-color: color-mix(in srgb, var(--uncoder-ui-accent) 55%, transparent);
-  background-color: var(--uncoder-ui-accent-soft);
-  color: var(--uncoder-ui-accent-tx);
+  border-color: var(--uncoder-ui-select);
+  background-color: var(--uncoder-ui-select-soft);
+  color: var(--uncoder-ui-select-tx);
+}
+.uncoder-ui-context__count {
+  height: 22px;
+  margin-left: auto;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 11px;
+  background: transparent;
+  color: var(--uncoder-ui-select-tx);
+  font-size: var(--uncoder-ui-fs-xs);
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.uncoder-ui-context__count:hover {
+  background: var(--uncoder-ui-select-soft);
+}
+.uncoder-ui-context__count.is-on {
+  background: var(--uncoder-ui-select);
+  color: #fff;
+}
+/* Legend for the label colours (Preferences → hints off hides it). */
+.uncoder-ui-insp__legend {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 7px 16px;
+  border-top: 1px solid var(--uncoder-ui-line);
+  color: var(--uncoder-ui-tx-3);
+  font-size: var(--uncoder-ui-fs-xs);
+  white-space: nowrap;
+}
+.uncoder-ui-insp__legend .is-set {
+  color: var(--uncoder-ui-select-tx);
+  font-weight: 500;
+}
+.uncoder-ui-insp__legend .is-inherited {
+  text-decoration: underline dotted;
+  text-decoration-color: var(--uncoder-ui-line-3);
+  text-underline-offset: 3px;
+}
+.uncoder-ui-insp__legend-tip {
+  margin-left: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .uncoder-ui-context__hint {
   margin: 5px 0 0;
@@ -1152,6 +1418,10 @@ html.uncoder-ui-moving-panel iframe {
 .uncoder-ui-sec__sum.is-default {
   color: var(--uncoder-ui-tx-4);
 }
+/* A collapsed group with values set shows them in the "set here" blue. */
+.uncoder-ui-sec__sum:not(.is-default) {
+  color: var(--uncoder-ui-select-tx);
+}
 .uncoder-ui-sec__caret {
   margin-left: auto;
   color: var(--uncoder-ui-tx-4);
@@ -1173,12 +1443,12 @@ html.uncoder-ui-moving-panel iframe {
 }
 
 /* Control rows. One anatomy everywhere (sections, Normal/Hover boxes, group popovers, repeater rows):
-   Label ● (?)  ·· helpers  |  input
-   The dot is the only "changed" signal: it sits right after the label, in a space every label keeps, so nothing
-   shifts when a value is set, and clicking it resets. Helpers (dynamic data, design variables) appear on hover or
-   focus.
+   Label (?) ↺  ·· helpers  |  input
+   The label itself says where the value comes from (blue = set here, dotted = inherited); ↺ resets a set value and
+   shows on hover. Helpers (dynamic data, design variables) appear on hover or focus.
    Layouts (rowLayout): inline = label column + input · stacked = label above a full-width input ·
-   slider = label and value on one line, the slider below · switch = label left, switch right. */
+   slider = label and value on one line, the slider below · switch = label left (wrapping), switch right.
+   A label is never cut: rowLayout stacks a row whose label would not fit the column with its icons. */
 .uncoder-ui-ctl {
   position: relative;
   grid-template-columns: 100px minmax(0, 1fr);
@@ -1206,48 +1476,42 @@ html.uncoder-ui-moving-panel iframe {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-/* Set here: the label darkens (no weight change, so nothing moves). */
+/* Where a value comes from, on the label itself (no dots): blue + medium = set on this device; a dotted underline =
+   inherited from a larger device; plain = default. Colour is never the only signal. */
 .uncoder-ui-ctl.is-set > .uncoder-ui-ctl__label > .uncoder-ui-ctl__text {
-  color: var(--uncoder-ui-tx-strong);
+  color: var(--uncoder-ui-select-tx);
+  font-weight: 500;
 }
-
-/* The set dot, right after the label. Every label keeps its space (hidden when nothing is set). */
-.uncoder-ui-ctl__dot {
-  position: relative;
+.uncoder-ui-ctl.is-inherited > .uncoder-ui-ctl__label > .uncoder-ui-ctl__text {
+  text-decoration: underline dotted;
+  text-decoration-color: var(--uncoder-ui-line-3);
+  text-underline-offset: 3px;
+}
+/* Reset: a small button after a set label, shown while the row is hovered or focused. */
+.uncoder-ui-ctl__reset {
   flex: none;
-  width: 5px;
-  height: 5px;
-  margin: 0 -1px 0 -1px;
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: -1px 0;
   padding: 0;
   border: 0;
-  border-radius: 50%;
+  border-radius: 4px;
   background: transparent;
-}
-.uncoder-ui-ctl__dot.is-set {
-  background: var(--uncoder-ui-accent);
+  color: var(--uncoder-ui-tx-3);
   cursor: pointer;
+  opacity: 0;
+  transition: opacity var(--uncoder-ui-t-fast);
 }
-.uncoder-ui-ctl__dot.is-set::after {
-  content: '';
-  position: absolute;
-  inset: -7px;
-  border-radius: 50%;
+.uncoder-ui-ctl:hover > .uncoder-ui-ctl__label > .uncoder-ui-ctl__reset,
+.uncoder-ui-ctl:focus-within > .uncoder-ui-ctl__label > .uncoder-ui-ctl__reset {
+  opacity: 1;
 }
-.uncoder-ui-ctl__dot.is-set:hover {
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--uncoder-ui-accent) 25%, transparent);
-}
-.uncoder-ui-ctl__dot.is-set:focus-visible {
-  outline: 2px solid var(--uncoder-ui-focus);
-  outline-offset: 2px;
-}
-.uncoder-ui-ctl__dot.is-inherited {
-  box-shadow: inset 0 0 0 1.5px var(--uncoder-ui-tx-4);
-}
-.uncoder-ui-ctl__dot.is-default {
-  visibility: hidden;
-}
-.uncoder-ui-app[data-uncoder-ui-theme='dark'] .uncoder-ui-ctl__dot.is-set {
-  background: var(--uncoder-ui-accent-tx);
+.uncoder-ui-ctl__reset:hover {
+  background: var(--uncoder-ui-bg-4);
+  color: var(--uncoder-ui-tx-strong);
 }
 
 /* (?) help: the control's description as a tooltip, by hover or keyboard focus. */
@@ -1323,6 +1587,11 @@ html.uncoder-ui-moving-panel iframe {
 }
 .uncoder-ui-ctl--switch > .uncoder-ui-ctl__input {
   justify-content: flex-end;
+}
+/* A long switch label wraps onto a second line instead of being cut: the switch keeps the row's right edge. */
+.uncoder-ui-ctl--switch > .uncoder-ui-ctl__label > .uncoder-ui-ctl__text {
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 .uncoder-ui-ctabs {
@@ -1427,7 +1696,7 @@ html.uncoder-ui-moving-panel iframe {
 .uncoder-ui-app.is-docked .uncoder-ui-topbar {
   border-bottom: 1px solid var(--uncoder-ui-line);
 }
-.uncoder-ui-app.is-docked .uncoder-ui-panel {
+.uncoder-ui-app.is-docked .uncoder-ui-build {
   border-right: 1px solid var(--uncoder-ui-line);
 }
 .uncoder-ui-app.is-docked .uncoder-ui-inspector {
@@ -1473,13 +1742,6 @@ html.uncoder-ui-moving-panel iframe {
   }
 }
 @media (max-width: 1180px) {
-  .uncoder-ui-aibtn-top {
-    width: 32px;
-    padding: 0;
-    justify-content: center;
-    font-size: 0;
-    gap: 0;
-  }
   .uncoder-ui-status {
     display: none;
   }
@@ -1508,8 +1770,8 @@ html.uncoder-ui-moving-panel iframe {
   align-items: center;
   gap: 6px;
   min-width: 0;
-  margin: -2px 12px 8px;
-  padding: 0 2px;
+  margin: -2px var(--uncoder-ui-pad) 8px;
+  padding: 0;
   color: var(--uncoder-ui-tx-3);
   font-size: var(--uncoder-ui-fs-xs);
   line-height: 16px;
@@ -1524,81 +1786,99 @@ html.uncoder-ui-moving-panel iframe {
   color: var(--uncoder-ui-tx-1);
   font-weight: 600;
 }
+/* Widget tiles: three to a row, icon over the name; ☆ in the corner on hover. */
 .uncoder-ui-wlist {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
 }
 .uncoder-ui-wrow {
-  width: 100%;
-  height: 34px;
+  position: relative;
+  min-width: 0;
+  height: 72px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 10px;
-  padding: 0 6px 0 8px;
-  border: 0;
-  border-radius: 8px;
-  background: transparent;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 4px 6px;
+  border: 1px solid var(--uncoder-ui-line);
+  border-radius: var(--uncoder-ui-r-lg);
+  background: var(--uncoder-ui-bg-1);
   color: var(--uncoder-ui-tx-1);
-  text-align: left;
+  text-align: center;
   cursor: grab;
   touch-action: none;
-  transition: background-color var(--uncoder-ui-t-fast);
+  transition: border-color var(--uncoder-ui-t-fast), background-color var(--uncoder-ui-t-fast), box-shadow var(--uncoder-ui-t-fast);
 }
 .uncoder-ui-wrow:hover,
 .uncoder-ui-wrow.is-active {
+  border-color: var(--uncoder-ui-line-3);
   background: var(--uncoder-ui-bg-3);
-  --uncoder-ui-wi-fill: color-mix(in srgb, var(--uncoder-ui-accent) 30%, var(--uncoder-ui-bg-1));
+  --uncoder-ui-wi-fill: color-mix(in srgb, var(--uncoder-ui-select) 16%, var(--uncoder-ui-bg-1));
+  --uncoder-ui-wi-accent: var(--uncoder-ui-select);
 }
 .uncoder-ui-wrow.is-active {
-  box-shadow: inset 0 0 0 1px var(--uncoder-ui-line-3);
+  box-shadow: 0 0 0 1px var(--uncoder-ui-select);
 }
 .uncoder-ui-wrow:active {
   cursor: grabbing;
 }
 .uncoder-ui-wrow__icon {
-  width: 20px;
+  height: 22px;
   flex-shrink: 0;
   display: flex;
+  align-items: center;
   justify-content: center;
   color: var(--uncoder-ui-tx-1);
 }
 .uncoder-ui-wrow__label {
-  flex: 1;
-  min-width: 0;
+  display: -webkit-box;
+  max-width: 100%;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: var(--uncoder-ui-fs-md);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 13px;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
+/* ⓘ The description: top-left corner on hover; its tooltip is on the icon itself, not the whole tile. */
 .uncoder-ui-wrow__info {
-  width: 24px;
-  height: 24px;
-  flex-shrink: 0;
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;
-  color: var(--uncoder-ui-tx-4);
-  cursor: help;
-  transition: color var(--uncoder-ui-t-fast), background-color var(--uncoder-ui-t-fast);
-}
-.uncoder-ui-wrow:hover .uncoder-ui-wrow__info {
+  border-radius: 5px;
   color: var(--uncoder-ui-tx-3);
+  cursor: help;
+  opacity: 0;
+  transition: opacity var(--uncoder-ui-t-fast), color var(--uncoder-ui-t-fast), background-color var(--uncoder-ui-t-fast);
+}
+.uncoder-ui-wrow:hover .uncoder-ui-wrow__info,
+.uncoder-ui-wrow.is-active .uncoder-ui-wrow__info,
+.uncoder-ui-wrow:focus-visible .uncoder-ui-wrow__info {
+  opacity: 1;
 }
 .uncoder-ui-wrow__info:hover {
-  color: var(--uncoder-ui-tx-1) !important;
+  color: var(--uncoder-ui-tx-strong);
   background: var(--uncoder-ui-bg-1);
 }
-/* ☆ Favourite: appears on hover / keyboard highlight; a pinned widget keeps a filled star. */
+/* ☆ Favourite: in the tile's corner on hover / keyboard highlight; a pinned widget keeps a filled star. */
 .uncoder-ui-wrow__fav {
-  width: 24px;
-  height: 24px;
-  flex-shrink: 0;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 20px;
+  height: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;
+  border-radius: 5px;
   color: var(--uncoder-ui-tx-4);
   cursor: pointer;
   opacity: 0;
@@ -1615,7 +1895,7 @@ html.uncoder-ui-moving-panel iframe {
   background: var(--uncoder-ui-bg-1);
 }
 .uncoder-ui-wrow__fav.is-on {
-  color: var(--uncoder-ui-accent);
+  color: var(--uncoder-ui-warning);
 }
 .uncoder-ui-wrow__fav.is-on svg {
   fill: currentColor;
@@ -1664,13 +1944,13 @@ html.uncoder-ui-moving-panel iframe {
 }
 .uncoder-ui-app,
 .uncoder-ui-portal {
-  --uncoder-ui-wi-fill: color-mix(in srgb, var(--uncoder-ui-accent) 20%, var(--uncoder-ui-bg-1));
-  --uncoder-ui-wi-accent: var(--uncoder-ui-accent);
+  --uncoder-ui-wi-fill: color-mix(in srgb, var(--uncoder-ui-tx-1) 9%, var(--uncoder-ui-bg-1));
+  --uncoder-ui-wi-accent: var(--uncoder-ui-tx-2);
 }
 .uncoder-ui-app[data-uncoder-ui-theme='dark'],
 .uncoder-ui-portal[data-uncoder-ui-theme='dark'] {
-  --uncoder-ui-wi-fill: color-mix(in srgb, var(--uncoder-ui-accent) 32%, var(--uncoder-ui-bg-1));
-  --uncoder-ui-wi-accent: var(--uncoder-ui-accent-tx);
+  --uncoder-ui-wi-fill: color-mix(in srgb, var(--uncoder-ui-tx-1) 16%, var(--uncoder-ui-bg-1));
+  --uncoder-ui-wi-accent: var(--uncoder-ui-tx-2);
 }
 .uncoder-ui-tile:hover {
   --uncoder-ui-wi-fill: color-mix(in srgb, var(--uncoder-ui-accent) 30%, var(--uncoder-ui-bg-1));
@@ -1773,8 +2053,8 @@ html.uncoder-ui-moving-panel iframe {
 }
 .uncoder-ui-dims__link.is-on {
   border: 0;
-  background: var(--uncoder-ui-accent-soft);
-  color: var(--uncoder-ui-accent-tx);
+  background: var(--uncoder-ui-select-soft);
+  color: var(--uncoder-ui-select-tx);
 }
 .uncoder-ui-dims__tools .uncoder-ui-unit {
   height: 22px;
@@ -1847,11 +2127,11 @@ html.uncoder-ui-moving-panel iframe {
   stroke-linecap: round;
 }
 .uncoder-ui-dims__cell .uncoder-ui-num:focus-within .uncoder-ui-dims__glyph-edge {
-  stroke: var(--uncoder-ui-accent);
+  stroke: var(--uncoder-ui-select);
 }
 /* Linked: every edge highlights together, so it reads as "all sides". */
 .uncoder-ui-dims.is-linked .uncoder-ui-dims__row:focus-within .uncoder-ui-dims__glyph-edge {
-  stroke: var(--uncoder-ui-accent);
+  stroke: var(--uncoder-ui-select);
 }
 
 /* Media: empty = one compact dashed row (click opens the library); chosen = preview with actions. */
@@ -2029,9 +2309,9 @@ html.uncoder-ui-moving-panel iframe {
   transform: translateY(-1px);
 }
 .uncoder-ui-iconlib__cell.is-active {
-  border-color: var(--uncoder-ui-accent);
-  box-shadow: 0 0 0 3px var(--uncoder-ui-accent-soft);
-  color: var(--uncoder-ui-accent-tx);
+  border-color: var(--uncoder-ui-select);
+  box-shadow: 0 0 0 3px var(--uncoder-ui-select-soft);
+  color: var(--uncoder-ui-select-tx);
 }
 .uncoder-ui-iconlib__empty {
   grid-column: 1 / -1;
@@ -2118,7 +2398,7 @@ html.uncoder-ui-moving-panel iframe {
   font-weight: 600;
 }
 .uncoder-ui-anim__empty:hover {
-  border-color: var(--uncoder-ui-accent);
+  border-color: var(--uncoder-ui-select);
   background: var(--uncoder-ui-bg-1);
 }
 .uncoder-ui-anim__empty-art {
@@ -2454,8 +2734,8 @@ html.uncoder-ui-moving-panel iframe {
   font-size: var(--uncoder-ui-fs-xs);
 }
 .uncoder-ui-anim__addprop:hover:not(:disabled) {
-  border-color: var(--uncoder-ui-accent);
-  color: var(--uncoder-ui-accent-tx);
+  border-color: var(--uncoder-ui-select);
+  color: var(--uncoder-ui-select-tx);
 }
 .uncoder-ui-anim__devices {
   display: flex;
@@ -2544,9 +2824,9 @@ html.uncoder-ui-moving-panel iframe {
   color: var(--uncoder-ui-tx-strong);
 }
 .uncoder-ui-easepick__item.is-active {
-  border-color: var(--uncoder-ui-accent);
-  background: var(--uncoder-ui-accent-soft);
-  color: var(--uncoder-ui-accent-tx);
+  border-color: var(--uncoder-ui-select);
+  background: var(--uncoder-ui-select-soft);
+  color: var(--uncoder-ui-select-tx);
 }
 .uncoder-ui-easepick__custom {
   display: grid;
@@ -3045,9 +3325,9 @@ html.uncoder-ui-moving-panel iframe {
   gap: 4px;
 }
 .uncoder-ui-conds__chips .uncoder-ui-chip[aria-pressed='true'] {
-  border-color: var(--uncoder-ui-accent);
-  background: var(--uncoder-ui-accent-soft);
-  color: var(--uncoder-ui-accent-tx);
+  border-color: var(--uncoder-ui-select);
+  background: var(--uncoder-ui-select-soft);
+  color: var(--uncoder-ui-select-tx);
 }
 .uncoder-ui-conds__and,
 .uncoder-ui-conds__or {
@@ -3138,7 +3418,7 @@ html.uncoder-ui-moving-panel iframe {
 }
 .uncoder-ui-ctl:hover .uncoder-ui-varbtn.uncoder-ui-iconbtn,
 .uncoder-ui-varbtn.is-active {
-  color: var(--uncoder-ui-accent-tx);
+  color: var(--uncoder-ui-select-tx);
 }
 .uncoder-ui-varchip {
   display: inline-flex;
@@ -3147,10 +3427,10 @@ html.uncoder-ui-moving-panel iframe {
   max-width: 100%;
   height: 26px;
   padding: 0 4px 0 9px;
-  border: 1px solid color-mix(in srgb, var(--uncoder-ui-accent) 40%, transparent);
+  border: 1px solid color-mix(in srgb, var(--uncoder-ui-select) 40%, transparent);
   border-radius: 999px;
-  background: var(--uncoder-ui-accent-soft);
-  color: var(--uncoder-ui-accent-tx);
+  background: var(--uncoder-ui-select-soft);
+  color: var(--uncoder-ui-select-tx);
   font-size: var(--uncoder-ui-fs-xs);
   font-weight: 600;
 }
@@ -3284,7 +3564,7 @@ html.uncoder-ui-moving-panel iframe {
   display: flex;
 }
 .uncoder-ui-nav__row.is-selected .uncoder-ui-nav__lock {
-  color: rgb(255 255 255 / 0.75);
+  color: var(--uncoder-ui-select);
 }
 
 /* ------------------------------------------------------------------ Notes */

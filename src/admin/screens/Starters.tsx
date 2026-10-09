@@ -1,4 +1,4 @@
-// Uncoder → Starter sites (Site\Library): complete sites from uncoderbuilder.com to start from. Free starters import
+// Library → Starter sites (Site\Library): complete sites from uncoderbuilder.com to start from. Free starters import
 // without a licence; Pro starters with a Pro or Agency licence. Import downloads the kit and opens the usual Site Kit
 // import (choose what comes in, what happens to existing items) in a dialog.
 import { useEffect, useMemo, useState } from 'react';
@@ -90,7 +90,7 @@ export function StartersScreen() {
   return (
     <>
       <PageHeader
-        title="Starter Sites"
+        title="Starter sites"
         description="Complete sites to start from: pages, header and footer, the Design System and every image. Import one, then make it yours."
         actions={
           catalog && (

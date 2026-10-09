@@ -1,12 +1,13 @@
 // Hover/selection outlines, element toolbar and drop indicators, drawn inside the canvas document.
 import { useEffect, useLayoutEffect, useReducer, useRef, useState } from 'react';
-import { schemaOf } from '../lib/config';
+import { config, schemaOf } from '../lib/config';
 import { iconSvg } from '../lib/icons';
 import { duplicateElement, insertElements, lockedBy, removeElements, toggleLocked, useDoc } from '../store/doc';
-import { select, useUi } from '../store/ui';
+import { select, useUi, showPanel } from '../store/ui';
 import { beginDrag } from './dnd';
 import { elementFor, frame, onGeometry, toParent } from './frame';
 import { focusInsertSearch, pick, revealAdded } from '../app/smart';
+import { openTemplate } from '../app/actions';
 import { Handles } from './Handles';
 import { useNotes } from '../store/notes';
 import { usePrefs } from '../store/prefs';
@@ -90,6 +91,11 @@ export function Overlay() {
   const hoverNode = hovered ? nodes[hovered] : null;
   const hoverRect = !dragging && hovered && !selected.includes(hovered) ? rectOf(hovered) : null;
   const toolbarRef = useRef<HTMLDivElement>(null);
+  const nameRef = useRef<HTMLSpanElement>(null);
+  const actsRef = useRef<HTMLSpanElement>(null);
+  // The name tag sits at the selection's top-left and the actions at its top-right; on an element too narrow for
+  // both, the actions follow the name tag instead.
+  const [tight, setTight] = useState(false);
 
   const selRects = selected.map((id) => ({ id, rect: rectOf(id) }));
   const primaryRect = selRects[0]?.rect ?? null;
@@ -110,6 +116,9 @@ export function Overlay() {
     const right = left + 4 + primaryRect.w;
     const flip = left + w > vw && right - w >= 0;
     if (flip !== barRight) setBarRight(flip);
+    const need = (nameRef.current?.getBoundingClientRect().width ?? 0) + (actsRef.current?.getBoundingClientRect().width ?? 0) + 12;
+    const t = need > primaryRect.w;
+    if (t !== tight) setTight(t);
   });
 
   const title = (id: string) => {
@@ -127,58 +136,30 @@ export function Overlay() {
     while (n && n.parent) n = nodes[n.parent];
     return n && isContainer(n.id) ? n.id : null;
   };
-  const sectionId = !dragging && !editing ? sectionOf(hovered ?? primary) : null;
+  // Only while the pointer is over the section (a selection inside it has its own toolbar).
+  const sectionId = !dragging && !editing ? sectionOf(hovered) : null;
   const sectionRect = sectionId ? rectOf(sectionId) : null;
   const root = useDoc.getState().doc.root;
+  const template = useTemplateHover();
   const notes = useNotes((s) => s.notes);
   const noted = new Map<string, number>();
   for (const n of notes ?? []) if (!n.resolved && nodes[n.element]) noted.set(n.element, (noted.get(n.element) ?? 0) + 1);
 
-  return (
-    <div className="uncoder-ui-ov" aria-hidden>
-      {hoverRect && hoverNode && (
-        <div className={`uncoder-ui-ov__hover${isContainer(hovered!) ? ' is-container' : ''}`} style={box(hoverRect)}>
-          <span className="uncoder-ui-ov__tag uncoder-ui-ov__tag--hover">{title(hovered!)}</span>
-        </div>
-      )}
-
-      {!dragging && parentRect && <div className="uncoder-ui-ov__parent" style={box(parentRect)} />}
-
-      {!dragging &&
-        selRects.map(({ id, rect }, i) =>
-          rect ? (
-            <div key={id} className={`uncoder-ui-ov__sel${isContainer(id) ? ' is-container' : ''}${editing === id ? ' is-editing' : ''}${rect.y < 40 ? ' is-top' : ''}${i === 0 && barRight ? ' is-bar-right' : ''}`} style={box(rect)}>
-              {i === 0 && editing !== id && (
-                <div className="uncoder-ui-ov__bar" ref={toolbarRef} data-uncoder-ui-for={id}>
-                  <span className="uncoder-ui-ov__name">{title(id)}</span>
+  const acts = (id: string) => (
+                  <span className="uncoder-ui-ov__acts" ref={actsRef}>
                   {selLock && (
                     <button type="button" className="uncoder-ui-ov__btn is-locked" title={selLock === id ? 'Locked · click to unlock' : 'Inside a locked element · click to select it'} onClick={() => (selLock === id ? toggleLocked(id) : pick(selLock))}>
                       <Svg name="lock" />
                     </button>
                   )}
-                  {isContainer(id) && (
-                    <button type="button" className="uncoder-ui-ov__btn" title="Insert inside" onClick={() => focusInsertSearch()}>
-                      <Svg name="plus" />
-                    </button>
-                  )}
                   {parentOfSel && (
-                    <button type="button" className="uncoder-ui-ov__btn uncoder-ui-ov__btn--text" title="Select parent (Esc)" onClick={() => pick(parentOfSel.id)}>
-                      Parent
+                    <button type="button" className="uncoder-ui-ov__btn" title="Select parent (Esc)" aria-label="Select parent" onClick={() => pick(parentOfSel.id)}>
+                      <Svg name="arrow-up" />
                     </button>
                   )}
-                  {!isSlot && !selLock && (
-                    <button
-                      type="button"
-                      className="uncoder-ui-ov__btn uncoder-ui-ov__btn--text uncoder-ui-ov__btn--grip"
-                      title="Drag to move"
-                      onPointerDown={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const p = toParent(e.clientX, e.clientY, zoom);
-                        beginDrag({ clientX: p.x, clientY: p.y }, { kind: 'move', ids: selected }, title(id), schemaOf(nodes[id]?.type)?.icon ?? 'box');
-                      }}
-                    >
-                      Move
+                  {isContainer(id) && (
+                    <button type="button" className="uncoder-ui-ov__btn" title="Insert inside" aria-label="Insert inside" onClick={() => focusInsertSearch()}>
+                      <Svg name="plus" />
                     </button>
                   )}
                   {!isSlot && (
@@ -217,54 +198,73 @@ export function Overlay() {
                   >
                     <Svg name="ellipsis" />
                   </button>
+                  </span>
+  );
+
+  return (
+    <div className="uncoder-ui-ov" aria-hidden>
+      {hoverRect && hoverNode && (
+        <div className={`uncoder-ui-ov__hover${isContainer(hovered!) ? ' is-container' : ''}`} style={box(hoverRect)}>
+          <span className="uncoder-ui-ov__tag uncoder-ui-ov__tag--hover">{title(hovered!)}</span>
+        </div>
+      )}
+
+      {!dragging && parentRect && <div className="uncoder-ui-ov__parent" style={box(parentRect)} />}
+
+      {!dragging &&
+        selRects.map(({ id, rect }, i) =>
+          rect ? (
+            <div key={id} className={`uncoder-ui-ov__sel${isContainer(id) ? ' is-container' : ''}${editing === id ? ' is-editing' : ''}${rect.y < 40 ? (rect.h < 160 ? ' is-top is-below' : ' is-top') : ''}${i === 0 && barRight ? ' is-bar-right' : ''}`} style={box(rect)}>
+              {i === 0 && editing !== id && (
+                <>
+                <div className="uncoder-ui-ov__bar" ref={toolbarRef} data-uncoder-ui-for={id}>
+                  {/* The name tag is also the handle: drag it to move the selection. */}
+                  <span
+                    ref={nameRef}
+                    className={`uncoder-ui-ov__name${!isSlot && !selLock ? ' is-grip' : ''}`}
+                    title={!isSlot && !selLock ? 'Drag to move' : undefined}
+                    onPointerDown={
+                      !isSlot && !selLock
+                        ? (e) => {
+                            if (e.button !== 0) return;
+                            e.preventDefault();
+                            e.stopPropagation();
+                            dragOnMove(e.nativeEvent, selected, title(id), schemaOf(nodes[id]?.type)?.icon ?? 'box', zoom);
+                          }
+                        : undefined
+                    }
+                  >
+                    {title(id)}
+                    {nodes[id]?.type === 'heading' && headingTag(id) && <span className="uncoder-ui-ov__tagname">{headingTag(id)}</span>}
+                  </span>
+                  {tight && acts(id)}
                 </div>
+                {!tight && (
+                  <div className="uncoder-ui-ov__bar is-acts" data-uncoder-ui-for={id}>
+                    {acts(id)}
+                  </div>
+                )}
+                </>
               )}
             </div>
           ) : null,
         )}
 
       {sectionId && sectionRect && (
-        <div className={`uncoder-ui-ov__sec${sectionRect.y < 30 ? ' is-top' : ''}`} style={{ transform: `translate(${Math.round(sectionRect.x + sectionRect.w / 2)}px, ${Math.round(sectionRect.y)}px)` }}>
-          <div className="uncoder-ui-ov__secbar">
-            <button
-              type="button"
-              className="uncoder-ui-ov__secbtn is-add"
-              title="Add a section above"
-              onClick={() => {
-                const ids = insertElements(null, Math.max(0, root.indexOf(sectionId)), [{ id: '', type: 'container', settings: {}, children: [] }], 'Add section');
-                revealAdded(ids);
-              }}
-            >
-              <Svg name="plus" size={13} />
-            </button>
-            <button
-              type="button"
-              className="uncoder-ui-ov__secbtn is-edit"
-              title="Edit section · drag to move · right-click for more"
-              aria-label={`Edit ${title(sectionId)}`}
-              data-uncoder-ui-for={sectionId}
-              onPointerDown={(e) => {
-                if (e.button !== 0) return;
-                e.preventDefault();
-                e.stopPropagation();
-                editOrDrag(e.nativeEvent, sectionId, title(sectionId), zoom);
-              }}
-            >
-              <Svg name="pencil" size={13} />
-            </button>
-            {!lockedBy(sectionId) && (
-            <button
-              type="button"
-              className="uncoder-ui-ov__secbtn is-delete"
-              title="Delete this section"
-              onClick={() => {
-                if (removeElements([sectionId]).length) select(null);
-              }}
-            >
-              <Svg name="x" size={13} />
-            </button>
-            )}
-          </div>
+        <div className="uncoder-ui-ov__sec" style={{ transform: `translate(${Math.round(sectionRect.x + sectionRect.w / 2)}px, ${Math.round(sectionRect.y)}px)` }}>
+          {/* Inside the section's top edge, so it never covers the site's own header above it. */}
+          <button
+            type="button"
+            className="uncoder-ui-ov__secadd"
+            title="Add a section above this one"
+            onClick={() => {
+              const ids = insertElements(null, Math.max(0, root.indexOf(sectionId)), [{ id: '', type: 'container', settings: {}, children: [] }], 'Add section');
+              revealAdded(ids);
+            }}
+          >
+            <Svg name="plus" size={12} />
+            Section
+          </button>
         </div>
       )}
 
@@ -282,7 +282,7 @@ export function Overlay() {
               style={{ translate: `${Math.round(Math.min(r.x + r.w - 10, maxX))}px ${Math.round(Math.max(r.y - 10, 0))}px` }}
               onClick={() => {
                 select(nid);
-                useUi.setState({ panel: 'notes' });
+                showPanel('notes');
               }}
             >
               <Svg name="message-square" size={11} />
@@ -290,6 +290,7 @@ export function Overlay() {
             </button>
           ) : null;
         })}
+      {!dragging && template && <TemplateHover el={template} />}
       {dragging && drop?.box && <div className="uncoder-ui-ov__target" style={box(drop.box)} />}
       {dragging && drop?.line && <div className={`uncoder-ui-ov__line${drop.line.w <= 4 ? ' is-vertical' : ''}`} style={box(drop.line)} />}
       {primaryRect && !dragging && selNode && isContainer(primary!) && <PaddingGuides id={primary!} />}
@@ -298,25 +299,77 @@ export function Overlay() {
   );
 }
 
-/** Section pencil: a click edits the section (the build panel follows), moving the pointer while pressed drags it. */
-function editOrDrag(down: PointerEvent, id: string, label: string, zoom: number) {
+/** The name tag as a handle: moving the pointer a few pixels while pressed drags the selection; a click does nothing. */
+function dragOnMove(down: PointerEvent, ids: string[], label: string, icon: string, zoom: number) {
   const doc = (down.target as Node).ownerDocument ?? document;
   const done = () => {
     doc.removeEventListener('pointermove', move, true);
-    doc.removeEventListener('pointerup', up, true);
+    doc.removeEventListener('pointerup', done, true);
   };
   const move = (e: PointerEvent) => {
-    if (Math.hypot(e.clientX - down.clientX, e.clientY - down.clientY) < 5 || lockedBy(id)) return;
+    if (Math.hypot(e.clientX - down.clientX, e.clientY - down.clientY) < 4) return;
     done();
     const p = toParent(e.clientX, e.clientY, zoom);
-    beginDrag({ clientX: p.x, clientY: p.y }, { kind: 'move', ids: [id] }, label, 'grip-horizontal');
-  };
-  const up = () => {
-    done();
-    pick(id);
+    beginDrag({ clientX: p.x, clientY: p.y }, { kind: 'move', ids }, label, icon);
   };
   doc.addEventListener('pointermove', move, true);
-  doc.addEventListener('pointerup', up, true);
+  doc.addEventListener('pointerup', done, true);
+}
+
+/** "h1"…"h6" for a heading (the level matters for SEO and is easy to get wrong), else nothing. */
+function headingTag(id: string): string {
+  const el = elementFor(id);
+  if (!el) return '';
+  const h = el.matches('h1,h2,h3,h4,h5,h6') ? el : el.querySelector(':scope > :is(h1,h2,h3,h4,h5,h6)');
+  return h ? h.tagName.toLowerCase() : '';
+}
+
+/**
+ * The header or footer around the page (another template, shown but not editable here) under the pointer. The page
+ * marks them with data-uncoder-edit-title (Theme_Builder::canvas_attrs, canvas only).
+ */
+function useTemplateHover(): HTMLElement | null {
+  const [el, setEl] = useState<HTMLElement | null>(null);
+  useEffect(() => {
+    const doc = frame.doc;
+    if (!doc) return;
+    const onMove = (e: PointerEvent) => {
+      const t = e.target as Element | null;
+      // Over its own button: keep it.
+      if (t?.closest?.('.uncoder-ui-ov__tpl')) return;
+      const hit = (t?.closest?.('[data-uncoder-edit-title]') as HTMLElement | null) ?? null;
+      const other = hit && hit.getAttribute('data-uncoder-doc') !== String(config.post.id) ? hit : null;
+      setEl((cur) => (cur === other ? cur : other));
+    };
+    const onLeave = () => setEl(null);
+    doc.addEventListener('pointermove', onMove, true);
+    doc.documentElement.addEventListener('pointerleave', onLeave);
+    return () => {
+      doc.removeEventListener('pointermove', onMove, true);
+      doc.documentElement.removeEventListener('pointerleave', onLeave);
+    };
+  }, []);
+  return el;
+}
+
+/** Outline and "Edit Header · Main header": opens that template in the editor (unsaved changes are asked about). */
+function TemplateHover({ el }: { el: HTMLElement }) {
+  if (!el.isConnected || !frame.win) return null;
+  const r = el.getBoundingClientRect();
+  const rect = { x: r.left + frame.win.scrollX, y: r.top + frame.win.scrollY, w: r.width, h: r.height };
+  const id = el.getAttribute('data-uncoder-doc') ?? '';
+  const kind = el.getAttribute('data-uncoder-edit-kind') || 'Template';
+  const title = el.getAttribute('data-uncoder-edit-title') || '';
+  const open = () => void openTemplate(id, kind);
+  return (
+    <div className="uncoder-ui-ov__tplbox" style={box(rect)}>
+      <button type="button" className="uncoder-ui-ov__tpl" title={`Open the ${kind.toLowerCase()} in the editor`} onClick={open}>
+        <Svg name="pencil" size={12} />
+        <span>Edit {kind}</span>
+        {title && <span className="uncoder-ui-ov__tplname">{title}</span>}
+      </button>
+    </div>
+  );
 }
 
 function box(r: { x: number; y: number; w: number; h: number }) {

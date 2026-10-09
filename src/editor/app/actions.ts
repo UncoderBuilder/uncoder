@@ -23,8 +23,51 @@ import { pick, revealAdded, scrollToElement } from './smart';
 import { htmlToElements, isHtml } from '../lib/htmlImport';
 import { imageFiles, uploadFile } from '../lib/media';
 import { insertTarget } from '../canvas/dnd';
+import { clearRecovery } from './recovery';
+import { choose } from './choice';
 
 const CLIPBOARD_KEY = 'uncoder-ui-clipboard';
+
+/** Set when the user chose to leave (after saving or not): the browser's "Leave site?" prompt is not shown again. */
+let leaving = false;
+
+/** Unsaved changes here before going to another editor: save them, leave them, or stay. False = stay. */
+async function readyToLeave(what: string, where: string): Promise<boolean> {
+  if (!isDirty() && !useKit.getState().dirty) return true;
+  const pick = await choose({
+    title: 'Save your changes first?',
+    body: `${what} has unsaved changes. ${where}`,
+    icon: 'save',
+    choices: [
+      { id: 'cancel', label: 'Cancel' },
+      { id: 'leave', label: "Don't save" },
+      { id: 'save', label: 'Save and continue', primary: true },
+    ],
+  });
+  if (pick === 'save') return save();
+  return pick === 'leave';
+}
+
+/**
+ * From a page, open the header / footer it shows in this tab. The template's editor then offers "← {page}" to come
+ * back (config.post.returnTo), and after saving, a "Back to {page}" button.
+ */
+export async function openTemplate(id: string, kind: string): Promise<void> {
+  const page = config.post.title || 'This page';
+  if (!(await readyToLeave(page, `The ${kind.toLowerCase()} opens in this tab; you can come back to ${page} from there.`))) return;
+  leaving = true;
+  window.location.assign(`${config.urls.admin}post.php?post=${encodeURIComponent(id)}&action=uncoder&uncoder_from=${config.post.id}`);
+}
+
+/** Back to the page this template was opened from. */
+export async function goBack(): Promise<void> {
+  const back = config.post.returnTo;
+  if (!back) return;
+  const here = config.post.title || 'This template';
+  if (!(await readyToLeave(here, `Going back to ${back.title}.`))) return;
+  leaving = true;
+  window.location.assign(back.url);
+}
 
 export async function save(status?: string): Promise<boolean> {
   const ui = useUi.getState();
@@ -47,7 +90,10 @@ export async function save(status?: string): Promise<boolean> {
     setKnownRev(res.rev);
     useDoc.setState({ savedVersion: version, status: res.status });
     useUi.setState({ lastSaved: Date.now() });
+    clearRecovery();
+    const back = config.post.returnTo;
     if (res.warnings?.length) toast(`Saved with ${res.warnings.length} adjustment(s): ${res.warnings[0]}`, 'warning', undefined, 7000);
+    else if (back) toast(`Saved. ${back.title} shows the new version.`, 'success', { label: `Back to ${back.title}`, run: () => void goBack() }, 9000);
     else toast(({ publish: 'Published', draft: 'Switched to draft', private: 'Made private', pending: 'Submitted for review' } as Record<string, string>)[status ?? ''] ?? 'Saved', 'success', undefined, 2200);
     if (res.status === 'publish') afterPublish();
     return true;
@@ -77,6 +123,7 @@ export function startAutosave(): void {
     });
   }, 120000);
   window.addEventListener('beforeunload', (e) => {
+    if (leaving) return;
     if (isDirty() || useKit.getState().dirty) {
       e.preventDefault();
       e.returnValue = '';

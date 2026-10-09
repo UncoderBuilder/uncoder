@@ -217,7 +217,14 @@ export function UnitSelect({ units, value, onChange }: { units: string[]; value:
   );
 }
 
-export function TextInput({ value, onChange, onCommit, className, ...rest }: Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'value'> & { value: string; onChange?: (v: string) => void; onCommit?: (v: string) => void }) {
+export function TextInput({
+  value,
+  onChange,
+  onCommit,
+  transform,
+  className,
+  ...rest
+}: Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'value'> & { value: string; onChange?: (v: string) => void; onCommit?: (v: string) => void; transform?: (v: string) => string }) {
   const [text, setText] = useState(value ?? '');
   const focused = useRef(false);
   useEffect(() => {
@@ -233,8 +240,10 @@ export function TextInput({ value, onChange, onCommit, className, ...rest }: Omi
         onCommit?.(text);
       }}
       onChange={(e) => {
-        setText(e.currentTarget.value);
-        onChange?.(e.currentTarget.value);
+        // A transform may rewrite what was typed or pasted (link fields add https://); the caret then goes to the end.
+        const next = transform ? transform(e.currentTarget.value) : e.currentTarget.value;
+        setText(next);
+        onChange?.(next);
       }}
       onKeyDown={(e) => {
         if (e.key === 'Enter' && onCommit) onCommit((e.target as HTMLInputElement).value);

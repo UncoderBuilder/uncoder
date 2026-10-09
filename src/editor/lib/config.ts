@@ -22,6 +22,8 @@ export interface EditorConfig {
     modified: number;
     pageTemplate: string;
     rev: string;
+    /** Opened from another document's editor (Edit Header on a page): the way back. */
+    returnTo?: { id: number; title: string; url: string } | null;
   };
   kitVersion: string;
   elements: ElementNode[];

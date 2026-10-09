@@ -4,7 +4,10 @@ import { readValue, visible, writeKey } from '../lib/schema';
 import { useUi } from '../store/ui';
 import { Icon } from '../ui/Icon';
 import { controlComponent, GROUP_TYPES, STACKED, STACKED_UI } from './registry';
-import { HelpTip, rowLayout } from './ControlRow';
+import { HelpTip, LabelText, rowLayout } from './ControlRow';
+
+/** The device icon a responsive setting shows next to its label on Tablet and Mobile. */
+const DEVICE_ICON_W = 17;
 
 interface Props {
   controls: Record<string, ControlDef>;
@@ -33,19 +36,13 @@ export function ControlForm({ controls, values, onChange, only, elementId = '' }
         const wk = writeKey(key, control, device);
         const isGroup = GROUP_TYPES.has(control.type);
         const stacked = STACKED.has(control.type) || STACKED_UI.has(control.ui ?? '') || control.type === 'textarea';
-        const layout = rowLayout(control, stacked);
+        // Forms sit in popovers and narrow lists: the 92px label column (studio.css).
+        const layout = rowLayout(control, stacked, { column: 92, extra: control.responsive && control.type !== 'code' ? DEVICE_ICON_W : 0 });
         return (
           <div key={key} className={`uncoder-ui-ctl uncoder-ui-ctl--t-${control.type} uncoder-ui-ctl--${layout}${read.own ? ' is-set' : ''}`}>
             {control.label !== undefined && (
               <div className="uncoder-ui-ctl__label">
-                <span className="uncoder-ui-ctl__text" title={control.label}>
-                  {control.label}
-                </span>
-                {read.own ? (
-                  <button type="button" className="uncoder-ui-ctl__dot is-set" aria-label={`Reset ${control.label}`} data-tip="Set · click to reset" onClick={() => onChange(isGroup ? key : wk, undefined)} />
-                ) : (
-                  <span className="uncoder-ui-ctl__dot is-default" aria-hidden />
-                )}
+                <LabelText label={control.label} own={read.own} from={null} device={device} onReset={() => onChange(isGroup ? key : wk, undefined)} />
                 {control.description && <HelpTip text={control.description} />}
                 {control.responsive && control.type !== 'code' && device !== 'desktop' && (
                   <span className="uncoder-ui-devsw is-device is-static" aria-hidden>

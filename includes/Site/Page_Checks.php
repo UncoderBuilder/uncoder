@@ -41,6 +41,8 @@ final class Page_Checks {
 	private const TOKEN    = '_uncoder_wb_report_token';
 	private const FEATURE  = 'reports';
 	private const MAX_RUN  = 10;
+	/** Pages with something to fix after the last check, page id => number of errors (the menu badge). */
+	public const ERRORS    = 'uncoder_wb_check_errors';
 
 	/** How each kind of issue is explained to the site's owner (the audit's own fixes are written for AI clients). */
 	public const PLAIN = array(
@@ -184,6 +186,7 @@ final class Page_Checks {
 		}
 		$audit   = new Audit();
 		$results = array();
+		$errors  = array();
 		foreach ( $ids as $id ) {
 			$post = get_post( $id );
 			if ( ! $post || ! current_user_can( 'edit_post', $id ) ) {
@@ -223,8 +226,42 @@ final class Page_Checks {
 					'issues'  => $issues,
 				)
 			);
+			$errors[ $id ] = count( array_filter( $issues, static fn( $i ) => 'error' === $i['severity'] ) );
 		}
+		self::remember_errors( $errors );
 		return new WP_REST_Response( array( 'results' => $results ) );
+	}
+
+	/**
+	 * Keeps the error count of each page checked (pages without errors drop out), for the badge on Page Checks.
+	 *
+	 * @param array<int,int> $errors Page id => errors found now.
+	 */
+	private static function remember_errors( array $errors ): void {
+		if ( ! $errors ) {
+			return;
+		}
+		$known = (array) get_option( self::ERRORS, array() );
+		foreach ( $errors as $id => $n ) {
+			if ( $n > 0 ) {
+				$known[ (int) $id ] = (int) $n;
+			} else {
+				unset( $known[ (int) $id ] );
+			}
+		}
+		update_option( self::ERRORS, $known, false );
+	}
+
+	/** How many pages had something to fix when they were last checked (still published ones only). */
+	public static function pages_with_errors(): int {
+		$known = (array) get_option( self::ERRORS, array() );
+		$n     = 0;
+		foreach ( array_keys( $known ) as $id ) {
+			if ( 'publish' === get_post_status( (int) $id ) ) {
+				++$n;
+			}
+		}
+		return $n;
 	}
 
 	/**

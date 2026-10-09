@@ -63,7 +63,10 @@ export function Popover({ anchor, open, onClose, children, placement = 'bottom-s
       left = edge.left - pw - offset;
       top = r.top;
     }
-    if (top + ph > vh - 8) top = Math.max(8, side.startsWith('right') || side.startsWith('left') ? vh - ph - 8 : r.top - ph - offset);
+    // No room below: a menu opened at a point (right-click) slides up just enough to fit, as system menus do; one
+    // attached to a button flips above it.
+    const atPoint = !('current' in anchor);
+    if (top + ph > vh - 8) top = Math.max(8, atPoint || side.startsWith('right') || side.startsWith('left') ? vh - ph - 8 : r.top - ph - offset);
     if (top < 8) top = 8;
     if (left + pw > vw - 8) left = vw - pw - 8;
     if (left < 8) left = 8;

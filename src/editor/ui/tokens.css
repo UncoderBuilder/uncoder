@@ -1,6 +1,7 @@
-/* Uncoder Studio tokens — "Paper" (light) and "Petrol night" (dark).
-   Palette from concurrence.com: warm sand greys, petrol ink for structure, terracotta as the one accent
-   (primary action and selection), lavender for "linked to something global", forest for "live".
+/* Uncoder Studio tokens — light and dark.
+   Neutral chrome (cool greys) so the page's own colors read true. Terracotta is the action color (Update,
+   Publish, primary buttons); blue is the system color for selection, "set here" and focus; lavender means
+   "linked to something global", forest "live".
    Type is Geist only (bundled Geist + Geist Mono files): no request leaves the site. */
 
 @font-face {
@@ -63,7 +64,7 @@
   /* Brand constants (same in both themes) */
   --uncoder-ui-brand: #083241;
   --uncoder-ui-terra: #aa412a;
-  --uncoder-ui-drop: #aa412a;
+  --uncoder-ui-drop: #1f6feb;
   --uncoder-ui-info: #1e4555;
 }
 
@@ -71,29 +72,29 @@
 .uncoder-ui-portal[data-uncoder-ui-theme='light'] {
   color-scheme: light;
   /* bg-0 around the canvas · bg-1 islands · bg-2 inputs · bg-3 hover / subtle fill · bg-4 pressed */
-  --uncoder-ui-bg-0: #e9e3e0;
+  --uncoder-ui-bg-0: #ebecef;
   --uncoder-ui-bg-1: #ffffff;
   --uncoder-ui-bg-2: #ffffff;
-  --uncoder-ui-bg-3: #f8f4f2;
-  --uncoder-ui-bg-4: #f1eae7;
-  --uncoder-ui-bg-inset: #f8f4f2;
-  --uncoder-ui-line: #e4dedb;
-  --uncoder-ui-line-2: #d7d2d0;
-  --uncoder-ui-line-3: #b3aeac;
-  --uncoder-ui-tx-strong: #100f0f;
-  --uncoder-ui-tx-1: #3b3837;
-  --uncoder-ui-tx-2: #575452;
-  --uncoder-ui-tx-3: #6f6b69;
-  --uncoder-ui-tx-4: #969290;
+  --uncoder-ui-bg-3: #f4f5f7;
+  --uncoder-ui-bg-4: #eceef1;
+  --uncoder-ui-bg-inset: #f6f7f9;
+  --uncoder-ui-line: #e3e4e8;
+  --uncoder-ui-line-2: #d3d5da;
+  --uncoder-ui-line-3: #a9acb3;
+  --uncoder-ui-tx-strong: #111214;
+  --uncoder-ui-tx-1: #2e3034;
+  --uncoder-ui-tx-2: #4a4c52;
+  --uncoder-ui-tx-3: #5f6168;
+  --uncoder-ui-tx-4: #8b8e95;
   --uncoder-ui-accent: #aa412a;
   --uncoder-ui-accent-strong: #95331d;
   --uncoder-ui-accent-hover: #95331d;
   --uncoder-ui-accent-soft: #ffefeb;
   --uncoder-ui-accent-tx: #7c2714;
   --uncoder-ui-on-accent: #ffffff;
-  --uncoder-ui-sel-fill: #083241;
+  --uncoder-ui-sel-fill: #1b1c1f;
   --uncoder-ui-on-sel-fill: #ffffff;
-  --uncoder-ui-focus: #1e4555;
+  --uncoder-ui-focus: #1f6feb;
   --uncoder-ui-danger: #b42335;
   --uncoder-ui-danger-soft: rgb(180 35 53 / 0.08);
   --uncoder-ui-danger-tx: #b42335;
@@ -106,41 +107,44 @@
   --uncoder-ui-success-soft: #e3ebe0;
   --uncoder-ui-warning: #8a5a12;
   --uncoder-ui-warning-soft: #fbf0dc;
-  --uncoder-ui-tip-bg: #083241;
+  --uncoder-ui-tip-bg: #1b1c1f;
   --uncoder-ui-tip-tx: #ffffff;
-  --uncoder-ui-scrim: rgb(16 15 15 / 0.32);
-  --uncoder-ui-shadow-island: 0 1px 0 rgb(16 15 15 / 0.03), 0 10px 28px -16px rgb(16 15 15 / 0.32);
-  --uncoder-ui-shadow-pop: 0 14px 36px -12px rgb(16 15 15 / 0.32), 0 0 0 1px var(--uncoder-ui-line);
-  --uncoder-ui-shadow-dialog: 0 28px 80px -24px rgb(16 15 15 / 0.4), 0 0 0 1px var(--uncoder-ui-line);
-  --uncoder-ui-canvas-bg: #e9e3e0;
+  --uncoder-ui-scrim: rgb(17 18 20 / 0.32);
+  --uncoder-ui-shadow-island: 0 1px 0 rgb(17 18 20 / 0.03), 0 10px 28px -16px rgb(17 18 20 / 0.3);
+  --uncoder-ui-shadow-pop: 0 14px 36px -12px rgb(17 18 20 / 0.28), 0 0 0 1px var(--uncoder-ui-line);
+  --uncoder-ui-shadow-dialog: 0 28px 80px -24px rgb(17 18 20 / 0.36), 0 0 0 1px var(--uncoder-ui-line);
+  --uncoder-ui-canvas-bg: #ebecef;
+  --uncoder-ui-select: #1f6feb;
+  --uncoder-ui-select-soft: #e8f0fe;
+  --uncoder-ui-select-tx: #1557c0;
 }
 
 .uncoder-ui-app[data-uncoder-ui-theme='dark'],
 .uncoder-ui-portal[data-uncoder-ui-theme='dark'] {
   color-scheme: dark;
-  --uncoder-ui-bg-0: #06141a;
-  --uncoder-ui-bg-1: #0c1e25;
-  --uncoder-ui-bg-2: #0f242c;
-  --uncoder-ui-bg-3: #12282f;
-  --uncoder-ui-bg-4: #1e3c47;
-  --uncoder-ui-bg-inset: #12282f;
-  --uncoder-ui-line: #1d3842;
-  --uncoder-ui-line-2: #2a4a56;
-  --uncoder-ui-line-3: #3a5e6b;
-  --uncoder-ui-tx-strong: #f8f4f2;
-  --uncoder-ui-tx-1: #e4dedb;
-  --uncoder-ui-tx-2: #c9c3c0;
-  --uncoder-ui-tx-3: #a8a3a1;
-  --uncoder-ui-tx-4: #767270;
+  --uncoder-ui-bg-0: #0e0f11;
+  --uncoder-ui-bg-1: #17181b;
+  --uncoder-ui-bg-2: #1c1d21;
+  --uncoder-ui-bg-3: #222328;
+  --uncoder-ui-bg-4: #2b2d32;
+  --uncoder-ui-bg-inset: #1c1d21;
+  --uncoder-ui-line: #2a2c31;
+  --uncoder-ui-line-2: #35373d;
+  --uncoder-ui-line-3: #4b4e56;
+  --uncoder-ui-tx-strong: #f4f5f7;
+  --uncoder-ui-tx-1: #e3e4e7;
+  --uncoder-ui-tx-2: #c6c8cd;
+  --uncoder-ui-tx-3: #a4a7ad;
+  --uncoder-ui-tx-4: #767980;
   --uncoder-ui-accent: #aa412a;
   --uncoder-ui-accent-strong: #ce6c56;
   --uncoder-ui-accent-hover: #ce6c56;
   --uncoder-ui-accent-soft: #2a1914;
   --uncoder-ui-accent-tx: #e69c8a;
   --uncoder-ui-on-accent: #ffffff;
-  --uncoder-ui-sel-fill: #1e4555;
-  --uncoder-ui-on-sel-fill: #ffffff;
-  --uncoder-ui-focus: #9db6c1;
+  --uncoder-ui-sel-fill: #e9eaee;
+  --uncoder-ui-on-sel-fill: #111214;
+  --uncoder-ui-focus: #6ea2ff;
   --uncoder-ui-danger: #f08a95;
   --uncoder-ui-danger-soft: rgb(240 138 149 / 0.14);
   --uncoder-ui-danger-tx: #f08a95;
@@ -153,11 +157,14 @@
   --uncoder-ui-success-soft: #16211a;
   --uncoder-ui-warning: #f5c46b;
   --uncoder-ui-warning-soft: rgb(245 196 107 / 0.12);
-  --uncoder-ui-tip-bg: #f8f4f2;
-  --uncoder-ui-tip-tx: #100f0f;
+  --uncoder-ui-tip-bg: #f4f5f7;
+  --uncoder-ui-tip-tx: #111214;
   --uncoder-ui-scrim: rgb(0 0 0 / 0.6);
   --uncoder-ui-shadow-island: 0 10px 28px -14px rgb(0 0 0 / 0.9);
   --uncoder-ui-shadow-pop: 0 14px 36px -12px rgb(0 0 0 / 0.9), 0 0 0 1px var(--uncoder-ui-line-2);
   --uncoder-ui-shadow-dialog: 0 28px 80px -18px rgb(0 0 0 / 0.9), 0 0 0 1px var(--uncoder-ui-line-2);
-  --uncoder-ui-canvas-bg: #06141a;
+  --uncoder-ui-canvas-bg: #0e0f11;
+  --uncoder-ui-select: #5b95ff;
+  --uncoder-ui-select-soft: rgb(91 149 255 / 0.16);
+  --uncoder-ui-select-tx: #a9c7ff;
 }

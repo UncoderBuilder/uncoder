@@ -1,4 +1,4 @@
-// Settings → Import & export: the whole site as one zip (Site\Site_Kit) — export here, import on another site.
+// Library → Import & export: the whole site as one zip (Site\Site_Kit) — export here, import on another site.
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Icon } from '@editor/ui/Icon';
 import { Button } from '@editor/ui/primitives';
@@ -105,7 +105,7 @@ export function SiteKitCard() {
 
   return (
     <>
-      <Card title="Export this site" description={`Everything you built with ${NAME} in one zip file: a backup, or the start of another site. Import it under Settings → Import & export on the other site.`}>
+      <Card title="Export this site" description={`Everything you built with ${NAME} in one zip file: a backup, or the start of another site. Import it under Library → Import & export on the other site.`}>
         <div className="uncoder-ui-kitparts">
           {ALL_PARTS.map((p) => (
             <Checkbox

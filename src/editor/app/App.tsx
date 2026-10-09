@@ -20,6 +20,8 @@ import { Toasts } from './Toasts';
 import { TopBar } from './TopBar';
 import { handleShortcut } from './shortcuts';
 import { handlePasteEvent, startAutosave } from './actions';
+import { ChoiceHost } from './choice';
+import { offerRecovery } from './recovery';
 import { TemplateConditionsDialog } from '../panels/TemplateSettings';
 import { hasConditions } from '../lib/docInfo';
 import { loadNotes } from '../store/notes';
@@ -55,6 +57,7 @@ export function App() {
     window.addEventListener('drop', noFileNav);
     startAutosave();
     loadNotes();
+    offerRecovery();
     return () => {
       window.removeEventListener('keydown', onKey);
       window.removeEventListener('paste', handlePasteEvent);
@@ -98,6 +101,7 @@ export function App() {
       <PrefsDialog />
       <StyleBook />
       <Toasts />
+      <ChoiceHost />
       <TooltipLayer root={root} />
       <SmallScreenNotice />
     </div>

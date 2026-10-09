@@ -122,7 +122,7 @@ export function Empty({ icon, title, children }: { icon: string; title: string; 
 
 /** Global tooltip layer: any element with data-tip gets a tooltip on hover/focus, with a caret pointing at it. */
 export function TooltipLayer({ root }: { root: HTMLElement | null }) {
-  const [tip, setTip] = useState<{ text: string; x: number; y: number; below: boolean } | null>(null);
+  const [tip, setTip] = useState<{ text: string; x: number; y: number; below: boolean; right?: boolean } | null>(null);
   const [pos, setPos] = useState<{ left: number; arrow: number } | null>(null);
   const ref = useRef<HTMLDivElement>(null);
   const timer = useRef<number>(0);
@@ -144,9 +144,14 @@ export function TooltipLayer({ root }: { root: HTMLElement | null }) {
         // Not over the menu or panel its own button has just opened (a click focuses the button too).
         if (el.getAttribute('aria-expanded') === 'true' || !el.isConnected) return;
         const r = el.getBoundingClientRect();
+        setPos(null);
+        // data-tip-side="right" (the rail): beside the trigger, caret pointing left.
+        if (el.getAttribute('data-tip-side') === 'right') {
+          setTip({ text: el.getAttribute('data-tip') || '', x: r.right + 10, y: r.top + r.height / 2, below: false, right: true });
+          return;
+        }
         // Above the trigger (caret pointing down) unless there is no room, then below (caret up).
         const below = r.top < 52;
-        setPos(null);
         setTip({ text: el.getAttribute('data-tip') || '', x: r.left + r.width / 2, y: below ? r.bottom + 9 : r.top - 9, below });
       }, 380);
     };
@@ -170,6 +175,10 @@ export function TooltipLayer({ root }: { root: HTMLElement | null }) {
   // Keep the bubble inside the window; the caret stays on the trigger.
   useLayoutEffect(() => {
     if (!tip || !ref.current) return;
+    if (tip.right) {
+      setPos({ left: tip.x, arrow: 0 });
+      return;
+    }
     const w = ref.current.offsetWidth;
     const left = Math.max(6, Math.min(window.innerWidth - w - 6, tip.x - w / 2));
     setPos({ left, arrow: Math.max(8, Math.min(w - 8, tip.x - left)) });
@@ -178,7 +187,7 @@ export function TooltipLayer({ root }: { root: HTMLElement | null }) {
   return createPortal(
     <div
       ref={ref}
-      className={`uncoder-ui-tooltip${tip.below ? ' is-below' : ''}`}
+      className={`uncoder-ui-tooltip${tip.below ? ' is-below' : ''}${tip.right ? ' is-right' : ''}`}
       style={{ left: pos ? pos.left : tip.x, top: tip.y, visibility: pos ? 'visible' : 'hidden', ['--uncoder-ui-tip-arrow' as string]: pos ? `${pos.arrow}px` : '50%' }}
       role="tooltip"
     >

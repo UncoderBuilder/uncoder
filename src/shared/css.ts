@@ -476,6 +476,8 @@ export function settingsCss(
       if (!ph) continue;
       if (control.selectors_dictionary && (typeof value === 'string' || typeof value === 'number') && String(value) in control.selectors_dictionary) {
         ph.VALUE = String(control.selectors_dictionary[String(value)]);
+        // An empty entry means "no CSS for this choice", for the whole control (Generator.php does the same).
+        if (ph.VALUE === '') continue;
       }
       if (type === 'font' && typeof value === 'string' && fonts && !fonts.has(value)) fonts.set(value, new Set());
 

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { schemaOf } from '../lib/config';
 import { useDoc } from '../store/doc';
 import { addNote, deleteNote, setResolved, useNotes, type Note } from '../store/notes';
-import { useUi } from '../store/ui';
+import { useUi, showPanel } from '../store/ui';
 import { pick, scrollToElement } from '../app/smart';
 import { Icon } from '../ui/Icon';
 import { Button, IconButton } from '../ui/primitives';
@@ -45,7 +45,7 @@ export function NotesPanel() {
   const go = (n: Note) => {
     if (!nodes[n.element]) return;
     pick(n.element);
-    useUi.setState({ panel: 'notes' });
+    showPanel('notes');
     scrollToElement(n.element);
   };
 

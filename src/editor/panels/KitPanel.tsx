@@ -32,6 +32,7 @@ const LABELS: Record<string, string> = {
   hover_border_color: 'Hover border color',
   shadow: 'Shadow',
   hover_effect: 'Hover effect',
+  hover_fill: 'Hover fill color',
   enabled: 'Apply to the whole site',
   body_color: 'Body text color',
   heading_color: 'Heading color',

@@ -9,17 +9,15 @@ import { AiScreen } from './screens/Ai';
 import { DashboardScreen } from './screens/Dashboard';
 import { DesignSystemScreen } from './screens/Kit';
 import { SettingsScreen } from './screens/Settings';
-import { StartersScreen } from './screens/Starters';
-import { CloudLibraryScreen } from './screens/CloudLibrary';
+import { LibraryScreen } from './screens/Library';
 import { PageChecksScreen } from './screens/PageChecks';
 import { SubmissionsScreen } from './screens/Submissions';
 import { ThemeBuilderScreen } from './screens/Templates';
 
-/** Six screens (see Admin::menu()); popups, saved sections, custom fonts and custom code are sections inside them. */
+/** The screens of Admin::menu(); starter sites, saved sections, popups, custom fonts and custom code are tabs or sections inside them. */
 const SCREENS: Record<string, () => ReactNode> = {
   uncoder: DashboardScreen,
-  'uncoder-starters': StartersScreen,
-  'uncoder-cloud': CloudLibraryScreen,
+  'uncoder-library': LibraryScreen,
   'uncoder-checks': PageChecksScreen,
   'uncoder-templates': ThemeBuilderScreen,
   'uncoder-design-system': DesignSystemScreen,

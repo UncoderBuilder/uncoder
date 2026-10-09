@@ -1,5 +1,5 @@
 import { copySelection, deleteSelection, doRedo, doUndo, duplicateSelection, moveSelection, pasteStyle, previewPage, save, selectParent, wrapSelection } from './actions';
-import { select, useUi } from '../store/ui';
+import { select, togglePanelOpen, useUi } from '../store/ui';
 import { canvasHasFocus, enterSelection, focusInsertSearch, selectSibling } from './smart';
 
 const isMac = /Mac|iPhone|iPad/.test(navigator.platform);
@@ -25,6 +25,12 @@ export function handleShortcut(e: KeyboardEvent): void {
   if (mod && key === 'k') {
     e.preventDefault();
     useUi.setState((s) => ({ palette: !s.palette }));
+    return;
+  }
+  // Ctrl/Cmd + \ collapses the build panel to the rail (more canvas), or opens it again.
+  if (mod && e.code === 'Backslash') {
+    e.preventDefault();
+    togglePanelOpen();
     return;
   }
   if (inEditable(e)) return;
@@ -75,9 +81,9 @@ export function handleShortcut(e: KeyboardEvent): void {
     focusInsertSearch();
   } else if (mod && key === 'i' && !e.shiftKey) {
     e.preventDefault();
-    useUi.setState((s) => ({ panel: s.panel === 'layers' ? 'add' : 'layers' }));
+    useUi.setState((s) => ({ panel: s.panel === 'layers' ? 'add' : 'layers', panelOpen: true }));
   } else if (e.shiftKey && key === 'n' && !mod) {
-    useUi.setState((s) => ({ panel: s.panel === 'layers' ? 'add' : 'layers' }));
+    useUi.setState((s) => ({ panel: s.panel === 'layers' ? 'add' : 'layers', panelOpen: true }));
   } else if (mod && (key === 'e' || key === 'k')) {
     // Finder (Elementor's Ctrl/Cmd+E) = the command palette.
     e.preventDefault();

@@ -2,14 +2,12 @@ import { useEffect, useState } from 'react';
 import { Button, Toggle } from '@editor/ui/primitives';
 import { NAME } from '@shared/brand';
 import { api, type PluginSettings } from '../lib/api';
-import { cfg } from '../lib/config';
+import { cfg, screenUrl } from '../lib/config';
 import { formatMs } from '../lib/format';
 import { useHashState, useResource, useUnsavedGuard } from '../lib/hooks';
-import { SiteKitCard } from './SiteKit';
 import { LicenceCard } from './Licence';
 import { WhiteLabelCard } from './WhiteLabel';
 import { HandoffCard } from './Handoff';
-import { ElementorImportCard } from './ElementorImport';
 import { ElementManager } from './Elements';
 import { SupportToolsCards } from './SupportTools';
 import { toast, toastError } from '../lib/toast';
@@ -78,14 +76,15 @@ const MODES: Array<{ value: Draft['maintenance']['mode']; label: string; help: s
   { value: 'maintenance', label: 'Maintenance', help: 'Visitors see a notice with HTTP 503, so search engines keep your pages and check back later.' },
 ];
 
-const SECTIONS = ['general', 'licence', 'white-label', 'handoff', 'access', 'privacy', 'forms', 'seo', 'elements', 'transfer', 'code', 'tools', 'advanced'] as const;
+const SECTIONS = ['general', 'elements', 'performance', 'access', 'privacy', 'forms', 'seo', 'code', 'tools', 'advanced', 'licence', 'white-label', 'handoff', 'transfer'] as const;
 type Section = (typeof SECTIONS)[number];
 const SECTION_LABEL: Record<Section, string> = {
   general: 'General',
   licence: 'Licence',
   'white-label': 'White-label',
   handoff: 'Client handoff',
-  access: 'Access & roles',
+  performance: 'Performance & fonts',
+  access: 'Site access',
   privacy: 'Cookie consent',
   forms: 'Forms',
   seo: 'Business & SEO',
@@ -98,11 +97,11 @@ const SECTION_LABEL: Record<Section, string> = {
 /** Which section each draft field lives in (for the “unsaved” dot in the nav). */
 const FIELD_SECTION: Record<keyof Draft, Section> = {
   postTypes: 'general',
-  fontDelivery: 'general',
-  applyKit: 'general',
-  performance: 'general',
+  fontDelivery: 'performance',
+  applyKit: 'performance',
+  performance: 'performance',
   maintenance: 'access',
-  roleAccess: 'access',
+  roleAccess: 'general',
   consent: 'privacy',
   captcha: 'forms',
   integrations: 'forms',
@@ -114,6 +113,10 @@ const FIELD_SECTION: Record<keyof Draft, Section> = {
 
 export function SettingsScreen() {
   const [section, setSection] = useHashState(SECTIONS, 'general');
+  useEffect(() => {
+    // Import & export moved to the Library: old links (Settings → Import & export) land there.
+    if (section === 'transfer') window.location.replace(screenUrl('uncoder-library', 'import'));
+  }, [section]);
   useSubCrumb(section === 'general' ? null : SECTION_LABEL[section]);
   const settings = useResource((signal) => api<PluginSettings>('settings', { signal }), []);
   const [draft, setDraft] = useState<Draft | null>(null);
@@ -180,10 +183,10 @@ export function SettingsScreen() {
     flagLabel: changed.has(id) ? 'Unsaved changes' : id === 'access' && s?.maintenance.mode ? 'The site is closed to visitors' : undefined,
   });
   const nav: Array<NavGroup<Section>> = [
-    { items: [item('general', 'sliders-horizontal'), ...(cfg.licensing ? [item('licence', 'key-round'), item('white-label', 'tag'), item('handoff', 'hand-helping')] : []), item('access', 'lock-keyhole')] },
-    { label: 'Visitors', items: [item('privacy', 'cookie'), item('forms', 'shield-check'), item('seo', 'building-2')] },
-    { label: 'Site', items: [item('elements', 'blocks'), item('transfer', 'arrow-left-right')] },
+    { label: 'Builder', items: [item('general', 'sliders-horizontal'), item('elements', 'blocks'), item('performance', 'gauge')] },
+    { label: 'Visitors', items: [item('access', 'lock-keyhole'), item('privacy', 'cookie'), item('forms', 'shield-check'), item('seo', 'building-2')] },
     { label: 'Developer', items: [item('code', 'code-xml'), item('tools', 'wrench'), item('advanced', 'settings-2')] },
+    ...(cfg.licensing ? [{ label: 'Account', items: [item('licence', 'key-round'), item('white-label', 'tag'), item('handoff', 'hand-helping')] }] : []),
   ];
 
   const set = <K extends keyof Draft>(key: K, value: Draft[K]) => setDraft((d) => (d ? { ...d, [key]: value } : d));
@@ -203,12 +206,7 @@ export function SettingsScreen() {
           <Embedded>
             <CodeScreen />
           </Embedded>
-        ) : section === 'transfer' ? (
-          <div className="uncoder-ui-stack">
-            <SiteKitCard />
-            <ElementorImportCard />
-          </div>
-        ) : !s || !draft ? (
+        ) : !s || !draft || section === 'transfer' ? (
           <Card>
             <SkeletonRows rows={5} cols={2} />
           </Card>
@@ -233,7 +231,42 @@ export function SettingsScreen() {
                     </SettingRow>
                   </div>
                 </Card>
-                <Card title="Performance & fonts">
+                <Card id="roles" title="Roles" description={`Who can use ${NAME}. “Content only” lets people change texts, images and links of existing designs — not add, move, delete or restyle anything. Administrators always have full access.`}>
+                  <div className="uncoder-ui-setlist">
+                    {s.roles
+                      .filter((r) => r.value !== 'administrator' && r.edits)
+                      .map((r) => {
+                        const level = draft.roleAccess[r.value] ?? 'full';
+                        return (
+                          <SettingRow key={r.value} title={r.label} htmlFor={`uncoder-ui-role-${r.value}`} danger={level === 'none'}>
+                            <select
+                              id={`uncoder-ui-role-${r.value}`}
+                              className="uncoder-ui-select"
+                              value={level}
+                              onChange={(e) => {
+                                const v = e.currentTarget.value as 'full' | 'content' | 'none';
+                                const next = { ...draft.roleAccess };
+                                if (v === 'full') delete next[r.value];
+                                else next[r.value] = v;
+                                set('roleAccess', Object.fromEntries(Object.entries(next).sort(([a], [b]) => a.localeCompare(b))) as Draft['roleAccess']);
+                              }}
+                            >
+                              {ACCESS.map((a) => (
+                                <option key={a.value} value={a.value}>
+                                  {a.label}
+                                </option>
+                              ))}
+                            </select>
+                          </SettingRow>
+                        );
+                      })}
+                  </div>
+                </Card>
+              </>
+            )}
+            {section === 'performance' && (
+              <>
+                <Card title="Fonts & styles">
                   <div className="uncoder-ui-setlist">
                     <SettingRow title="Font delivery" description="Where Design System and element fonts load from. Choose “Do not load fonts” if your theme or a font plugin already provides them (this also stops requests to Google Fonts)." htmlFor="uncoder-ui-set-fonts">
                       <select id="uncoder-ui-set-fonts" className="uncoder-ui-select" value={draft.fontDelivery} onChange={(e) => set('fontDelivery', e.currentTarget.value)}>
@@ -324,37 +357,6 @@ export function SettingsScreen() {
                         </SettingRow>
                       </>
                     )}
-                  </div>
-                </Card>
-                <Card id="roles" title="Roles" description={`Who can use ${NAME}. “Content only” lets people change texts, images and links of existing designs — not add, move, delete or restyle anything. Administrators always have full access.`}>
-                  <div className="uncoder-ui-setlist">
-                    {s.roles
-                      .filter((r) => r.value !== 'administrator' && r.edits)
-                      .map((r) => {
-                        const level = draft.roleAccess[r.value] ?? 'full';
-                        return (
-                          <SettingRow key={r.value} title={r.label} htmlFor={`uncoder-ui-role-${r.value}`} danger={level === 'none'}>
-                            <select
-                              id={`uncoder-ui-role-${r.value}`}
-                              className="uncoder-ui-select"
-                              value={level}
-                              onChange={(e) => {
-                                const v = e.currentTarget.value as 'full' | 'content' | 'none';
-                                const next = { ...draft.roleAccess };
-                                if (v === 'full') delete next[r.value];
-                                else next[r.value] = v;
-                                set('roleAccess', Object.fromEntries(Object.entries(next).sort(([a], [b]) => a.localeCompare(b))) as Draft['roleAccess']);
-                              }}
-                            >
-                              {ACCESS.map((a) => (
-                                <option key={a.value} value={a.value}>
-                                  {a.label}
-                                </option>
-                              ))}
-                            </select>
-                          </SettingRow>
-                        );
-                      })}
                   </div>
                 </Card>
               </>
@@ -555,7 +557,7 @@ export function SettingsScreen() {
                         Find & replace…
                       </Button>
                     </SettingRow>
-                    <SettingRow title="Export design (JSON)" description="The Design System and every template as one small file, without pages, media or menus. For the whole site, use Import & export.">
+                    <SettingRow title="Export design (JSON)" description="The Design System and every template as one small file, without pages, media or menus. For the whole site, use Library → Import & export.">
                       <Button
                         icon="download"
                         loading={exporting}

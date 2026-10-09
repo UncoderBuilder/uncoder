@@ -6,6 +6,7 @@ import { IconButton, Toggle } from '../ui/primitives';
 import { TextInput } from '../ui/inputs';
 import { useLookup } from './lookup';
 import type { ControlProps } from './ControlRow';
+import { isWholeLink, smartLink } from '../lib/smartLink';
 
 export function UrlControl({ control, value, placeholder, onChange }: ControlProps<LinkValue>) {
   const v: LinkValue = value ?? (placeholder as LinkValue) ?? { url: '' };
@@ -27,12 +28,22 @@ export function UrlControl({ control, value, placeholder, onChange }: ControlPro
           className="uncoder-ui-input--mono"
           value={value?.url ?? ''}
           placeholder={(placeholder as LinkValue)?.url || 'https://, /page, #anchor or search'}
+          transform={(t) => smartLink(t)}
+          onPaste={(e) => {
+            // A field holds one link: pasting a complete one replaces it (no "https://https://…", no two addresses).
+            const pasted = e.clipboardData.getData('text');
+            if (!isWholeLink(pasted)) return;
+            e.preventDefault();
+            const input = e.currentTarget;
+            Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')?.set?.call(input, pasted.trim());
+            input.dispatchEvent(new Event('input', { bubbles: true }));
+          }}
           onChange={(t) => {
             setSearch(t);
             setSuggest(!/^(https?:|\/|#|mailto:|tel:)/.test(t));
           }}
           onCommit={(url) => {
-            if (!suggest || !results?.length) set({ url: url.trim() });
+            if (!suggest || !results?.length) set({ url: smartLink(url, true) });
           }}
           aria-label={control.label}
         />

@@ -118,6 +118,23 @@ final class OAuth {
 		if ( is_array( $cached ) ) {
 			return $cached;
 		}
+		// A document that failed recently is not fetched again, and one address may not make the site fetch many
+		// different documents: anonymous requests must not turn the site into a fetcher.
+		if ( 'invalid' === $cached ) {
+			return null;
+		}
+		if ( ! Rate_Limiter::hit( 'cimd|' . Utils::client_ip(), 30, HOUR_IN_SECONDS )['allowed'] ) {
+			return null;
+		}
+		$client = self::fetch_metadata_document( $url );
+		set_transient( $key, $client ?? 'invalid', $client ? HOUR_IN_SECONDS : 5 * MINUTE_IN_SECONDS );
+		return $client;
+	}
+
+	/**
+	 * @return array<string,mixed>|null
+	 */
+	private static function fetch_metadata_document( string $url ): ?array {
 		$response = wp_safe_remote_get(
 			$url,
 			array(
@@ -146,7 +163,6 @@ final class OAuth {
 			'logo_uri'      => esc_url_raw( (string) ( $data['logo_uri'] ?? '' ), array( 'https' ) ),
 			'client_uri'    => esc_url_raw( (string) ( $data['client_uri'] ?? '' ), array( 'https' ) ),
 		);
-		set_transient( $key, $client, HOUR_IN_SECONDS );
 		return $client;
 	}
 

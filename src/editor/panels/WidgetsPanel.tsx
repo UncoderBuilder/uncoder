@@ -5,7 +5,7 @@ import { beginDrag, insertNearSelection, insertTarget } from '../canvas/dnd';
 import { Icon } from '../ui/Icon';
 import { widgetIconSvg } from '../lib/widgetIcons';
 import { useDoc } from '../store/doc';
-import { useUi } from '../store/ui';
+import { useUi, showPanel } from '../store/ui';
 import { takeInsertSearch } from '../app/smart';
 import { disabledWidgets, toggleFavorite, usePrefs } from '../store/prefs';
 
@@ -18,9 +18,9 @@ interface Group {
 }
 
 /**
- * Insert → Elements: a list of widgets (icon, name, ⓘ for the description, ☆ to pin it to Favourites). Click
- * adds at the target shown above the list, drag drops anywhere; in the search, ↑ / ↓ pick a result and Enter
- * adds it. Widgets turned off in Settings → Elements are not offered.
+ * Insert → Elements: widget tiles (icon and name; hover for the description, ☆ to pin it to Favourites), three to a
+ * row, Favourites and recent first. Click adds at the target shown above, drag drops anywhere; in the search, ↑ / ↓
+ * pick a result and Enter adds it. Widgets turned off in Settings → Elements are not offered.
  */
 export function WidgetsPanel() {
   const [query, setQuery] = useState('');
@@ -60,10 +60,9 @@ export function WidgetsPanel() {
     }
     const out: Group[] = [];
     const offered = (n: string) => !!schemas[n] && !disabledWidgets.has(n);
-    const favItems = favorites.filter(offered).map((n) => schemas[n]);
-    if (favItems.length) out.push({ id: 'favorites', label: 'Favourites', items: favItems });
-    const recentItems = recent.filter((n) => offered(n) && !favorites.includes(n)).map((n) => schemas[n]);
-    if (recentItems.length) out.push({ id: 'recent', label: 'Recent', items: recentItems });
+    // Pinned widgets, then the ones used lately: one row of quick picks.
+    const quick = [...favorites.filter(offered), ...recent.filter((n) => offered(n) && !favorites.includes(n))].slice(0, 9).map((n) => schemas[n]);
+    if (quick.length) out.push({ id: 'favorites', label: favorites.length ? 'Favourites and recent' : 'Recent', items: quick });
     for (const [id, label] of Object.entries(config.schema.categories)) {
       const items = all.filter((s) => s.category === id);
       if (items.length) out.push({ id, label, items });
@@ -141,7 +140,7 @@ export function WidgetsPanel() {
                         className={`uncoder-ui-wrow${index === active ? ' is-active' : ''}`}
                         data-uncoder-ui-tile=""
                         data-uncoder-ui-row={index}
-                        aria-description={s.description || undefined}
+                        aria-description={s.tip || s.description || undefined}
                         onDragStart={(e) => e.preventDefault()}
                         onPointerDown={(e) => {
                           if (e.button !== 0) return;
@@ -163,9 +162,9 @@ export function WidgetsPanel() {
                         <WidgetIcon name={s.name} icon={s.icon} />
                         <span className="uncoder-ui-wrow__label">{s.title}</span>
                         <FavoriteStar name={s.name} title={s.title} on={favorites.includes(s.name)} />
-                        {s.description && (
-                          <span className="uncoder-ui-wrow__info" data-tip={s.description} data-tip-force="" aria-hidden onPointerDown={(e) => e.stopPropagation()}>
-                            <Icon name="info" size={14} stroke={1.7} />
+                        {(s.tip || s.description) && (
+                          <span className="uncoder-ui-wrow__info" data-tip={s.tip || s.description} data-tip-force="" aria-hidden onPointerDown={(e) => e.stopPropagation()}>
+                            <Icon name="info" size={12} stroke={1.8} />
                           </span>
                         )}
                       </button>
@@ -179,7 +178,7 @@ export function WidgetsPanel() {
         {!groups.length && (
           <div className="uncoder-ui-widgets__none">
             No widget matches “{query}”.
-            <button type="button" className="uncoder-ui-link" onClick={() => useUi.setState({ panel: 'ai' })}>
+            <button type="button" className="uncoder-ui-link" onClick={() => showPanel('ai')}>
               Ask AI to build it instead
             </button>
           </div>
@@ -247,6 +246,6 @@ function InsertTarget() {
 
 /** Custom drawing for our widgets (lib/widgetIcons.ts); third-party widgets keep their Lucide icon. */
 function WidgetIcon({ name, icon }: { name: string; icon: string }) {
-  const svg = widgetIconSvg(name, 18);
-  return svg ? <span className="uncoder-ui-wrow__icon" dangerouslySetInnerHTML={{ __html: svg }} /> : <Icon name={icon} size={16} stroke={1.6} className="uncoder-ui-wrow__icon" />;
+  const svg = widgetIconSvg(name, 22);
+  return svg ? <span className="uncoder-ui-wrow__icon" dangerouslySetInnerHTML={{ __html: svg }} /> : <Icon name={icon} size={20} stroke={1.6} className="uncoder-ui-wrow__icon" />;
 }

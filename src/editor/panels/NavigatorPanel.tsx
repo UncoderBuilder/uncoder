@@ -8,6 +8,7 @@ import { Icon } from '../ui/Icon';
 import { elementFor } from '../canvas/frame';
 import { openCount, useNotes } from '../store/notes';
 import { scrollToElement } from '../app/smart';
+import { hiddenOn, layerName } from '../lib/layerName';
 
 /** Conditions (Behaviour → Conditions; Core\Element_Conditions). */
 const hasDisplayRules = (s: Record<string, any>) => Array.isArray(s._conditions) && s._conditions.length > 0;
@@ -142,7 +143,14 @@ const NavRow = memo(function NavRow({ id, depth, top, drag, setDrag, dropHere, s
   if (!node) return null;
   const hasChildren = node.children.length > 0;
   const container = !!schema?.container;
-  const label = node.label || schema?.title || node.type;
+  // Name and summary from the content; a string from the store, so the row re-renders only when the words change.
+  const name = useDoc((s) => {
+    const l = layerName(s.doc.nodes, id);
+    return `${l.named ? '1' : '0'}\u001f${l.name}\u001f${l.summary}`;
+  });
+  const [named, primary, summary] = name.split('\u001f');
+  const hidden = hiddenOn(node);
+  const isH1 = node.type === 'heading' && String(node.settings.tag ?? '').toLowerCase() === 'h1';
   const openNoteCount = useNotes((s) => openCount(s.notes, id));
   const badge = node.type === 'template' ? (node.settings.overrides && Object.keys(node.settings.overrides).length ? 'Component' : 'Template') : '';
 
@@ -221,7 +229,16 @@ const NavRow = memo(function NavRow({ id, depth, top, drag, setDrag, dropHere, s
           }}
         />
       ) : (
-        <span className="uncoder-ui-nav__label">{label}</span>
+        <span className={`uncoder-ui-nav__label${named === '1' ? ' is-named' : ''}${depth === 0 ? ' is-top' : ''}`} title={summary ? `${primary} · ${summary}` : primary}>
+          <span className="uncoder-ui-nav__name">{primary}</span>
+          {summary && <span className="uncoder-ui-nav__sub">{summary}</span>}
+        </span>
+      )}
+      {isH1 && <span className="uncoder-ui-nav__badge is-h1" data-tip="The page's main heading (h1)">h1</span>}
+      {hidden && (
+        <span className="uncoder-ui-nav__flag" data-tip={hidden}>
+          <Icon name="eye-off" size={12} />
+        </span>
       )}
       {badge && <span className={`uncoder-ui-nav__badge is-${badge.toLowerCase()}`}>{badge}</span>}
       {openNoteCount > 0 && (

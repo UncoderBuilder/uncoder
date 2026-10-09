@@ -1,8 +1,6 @@
-import { contentOnly } from '../lib/config';
 import { tabLabel } from '../lib/docInfo';
 import { useDoc } from '../store/doc';
-import { MAIN_PANELS, useUi, type LeftPanel as PanelView } from '../store/ui';
-import { Icon } from '../ui/Icon';
+import { useUi, type LeftPanel as PanelView } from '../store/ui';
 import { IconButton } from '../ui/primitives';
 import { WidgetsPanel } from '../panels/WidgetsPanel';
 import { NavigatorPanel } from '../panels/NavigatorPanel';
@@ -14,72 +12,77 @@ import { AiPanel } from '../panels/AiPanel';
 import { FindPanel } from '../panels/FindPanel';
 import { A11yPanel } from '../panels/A11yPanel';
 import { NotesPanel } from '../panels/NotesPanel';
+import { Rail } from './Rail';
 import { focusInsertSearch } from './smart';
 
-const TABS: Array<{ id: PanelView; label: string; icon: string; design?: boolean }> = [
-  { id: 'add', label: 'Insert', icon: 'plus', design: true },
-  { id: 'layers', label: 'Layers', icon: 'layers' },
-  { id: 'kit', label: 'Styles', icon: 'palette', design: true },
-  { id: 'page', label: tabLabel(), icon: 'file-cog', design: true },
-];
-const TOOL_TITLES: Partial<Record<PanelView, string>> = { history: 'History', find: 'Find & replace', a11y: 'Checks', ai: 'Ask AI', notes: 'Notes' };
+const TITLES: Partial<Record<PanelView, string>> = {
+  add: 'Insert',
+  library: 'Insert',
+  layers: 'Layers',
+  kit: 'Styles',
+  page: tabLabel(),
+  history: 'History',
+  find: 'Find & replace',
+  a11y: 'Checks',
+  ai: 'Ask AI',
+  notes: 'Notes',
+};
 
-/** The build panel (left island): Insert · Layers · Styles · Page, or a tool view from the command bar. */
+/**
+ * The build side: the rail, and next to it the panel for the chosen view (Insert · Layers · Styles · Page, or a
+ * tool). The panel collapses to the rail (rail button, Ctrl/⌘ \) so the canvas gets its width.
+ */
 export function LeftPanel() {
   const panel = useUi((s) => s.panel);
-  const tool = !MAIN_PANELS.includes(panel);
-  const tabs = TABS.filter((t) => !contentOnly() || !t.design);
-  const active = panel === 'library' ? 'add' : panel;
+  const open = useUi((s) => s.panelOpen);
 
   return (
-    <aside className="uncoder-ui-panel uncoder-ui-island" aria-label={tool ? TOOL_TITLES[panel] : 'Build'}>
-      {tool ? (
-        <div className="uncoder-ui-panel__tool">
-          <IconButton icon="arrow-left" label="Back" size={15} onClick={() => useUi.setState((s) => ({ panel: s.mainPanel }))} />
-          <h2 className="uncoder-ui-panel__title">{TOOL_TITLES[panel]}</h2>
-        </div>
-      ) : (
-        <div className="uncoder-ui-tabs uncoder-ui-tabs--build" role="tablist" aria-label="Build panel">
-          {tabs.map((t) => (
-            <button key={t.id} type="button" role="tab" aria-selected={active === t.id} className={`uncoder-ui-tabs__tab${active === t.id ? ' is-active' : ''}`} onClick={() => (t.id === 'add' ? focusInsertSearch() : useUi.setState({ panel: t.id }))}>
-              <Icon name={t.icon} size={16} className="uncoder-ui-tabs__icon" />
-              <span>{t.label}</span>
-            </button>
-          ))}
+    <aside className={`uncoder-ui-build uncoder-ui-island${open ? ' is-open' : ''}`} aria-label="Build">
+      <Rail />
+      {open && (
+        <div className="uncoder-ui-panel" role="region" aria-label={TITLES[panel]}>
+          <div className="uncoder-ui-panel__head">
+            <h2 className="uncoder-ui-panel__title">{TITLES[panel]}</h2>
+            <div className="uncoder-ui-panel__actions">
+              {(panel === 'add' || panel === 'library') && <InsertSwitch sections={panel === 'library'} />}
+              {panel === 'layers' && <LayersActions />}
+            </div>
+          </div>
+          <div className={`uncoder-ui-panel__body is-${panel}`}>
+            {(panel === 'add' || panel === 'library') && <div className="uncoder-ui-insert">{panel === 'library' ? <LibraryPanel /> : <WidgetsPanel />}</div>}
+            {panel === 'layers' && (
+              <div className="uncoder-ui-layers">
+                <NavigatorPanel />
+              </div>
+            )}
+            {panel === 'kit' && <KitPanel />}
+            {panel === 'page' && <PagePanel />}
+            {panel === 'history' && <HistoryPanel />}
+            {panel === 'ai' && <AiPanel />}
+            {panel === 'find' && <FindPanel />}
+            {panel === 'a11y' && <A11yPanel />}
+            {panel === 'notes' && <NotesPanel />}
+          </div>
         </div>
       )}
-      <div className="uncoder-ui-panel__body">
-        {(panel === 'add' || panel === 'library') && <InsertView sections={panel === 'library'} />}
-        {panel === 'layers' && <LayersView />}
-        {panel === 'kit' && <KitPanel />}
-        {panel === 'page' && <PagePanel />}
-        {panel === 'history' && <HistoryPanel />}
-        {panel === 'ai' && <AiPanel />}
-        {panel === 'find' && <FindPanel />}
-        {panel === 'a11y' && <A11yPanel />}
-        {panel === 'notes' && <NotesPanel />}
-      </div>
     </aside>
   );
 }
 
-function InsertView({ sections }: { sections: boolean }) {
+function InsertSwitch({ sections }: { sections: boolean }) {
   return (
-    <div className="uncoder-ui-insert">
-      <div className="uncoder-ui-seg uncoder-ui-seg--sm uncoder-ui-insert__switch" role="radiogroup" aria-label="Insert">
-        <button type="button" role="radio" aria-checked={!sections} className={`uncoder-ui-seg__item${!sections ? ' is-active' : ''}`} onClick={() => focusInsertSearch()}>
-          Elements
-        </button>
-        <button type="button" role="radio" aria-checked={sections} className={`uncoder-ui-seg__item${sections ? ' is-active' : ''}`} onClick={() => useUi.setState({ panel: 'library' })}>
-          Sections
-        </button>
-      </div>
-      {sections ? <LibraryPanel /> : <WidgetsPanel />}
+    <div className="uncoder-ui-seg uncoder-ui-seg--sm" role="radiogroup" aria-label="Insert">
+      <button type="button" role="radio" aria-checked={!sections} className={`uncoder-ui-seg__item${!sections ? ' is-active' : ''}`} onClick={() => focusInsertSearch()}>
+        Elements
+      </button>
+      <button type="button" role="radio" aria-checked={sections} className={`uncoder-ui-seg__item${sections ? ' is-active' : ''}`} onClick={() => useUi.setState({ panel: 'library' })}>
+        Sections
+      </button>
     </div>
   );
 }
 
-function LayersView() {
+function LayersActions() {
   const count = useDoc((s) => Object.keys(s.doc.nodes).length);
   const anyCollapsed = useUi((s) => Object.values(s.navigatorCollapsed).some(Boolean));
   // Expand everything, or fold every element that has children (like Elementor's navigator toggle).
@@ -92,14 +95,11 @@ function LayersView() {
     useUi.setState({ navigatorCollapsed: Object.fromEntries(Object.values(nodes).filter((n) => n.children.length).map((n) => [n.id, true])) });
   };
   return (
-    <div className="uncoder-ui-layers">
-      <div className="uncoder-ui-layers__meta">
-        <span>
-          {count} element{count === 1 ? '' : 's'}
-        </span>
-        <IconButton icon={anyCollapsed ? 'chevrons-up-down' : 'chevrons-down-up'} label={anyCollapsed ? 'Expand all' : 'Collapse all'} size={14} onClick={toggleAll} />
-      </div>
-      <NavigatorPanel />
-    </div>
+    <>
+      <span className="uncoder-ui-panel__count" data-tip={`${count} element${count === 1 ? '' : 's'} on this page`}>
+        {count}
+      </span>
+      <IconButton icon={anyCollapsed ? 'chevrons-up-down' : 'chevrons-down-up'} label={anyCollapsed ? 'Expand all' : 'Collapse all'} size={14} onClick={toggleAll} />
+    </>
   );
 }

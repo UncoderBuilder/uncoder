@@ -143,7 +143,7 @@ export function LibraryPanel() {
 
   return (
     <div className="uncoder-ui-library">
-      <div className="uncoder-ui-kit__label">Layouts</div>
+      <LibGroup id="layouts" label="Layouts" first>
       <div className="uncoder-ui-library__structs">
         {STRUCTURES.map((s) => (
           <button key={s.id} type="button" className="uncoder-ui-addsec__struct" title={s.label} aria-label={s.label} onClick={() => insert([structureTree(s.cols)], 'Add section', insertionIndex(), true)}>
@@ -153,8 +153,9 @@ export function LibraryPanel() {
           </button>
         ))}
       </div>
+      </LibGroup>
 
-      <div className="uncoder-ui-kit__label">Patterns</div>
+      <LibGroup id="patterns" label="Patterns">
       <label className="uncoder-ui-search">
         <Icon name="search" size={14} />
         <input type="search" placeholder="Search patterns" value={pq} onChange={(e) => setPq(e.currentTarget.value)} aria-label="Search patterns" />
@@ -197,12 +198,21 @@ export function LibraryPanel() {
       {patternError && <p className="uncoder-ui-note">Could not load patterns: {patternError}</p>}
       {patterns && !visible.length && <p className="uncoder-ui-note">No pattern matches “{pq}”.</p>}
       {patterns && <p className="uncoder-ui-note">Inserted after the selected section, or at the end of the page.</p>}
+      </LibGroup>
 
-      {config.licensing && <PremiumSections insert={(nodes, label) => insert(nodes, label, insertionIndex())} />}
+      {config.licensing && (
+        <LibGroup id="premium" label="Premium sections">
+          <PremiumSections bare insert={(nodes, label) => insert(nodes, label, insertionIndex())} />
+        </LibGroup>
+      )}
 
-      {config.cloud?.read && <CloudSections insert={(nodes, label) => insert(nodes, label, insertionIndex())} />}
+      {config.cloud?.read && (
+        <LibGroup id="cloud" label="Cloud library">
+          <CloudSections bare insert={(nodes, label) => insert(nodes, label, insertionIndex())} />
+        </LibGroup>
+      )}
 
-      <div className="uncoder-ui-kit__label">Saved sections</div>
+      <LibGroup id="saved" label="Saved sections">
       <label className="uncoder-ui-search">
         <Icon name="search" size={14} />
         <input type="search" placeholder="Search saved sections" value={q} onChange={(e) => setQ(e.currentTarget.value)} aria-label="Search saved sections" />
@@ -239,7 +249,27 @@ export function LibraryPanel() {
         ))}
         {sections && !sections.length && <p className="uncoder-ui-note">No saved sections yet. Right-click any element and choose “Save as template”, or ask your AI client to create one.</p>}
       </div>
+      </LibGroup>
     </div>
+  );
+}
+
+/**
+ * A collapsible group of Insert › Sections (same look as the widget groups in Elements). The first group starts
+ * open; what you open or close is remembered.
+ */
+function LibGroup({ id, label, first = false, children }: { id: string; label: string; first?: boolean; children: React.ReactNode }) {
+  const key = `library:${id}`;
+  const stored = useUi((s) => s.openSections[key]);
+  const open = stored ?? first;
+  return (
+    <section className={`uncoder-ui-wgroup uncoder-ui-libgroup${open ? ' is-open' : ''}`}>
+      <button type="button" className="uncoder-ui-wgroup__head" aria-expanded={open} onClick={() => useUi.setState((s) => ({ openSections: { ...s.openSections, [key]: !open } }))}>
+        <span>{label}</span>
+        <Icon name="chevron-right" size={12} className="uncoder-ui-wgroup__caret" />
+      </button>
+      {open && <div className="uncoder-ui-libgroup__body">{children}</div>}
+    </section>
   );
 }
 
@@ -247,7 +277,7 @@ export function LibraryPanel() {
  * The agency's private cloud library (Site\Cloud_Library): sections, pages and templates saved from any site on the
  * licence. Inserting copies their images into this site and adds the global classes this site does not have.
  */
-function CloudSections({ insert }: { insert: (nodes: ElementNode[], label: string) => void }) {
+function CloudSections({ insert, bare = false }: { insert: (nodes: ElementNode[], label: string) => void; bare?: boolean }) {
   const [list, setList] = useState<CloudList | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [q, setQ] = useState('');
@@ -291,7 +321,7 @@ function CloudSections({ insert }: { insert: (nodes: ElementNode[], label: strin
 
   return (
     <>
-      <div className="uncoder-ui-kit__label">Cloud library</div>
+      {!bare && <div className="uncoder-ui-kit__label">Cloud library</div>}
       {list && list.items.some((i) => i.kind !== 'kit') && (
         <label className="uncoder-ui-search">
           <Icon name="search" size={14} />

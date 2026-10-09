@@ -67,7 +67,9 @@ final class Starters {
 		 *
 		 * @param array<string, array<string,mixed>> $out Starters by id.
 		 */
-		return (array) apply_filters( 'uncoder_starter_sites', $out );
+		$out = (array) apply_filters( 'uncoder_wb/starters/list', $out );
+		// The earlier name, outside the uncoder_wb/ prefix: still honoured.
+		return (array) apply_filters_deprecated( 'uncoder_starter_sites', array( $out ), '0.1.2', 'uncoder_wb/starters/list' );
 	}
 
 	/**

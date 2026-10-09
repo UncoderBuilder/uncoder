@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { schemas } from '../lib/config';
 import { insertNearSelection } from '../canvas/dnd';
-import { placeInspector, setDevice, useUi } from '../store/ui';
+import { placeInspector, setDevice, useUi, showPanel } from '../store/ui';
 import { Icon } from '../ui/Icon';
 import { doRedo, doUndo, previewPage, save, copySelection, pasteAfterSelection, duplicateSelection, deleteSelection, wrapSelection, moveSelection } from './actions';
 import { MOD } from './shortcuts';
@@ -31,15 +31,15 @@ function commands(): Command[] {
     { id: 'up', label: 'Move element up', icon: 'arrow-up', group: 'Edit', shortcut: `${MOD}↑`, run: () => moveSelection(-1) },
     { id: 'down', label: 'Move element down', icon: 'arrow-down', group: 'Edit', shortcut: `${MOD}↓`, run: () => moveSelection(1) },
     { id: 'del', label: 'Delete element', icon: 'trash-2', group: 'Edit', shortcut: 'Del', run: deleteSelection },
-    { id: 'nav', label: 'Open layers', icon: 'layers', group: 'Panels', shortcut: '⇧N', run: () => useUi.setState({ panel: 'layers' }) },
-    { id: 'add', label: 'Insert elements', icon: 'plus', group: 'Panels', shortcut: '⇧A', run: () => useUi.setState({ panel: 'add' }) },
-    { id: 'library', label: 'Insert sections & saved templates', icon: 'layout-template', group: 'Panels', run: () => useUi.setState({ panel: 'library' }) },
-    { id: 'kit', label: 'Styles (Design System)', icon: 'palette', group: 'Panels', run: () => useUi.setState({ panel: 'kit' }) },
-    { id: 'page', label: settingsTitle(), icon: 'file-cog', group: 'Panels', run: () => useUi.setState({ panel: 'page' }) },
-    { id: 'history', label: 'History', icon: 'history', group: 'Panels', run: () => useUi.setState({ panel: 'history' }) },
-    { id: 'find', label: 'Find & replace', icon: 'replace-all', group: 'Panels', run: () => useUi.setState({ panel: 'find' }) },
-    { id: 'a11y', label: 'Accessibility checks', icon: 'shield-check', group: 'Panels', run: () => useUi.setState({ panel: 'a11y' }) },
-    { id: 'ai', label: 'Ask AI', icon: 'sparkles', group: 'Panels', run: () => useUi.setState({ panel: 'ai' }) },
+    { id: 'nav', label: 'Open layers', icon: 'layers', group: 'Panels', shortcut: '⇧N', run: () => showPanel('layers') },
+    { id: 'add', label: 'Insert elements', icon: 'plus', group: 'Panels', shortcut: '⇧A', run: () => showPanel('add') },
+    { id: 'library', label: 'Insert sections & saved templates', icon: 'layout-template', group: 'Panels', run: () => showPanel('library') },
+    { id: 'kit', label: 'Styles (Design System)', icon: 'palette', group: 'Panels', run: () => showPanel('kit') },
+    { id: 'page', label: settingsTitle(), icon: 'file-cog', group: 'Panels', run: () => showPanel('page') },
+    { id: 'history', label: 'History', icon: 'history', group: 'Panels', run: () => showPanel('history') },
+    { id: 'find', label: 'Find & replace', icon: 'replace-all', group: 'Panels', run: () => showPanel('find') },
+    { id: 'a11y', label: 'Accessibility checks', icon: 'shield-check', group: 'Panels', run: () => showPanel('a11y') },
+    { id: 'ai', label: 'Ask AI', icon: 'sparkles', group: 'Panels', run: () => showPanel('ai') },
     { id: 'desktop', label: 'Desktop view', icon: 'monitor', group: 'View', run: () => setDevice('desktop') },
     { id: 'tablet', label: 'Tablet view', icon: 'tablet', group: 'View', run: () => setDevice('tablet') },
     { id: 'mobile', label: 'Mobile view', icon: 'smartphone', group: 'View', run: () => setDevice('mobile') },

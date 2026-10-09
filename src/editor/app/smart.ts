@@ -79,7 +79,7 @@ let pendingSearch: string | null | undefined;
 export function focusInsertSearch(text?: string): void {
   if (contentOnly()) return;
   pendingSearch = text ?? null;
-  if (useUi.getState().panel !== 'add') useUi.setState({ panel: 'add' });
+  if (useUi.getState().panel !== 'add' || !useUi.getState().panelOpen) useUi.setState({ panel: 'add', panelOpen: true });
   window.dispatchEvent(new Event('uncoder-ui:insert-search'));
 }
 

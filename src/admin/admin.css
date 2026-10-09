@@ -591,6 +591,22 @@ body.uncoder-ui-admin-screen #wpfooter {
   gap: 8px;
   flex-shrink: 0;
 }
+/* Phones: the actions (search, buttons) go under the title instead of squeezing it. */
+@media (max-width: 600px) {
+  .uncoder-ui-admin-root .uncoder-ui-sechead {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .uncoder-ui-admin-root .uncoder-ui-sechead__actions {
+    flex-wrap: wrap;
+    flex-shrink: 1;
+  }
+  .uncoder-ui-admin-root .uncoder-ui-sechead__actions .uncoder-ui-searchbox {
+    flex: 1 1 100%;
+    width: auto !important;
+  }
+}
 
 /* ------------------------------------------------------------------ Workspace: section nav + content */
 
@@ -1979,6 +1995,7 @@ body.uncoder-ui-admin-screen #wpfooter {
   border: 0;
   background: transparent;
   color: var(--uncoder-ui-tx-3);
+  flex-shrink: 0;
   font-weight: 500;
   white-space: nowrap;
   transition: color var(--uncoder-ui-t-fast);
@@ -4780,6 +4797,22 @@ body.uncoder-ui-admin-screen #wpfooter {
   align-items: center;
   gap: 6px;
   text-decoration: none;
+}
+
+/* ------------------------------------------------------------------ Style book (Design System → Style book) */
+
+.uncoder-ui-admin-root .uncoder-ui-stylebook {
+  overflow: hidden;
+  border: 1px solid var(--uncoder-ui-line);
+  border-radius: var(--uncoder-ui-r-xl, 12px);
+  background: #fff;
+}
+.uncoder-ui-admin-root .uncoder-ui-stylebook iframe {
+  display: block;
+  width: 100%;
+  height: calc(100vh - 290px);
+  min-height: 520px;
+  border: 0;
 }
 
 /* ------------------------------------------------------------------ White-label (Settings → White-label) */

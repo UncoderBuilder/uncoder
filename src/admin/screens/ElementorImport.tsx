@@ -1,4 +1,4 @@
-// Settings → Import & export: convert Elementor pages, templates and Site Settings into Uncoder designs
+// Library → Import & export: convert Elementor pages, templates and Site Settings into Uncoder designs
 // (Site\Elementor_Import). The Elementor data is never changed, so every conversion can be compared or undone.
 import { useMemo, useRef, useState, type DragEvent } from 'react';
 import { Icon } from '@editor/ui/Icon';

@@ -1,13 +1,13 @@
 /* Styles loaded inside the canvas iframe while editing (preview mode only). */
 
 .uncoder-ui-ov-root {
-  --uncoder-ui-sel: #aa412a;
-  --uncoder-ui-sel-soft: rgb(170 65 42 / 0.1);
-  --uncoder-ui-drop: #aa412a;
-  --uncoder-ui-line: #5c767e;
-  --uncoder-ui-bar: #083241;
-  --uncoder-ui-bar-tx: #f1eae7;
-  --uncoder-ui-bar-name: #ef8a6f;
+  --uncoder-ui-sel: #1f6feb;
+  --uncoder-ui-sel-soft: rgb(31 111 235 / 0.1);
+  --uncoder-ui-drop: #1f6feb;
+  --uncoder-ui-line: #6f9ff0;
+  --uncoder-ui-bar: #1b1c1f;
+  --uncoder-ui-bar-tx: #f4f5f7;
+  --uncoder-ui-bar-name: #9cc1ff;
   --uncoder-ui-ov-font: 500 11px/16px 'Geist UC', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   position: absolute;
   top: 0;
@@ -47,13 +47,13 @@
 .uncoder-ui-ov__parent {
   border: 1px dashed var(--uncoder-ui-line);
 }
-/* Selection: 2px terracotta with a white halo, so it stays visible on dark (petrol) sections too. */
+/* Selection: 2px blue with a white halo, so it stays visible on dark sections too. */
 .uncoder-ui-ov__sel {
   border: 2px solid var(--uncoder-ui-sel);
   box-shadow: 0 0 0 1px #fff, inset 0 0 0 1px rgb(255 255 255 / 0.9);
 }
 .uncoder-ui-ov__sel.is-editing {
-  border-color: rgb(170 65 42 / 0.55);
+  border-color: rgb(31 111 235 / 0.55);
 }
 .uncoder-ui-ov__tag {
   position: absolute;
@@ -83,20 +83,15 @@
 .uncoder-ui-ov__ic svg {
   display: block;
 }
-/* Quick toolbar above the selection */
+/* Selection toolbar: a blue name tag (the drag handle; "· h1" on headings) and a small dark group of actions. */
 .uncoder-ui-ov__bar {
   position: absolute;
   left: -2px;
   bottom: calc(100% + 6px);
   display: flex;
   align-items: center;
-  gap: 1px;
-  height: 28px;
-  padding: 2px;
-  border-radius: 8px;
-  background: var(--uncoder-ui-bar);
-  color: var(--uncoder-ui-bar-tx);
-  box-shadow: 0 8px 22px -8px rgb(0 0 0 / 0.55);
+  gap: 4px;
+  height: 26px;
   font: var(--uncoder-ui-ov-font);
   white-space: nowrap;
   pointer-events: auto;
@@ -104,17 +99,52 @@
   transform-origin: left bottom;
 }
 .uncoder-ui-ov__name {
-  padding: 0 8px 0 7px;
-  color: var(--uncoder-ui-bar-name);
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 220px;
+  padding: 0 8px;
+  overflow: hidden;
+  border-radius: 6px;
+  background: var(--uncoder-ui-sel);
+  color: #fff;
   font-weight: 600;
+  text-overflow: ellipsis;
+  box-shadow: 0 6px 16px -8px rgb(0 0 0 / 0.5);
+}
+.uncoder-ui-ov__name.is-grip {
+  cursor: grab;
+}
+.uncoder-ui-ov__name.is-grip:active {
+  cursor: grabbing;
+}
+.uncoder-ui-ov__tagname {
+  padding: 0 4px;
+  border-radius: 4px;
+  background: rgb(255 255 255 / 0.2);
+  font-weight: 600;
+  font-size: 10px;
+  line-height: 15px;
+}
+.uncoder-ui-ov__acts {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  height: 26px;
+  padding: 1px;
+  border-radius: 7px;
+  background: var(--uncoder-ui-bar);
+  color: var(--uncoder-ui-bar-tx);
+  box-shadow: 0 8px 22px -8px rgb(0 0 0 / 0.55);
 }
 .uncoder-ui-ov__btn {
   height: 24px;
-  min-width: 26px;
+  min-width: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 6px;
+  padding: 0 5px;
   border: 0;
   border-radius: 6px;
   background: transparent;
@@ -123,17 +153,22 @@
   cursor: pointer;
 }
 .uncoder-ui-ov__btn:hover {
-  background: rgb(255 255 255 / 0.12);
+  background: rgb(255 255 255 / 0.14);
 }
-.uncoder-ui-ov__btn--text {
-  padding: 0 8px;
+/* The actions on their own, at the selection's top-right (the name tag keeps the top-left). */
+.uncoder-ui-ov__bar.is-acts {
+  left: auto;
+  right: -2px;
+  transform-origin: right bottom;
 }
-.uncoder-ui-ov__btn--grip {
-  cursor: grab;
+.uncoder-ui-ov__sel.is-top .uncoder-ui-ov__bar.is-acts {
+  left: auto;
+  right: 6px;
+  transform-origin: right top;
 }
-.uncoder-ui-ov__name + .uncoder-ui-ov__btn,
-.uncoder-ui-ov__btn + .uncoder-ui-ov__btn {
-  box-shadow: -1px 0 0 rgb(255 255 255 / 0.1);
+.uncoder-ui-ov__sel.is-top.is-below .uncoder-ui-ov__bar.is-acts {
+  left: auto;
+  right: -2px;
 }
 /* Element at the very top of the page: toolbar goes inside, below the top edge. */
 .uncoder-ui-ov__sel.is-top .uncoder-ui-ov__bar {
@@ -141,6 +176,11 @@
   top: 6px;
   left: 6px;
   transform-origin: left top;
+}
+/* A short element at the very top (a header row, the button in it): the toolbar goes just below it, covering nothing. */
+.uncoder-ui-ov__sel.is-top.is-below .uncoder-ui-ov__bar {
+  top: calc(100% + 6px);
+  left: -2px;
 }
 /* Near the right edge of the page: the toolbar ends at the selection's right edge instead. */
 .uncoder-ui-ov__sel.is-bar-right .uncoder-ui-ov__bar {
@@ -152,6 +192,9 @@
   left: auto;
   right: 6px;
   transform-origin: right top;
+}
+.uncoder-ui-ov__sel.is-top.is-below.is-bar-right .uncoder-ui-ov__bar {
+  right: -2px;
 }
 /* Drop feedback */
 .uncoder-ui-ov__target {
@@ -181,7 +224,7 @@
   margin: 0 0 0 -4.5px;
 }
 .uncoder-ui-ov__pad {
-  background: repeating-linear-gradient(135deg, rgb(170 65 42 / 0.12) 0 4px, rgb(170 65 42 / 0.04) 4px 8px);
+  background: repeating-linear-gradient(135deg, rgb(31 111 235 / 0.12) 0 4px, rgb(31 111 235 / 0.04) 4px 8px);
 }
 
 /* Empty container placeholder */
@@ -195,14 +238,14 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  border: 1.5px dashed rgb(170 65 42 / 0.35);
+  border: 1.5px dashed rgb(31 111 235 / 0.35);
   border-radius: 8px;
-  background: rgb(170 65 42 / 0.03);
+  background: rgb(31 111 235 / 0.03);
   transition: border-color 0.15s, background-color 0.15s;
 }
 .uncoder-ui-empty-con.is-target {
-  border-color: #aa412a;
-  background: rgb(170 65 42 / 0.07);
+  border-color: #1f6feb;
+  background: rgb(31 111 235 / 0.07);
 }
 .uncoder-ui-empty-con.is-slot {
   min-height: 72px;
@@ -216,10 +259,10 @@
   padding: 0;
   border: 0;
   border-radius: 50%;
-  background: #aa412a;
+  background: #1f6feb;
   color: #fff;
   cursor: pointer;
-  box-shadow: 0 4px 12px -4px rgb(170 65 42 / 0.7);
+  box-shadow: 0 4px 12px -4px rgb(31 111 235 / 0.7);
   transition: transform 0.15s;
 }
 .uncoder-ui-empty-con__add:hover {
@@ -227,7 +270,7 @@
 }
 .uncoder-ui-empty-con__hint {
   font: 500 11px/16px 'Geist UC', ui-sans-serif, system-ui, sans-serif;
-  color: rgb(170 65 42 / 0.85);
+  color: rgb(31 111 235 / 0.85);
 }
 
 /* Add section bar */
@@ -246,16 +289,16 @@
   gap: 6px;
   height: 34px;
   padding: 0 14px;
-  border: 1.5px dashed rgb(170 65 42 / 0.5);
+  border: 1.5px dashed rgb(31 111 235 / 0.5);
   border-radius: 999px;
-  background: rgb(170 65 42 / 0.04);
-  color: #7c2714;
+  background: rgb(31 111 235 / 0.04);
+  color: #1557c0;
   font: inherit;
   cursor: pointer;
 }
 .uncoder-ui-addsec__btn:hover {
   border-style: solid;
-  background: rgb(170 65 42 / 0.08);
+  background: rgb(31 111 235 / 0.08);
 }
 .uncoder-ui-addsec__btn span {
   display: flex;
@@ -267,9 +310,9 @@
   gap: 14px;
   width: min(560px, 100%);
   padding: 18px;
-  border: 1.5px dashed rgb(170 65 42 / 0.45);
+  border: 1.5px dashed rgb(31 111 235 / 0.45);
   border-radius: 14px;
-  background: rgb(170 65 42 / 0.03);
+  background: rgb(31 111 235 / 0.03);
   color: #100f0f;
 }
 .uncoder-ui-addsec__intro {
@@ -304,13 +347,13 @@
 .uncoder-ui-addsec__struct span {
   flex-basis: 0;
   border-radius: 4px;
-  background: #e4dedb;
+  background: #e3e4e8;
 }
 .uncoder-ui-addsec__struct:hover {
-  border-color: #aa412a;
+  border-color: #1f6feb;
 }
 .uncoder-ui-addsec__struct:hover span {
-  background: rgb(170 65 42 / 0.25);
+  background: rgb(31 111 235 / 0.25);
 }
 .uncoder-ui-addsec__close {
   position: absolute;
@@ -329,6 +372,55 @@
 }
 
 /* Editing affordances */
+/* A header or footer around the page (another template): lavender outline and an "Edit Header" button on hover. */
+.uncoder-ui-ov__tplbox {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-shadow: inset 0 0 0 2px rgb(97 86 105 / 0.75);
+  background: rgb(97 86 105 / 0.05);
+  pointer-events: none;
+  z-index: 4;
+}
+.uncoder-ui-ov__tpl {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 12px 0 10px;
+  border: 0;
+  border-radius: 14px;
+  background: #615669;
+  color: #fff;
+  font: 600 12px/1 'Geist UC', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  white-space: nowrap;
+  box-shadow: 0 0 0 2px #fff, 0 8px 22px -8px rgb(0 0 0 / 0.45);
+  cursor: pointer;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(var(--uncoder-ui-inv-scale, 1));
+}
+.uncoder-ui-ov__tpl:hover {
+  background: #4f4556;
+}
+.uncoder-ui-ov__tplname {
+  max-width: 220px;
+  overflow: hidden;
+  font-weight: 500;
+  opacity: 0.85;
+  text-overflow: ellipsis;
+}
+.uncoder-ui-ov__tplname::before {
+  content: '·';
+  margin-right: 6px;
+}
+/* No admin bar in the canvas, so no room kept for it (a theme or plugin may still print the bump). */
+html.uncoder-editing {
+  margin-top: 0 !important;
+  --wp-admin--admin-bar--height: 0px;
+}
 .uncoder-editing .uncoder-js .uncoder-anim:not(.uncoder-anim--in),
 .uncoder-editing .uncoder-anim {
   opacity: 1 !important;
@@ -353,7 +445,7 @@ html[data-uncoder-ui-device='widescreen'] [data-uncoder-ui-hidden~='widescreen']
 .uncoder-ui-inline-editing {
   outline: none !important;
   cursor: text;
-  caret-color: #aa412a;
+  caret-color: #1f6feb;
 }
 .uncoder-ui-inline-editing:empty::before {
   content: 'Type here…';
@@ -400,7 +492,7 @@ html.uncoder-ui-is-dragging * {
   min-height: 60vh;
 }
 
-/* Section handle: a tab on the top edge of the page section under the pointer (add above · edit / drag · delete). */
+/* Section handle: a "+ Section" pill just inside the top edge of the section under the pointer (adds one above). */
 .uncoder-ui-ov__sec {
   position: absolute;
   top: 0;
@@ -409,55 +501,32 @@ html.uncoder-ui-is-dragging * {
   height: 0;
   z-index: 3;
 }
-.uncoder-ui-ov__secbar {
+.uncoder-ui-ov__secadd {
   position: absolute;
+  top: 6px;
   left: 0;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  gap: 1px;
-  padding: 2px;
-  border-radius: 8px 8px 0 0;
-  background: var(--uncoder-ui-bar);
-  box-shadow: 0 -4px 14px -6px rgb(0 0 0 / 0.35);
-  transform: translateX(-50%) scale(var(--uncoder-ui-inv-scale, 1));
-  transform-origin: center bottom;
-  pointer-events: auto;
-}
-.uncoder-ui-ov__sec.is-top .uncoder-ui-ov__secbar {
-  bottom: auto;
-  top: 0;
-  border-radius: 0 0 8px 8px;
-  transform-origin: center top;
-}
-.uncoder-ui-ov__secbtn {
-  width: 26px;
   height: 22px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  padding: 0;
+  gap: 3px;
+  padding: 0 9px 0 7px;
   border: 0;
-  border-radius: 6px;
-  background: transparent;
-  color: var(--uncoder-ui-bar-tx);
-  cursor: pointer;
-}
-.uncoder-ui-ov__secbtn:hover {
-  background: rgb(255 255 255 / 0.14);
-}
-.uncoder-ui-ov__secbtn.is-add {
+  border-radius: 11px;
   background: var(--uncoder-ui-sel);
   color: #fff;
+  font: 600 11px/1 'Geist UC', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  white-space: nowrap;
+  box-shadow: 0 0 0 2px #fff, 0 6px 16px -6px rgb(31 111 235 / 0.6);
+  cursor: pointer;
+  pointer-events: auto;
+  transform: translateX(-50%) scale(var(--uncoder-ui-inv-scale, 1));
+  transform-origin: center top;
+  opacity: 0.92;
+  transition: opacity 0.12s;
 }
-.uncoder-ui-ov__secbtn.is-add:hover {
-  background: #c2543b;
-}
-.uncoder-ui-ov__secbtn.is-edit:active {
-  cursor: grabbing;
-}
-.uncoder-ui-ov__secbtn.is-delete:hover {
-  background: rgb(240 138 149 / 0.25);
+.uncoder-ui-ov__secadd:hover {
+  opacity: 1;
+  background: #1557c0;
 }
 
 /* Drag handles on the selected element: padding (terracotta), margin (linework blue), gap, column width. */

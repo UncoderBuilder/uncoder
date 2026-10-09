@@ -50,13 +50,35 @@ function styleOf(v: Settings): CSSProperties {
   } as CSSProperties;
 }
 
-const KIT_TABS = ['styles', 'fonts', 'icons'] as const;
+/** The style book (Site\Style_Book) inside the screen: colors, text styles, buttons, form fields and every element, in the site's theme. */
+function StyleBook() {
+  const url = `${cfg.urls.site}?uncoder_style_book=1`;
+  return (
+    <>
+      <PageHeader
+        title="Style book"
+        description="Your colors, text styles, buttons, form fields and every element with its starting look, inside your theme. After changing the Design System in the builder, reload to see it here."
+        actions={
+          <a className="uncoder-ui-btn uncoder-ui-btn--secondary" href={url} target="_blank" rel="noopener">
+            <Icon name="external-link" size={14} />
+            Open in a new tab
+          </a>
+        }
+      />
+      <div className="uncoder-ui-stylebook">
+        <iframe src={url} title="Style book" />
+      </div>
+    </>
+  );
+}
+
+const KIT_TABS = ['styles', 'stylebook', 'fonts', 'icons'] as const;
 type KitTab = (typeof KIT_TABS)[number];
 
 /** Design System: the global styles overview and the custom fonts that feed it. */
 export function DesignSystemScreen() {
   const [tab, setTab] = useHashState(KIT_TABS, 'styles');
-  useSubCrumb(tab === 'fonts' ? 'Custom fonts' : tab === 'icons' ? 'Custom icons' : null);
+  useSubCrumb(tab === 'fonts' ? 'Custom fonts' : tab === 'icons' ? 'Custom icons' : tab === 'stylebook' ? 'Style book' : null);
   return (
     <>
       <PageHeader title="Design System" description={`Global colors, fonts and text styles shared by every ${NAME} page and template. Change them once, everywhere updates.`} />
@@ -67,12 +89,13 @@ export function DesignSystemScreen() {
         onChange={setTab}
         tabs={[
           { id: 'styles', label: 'Styles', icon: 'palette' },
+          { id: 'stylebook', label: 'Style book', icon: 'book-open' },
           { id: 'fonts', label: 'Custom fonts', icon: 'type', count: Object.values(cfg.customFonts ?? {}).filter((f) => f.custom).length || null },
           { id: 'icons', label: 'Custom icons', icon: 'shapes' },
         ]}
       />
       <TabPanel idBase="uncoder-ui-kit" active={tab}>
-        <Embedded>{tab === 'fonts' ? <FontsScreen /> : tab === 'icons' ? <IconsScreen /> : <KitStyles />}</Embedded>
+        <Embedded>{tab === 'fonts' ? <FontsScreen /> : tab === 'icons' ? <IconsScreen /> : tab === 'stylebook' ? <StyleBook /> : <KitStyles />}</Embedded>
       </TabPanel>
     </>
   );
@@ -96,10 +119,6 @@ function KitStyles() {
         description="A read-only overview. The Design System is edited in the builder, where every change previews live."
         actions={
           <>
-            <a className="uncoder-ui-btn uncoder-ui-btn--secondary" href={`${cfg.urls.site}?uncoder_style_book=1`} target="_blank" rel="noopener">
-              <Icon name="book-open" size={14} />
-              Style book
-            </a>
             {kitEditor ? (
               <a className="uncoder-ui-btn uncoder-ui-btn--primary" href={kitEditor}>
                 <Icon name="palette" size={14} />

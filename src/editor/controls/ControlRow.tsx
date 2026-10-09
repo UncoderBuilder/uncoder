@@ -1,4 +1,4 @@
-import { memo, useMemo, useRef, useState } from 'react';
+import { createContext, memo, useContext, useMemo, useRef, useState } from 'react';
 import type { ControlDef, DynamicDef, Settings } from '@shared/types';
 import { config } from '../lib/config';
 import { readValue, visible, writeKey } from '../lib/schema';
@@ -76,18 +76,16 @@ export const ControlRow = memo(function ControlRow({ id, keyName, control, contr
   const onChange = (v: any) => write(v, `${id}:${isGroup ? keyName : wk}`);
   const stacked = STACKED.has(control.type) || STACKED_UI.has(control.ui ?? '') || (control.type === 'textarea' && (control.rows ?? 3) > 1) || control.label === undefined;
   const tools = !dynamic && !!control.dynamic;
-  const layout = rowLayout(control, stacked || (tools && control.type === 'text'));
+  const column = useContext(LabelColumn);
+  const layout = rowLayout(control, stacked || (tools && control.type === 'text'), { column, tools });
   // Content text shows its default as editable text (not as a faded placeholder).
   const textDefault = !read.own && read.from === null && control.tab === 'content' && ['text', 'textarea', 'wysiwyg'].includes(control.type);
 
   return (
-    <div className={`uncoder-ui-ctl uncoder-ui-ctl--t-${control.type} uncoder-ui-ctl--${layout}${isGroup ? ' uncoder-ui-ctl--group' : ''}${read.own ? ' is-set' : ''}`} data-control={keyName}>
+    <div className={`uncoder-ui-ctl uncoder-ui-ctl--t-${control.type} uncoder-ui-ctl--${layout}${isGroup ? ' uncoder-ui-ctl--group' : ''}${read.own ? ' is-set' : read.from ? ' is-inherited' : ''}`} data-control={keyName}>
       {control.label !== undefined && (
         <div className="uncoder-ui-ctl__label">
-          <span className="uncoder-ui-ctl__text" title={control.label}>
-            {control.label}
-          </span>
-          <ValueDot own={read.own} from={read.from} device={device} onReset={() => write(undefined)} />
+          <LabelText label={control.label} own={read.own} from={read.from} device={device} onReset={() => write(undefined)} />
           {control.description && <HelpTip text={control.description} />}
           {mixed && (
             <span className="uncoder-ui-ctl__mixed" data-tip="The selected elements have different values">
@@ -134,18 +132,47 @@ export const ControlRow = memo(function ControlRow({ id, keyName, control, contr
   );
 });
 
+/** Width of the label column of inline rows (studio.css: 100px; 92px inside Normal/Hover boxes and control forms). */
+export const LabelColumn = createContext(100);
+
+/** Space the label line gives its extras: the (?) help icon, the reset button of a set value, the helper buttons. */
+const HELP_W = 17;
+const RESET_W = 23;
+const TOOLS_W = 25;
+
+let measure: CanvasRenderingContext2D | null | undefined;
+const labelWidths = new Map<string, number>();
+
+/** Width of a label as a set value shows it (medium weight, the widest it gets), in the label font of studio.css. */
+function labelWidth(label: string): number {
+  let w = labelWidths.get(label);
+  if (w === undefined) {
+    if (measure === undefined) {
+      measure = document.createElement('canvas').getContext('2d');
+      if (measure) measure.font = `500 12px "Geist UC", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif`;
+    }
+    w = measure ? Math.ceil(measure.measureText(label).width) : label.length * 7;
+    labelWidths.set(label, w);
+  }
+  return w;
+}
+
 /**
  * How a row lays out its label and input:
  * inline  — label column + input (selects, choices, colours, numbers…)
- * stacked — label above a full-width input (rich inputs, and labels too long for the label column)
+ * stacked — label above a full-width input (rich inputs, and labels that would not fit the label column whole)
  * slider  — label and value on one line, the slider underneath
  * switch  — label on the left (it may wrap), the switch at the right
+ * A label is never cut: it stays inline only when it fits the column together with its help icon, helper buttons
+ * and the reset button a set value shows. That room is kept whether the value is set or not, so setting a value
+ * never moves the row.
  */
-export function rowLayout(control: ControlDef, stacked: boolean): 'inline' | 'stacked' | 'slider' | 'switch' {
+export function rowLayout(control: ControlDef, stacked: boolean, { column = 100, tools = false, extra = 0 }: { column?: number; tools?: boolean; extra?: number } = {}): 'inline' | 'stacked' | 'slider' | 'switch' {
   if (control.type === 'switch') return 'switch';
   if (control.type === 'slider' || (control.type === 'number' && control.min !== undefined && control.max !== undefined && control.ui !== 'input')) return 'slider';
-  if (stacked || (control.label?.length ?? 0) > 15) return 'stacked';
-  return 'inline';
+  if (stacked) return 'stacked';
+  const need = labelWidth(control.label ?? '') + (control.description ? HELP_W : 0) + RESET_W + (tools ? TOOLS_W : 0) + extra + 3;
+  return need > column ? 'stacked' : 'inline';
 }
 
 /** The control's description, as a tooltip on a small help icon next to its label. */
@@ -157,14 +184,38 @@ export function HelpTip({ text }: { text: string }) {
   );
 }
 
-/** ● value set on this device (click to reset) · ○ inherited from a larger device · faint ○ default. */
-function ValueDot({ own, from, device, onReset }: { own: boolean; from: string | null; device: string; onReset: () => void }) {
+/**
+ * The label says where a value comes from: blue (and medium weight) when it is set on this device, a dotted underline
+ * when it is inherited from a larger device, plain when it is the default. A set value resets with the small button
+ * that shows on hover, or by right-clicking the label.
+ */
+export function LabelText({ label, own, from, device, onReset }: { label: string; own: boolean; from: string | null; device: string; onReset: () => void }) {
   const name = (d: string) => breakpoints.find((b) => b.id === d)?.label ?? d;
-  if (own) {
-    return <button type="button" className="uncoder-ui-ctl__dot is-set" aria-label={`Set on ${name(device)}. Reset`} data-tip={`Set on ${name(device)} · click to reset`} onClick={onReset} />;
-  }
-  if (from) return <span className="uncoder-ui-ctl__dot is-inherited" data-tip={`Inherited from ${name(from)}`} />;
-  return <span className="uncoder-ui-ctl__dot is-default" aria-hidden />;
+  const tip = own ? `Set on ${name(device)} · right-click to reset` : from ? `Inherited from ${name(from)}` : undefined;
+  return (
+    <>
+      <span
+        className="uncoder-ui-ctl__text"
+        title={tip ? undefined : label}
+        data-tip={tip ? `${label}\n${tip}` : undefined}
+        onContextMenu={
+          own
+            ? (e) => {
+                e.preventDefault();
+                onReset();
+              }
+            : undefined
+        }
+      >
+        {label}
+      </span>
+      {own && (
+        <button type="button" className="uncoder-ui-ctl__reset" aria-label={`Reset ${label}`} data-tip={`Reset to ${from ? `the ${name(from)} value` : 'default'}`} onClick={onReset}>
+          <Icon name="rotate-ccw" size={11} stroke={2} />
+        </button>
+      )}
+    </>
+  );
 }
 
 function categoriesFor(control: ControlDef): string[] {

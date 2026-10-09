@@ -96,7 +96,7 @@ export function IconsScreen() {
           <SkeletonRows rows={2} cols={3} />
         ) : !sets.data.length ? (
           <EmptyState icon="shapes" title="No custom icons yet">
-            Bundled sets (Lucide, Font Awesome, Phosphor, Bootstrap, Heroicons, Feather) are always available.
+            Bundled sets (Lucide, Font Awesome, Phosphor, Bootstrap, Heroicons, Feather, Themify) are always available.
           </EmptyState>
         ) : (
           <ul className="uncoder-ui-iconsets">

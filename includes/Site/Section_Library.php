@@ -49,6 +49,7 @@ final class Section_Library {
 		$can = array( self::class, 'can_use' );
 		register_rest_route( Rest::NS, '/sections', array( 'methods' => 'GET', 'callback' => array( $this, 'catalog' ), 'permission_callback' => $can ) );
 		register_rest_route( Rest::NS, '/sections/(?P<id>[a-z0-9\-]+)', array( 'methods' => 'GET', 'callback' => array( $this, 'section' ), 'permission_callback' => $can ) );
+		register_rest_route( Rest::NS, '/sections/(?P<id>[a-z0-9\-]+)/save', array( 'methods' => 'POST', 'callback' => array( $this, 'save' ), 'permission_callback' => $can ) );
 	}
 
 	/** @return WP_REST_Response|WP_Error */
@@ -86,6 +87,61 @@ final class Section_Library {
 
 	/** @return WP_REST_Response|WP_Error */
 	public function section( WP_REST_Request $request ) {
+		$section = self::fetch( (string) $request['id'] );
+		if ( is_wp_error( $section ) ) {
+			return $section;
+		}
+		return new WP_REST_Response( self::prepare( $section, (bool) $request->get_param( 'match' ) ) );
+	}
+
+	/**
+	 * Library → Premium sections: a copy of the section as one of the site's saved sections (Insert → Sections →
+	 * Saved sections in the editor), with its styles, fonts and images brought in as when inserting it.
+	 *
+	 * @return WP_REST_Response|WP_Error
+	 */
+	public function save( WP_REST_Request $request ) {
+		$section = self::fetch( (string) $request['id'] );
+		if ( is_wp_error( $section ) ) {
+			return $section;
+		}
+		$prepared = self::prepare( $section, false );
+		$title    = sanitize_text_field( (string) ( $section['title'] ?? '' ) );
+		$id       = wp_insert_post(
+			wp_slash(
+				array(
+					'post_type'   => \Uncoder\Builder\Core\Post_Types::TEMPLATE,
+					'post_title'  => '' !== $title ? $title : __( 'Premium section', 'uncoder' ),
+					'post_status' => 'publish',
+					'post_author' => get_current_user_id(),
+				)
+			),
+			true
+		);
+		if ( is_wp_error( $id ) ) {
+			return new WP_Error( 'uncoder_create_failed', $id->get_error_message(), array( 'status' => 500 ) );
+		}
+		update_post_meta( (int) $id, \Uncoder\Builder\Core\Utils::META_TYPE, 'section' );
+		$doc = \Uncoder\Builder\Plugin::instance()->documents()->get( (int) $id );
+		if ( $doc ) {
+			$doc->save( (array) $prepared['elements'] );
+		}
+		return new WP_REST_Response(
+			array(
+				'id'      => (int) $id,
+				'title'   => get_the_title( (int) $id ),
+				'editUrl' => \Uncoder\Builder\Editor\Editor::url( (int) $id ),
+			),
+			201
+		);
+	}
+
+	/**
+	 * One section from the library server, with this site's licence.
+	 *
+	 * @return array<string,mixed>|WP_Error
+	 */
+	private static function fetch( string $id ) {
 		$res = wp_remote_post(
 			Licence::server() . 'library/section',
 			array(
@@ -93,7 +149,7 @@ final class Section_Library {
 				'headers' => array( 'Content-Type' => 'application/json', 'Accept' => 'application/json' ),
 				'body'    => (string) wp_json_encode(
 					array(
-						'id'       => (string) $request['id'],
+						'id'       => $id,
 						'site_url' => home_url( '/' ),
 						'key'      => (string) ( Licence::data()['key'] ?? '' ),
 						'env'      => function_exists( 'wp_get_environment_type' ) ? wp_get_environment_type() : 'production',
@@ -116,7 +172,7 @@ final class Section_Library {
 			);
 			return new WP_Error( 'uncoder_sections_' . ( '' !== $code ? $code : 'failed' ), $map[ $code ] ?? __( 'The section could not be loaded. Try again in a moment.', 'uncoder' ), array( 'status' => 403 ) );
 		}
-		return new WP_REST_Response( self::prepare( $body['section'], (bool) $request->get_param( 'match' ) ) );
+		return $body['section'];
 	}
 
 	/**

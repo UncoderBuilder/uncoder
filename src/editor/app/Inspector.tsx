@@ -6,18 +6,19 @@ import { effectiveSettings, readValue, visible } from '../lib/schema';
 import { sectionSummary } from '../lib/summary';
 import { lockedBy, toggleLocked, useDoc } from '../store/doc';
 import { pick } from './smart';
-import { breakpoints, placeInspector, setDevice, useUi, type InspectorTab } from '../store/ui';
+import { breakpoints, placeInspector, setDevice, useUi, type InspectorTab, showPanel } from '../store/ui';
 import { clampFloat, InspectorDockMenu, InspectorGrip, onHeadDoubleClick, onHeadPointerDown } from './InspectorDock';
 import { Icon } from '../ui/Icon';
 import { Menu, usePopover } from '../ui/Popover';
 import { Button, IconButton } from '../ui/primitives';
-import { ControlRow, HelpTip } from '../controls/ControlRow';
+import { ControlRow, HelpTip, LabelColumn } from '../controls/ControlRow';
 import { ClassesBar } from './ClassesBar';
 import { elementMenuItems } from './ContextMenu';
 import { settingsTitle } from '../lib/docInfo';
 import { cleanState, stateable, stateLabel, usedStates } from '../lib/states';
 import { TextInput } from '../ui/inputs';
 import { InspectorTargets, sharedSchema } from './inspectorTargets';
+import { usePrefs } from '../store/prefs';
 
 const TAB_LABEL: Record<InspectorTab, string> = { content: 'Content', design: 'Design', behaviour: 'Behaviour' };
 /** Advanced sections that are visual: they live in Design, the rest in Behaviour. */
@@ -135,10 +136,10 @@ function PageSummary() {
         <>
           <p className="uncoder-ui-insp-empty__text">Select an element on the canvas or in Layers to edit it here.</p>
           <div className="uncoder-ui-insp-empty__actions">
-            <Button icon="plus" onClick={() => useUi.setState({ panel: 'add' })}>
+            <Button icon="plus" onClick={() => showPanel('add')}>
               Insert elements
             </Button>
-            <Button icon="file-cog" onClick={() => useUi.setState({ panel: 'page' })}>
+            <Button icon="file-cog" onClick={() => showPanel('page')}>
               {settingsTitle()}
             </Button>
           </div>
@@ -194,6 +195,18 @@ const ElementInspector = memo(function ElementInspector({ id, schema, multi }: {
   }, [schema, current, tabs, query]);
   const tag = String(node.settings.tag ?? node.settings.title_tag ?? node.settings.html_tag ?? '') || '';
   const used = usedStates(node.settings);
+  // Settings of this tab set on the device being edited ("3 set here"): a click shows only those.
+  const setHere = useMemo(() => {
+    if (current === 'content') return 0;
+    let n = 0;
+    for (const s of schema.sections) {
+      if (tabOf(s) !== current) continue;
+      const keys = [...s.controls.filter((k) => !k.startsWith('@tabs:')), ...Object.values(s.tab_controls ?? {}).flatMap((t) => Object.values(t).flat())];
+      for (const k of keys) if (schema.controls[k] && readValue(node.settings, k, schema.controls[k], device).own) n++;
+    }
+    return n;
+  }, [schema, node.settings, device, current]);
+  const hints = usePrefs((s) => s.hints);
   const [customOpen, setCustomOpen] = useState(false);
   const setState = (v: string) => useUi.setState({ inspectorState: v });
 
@@ -205,7 +218,7 @@ const ElementInspector = memo(function ElementInspector({ id, schema, multi }: {
           <span className="uncoder-ui-insp__title">{multi > 1 ? (schema.name === '__shared' ? `${multi} elements` : `${multi} × ${schema.title}`) : node.label || schema.title}</span>
           {tag && /^(h[1-6]|p|div|span|section|header|footer|nav|article|aside|main)$/.test(tag) && <span className="uncoder-ui-chip-tag">{tag}</span>}
           {multi > 1 && <span className="uncoder-ui-chip-tag" data-tip="Changes apply to every selected element">all</span>}
-          {multi === 1 && schema.description && <HelpTip text={schema.description} />}
+          {multi === 1 && (schema.tip || schema.description) && <HelpTip text={schema.tip || schema.description} />}
         </div>
         <IconButton icon="search" label="Search settings" size={15} active={showSearch} onClick={() => setShowSearch((v) => !v)} />
         <InspectorDockMenu />
@@ -257,6 +270,17 @@ const ElementInspector = memo(function ElementInspector({ id, schema, multi }: {
               ))}
               <option value="__custom">Custom selector…</option>
             </select>
+            {setHere > 0 && (
+              <button
+                type="button"
+                className={`uncoder-ui-context__count${changedOnly ? ' is-on' : ''}`}
+                aria-pressed={changedOnly}
+                data-tip={changedOnly ? 'Show every setting' : `Show only the settings set on ${deviceLabel(device)}`}
+                onClick={() => setChangedOnly((v) => !v)}
+              >
+                {setHere} set
+              </button>
+            )}
           </div>
           {customOpen && (
             <div className="uncoder-ui-context__custom">
@@ -317,6 +341,13 @@ const ElementInspector = memo(function ElementInspector({ id, schema, multi }: {
           <SectionView key={section.id} id={id} schema={schema} section={section} index={i} search={query} changedOnly={changedOnly} />
         ))}
       </div>
+      {hints && current !== 'content' && (
+        <div className="uncoder-ui-insp__legend" aria-hidden>
+          <span className="is-set">Set here</span>
+          <span className="is-inherited">Inherited</span>
+          <span className="uncoder-ui-insp__legend-tip">Right-click a label to reset</span>
+        </div>
+      )}
     </div>
   );
 });
@@ -392,10 +423,13 @@ function ControlTabs({ id, schema, section, tabsId, settings, matches }: { id: s
           </button>
         ))}
       </div>
-      {keys.map((k) => (
-        // The native Hover tab writes its own keys; any other state goes into _states.
-        <ControlRow key={k} id={id} keyName={k} control={schema.controls[k]} controls={schema.controls} settings={settings} stateKey={active === state ? 'normal' : state} />
-      ))}
+      {/* The box is narrower: rows here have the 92px label column (studio.css). */}
+      <LabelColumn.Provider value={92}>
+        {keys.map((k) => (
+          // The native Hover tab writes its own keys; any other state goes into _states.
+          <ControlRow key={k} id={id} keyName={k} control={schema.controls[k]} controls={schema.controls} settings={settings} stateKey={active === state ? 'normal' : state} />
+        ))}
+      </LabelColumn.Provider>
     </div>
   );
 }

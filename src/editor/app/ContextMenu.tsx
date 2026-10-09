@@ -1,7 +1,7 @@
 import { schemaOf } from '../lib/config';
 import { lockedBy, toggleLocked, useDoc } from '../store/doc';
 import { useNotes } from '../store/notes';
-import { select, useUi } from '../store/ui';
+import { select, useUi, showPanel } from '../store/ui';
 import { MenuList, Popover, type MenuItem } from '../ui/Popover';
 import { copySelection, deleteSelection, duplicateSelection, pasteAfterSelection, pasteStyle, resetStyle, wrapSelection, moveSelection } from './actions';
 import { MOD } from './shortcuts';
@@ -37,12 +37,12 @@ export function elementMenuItems(id: string | null): MenuItem[] {
     { label: 'Move up', icon: 'arrow-up', shortcut: `${MOD}↑`, onSelect: () => (select(node.id), moveSelection(-1)), disabled: isSlot },
     { label: 'Move down', icon: 'arrow-down', shortcut: `${MOD}↓`, onSelect: () => (select(node.id), moveSelection(1)), disabled: isSlot },
     ...(parent ? [{ label: 'Select parent', icon: 'arrow-up-left', shortcut: 'Esc', onSelect: () => select(parent.id) } as MenuItem] : []),
-    { label: 'Add note…', icon: 'message-square-plus', onSelect: () => (select(node.id), useNotes.setState({ composeFor: node.id }), useUi.setState({ panel: 'notes' })) },
+    { label: 'Add note…', icon: 'message-square-plus', onSelect: () => (select(node.id), useNotes.setState({ composeFor: node.id }), showPanel('notes')) },
     { label: 'Save as template', icon: 'folder-plus', onSelect: () => useUi.setState({ saveTemplate: node.id }), disabled: isSlot },
     node.locked
       ? { label: 'Unlock', icon: 'lock-open', onSelect: () => toggleLocked(node.id) }
       : { label: 'Lock', icon: 'lock', onSelect: () => toggleLocked(node.id), disabled: !!lockedBy(node.id) },
-    { label: 'Show in layers', icon: 'layers', shortcut: `${MOD}I`, onSelect: () => useUi.setState({ panel: 'layers' }) },
+    { label: 'Show in layers', icon: 'layers', shortcut: `${MOD}I`, onSelect: () => showPanel('layers') },
     { label: 'Scroll into view', icon: 'locate-fixed', onSelect: () => elementFor(node.id)?.scrollIntoView({ block: 'center', behavior: 'smooth' }) },
     'separator',
     { label: 'Delete', icon: 'trash-2', shortcut: 'Del', danger: true, onSelect: deleteSelection, disabled: isSlot },

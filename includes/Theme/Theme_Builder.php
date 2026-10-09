@@ -234,6 +234,28 @@ final class Theme_Builder {
 	}
 
 	/**
+	 * In the editor's canvas, a header or footer around the page says which template it is (name, kind), so the editor
+	 * can offer "Edit Header · Main header" on hover. Only there, and only for someone who may edit that template.
+	 *
+	 * @param array<string,mixed> $args Render args.
+	 * @return array<string,mixed>
+	 */
+	private function canvas_attrs( int $id, string $location, array $args ): array {
+		$preview = Plugin::instance()->module( 'preview' );
+		if ( ! $preview instanceof \Uncoder\Builder\Editor\Preview || ! $preview->active() || ! current_user_can( 'edit_post', $id ) ) {
+			return $args;
+		}
+		$args['attrs'] = array_merge(
+			(array) ( $args['attrs'] ?? array() ),
+			array(
+				'data-uncoder-edit-title' => get_the_title( $id ),
+				'data-uncoder-edit-kind'  => ucfirst( $location ),
+			)
+		);
+		return $args;
+	}
+
+	/**
 	 * Shell helper: prints header/footer when a template applies.
 	 */
 	public function print_location( bool $printed, string $location ): bool {
@@ -244,7 +266,7 @@ final class Theme_Builder {
 		if ( ! $id ) {
 			return false;
 		}
-		$args = array( 'class' => 'uncoder-location uncoder-location--' . $location, 'tag' => 'header' === $location ? 'header' : ( 'footer' === $location ? 'footer' : 'div' ) );
+		$args = $this->canvas_attrs( $id, $location, array( 'class' => 'uncoder-location uncoder-location--' . $location, 'tag' => 'header' === $location ? 'header' : ( 'footer' === $location ? 'footer' : 'div' ) ) );
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- rendered by the escaping renderer.
 		echo 'header' === $location ? Header_Behavior::render( $this, $id, $args ) : $this->render_template( $id, $args );
 		return true;
@@ -320,7 +342,7 @@ final class Theme_Builder {
 		if ( ! $id ) {
 			return (string) $content;
 		}
-		$args = array( 'class' => 'uncoder-location uncoder-location--' . $area, 'tag' => $area );
+		$args = $this->canvas_attrs( $id, $area, array( 'class' => 'uncoder-location uncoder-location--' . $area, 'tag' => $area ) );
 		return 'header' === $area ? Header_Behavior::render( $this, $id, $args ) : $this->render_template( $id, $args );
 	}
 

@@ -73,6 +73,21 @@ final class Preview {
 		nocache_headers();
 		show_admin_bar( false );
 		add_filter( 'show_admin_bar', '__return_false' );
+		// WordPress set the admin bar up just before this (template_redirect, priority 0): without these the canvas
+		// keeps its 32px "bump" above the page, a blank band over the header.
+		remove_action( 'wp_head', '_admin_bar_bump_cb' );
+		remove_action( 'wp_enqueue_scripts', 'wp_enqueue_admin_bar_bump_styles' );
+		remove_action( 'wp_enqueue_scripts', 'wp_enqueue_admin_bar_header_styles' );
+		remove_action( 'wp_footer', 'wp_admin_bar_render', 1000 );
+		// Its stylesheet also sets --wp-admin--admin-bar--height (32px), which sticky headers keep free above them.
+		add_action(
+			'wp_enqueue_scripts',
+			static function (): void {
+				wp_dequeue_style( 'admin-bar' );
+				wp_dequeue_script( 'admin-bar' );
+			},
+			100
+		);
 
 		add_filter(
 			'uncoder_wb/preview/mount',

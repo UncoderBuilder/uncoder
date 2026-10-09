@@ -1,6 +1,38 @@
 {
   "changelog": [
     {
+      "version": "0.1.2",
+      "date": "2026-10-10",
+      "title": "A redesigned editor and the Library",
+      "groups": [
+        {
+          "label": "Editor",
+          "items": [
+            "A slim rail on the left opens Insert, Layers, Styles and the page’s settings, and the panels sit edge to edge for a wider canvas. Checks, Notes and Ask AI are in the rail too, with their counts. Ctrl+\\ folds the panel away.",
+            "Settings say where a value comes from: its label turns blue when it is set on this device and is underlined when it is inherited. Right-click a label to reset it. Labels are never cut off: a long one sits above its field.",
+            "Insert shows widgets as tiles, with a plain-language tip on each (i), and Insert → Sections has collapsible groups: Layouts, Patterns, Premium sections and Saved sections.",
+            "Hover the header or footer on a page and click Edit Header to change it; “← page name” in the top bar takes you back, and saving offers the same.",
+            "Layers shows what each element holds, the selected element gets a name tag you can drag and its actions at the top right, and a + Section button between sections.",
+            "Link fields add https:// for you and do not double it when you paste a full link, the right-click menu stays next to the pointer, and if the editor ever hits an error it offers to restore your unsaved work."
+          ]
+        },
+        {
+          "label": "Admin",
+          "items": [
+            "Uncoder → Library brings together starter sites, saved sections, premium sections, the cloud library, and import & export. Save a premium section to your own sections in one click.",
+            "A tidier menu in three groups, Settings in Builder, Visitors, Developer and Account, the Style book as a tab of the Design System, a count on Page Checks for pages with something to fix, and a dot on Settings while the site is closed to visitors. Old links and bookmarks keep working."
+          ]
+        },
+        {
+          "label": "Speed and security",
+          "items": [
+            "A page loads only the widgets it uses, which helps on modest hosting.",
+            "Hardening for REST requests, MCP sign-in and its client checks, rate limits behind a proxy or CDN (set UNCODER_WB_CLIENT_IP_HEADER), and MCP error messages without server paths."
+          ]
+        }
+      ]
+    },
+    {
       "version": "0.1.1",
       "date": "2026-10-09",
       "title": "Starter sites, plans and agency tools",
@@ -101,6 +133,17 @@
   ],
   "news": [
     {
+      "id": "2026-10-release-0-1-2",
+      "date": "2026-10-10",
+      "tag": "release",
+      "title": "Uncoder 0.1.2: a redesigned editor",
+      "body": "A wider canvas with a slim rail, clearer settings, Edit Header straight from a page, and the new Library for starter sites and sections.",
+      "link": {
+        "label": "See what’s new",
+        "docs": "changelog/"
+      }
+    },
+    {
       "id": "2026-10-release-0-1-1",
       "date": "2026-10-09",
       "tag": "release",
@@ -127,7 +170,7 @@
       "date": "2026-09-28",
       "tag": "tip",
       "title": "Start from a pattern",
-      "body": "Insert → Sections has 40 ready-made patterns. In a header or footer template, the matching category is already selected.",
+      "body": "Insert → Sections → Patterns has ready-made sections to start from. In a header or footer template, the matching category is already selected.",
       "link": {
         "label": "How patterns work",
         "docs": "editor/library/"

@@ -83,13 +83,13 @@ export function DashboardScreen() {
             </span>
             <Icon name="arrow-right" size={15} className="uncoder-ui-quick__arrow" />
           </button>
-          {/* With the starter-site library (Licence::enabled()), its screen for those who may open it (hidden for the
-              others); before that, the built-in starters. */}
-          {(cfg.library ? 'uncoder-starters' in cfg.pages : can('edit_theme_options') && can('edit_pages')) && (
+          {/* With the starter-site library (Licence::enabled()), Library → Starter sites for those who may open it
+              (hidden for the others); before that, the built-in starters. */}
+          {(cfg.library ? 'uncoder-library' in cfg.pages && can('manage_options') : can('edit_theme_options') && can('edit_pages')) && (
             <button
               type="button"
               className="uncoder-ui-quick__card"
-              onClick={() => (cfg.library ? (window.location.href = screenUrl('uncoder-starters')) : setStarters(true))}
+              onClick={() => (cfg.library ? (window.location.href = screenUrl('uncoder-library', 'starters')) : setStarters(true))}
             >
               <span className="uncoder-ui-quick__icon">
                 <Icon name="layout-dashboard" size={18} />

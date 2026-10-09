@@ -1,7 +1,7 @@
 // "Make it yours" (Site\Starter_Rewrite, Pro): the owner's own AI app, connected over MCP, rewrites the texts of an
 // imported starter for their business. Uncoder needs no AI key and calls no AI service: it keeps the business
 // details, keeps a copy of every page (Undo), and hands over the instruction to paste into the AI app. Two steps:
-// the business, then the hand-over with the pages as the AI app rewrites them. Opened from Uncoder → Starter sites.
+// the business, then the hand-over with the pages as the AI app rewrites them. Opened from Library → Starter sites.
 import { useEffect, useState } from 'react';
 import { Icon } from '@editor/ui/Icon';
 import { Button } from '@editor/ui/primitives';

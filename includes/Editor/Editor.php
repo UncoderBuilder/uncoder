@@ -36,6 +36,34 @@ final class Editor {
 		add_filter( 'display_post_states', array( $this, 'post_state' ), 10, 2 );
 	}
 
+	/** Where closing a template's editor leads: its list (saved sections live in the Library, the rest in the Theme Builder). */
+	private static function template_list_url( string $type ): string {
+		return 'section' === $type ? admin_url( 'admin.php?page=uncoder-library#sections' ) : admin_url( 'admin.php?page=uncoder-templates#' . $type );
+	}
+
+	/**
+	 * Opened from another document's editor ("Edit Header" on a page, ?uncoder_from=ID): that document, so the top bar
+	 * can offer the way back. Only a document the user may edit, and never the one being edited.
+	 *
+	 * @return array{id:int, title:string, url:string}|null
+	 */
+	private static function return_to( int $current ): ?array {
+		$from = isset( $_GET['uncoder_from'] ) ? absint( wp_unslash( $_GET['uncoder_from'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- only builds a link the user may follow anyway.
+		if ( ! $from || $from === $current || ! current_user_can( 'edit_post', $from ) ) {
+			return null;
+		}
+		$post = get_post( $from );
+		if ( ! $post || 'trash' === $post->post_status ) {
+			return null;
+		}
+		$title = trim( wp_strip_all_tags( get_the_title( $post ) ) );
+		return array(
+			'id'    => $from,
+			'title' => '' !== $title ? html_entity_decode( $title, ENT_QUOTES, 'UTF-8' ) : __( 'Untitled', 'uncoder' ),
+			'url'   => self::url( $from ),
+		);
+	}
+
 	/**
 	 * Editor link. It carries a nonce because opening a classic post converts it to the builder.
 	 */
@@ -306,16 +334,17 @@ final class Editor {
 				'permalink'    => get_permalink( $post ),
 				'previewUrl'   => Preview::url( $post->ID ),
 				'draftNonce'   => wp_create_nonce( Draft_Preview::NONCE . $post->ID ),
-				'exitUrl'      => Post_Types::TEMPLATE === $post->post_type ? admin_url( 'admin.php?page=uncoder-templates#' . $doc->type() ) : get_edit_post_link( $post->ID, 'raw' ),
+				'exitUrl'      => Post_Types::TEMPLATE === $post->post_type ? self::template_list_url( $doc->type() ) : get_edit_post_link( $post->ID, 'raw' ),
 				'modified'     => get_post_modified_time( 'U', true, $post ),
 				'pageTemplate' => get_page_template_slug( $post ),
 				'rev'          => $doc->rev()['id'],
+				'returnTo'     => self::return_to( $post->ID ),
 			),
 			'kitVersion'  => $plugin->kit()->version(),
 			'elements'    => $doc->elements(),
 			'pageSettings' => (object) $doc->page_settings(),
 			'schema'      => array(
-				'elements'    => $plugin->elements()->schema(),
+				'elements'    => Widget_Tips::add( $plugin->elements()->schema() ),
 				'categories'  => $plugin->elements()->categories(),
 				'dynamicTags' => $plugin->tags()->schema(),
 				'tagGroups'   => \Uncoder\Builder\Dynamic\Tags::GROUPS,

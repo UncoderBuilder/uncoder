@@ -131,6 +131,8 @@ export interface ElementSchema {
   category: string;
   keywords: string[];
   description: string;
+  /** Plain-language description for people (Editor\Widget_Tips); `description` is written for AI clients. */
+  tip?: string;
   container: boolean;
   nested: { items: string } | null;
   render: 'static' | 'dynamic';

@@ -10,6 +10,8 @@ export interface AdminConfig {
   library?: boolean;
   /** The licence covers branded page reports (Site\Page_Checks::allowed()) and this user manages it. */
   reports?: boolean;
+  /** Premium sections can be browsed and saved here (Section_Library: paid plans on, full builder access). */
+  premium?: boolean;
   rest: { root: string; wp: string; nonce: string };
   urls: {
     admin: string;

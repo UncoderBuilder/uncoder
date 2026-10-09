@@ -1,4 +1,4 @@
-// Uncoder → Cloud library (Site\Cloud_Library, Agency licence): the agency's sections, pages, templates and site kits,
+// Library → Cloud library (Site\Cloud_Library, Agency licence): the agency's sections, pages, templates and site kits,
 // saved from any site of the licence and reused here. Sections are inserted from the editor (Insert → Sections) or
 // copied to this site's saved sections; pages and templates come in as drafts; site kits open the usual import.
 import { useEffect, useMemo, useState } from 'react';

@@ -4,7 +4,7 @@ import { api } from '../lib/api';
 import { config, schemaOf } from '../lib/config';
 import { subtree } from '../lib/tree';
 import { useDoc } from '../store/doc';
-import { toast, useUi } from '../store/ui';
+import { toast, useUi, showPanel } from '../store/ui';
 import { refreshLookup } from '../controls/lookup';
 import { Icon } from '../ui/Icon';
 import { Button, Segmented } from '../ui/primitives';
@@ -35,14 +35,14 @@ export function SaveTemplateDialog() {
     try {
       if (where === 'cloud') {
         await api('cloud/section', { body: { title: name.trim(), elements: [tree] } });
-        toast(`Saved “${name.trim()}” to the cloud library`, 'success', { label: 'Show', run: () => useUi.setState({ panel: 'library' }) }, 5000);
+        toast(`Saved “${name.trim()}” to the cloud library`, 'success', { label: 'Show', run: () => showPanel('library') }, 5000);
         close();
         return;
       }
       const tpl = await api<{ id: number }>('templates', { body: { type: 'section', title: name.trim() } });
       await api(`documents/${tpl.id}`, { body: { elements: [tree], status: 'publish' } });
       refreshLookup('templates');
-      toast(`Saved “${name.trim()}” to Insert → Sections`, 'success', { label: 'Show', run: () => useUi.setState({ panel: 'library' }) }, 5000);
+      toast(`Saved “${name.trim()}” to Insert → Sections`, 'success', { label: 'Show', run: () => showPanel('library') }, 5000);
       close();
     } catch (e) {
       toast(e instanceof Error ? e.message : 'Could not save the template', 'error');

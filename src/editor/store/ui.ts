@@ -51,6 +51,8 @@ interface UiState {
   customWidth: number | null;
   theme: 'dark' | 'light';
   panel: LeftPanel;
+  /** The build panel next to the rail is open; collapsed, only the 48px rail shows and the canvas gets the room. */
+  panelOpen: boolean;
   /** Last build-panel tab, restored when a tool view closes. */
   mainPanel: LeftPanel;
   /** Islands floating over the canvas, or docked edge to edge ("docked panels"). */
@@ -121,8 +123,11 @@ export const useUi = create<UiState>(() => ({
   customWidth: null,
   theme: stored.theme === 'dark' ? 'dark' : 'light',
   panel: requestedPanel() ?? startPanel(),
+  // Open unless collapsed last time (a deep link to a panel always opens it).
+  panelOpen: stored.panelOpen !== false || !!requestedPanel(),
   mainPanel: startPanel(),
-  layout: stored.layout === 'dock' ? 'dock' : 'float',
+  // Edge to edge since the 2026-10 layout (prefs v2); floating islands only for whoever picks them again.
+  layout: stored.v === 2 && stored.layout === 'float' ? 'float' : 'dock',
   // Docked on the right unless the user chose otherwise. Saved as inspectorDock: the old inspectorAt also held the
   // former default (left) for people who never chose, so it is not read.
   inspectorAt: stored.inspectorDock === 'left' || stored.inspectorDock === 'float' ? stored.inspectorDock : 'right',
@@ -160,6 +165,7 @@ useUi.subscribe((s, prev) => {
     s.mainPanel !== prev.mainPanel ||
     s.openSections !== prev.openSections ||
     s.layout !== prev.layout ||
+    s.panelOpen !== prev.panelOpen ||
     s.recentWidgets !== prev.recentWidgets ||
     s.inspectorAt !== prev.inspectorAt ||
     s.inspectorFloat !== prev.inspectorFloat
@@ -167,7 +173,7 @@ useUi.subscribe((s, prev) => {
     try {
       localStorage.setItem(
         'uncoder-editor',
-        JSON.stringify({ theme: s.theme, panel: s.mainPanel, openSections: s.openSections, layout: s.layout, recent: s.recentWidgets, inspectorDock: s.inspectorAt, inspectorFloat: s.inspectorFloat, inspectorSide: s.inspectorSide }),
+        JSON.stringify({ v: 2, theme: s.theme, panel: s.mainPanel, panelOpen: s.panelOpen, openSections: s.openSections, layout: s.layout, recent: s.recentWidgets, inspectorDock: s.inspectorAt, inspectorFloat: s.inspectorFloat, inspectorSide: s.inspectorSide }),
       );
     } catch {
       /* private mode */
@@ -197,7 +203,20 @@ export const viewZoom = (): number => {
 };
 
 /** Opens a build-panel view; opening an open tool view again returns to the last tab. */
-export const togglePanel = (panel: LeftPanel) => useUi.setState((s) => ({ panel: s.panel === panel && !MAIN_PANELS.includes(panel) ? s.mainPanel : panel }));
+export const togglePanel = (panel: LeftPanel) => useUi.setState((s) => ({ panel: s.panel === panel && s.panelOpen && !MAIN_PANELS.includes(panel) ? s.mainPanel : panel, panelOpen: true }));
+
+/** Shows a build-panel view, opening the panel if it was collapsed (for anything the user asked to see). */
+export const showPanel = (panel: LeftPanel) => useUi.setState({ panel, panelOpen: true });
+
+/** Collapses the build panel to the rail, or opens it again (rail button, Ctrl/⌘ \). */
+export const togglePanelOpen = () => useUi.setState((s) => ({ panelOpen: !s.panelOpen }));
+
+/** A rail button: its view, or, when that view is already open, collapse to the rail. */
+export const railSelect = (panel: LeftPanel) =>
+  useUi.setState((s) => {
+    const current = s.panel === panel || (panel === 'add' && s.panel === 'library');
+    return current && s.panelOpen ? { panelOpen: false } : { panel: current ? s.panel : panel, panelOpen: true };
+  });
 
 export const setDevice = (device: string) => useUi.setState({ device, customWidth: null });
 

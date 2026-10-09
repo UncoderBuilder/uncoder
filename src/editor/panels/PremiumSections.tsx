@@ -51,7 +51,7 @@ function readMatch(): boolean {
   }
 }
 
-export function PremiumSections({ insert }: { insert: (nodes: ElementNode[], label: string) => void }) {
+export function PremiumSections({ insert, bare = false }: { insert: (nodes: ElementNode[], label: string) => void; bare?: boolean }) {
   const [catalog, setCatalog] = useState<Catalog | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [cat, setCat] = useState('hero');
@@ -127,16 +127,18 @@ export function PremiumSections({ insert }: { insert: (nodes: ElementNode[], lab
 
   return (
     <>
-      <div className="uncoder-ui-kit__label">
-        Premium sections {catalog && !catalog.allowed && <span className="uncoder-ui-premium__pro">Pro</span>}
-      </div>
+      {!bare && (
+        <div className="uncoder-ui-kit__label">
+          Premium sections {catalog && !catalog.allowed && <span className="uncoder-ui-premium__pro">Pro</span>}
+        </div>
+      )}
       {error && <p className="uncoder-ui-note">{error}</p>}
       {!catalog && !error && <p className="uncoder-ui-note">Loading premium sections…</p>}
       {catalog && (
         <>
           <label className="uncoder-ui-search">
             <Icon name="search" size={14} />
-            <input type="search" placeholder={`Search ${catalog.sections.length} sections`} value={q} onChange={(e) => setQ(e.currentTarget.value)} aria-label="Search premium sections" />
+            <input type="search" placeholder="Search premium sections" value={q} onChange={(e) => setQ(e.currentTarget.value)} aria-label="Search premium sections" />
           </label>
           {!q && (
             <div className="uncoder-ui-chips uncoder-ui-library__cats" role="group" aria-label="Premium section categories">

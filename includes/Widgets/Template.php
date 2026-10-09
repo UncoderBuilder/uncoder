@@ -77,7 +77,7 @@ class Template extends Widget_Base {
 			'template_notice',
 			array(
 				'type'  => 'notice',
-				'label' => __( 'Create sections in Uncoder → Theme Builder → Saved sections, or right-click a section in the builder → Save as template. Changes to the template show everywhere it is used.', 'uncoder' ),
+				'label' => __( 'Create sections in Uncoder → Library → Saved sections, or right-click a section in the builder → Save as template. Changes to the template show everywhere it is used.', 'uncoder' ),
 			)
 		);
 		$this->end_section();
