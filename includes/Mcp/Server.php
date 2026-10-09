@@ -58,6 +58,10 @@ final class Server {
 					break;
 				case 'tools/list':
 					$result = array( 'tools' => Registry::instance()->describe( $this->ctx ) );
+					if ( \Uncoder\Builder\Site\White_Label::active() ) {
+						// White-label: the tools' titles and descriptions name the agency's builder.
+						$result['tools'] = \Uncoder\Builder\Site\White_Label::rename_deep( $result['tools'] );
+					}
 					break;
 				case 'tools/call':
 					$result = $this->call_tool( $params );
@@ -128,10 +132,10 @@ final class Server {
 			),
 			'serverInfo'      => array(
 				'name'       => self::SERVER_NAME,
-				'title'      => 'Uncoder — ' . get_bloginfo( 'name' ),
+				'title'      => \Uncoder\Builder\Core\Brand::name() . ' — ' . get_bloginfo( 'name' ),
 				'version'    => UNCODER_WB_VERSION,
-				'websiteUrl' => \Uncoder\Builder\Core\Brand::URL,
-				'icons'      => array(
+				'websiteUrl' => \Uncoder\Builder\Core\Brand::url(),
+				'icons'      => '' !== \Uncoder\Builder\Site\White_Label::brand()['icon'] ? array( array( 'src' => \Uncoder\Builder\Site\White_Label::brand()['icon'] ) ) : array(
 					array(
 						'src'      => \Uncoder\Builder\Core\Brand::asset( 'uncoder-favicon.svg' ),
 						'mimeType' => 'image/svg+xml',
@@ -144,7 +148,7 @@ final class Server {
 					),
 				),
 			),
-			'instructions'    => Guide::instructions(),
+			'instructions'    => (string) \Uncoder\Builder\Site\White_Label::rename( Guide::instructions() ),
 		);
 	}
 

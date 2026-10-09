@@ -54,7 +54,7 @@ final class Audit {
 		try {
 			$html = Plugin::instance()->documents()->get( $post->ID )->render( array( 'post_id' => $post->ID ) );
 			foreach ( Html_A11y::check( $html ) as $issue ) {
-				$this->add( $issue['severity'], 'accessibility', $issue['id'], $issue['message'], $issue['fix'] );
+				$this->add( $issue['severity'], 'accessibility', $issue['id'], $issue['message'], $issue['fix'], (string) ( $issue['rule'] ?? '' ) );
 			}
 		} catch ( \Throwable $e ) {
 			unset( $e ); // The static checks above still apply.
@@ -65,24 +65,24 @@ final class Audit {
 		$template_type = (string) get_post_meta( $post->ID, Utils::META_TYPE, true );
 		$needs_h1      = '' === $template_type || in_array( $template_type, array( 'single-page', 'error-404', 'search-results' ), true );
 		if ( ! $h1 && $needs_h1 && $state['headings'] ) {
-			$this->add( 'error', 'headings', $state['headings'][0]['id'], 'The page has no h1.', 'Make the main hero title tag "h1".' );
+			$this->add( 'error', 'headings', $state['headings'][0]['id'], 'The page has no h1.', 'Make the main hero title tag "h1".', 'no-h1' );
 		} elseif ( count( $h1 ) > 1 ) {
 			foreach ( array_slice( $h1, 1 ) as $h ) {
-				$this->add( 'error', 'headings', $h['id'], 'More than one h1 on the page.', 'Use h2 for section titles; keep a single h1.' );
+				$this->add( 'error', 'headings', $h['id'], 'More than one h1 on the page.', 'Use h2 for section titles; keep a single h1.', 'multiple-h1' );
 			}
 		}
 		$prev = 0;
 		foreach ( $state['headings'] as $h ) {
 			if ( $prev && $h['level'] > $prev + 1 ) {
-				$this->add( 'warning', 'headings', $h['id'], sprintf( 'Heading level jumps from h%d to h%d.', $prev, $h['level'] ), sprintf( 'Use h%d here, or style it with a text style preset instead of skipping levels.', $prev + 1 ) );
+				$this->add( 'warning', 'headings', $h['id'], sprintf( 'Heading level jumps from h%d to h%d.', $prev, $h['level'] ), sprintf( 'Use h%d here, or style it with a text style preset instead of skipping levels.', $prev + 1 ), 'heading-skip' );
 			}
 			$prev = $h['level'];
 		}
 		if ( count( $state['fonts'] ) > 3 ) {
-			$this->add( 'warning', 'performance', null, 'The page loads ' . count( $state['fonts'] ) . ' font families: ' . implode( ', ', array_keys( $state['fonts'] ) ) . '.', 'Use the Design System heading/body fonts (var(--uncoder-f-heading), var(--uncoder-f-body)) and at most 2–3 families.' );
+			$this->add( 'warning', 'performance', null, 'The page loads ' . count( $state['fonts'] ) . ' font families: ' . implode( ', ', array_keys( $state['fonts'] ) ) . '.', 'Use the Design System heading/body fonts (var(--uncoder-f-heading), var(--uncoder-f-body)) and at most 2–3 families.', 'many-fonts' );
 		}
 		if ( ! $this->has_meta_description( $post->ID ) && '' === $template_type ) {
-			$this->add( 'info', 'seo', null, 'No meta description.', 'Call set_seo_meta with a 140–160 character description.' );
+			$this->add( 'info', 'seo', null, 'No meta description.', 'Call set_seo_meta with a 140–160 character description.', 'meta-description' );
 		}
 
 		$counts = array_count_values( array_column( $this->issues, 'severity' ) );
@@ -114,7 +114,7 @@ final class Audit {
 				continue;
 			}
 			if ( $depth > 7 ) {
-				$this->add( 'warning', 'structure', $id, 'Deep nesting (' . $depth . ' levels).', 'Flatten the layout: use grid containers or fewer wrapper containers.' );
+				$this->add( 'warning', 'structure', $id, 'Deep nesting (' . $depth . ' levels).', 'Flatten the layout: use grid containers or fewer wrapper containers.', 'deep-nesting' );
 			}
 
 			$my_bg   = $bg;
@@ -126,7 +126,7 @@ final class Audit {
 				}
 				// A childless box with a background or border is a shape (swatch, dot, divider), not a leftover.
 				if ( empty( $node['children'] ) && ! self::is_shape( $s ) ) {
-					$this->add( 'warning', 'structure', $id, 'Empty container.', 'Add content or delete it.' );
+					$this->add( 'warning', 'structure', $id, 'Empty container.', 'Add content or delete it.', 'empty-container' );
 				}
 				if ( ! $this->hidden_mobile && empty( $s['_hide_mobile'] ) ) {
 					$this->check_responsive_container( $id, $s, (array) ( $node['children'] ?? array() ) );
@@ -177,9 +177,9 @@ final class Audit {
 			$title = wp_strip_all_tags( (string) ( $eff['title'] ?? '' ) );
 			if ( 'heading' === $type && ! isset( $dynamic['title'] ) ) {
 				if ( '' === trim( $title ) ) {
-					$this->add( 'error', 'content', $id, 'Empty heading.', 'Write a heading or delete the widget.' );
+					$this->add( 'error', 'content', $id, 'Empty heading.', 'Write a heading or delete the widget.', 'empty-heading' );
 				} elseif ( mb_strlen( $title ) > 110 ) {
-					$this->add( 'warning', 'content', $id, 'Very long heading (' . mb_strlen( $title ) . ' characters).', 'Shorten it; move detail into a paragraph.' );
+					$this->add( 'warning', 'content', $id, 'Very long heading (' . mb_strlen( $title ) . ' characters).', 'Shorten it; move detail into a paragraph.', 'long-heading' );
 				}
 			}
 			$this->check_contrast( $id, (string) ( $s['color'] ?? '' ), $bg, '' !== $text ? $text : 'var(--uncoder-c-heading)', true );
@@ -201,7 +201,7 @@ final class Audit {
 					continue;
 				}
 				if ( '' !== $val && ( $val === $placeholder || 0 === strpos( $val, 'lorem ipsum' ) || ( 'add your text here' === $placeholder && 0 === strpos( $val, 'add your text here' ) ) ) ) {
-					$this->add( 'warning', 'content', $id, sprintf( '%s still has placeholder text ("%s").', $type, mb_substr( $val, 0, 40 ) ), 'Replace it with real copy.' );
+					$this->add( 'warning', 'content', $id, sprintf( '%s still has placeholder text ("%s").', $type, mb_substr( $val, 0, 40 ) ), 'Replace it with real copy.', 'placeholder' );
 					break 2;
 				}
 			}
@@ -212,10 +212,10 @@ final class Audit {
 			// A button that works through a click interaction (a toggle, a popup) needs no link.
 			$acts = array_filter( is_array( $eff['_interactions'] ?? null ) ? $eff['_interactions'] : array(), static fn( $row ) => is_array( $row ) && 'click' === ( $row['trigger'] ?? '' ) );
 			if ( ! isset( $dynamic['link'] ) && ! $acts && ( '' === $url || '#' === $url ) ) {
-				$this->add( 'warning', 'links', $id, 'Button links to "' . ( '' === $url ? '(nothing)' : '#' ) . '".', 'Set link to a real page URL, #section anchor or tel:/mailto:.' );
+				$this->add( 'warning', 'links', $id, 'Button links to "' . ( '' === $url ? '(nothing)' : '#' ) . '".', 'Set link to a real page URL, #section anchor or tel:/mailto:.', 'button-link' );
 			}
 			if ( '' === trim( (string) ( $eff['text'] ?? '' ) ) && ! isset( $dynamic['text'] ) ) {
-				$this->add( 'error', 'accessibility', $id, 'Button without text.', 'Give the button a label.' );
+				$this->add( 'error', 'accessibility', $id, 'Button without text.', 'Give the button a label.', 'button-text' );
 			}
 		}
 
@@ -226,10 +226,10 @@ final class Audit {
 				$alt = (string) get_post_meta( (int) $media['id'], '_wp_attachment_image_alt', true );
 			}
 			if ( '' === $alt && '' === (string) ( $media['alt'] ?? '' ) && ! isset( $dynamic['image'] ) && empty( $eff['decorative'] ) ) {
-				$this->add( empty( $media['url'] ) && empty( $media['id'] ) ? 'warning' : 'error', 'accessibility', $id, empty( $media['url'] ) && empty( $media['id'] ) ? 'Image widget without an image.' : 'Image without alt text.', 'Describe the image in "alt" (or set_image_alt on the attachment). Purely ornamental images: set "decorative": true.' );
+				$this->add( empty( $media['url'] ) && empty( $media['id'] ) ? 'warning' : 'error', 'accessibility', $id, empty( $media['url'] ) && empty( $media['id'] ) ? 'Image widget without an image.' : 'Image without alt text.', 'Describe the image in "alt" (or set_image_alt on the attachment). Purely ornamental images: set "decorative": true.', empty( $media['url'] ) && empty( $media['id'] ) ? 'image-missing' : 'image-alt' );
 			}
 			if ( ! empty( $media['url'] ) && empty( $media['id'] ) && false === strpos( (string) $media['url'], (string) wp_parse_url( home_url(), PHP_URL_HOST ) ) ) {
-				$this->add( 'warning', 'performance', $id, 'Image is hotlinked from another site.', 'Import it with upload_media and use {"id": attachment_id}.' );
+				$this->add( 'warning', 'performance', $id, 'Image is hotlinked from another site.', 'Import it with upload_media and use {"id": attachment_id}.', 'image-hotlink' );
 			}
 		}
 
@@ -240,7 +240,7 @@ final class Audit {
 		if ( 'image' === $type && $lifted && ! in_array( $s['_position'] ?? '', array( 'absolute', 'fixed' ), true ) ) {
 			$v = $s['width'] ?? null;
 			if ( is_array( $v ) && 'px' === ( $v['unit'] ?? '' ) && (float) ( $v['size'] ?? 0 ) > 360 && ! isset( $s['width_mobile'] ) ) {
-				$this->add( 'warning', 'responsive', $id, sprintf( 'Image is %spx wide with no maximum, without a mobile value.', $v['size'] ), 'Add width_mobile (e.g. 100%), or keep max_width so it shrinks.' );
+				$this->add( 'warning', 'responsive', $id, sprintf( 'Image is %spx wide with no maximum, without a mobile value.', $v['size'] ), 'Add width_mobile (e.g. 100%), or keep max_width so it shrinks.', 'image-width' );
 			}
 		}
 	}
@@ -342,13 +342,13 @@ final class Audit {
 		$has_menu  = (bool) array_filter( $children, static fn( $c ) => 'nav-menu' === ( $c['type'] ?? '' ) );
 		$is_layout = $columns >= 2 && ! $has_menu;
 		if ( 'grid' !== ( $s['layout'] ?? '' ) && in_array( self::on_mobile( $s, 'direction', 'column' ), array( 'row', 'row-reverse' ), true ) && $is_layout && 'wrap' !== self::on_mobile( $s, 'wrap', '' ) ) {
-			$this->add( 'warning', 'responsive', $id, sprintf( 'Row with %d columns keeps the row layout on phones.', count( $children ) ), 'Add "direction_mobile": "column" (and a smaller gap_mobile).' );
+			$this->add( 'warning', 'responsive', $id, sprintf( 'Row with %d columns keeps the row layout on phones.', count( $children ) ), 'Add "direction_mobile": "column" (and a smaller gap_mobile).', 'row-mobile' );
 		}
 		// A custom column template (grid_template "1fr 1fr") decides the columns; grid_columns is ignored then.
 		$template    = trim( (string) self::on_mobile( $s, 'grid_template', '' ) );
 		$mobile_cols = '' !== $template ? self::template_tracks( $template ) : (int) self::on_mobile( $s, 'grid_columns', 3 );
 		if ( 'grid' === ( $s['layout'] ?? '' ) && $mobile_cols >= 3 && ! isset( $s['grid_template_mobile'] ) ) {
-			$this->add( 'warning', 'responsive', $id, 'Grid keeps ' . $mobile_cols . ' columns on phones.', 'Add "grid_columns_mobile": 1 (and grid_columns_tablet: 2).' );
+			$this->add( 'warning', 'responsive', $id, 'Grid keeps ' . $mobile_cols . ' columns on phones.', 'Add "grid_columns_mobile": 1 (and grid_columns_tablet: 2).', 'grid-mobile' );
 		}
 	}
 
@@ -424,7 +424,7 @@ final class Audit {
 		$ratio = self::contrast( $fg_rgb, $bg_rgb );
 		$min   = $large ? 3.0 : 4.5;
 		if ( $ratio < $min ) {
-			$this->add( 'error', 'accessibility', $id, sprintf( 'Low contrast %.1f:1 (text %s on %s; minimum %.1f:1).', $ratio, $fg, $bg, $min ), 'Darken/lighten the text color or change the section background. On dark sections set the container text_color to #fff.' );
+			$this->add( 'error', 'accessibility', $id, sprintf( 'Low contrast %.1f:1 (text %s on %s; minimum %.1f:1).', $ratio, $fg, $bg, $min ), 'Darken/lighten the text color or change the section background. On dark sections set the container text_color to #fff.', 'contrast' );
 		}
 	}
 
@@ -470,7 +470,7 @@ final class Audit {
 		return \Uncoder\Builder\Core\Seo::has_description( $post_id ) || '' !== trim( (string) get_post_field( 'post_excerpt', $post_id ) );
 	}
 
-	private function add( string $severity, string $category, ?string $id, string $message, string $fix ): void {
+	private function add( string $severity, string $category, ?string $id, string $message, string $fix, string $rule = '' ): void {
 		if ( count( $this->issues ) >= 150 ) {
 			return;
 		}
@@ -482,6 +482,9 @@ final class Audit {
 		);
 		if ( $id ) {
 			$issue['element_id'] = $id;
+		}
+		if ( '' !== $rule ) {
+			$issue['rule'] = $rule; // Site\Page_Checks explains each rule in plain words.
 		}
 		$this->issues[] = $issue;
 	}

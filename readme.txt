@@ -4,7 +4,7 @@ Tags: page builder, website builder, theme builder, drag and drop, mcp
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 0.1.0
+Stable tag: 0.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -332,10 +332,23 @@ Bundled assets:
 
 == Changelog ==
 
+= 0.1.1 =
+* Pro and Agency licences, activated under Settings → Licence.
+* Starter Sites: a library of complete starter sites, newest first, many of them free, imported in one click.
+* Make it yours (Pro and Agency): your connected AI app rewrites an imported starter for your business, with undo.
+* Premium sections in the editor (Pro and Agency).
+* Agency tools: white-label, client handoff, a private cloud library and branded page reports.
+* Page Checks for every published page, on every plan.
+* Editor: no more extra scrollbars or shaking when you select an element near the edge of the page, darker and easier-to-read settings, the changed-setting dot after the label, any clicked element shown in Layers, and "&" in titles no longer shown as "&amp;".
+* AI works only through the app you connect over MCP: no AI provider keys in WordPress.
+
 = 0.1.0 =
 * First release.
 
 == Upgrade Notice ==
+
+= 0.1.1 =
+Starter sites, Pro and Agency licences, agency tools and Page Checks. The AI buttons that needed your own AI key are replaced by your connected AI app, and saved AI keys are deleted.
 
 = 0.1.0 =
 First release.

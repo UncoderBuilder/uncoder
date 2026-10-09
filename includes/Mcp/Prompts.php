@@ -7,12 +7,13 @@
 
 namespace Uncoder\Builder\Mcp;
 
+use Uncoder\Builder\Site\Starter_Rewrite;
 use WP_Error;
 
 defined( 'ABSPATH' ) || exit;
 
 /**
- * build_website, create_landing_page, redesign_page, audit_and_fix.
+ * build_website, create_landing_page, redesign_page, audit_and_fix, make_it_yours.
  */
 final class Prompts {
 
@@ -20,7 +21,7 @@ final class Prompts {
 	 * @return array<string, array<string,mixed>>
 	 */
 	private static function defs(): array {
-		return array(
+		$defs = array(
 			'build_website'       => array(
 				'title'       => 'Build a complete website',
 				'description' => 'Design system, header, footer, core pages and navigation for a business.',
@@ -47,6 +48,14 @@ final class Prompts {
 					array( 'name' => 'direction', 'description' => 'What should change', 'required' => false ),
 				),
 			),
+			'make_it_yours'       => array(
+				'title'       => 'Make a starter site yours',
+				'description' => 'Rewrite every text of an imported starter site for your business; layout, images and styles stay. Uncoder keeps a copy of every page first (Pro and Agency).',
+				'arguments'   => array(
+					array( 'name' => 'business', 'description' => 'Name, what you do, where, for whom, services, contact details', 'required' => true ),
+					array( 'name' => 'tone', 'description' => 'Tone of voice, e.g. friendly, professional, confident', 'required' => false ),
+				),
+			),
 			'audit_and_fix'       => array(
 				'title'       => 'Audit and fix a page',
 				'description' => 'Run the accessibility/SEO/layout audit and fix what it finds.',
@@ -55,6 +64,10 @@ final class Prompts {
 				),
 			),
 		);
+		if ( ! Starter_Rewrite::allowed() ) {
+			unset( $defs['make_it_yours'] ); // Pro and Agency only.
+		}
+		return $defs;
 	}
 
 	/**
@@ -109,6 +122,10 @@ final class Prompts {
 				$text      = "Redesign page {$a['page_id']} ({$direction}).\n1. get_page with format outline, then tree for sections you change.\n"
 					. "2. get_design_system and keep using its tokens.\n3. Improve section by section with edit_elements (update/replace/insert), keeping the existing copy unless it is placeholder text.\n"
 					. '4. audit_page and fix issues. Summarise what changed; remind the user that undo_last_change reverts each step.';
+				break;
+			case 'make_it_yours':
+				// Pro and Agency; Uncoder keeps a copy of every page before the AI app changes it (Undo in the admin).
+				$text = Starter_Rewrite::mcp_instruction( $a['business'], $a['tone'] ?? '' );
 				break;
 			case 'audit_and_fix':
 				$text = "Run audit_page for page {$a['page_id']}. Fix every error and as many warnings as sensible using edit_elements (alt text, heading order, contrast, mobile overrides, empty links). Re-run audit_page until it is clean and report the result.";

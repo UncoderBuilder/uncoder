@@ -35,7 +35,9 @@ class Text extends Control_Type {
 			return null;
 		}
 		if ( 'inline' === ( $control['html'] ?? '' ) ) {
-			return wp_kses( Utils::popup_links_for_kses( $value ), Utils::kses_inline() );
+			// kses writes every "&" as "&amp;"; keep the plain "&" the person typed (the title field shows what is
+			// stored, and the widget escapes it again when it prints the page).
+			return str_replace( '&amp;', '&', wp_kses( Utils::popup_links_for_kses( $value ), Utils::kses_inline() ) );
 		}
 		if ( 'textarea' === $this->type ) {
 			return sanitize_textarea_field( $value );

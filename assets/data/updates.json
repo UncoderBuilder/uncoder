@@ -1,6 +1,52 @@
 {
   "changelog": [
     {
+      "version": "0.1.1",
+      "date": "2026-10-09",
+      "title": "Starter sites, plans and agency tools",
+      "groups": [
+        {
+          "label": "Plans",
+          "items": [
+            "Pro and Agency licences add paid features to the free builder. Activate a key under Settings → Licence, see your plan, sites and renewal date, change keys and free a site for another one. Staging and local copies do not count towards a licence’s sites."
+          ]
+        },
+        {
+          "label": "Starter sites",
+          "items": [
+            "Uncoder → Starter Sites: a library of complete starter sites, newest first, many of them free, with search, filters, live previews and one-click import. Pro and Agency unlock every starter.",
+            "Make it yours (Pro and Agency): your connected AI app rewrites an imported starter for your business, with a copy of every page kept so you can undo."
+          ]
+        },
+        {
+          "label": "Editor",
+          "items": [
+            "Selecting an element near the edge of the page no longer adds scrollbars to the canvas or makes it shake, and the settings panel’s labels, tabs and hints are darker and easier to read.",
+            "The changed-setting dot sits after its label, any element you click on the page is shown in Layers, and a title with \"&\" keeps showing \"&\" after saving.",
+            "Premium sections under Insert → Sections (Pro and Agency), and the private cloud library in Insert → Sections, Save as template and the editor menu (Agency)."
+          ]
+        },
+        {
+          "label": "AI",
+          "items": [
+            "AI works only through the app you connect over MCP, with your own account in that app. The AI writing and AI images buttons that needed your own AI key are removed, and saved keys are deleted."
+          ]
+        },
+        {
+          "label": "Agency tools",
+          "items": [
+            "White-label, client handoff, a private cloud library and branded page reports."
+          ]
+        },
+        {
+          "label": "Site",
+          "items": [
+            "Uncoder → Page Checks: accessibility, search, content, mobile and speed checks for every published page, with a plain fix for each issue. On every plan."
+          ]
+        }
+      ]
+    },
+    {
       "version": "0.1.0",
       "date": "2026-09-28",
       "title": "First release",
@@ -55,12 +101,26 @@
   ],
   "news": [
     {
+      "id": "2026-10-release-0-1-1",
+      "date": "2026-10-09",
+      "tag": "release",
+      "title": "Uncoder 0.1.1: starter sites and plans",
+      "body": "Start from a complete starter site, let your AI app make it yours, and add Pro or Agency for the whole library and the agency tools.",
+      "link": {
+        "label": "See what’s new",
+        "docs": "changelog/"
+      }
+    },
+    {
       "id": "2026-09-ai-connect",
       "date": "2026-09-28",
       "tag": "guide",
       "title": "Let your AI build with you",
       "body": "Connect Claude, ChatGPT, Cursor or another AI app in a few clicks. It edits the same elements you do, and every change can be undone.",
-      "link": { "label": "Connect an AI app", "screen": "uncoder-ai" }
+      "link": {
+        "label": "Connect an AI app",
+        "screen": "uncoder-ai"
+      }
     },
     {
       "id": "2026-09-patterns",
@@ -68,7 +128,10 @@
       "tag": "tip",
       "title": "Start from a pattern",
       "body": "Insert → Sections has 40 ready-made patterns. In a header or footer template, the matching category is already selected.",
-      "link": { "label": "How patterns work", "docs": "editor/library/" }
+      "link": {
+        "label": "How patterns work",
+        "docs": "editor/library/"
+      }
     },
     {
       "id": "2026-09-release-0-1-0",
@@ -76,7 +139,10 @@
       "tag": "release",
       "title": "Uncoder 0.1.0 is here",
       "body": "The first public version: a visual builder, a full Theme Builder, forms, popups and a built-in MCP server. Free, with no account.",
-      "link": { "label": "Read the launch post", "url": "https://uncoderbuilder.com/blog/" }
+      "link": {
+        "label": "Read the launch post",
+        "url": "https://uncoderbuilder.com/blog/"
+      }
     }
   ]
 }

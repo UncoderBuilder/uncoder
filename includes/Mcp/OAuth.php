@@ -69,7 +69,7 @@ final class OAuth {
 			'authorization_servers'    => array( self::issuer() ),
 			'scopes_supported'         => array_keys( Tokens::SCOPES ),
 			'bearer_methods_supported' => array( 'header' ),
-			'resource_name'            => get_bloginfo( 'name' ) . ' — Uncoder',
+			'resource_name'            => get_bloginfo( 'name' ) . ' — ' . \Uncoder\Builder\Core\Brand::name(),
 			'resource_documentation'   => admin_url( 'admin.php?page=uncoder-ai' ),
 		);
 	}

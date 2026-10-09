@@ -150,9 +150,6 @@ final class Settings_Controller {
 			'consent'             => \Uncoder\Builder\Site\Consent::get(),
 			'performance'         => \Uncoder\Builder\Site\Performance::get(),
 			'business'            => \Uncoder\Builder\Site\Schema::get(),
-			'ai'                  => \Uncoder\Builder\Site\Ai_Writer::public_settings(),
-			'aiImages'            => \Uncoder\Builder\Site\Ai_Images::public_settings(),
-			'aiModels'            => \Uncoder\Builder\Site\Ai_Writer::MODELS,
 			'seoPlugin'           => array( 'yoast' => 'Yoast SEO', 'rankmath' => 'Rank Math', 'aioseo' => 'All in One SEO', 'seopress' => 'SEOPress', 'tsf' => 'The SEO Framework' )[ \Uncoder\Builder\Core\Seo::plugin() ] ?? '',
 			'businessTypes'       => \Uncoder\Builder\Site\Schema::TYPES,
 			'maintenancePage'     => $this->page_ref( Maintenance::get()['page'] ),
@@ -221,14 +218,6 @@ final class Settings_Controller {
 		if ( array_key_exists( 'formRetentionDays', $body ) ) {
 			$stored['form_retention_days'] = max( 0, min( 3650, absint( $body['formRetentionDays'] ) ) );
 			$changed                       = true;
-		}
-		if ( isset( $body['aiImages'] ) && is_array( $body['aiImages'] ) ) {
-			$stored['ai_images'] = \Uncoder\Builder\Site\Ai_Images::sanitize( $body['aiImages'] );
-			$changed             = true;
-		}
-		if ( isset( $body['ai'] ) && is_array( $body['ai'] ) ) {
-			$stored['ai'] = \Uncoder\Builder\Site\Ai_Writer::sanitize( $body['ai'] );
-			$changed      = true;
 		}
 		if ( isset( $body['business'] ) && is_array( $body['business'] ) ) {
 			$stored['business'] = \Uncoder\Builder\Site\Schema::sanitize( $body['business'] );

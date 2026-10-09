@@ -116,6 +116,21 @@ final class Migrations {
 		if ( '' !== $from && version_compare( $from, '1.4.0', '<' ) ) {
 			self::legacy_conditions();
 		}
+		if ( '' !== $from && version_compare( $from, '1.5.0', '<' ) ) {
+			self::forget_ai_keys();
+		}
+	}
+
+	/**
+	 * 1.5.0 — AI works only through MCP (the user's own AI app): the AI writing and AI images settings, with any
+	 * Anthropic or image-service key saved in them, are deleted.
+	 */
+	private static function forget_ai_keys(): void {
+		$stored = get_option( 'uncoder_wb_settings', null );
+		if ( is_array( $stored ) && ( isset( $stored['ai'] ) || isset( $stored['ai_images'] ) ) ) {
+			unset( $stored['ai'], $stored['ai_images'] );
+			update_option( 'uncoder_wb_settings', $stored );
+		}
 	}
 
 	/**

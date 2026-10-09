@@ -56,13 +56,33 @@ final class Admin {
 			'uncoder-ai'          => array( __( 'AI & MCP', 'uncoder' ), 'manage_options' ),
 			'uncoder-settings'    => array( __( 'Settings', 'uncoder' ), 'manage_options' ),
 		);
+		// The starter-site library arrives with the paid plans (Licence::enabled()), right after Home.
+		if ( \Uncoder\Builder\Licence\Licence::enabled() && \Uncoder\Builder\Site\White_Label::can_manage() ) {
+			$this->pages = array_slice( $this->pages, 0, 1, true ) + array( 'uncoder-starters' => array( __( 'Starter Sites', 'uncoder' ), 'manage_options' ) ) + array_slice( $this->pages, 1, null, true );
+		}
+		// The agency's private cloud library, right after Starter sites (Site\Cloud_Library).
+		if ( \Uncoder\Builder\Licence\Licence::enabled() && \Uncoder\Builder\Site\Cloud_Library::offered() ) {
+			$at          = array_search( 'uncoder-starters', array_keys( $this->pages ), true );
+			$at          = false === $at ? 1 : $at + 1;
+			$this->pages = array_slice( $this->pages, 0, $at, true ) + array( 'uncoder-cloud' => array( __( 'Cloud Library', 'uncoder' ), 'edit_posts' ) ) + array_slice( $this->pages, $at, null, true );
+		}
+		// Page checks (and the Agency's branded reports), right before Submissions (Site\Page_Checks).
+		if ( \Uncoder\Builder\Licence\Licence::enabled() ) {
+			$at          = array_search( 'uncoder-submissions', array_keys( $this->pages ), true );
+			$at          = false === $at ? count( $this->pages ) : $at;
+			$this->pages = array_slice( $this->pages, 0, $at, true ) + array( 'uncoder-checks' => array( __( 'Page Checks', 'uncoder' ), 'edit_pages' ) ) + array_slice( $this->pages, $at, null, true );
+		}
+		if ( \Uncoder\Builder\Site\Handoff::restricts() ) {
+			// A handed-over site: the client keeps Home and Submissions; the design screens stay with the builders.
+			$this->pages = array_intersect_key( $this->pages, array_flip( array( 'uncoder', 'uncoder-submissions' ) ) );
+		}
 		$unread = current_user_can( 'edit_pages' ) ? \Uncoder\Builder\Forms\Store::unread_count() : 0;
 
 		// Right under the Dashboard (2), before anything else (Jetpack uses 3, the first separator is 4); a string, so
 		// WordPress keeps the fraction.
 		add_menu_page(
-			__( 'Uncoder', 'uncoder' ),
-			__( 'Uncoder', 'uncoder' ),
+			\Uncoder\Builder\Core\Brand::name(),
+			\Uncoder\Builder\Core\Brand::name(),
 			'edit_posts',
 			self::SLUG,
 			array( $this, 'render' ),
@@ -76,7 +96,7 @@ final class Admin {
 					/* translators: %s: number of unread form submissions. */
 					. esc_html( sprintf( _n( '%s unread', '%s unread', $unread, 'uncoder' ), number_format_i18n( $unread ) ) ) . '</span></span>';
 			}
-			add_submenu_page( self::SLUG, $page[0] . ' ‹ Uncoder', $label, $page[1], $slug, array( $this, 'render' ) );
+			add_submenu_page( self::SLUG, $page[0] . ' ‹ ' . \Uncoder\Builder\Core\Brand::name(), $label, $page[1], $slug, array( $this, 'render' ) );
 		}
 	}
 
@@ -129,6 +149,16 @@ final class Admin {
 		return array(
 			'page'    => $page,
 			'version' => UNCODER_WB_VERSION,
+			// Settings → Licence and White-label show only once the paid plans launch (Licence::enabled()), and under
+			// white-label "only me" only to the administrator who set it.
+			'licensing' => \Uncoder\Builder\Licence\Licence::enabled() && \Uncoder\Builder\Site\White_Label::can_manage(),
+			// The starter-site library replaces the built-in starters (Uncoder → Starter Sites, for who may open it).
+			'library'   => \Uncoder\Builder\Licence\Licence::enabled(),
+			// Branded page reports: the licence covers them (Page Checks shows "Create report" only then).
+			'reports'   => \Uncoder\Builder\Licence\Licence::enabled() && \Uncoder\Builder\Site\Page_Checks::can_report() && \Uncoder\Builder\Site\Page_Checks::allowed(),
+			'brand'     => \Uncoder\Builder\Site\White_Label::brand(),
+			'handoff'   => \Uncoder\Builder\Site\Handoff::notice(),
+			'cloud'     => \Uncoder\Builder\Site\Cloud_Library::client_config(),
 			'rest'    => array(
 				'root'  => esc_url_raw( rest_url( 'uncoder/v1/' ) ),
 				'wp'    => esc_url_raw( rest_url( 'wp/v2/' ) ),

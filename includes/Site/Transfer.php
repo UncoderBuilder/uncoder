@@ -117,9 +117,11 @@ final class Transfer {
 	}
 
 	/**
+	 * One page or template as a file item (also used by Cloud_Library).
+	 *
 	 * @return array<string,mixed>|WP_Error
 	 */
-	private function export_item( int $id ) {
+	public function export_item( int $id ) {
 		$post = get_post( $id );
 		if ( ! $post || ! current_user_can( 'edit_post', $id ) ) {
 			/* translators: %d: post id. */
@@ -324,6 +326,19 @@ final class Transfer {
 			$doc->save_page_settings( $item['page_settings'] );
 		}
 		return $id;
+	}
+
+	/**
+	 * Copies the images of an element tree from another site into the media library (up to $budget), for elements
+	 * inserted outside an import (Cloud_Library sections).
+	 *
+	 * @param array<int,mixed> $elements Tree.
+	 * @return array{0:array<int,mixed>,1:int,2:int} Tree, images copied, images that could not be copied.
+	 */
+	public function localize( array $elements, int $budget ): array {
+		$media    = array( 'budget' => current_user_can( 'upload_files' ) ? $budget : 0, 'map' => array(), 'failed' => 0 );
+		$elements = $this->localize_media( $elements, $media );
+		return array( $elements, count( array_filter( $media['map'] ) ), (int) $media['failed'] );
 	}
 
 	/**

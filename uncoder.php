@@ -3,7 +3,7 @@
  * Plugin Name:       Uncoder – AI-Powered Website Builder
  * Plugin URI:        https://uncoderbuilder.com/
  * Description:       Visual drag & drop website builder with a full theme builder (headers, footers, single, archive, 404, popups, mega menus, loop items) and a built-in MCP server so AI assistants like Claude, ChatGPT and Cursor can design and build your site.
- * Version:           0.1.0
+ * Version:           0.1.1
  * Requires at least: 6.6
  * Requires PHP:      8.0
  * Author:            Uncoder
@@ -19,7 +19,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'UNCODER_WB_VERSION', '0.1.0' );
+define( 'UNCODER_WB_VERSION', '0.1.1' );
 define( 'UNCODER_WB_FILE', __FILE__ );
 define( 'UNCODER_WB_PATH', plugin_dir_path( __FILE__ ) );
 define( 'UNCODER_WB_URL', plugin_dir_url( __FILE__ ) );
