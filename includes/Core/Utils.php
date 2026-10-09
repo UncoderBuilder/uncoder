@@ -373,8 +373,32 @@ final class Utils {
 		return gmdate( 'Y-m-d H:i:s' );
 	}
 
+	/**
+	 * The visitor's IP address, for rate limits and anonymised logs. REMOTE_ADDR by default. Behind a proxy or CDN
+	 * every visitor shares the proxy's address, so one abuser would lock everyone out: there, name the header the
+	 * proxy sets in wp-config.php, e.g. define( 'UNCODER_WB_CLIENT_IP_HEADER', 'CF-Connecting-IP' ) for Cloudflare.
+	 * Only set it when the proxy always writes that header, or visitors could choose their own address. For
+	 * X-Forwarded-For the last address is used: the one your proxy added.
+	 */
 	public static function client_ip(): string {
-		$ip = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
+		$ip     = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
+		$header = defined( 'UNCODER_WB_CLIENT_IP_HEADER' ) ? (string) UNCODER_WB_CLIENT_IP_HEADER : '';
+		if ( '' !== $header ) {
+			$key = 'HTTP_' . strtoupper( str_replace( '-', '_', $header ) );
+			if ( ! empty( $_SERVER[ $key ] ) ) {
+				$list    = array_map( 'trim', explode( ',', sanitize_text_field( wp_unslash( $_SERVER[ $key ] ) ) ) );
+				$proxied = (string) end( $list );
+				if ( filter_var( $proxied, FILTER_VALIDATE_IP ) ) {
+					$ip = $proxied;
+				}
+			}
+		}
+		/**
+		 * Filters the visitor IP address Uncoder uses for rate limits and logs.
+		 *
+		 * @param string $ip IP address (empty when unknown).
+		 */
+		$ip = (string) apply_filters( 'uncoder_wb/client_ip', $ip );
 		return filter_var( $ip, FILTER_VALIDATE_IP ) ? $ip : '';
 	}
 

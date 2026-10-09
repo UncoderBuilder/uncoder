@@ -1,6 +1,6 @@
 <?php
 /**
- * The starter-site library (Uncoder → Starter sites): the catalogue from uncoderbuilder.com, and one-click import.
+ * The starter-site library (Uncoder → Library → Starter sites): the catalogue from uncoderbuilder.com, and one-click import.
  * Free starters download without a key; Pro starters need a licence with the "library" feature (Licence\Licence).
  * Importing downloads the kit, unpacks it like an uploaded site kit (Site_Kit::stage_zip()) and hands the preview to
  * the usual import step, so the owner chooses what to bring in before anything changes.

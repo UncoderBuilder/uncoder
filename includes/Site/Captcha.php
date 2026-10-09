@@ -142,7 +142,7 @@ final class Captcha {
 				'body'    => array(
 					'secret'   => $c['secret'],
 					'response' => $response,
-					'remoteip' => isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '',
+					'remoteip' => \Uncoder\Builder\Core\Utils::client_ip(),
 				),
 			)
 		);

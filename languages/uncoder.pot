@@ -2,14 +2,14 @@
 # This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Uncoder – AI-Powered Website Builder 0.1.0\n"
+"Project-Id-Version: Uncoder – AI-Powered Website Builder 0.1.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/uncoder\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-07T13:40:07+00:00\n"
+"POT-Creation-Date: 2026-10-09T18:48:27+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: uncoder\n"
@@ -32,14 +32,12 @@ msgstr ""
 
 #. Author of the plugin
 #: uncoder.php
-#: includes/Admin/Admin.php:64
-#: includes/Admin/Admin.php:65
-#: includes/Editor/Editor.php:80
+#: includes/Editor/Editor.php:108
 #: includes/Mcp/Abilities_Bridge.php:40
 msgid "Uncoder"
 msgstr ""
 
-#: includes/Admin/Admin.php:52
+#: includes/Admin/Admin.php:60
 #: includes/Widgets/Breadcrumbs.php:67
 #: includes/Widgets/Breadcrumbs.php:566
 #: includes/Widgets/Nav_Menu.php:1416
@@ -47,47 +45,71 @@ msgstr ""
 msgid "Home"
 msgstr ""
 
-#: includes/Admin/Admin.php:53
+#: includes/Admin/Admin.php:61
+msgid "Library"
+msgstr ""
+
+#: includes/Admin/Admin.php:62
 #: includes/Editor/Admin_Bar.php:147
 msgid "Theme Builder"
 msgstr ""
 
-#: includes/Admin/Admin.php:54
+#: includes/Admin/Admin.php:63
 #: includes/Editor/Admin_Bar.php:154
 msgid "Design System"
 msgstr ""
 
-#: includes/Admin/Admin.php:55
+#: includes/Admin/Admin.php:64
 msgid "Submissions"
 msgstr ""
 
-#: includes/Admin/Admin.php:56
+#: includes/Admin/Admin.php:68
+msgid "Page Checks"
+msgstr ""
+
+#: includes/Admin/Admin.php:70
 msgid "AI & MCP"
 msgstr ""
 
-#: includes/Admin/Admin.php:57
+#: includes/Admin/Admin.php:71
 msgid "Settings"
 msgstr ""
 
-#. translators: %s: number of unread form submissions.
-#: includes/Admin/Admin.php:77
+#: includes/Admin/Admin.php:94
 #, php-format
 msgid "%s unread"
 msgid_plural "%s unread"
 msgstr[0] ""
 msgstr[1] ""
 
-#: includes/Admin/Admin.php:173
+#. translators: %s: number of pages.
+#: includes/Admin/Admin.php:98
+#, php-format
+msgid "%s page with something to fix"
+msgid_plural "%s pages with something to fix"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/Admin/Admin.php:101
+#: includes/Widgets/Call_To_Action.php:278
+msgid "New"
+msgstr ""
+
+#: includes/Admin/Admin.php:104
+msgid "The site is closed to visitors"
+msgstr ""
+
+#: includes/Admin/Admin.php:236
 #: includes/Editor/Admin_Bar.php:68
-#: includes/Widgets/Loop_Grid.php:310
+#: includes/Widgets/Loop_Grid.php:324
 msgid "Loading…"
 msgstr ""
 
-#: includes/Admin/Admin.php:181
+#: includes/Admin/Admin.php:244
 msgid "Connect AI"
 msgstr ""
 
-#: includes/Admin/Admin.php:182
+#: includes/Admin/Admin.php:245
 #: includes/Widgets/Login.php:128
 msgid "Dashboard"
 msgstr ""
@@ -147,7 +169,7 @@ msgstr ""
 #: includes/Widgets/Icon_List.php:293
 #: includes/Widgets/Icon_List.php:359
 #: includes/Widgets/Icon_List.php:369
-#: includes/Widgets/Image.php:287
+#: includes/Widgets/Image.php:331
 #: includes/Widgets/Image_Box.php:392
 #: includes/Widgets/Image_Box.php:420
 #: includes/Widgets/Image_Box.php:453
@@ -160,7 +182,7 @@ msgstr ""
 #: includes/Widgets/Link_In_Bio.php:731
 #: includes/Widgets/Link_In_Bio.php:752
 #: includes/Widgets/Login.php:283
-#: includes/Widgets/Loop_Grid.php:556
+#: includes/Widgets/Loop_Grid.php:570
 #: includes/Widgets/Marquee.php:251
 #: includes/Widgets/Marquee.php:324
 #: includes/Widgets/Nav_Menu.php:897
@@ -239,7 +261,7 @@ msgstr ""
 #: includes/Widgets/Image.php:27
 #: includes/Widgets/Image.php:63
 #: includes/Widgets/Image.php:68
-#: includes/Widgets/Image.php:186
+#: includes/Widgets/Image.php:230
 #: includes/Widgets/Image_Box.php:65
 #: includes/Widgets/Image_Box.php:279
 #: includes/Widgets/Image_Compare.php:201
@@ -260,7 +282,7 @@ msgstr ""
 #: includes/Core/Common_Controls.php:347
 #: includes/Widgets/Link_In_Bio.php:328
 #: includes/Widgets/Login.php:245
-#: includes/Widgets/Loop_Grid.php:230
+#: includes/Widgets/Loop_Grid.php:244
 #: includes/Widgets/Price_Table.php:289
 #: includes/Widgets/Reading_Progress.php:57
 msgid "Position"
@@ -273,7 +295,7 @@ msgstr ""
 #: includes/Controls/Groups/Background.php:51
 #: includes/Core/Common_Controls.php:367
 #: includes/Core/Common_Controls.php:370
-#: includes/Widgets/Loop_Grid.php:241
+#: includes/Widgets/Loop_Grid.php:255
 msgid "Repeat"
 msgstr ""
 
@@ -420,7 +442,7 @@ msgstr ""
 #: includes/Widgets/Facebook_Embed.php:202
 #: includes/Widgets/Featured_Image.php:132
 #: includes/Widgets/Icon_Box.php:488
-#: includes/Widgets/Image.php:191
+#: includes/Widgets/Image.php:235
 #: includes/Widgets/Image_Box.php:284
 #: includes/Widgets/Login.php:421
 #: includes/Widgets/Lottie.php:186
@@ -640,13 +662,13 @@ msgstr ""
 #: includes/Widgets/Icon_Box.php:88
 #: includes/Widgets/Image.php:115
 #: includes/Widgets/Image.php:136
-#: includes/Widgets/Image.php:271
+#: includes/Widgets/Image.php:315
 #: includes/Widgets/Image_Carousel.php:105
 #: includes/Widgets/Image_Carousel.php:175
 #: includes/Widgets/Image_Gallery.php:214
 #: includes/Widgets/Image_Gallery.php:252
 #: includes/Widgets/Link_In_Bio.php:280
-#: includes/Widgets/Loop_Grid.php:269
+#: includes/Widgets/Loop_Grid.php:283
 #: includes/Widgets/Posts.php:309
 #: includes/Widgets/Posts.php:395
 #: includes/Widgets/Price_List.php:160
@@ -683,8 +705,8 @@ msgstr ""
 #: includes/Core/Assets.php:78
 #: includes/Widgets/Form.php:325
 #: includes/Widgets/Form.php:1122
-#: includes/Widgets/Loop_Grid.php:292
-#: includes/Widgets/Loop_Grid.php:782
+#: includes/Widgets/Loop_Grid.php:306
+#: includes/Widgets/Loop_Grid.php:797
 #: includes/Widgets/Posts.php:330
 #: includes/Widgets/Posts.php:970
 #: includes/Widgets/Post_Navigation.php:74
@@ -693,8 +715,8 @@ msgid "Next"
 msgstr ""
 
 #: includes/Core/Assets.php:79
-#: includes/Widgets/Loop_Grid.php:283
-#: includes/Widgets/Loop_Grid.php:781
+#: includes/Widgets/Loop_Grid.php:297
+#: includes/Widgets/Loop_Grid.php:796
 #: includes/Widgets/Posts.php:321
 #: includes/Widgets/Posts.php:969
 #: includes/Widgets/Post_Navigation.php:65
@@ -719,8 +741,8 @@ msgstr ""
 #: includes/Widgets/Icon_List.php:108
 #: includes/Widgets/Image_Gallery.php:112
 #: includes/Widgets/Language_Switcher.php:67
-#: includes/Widgets/Loop_Grid.php:110
-#: includes/Widgets/Loop_Grid.php:358
+#: includes/Widgets/Loop_Grid.php:124
+#: includes/Widgets/Loop_Grid.php:372
 #: includes/Widgets/Nav_Menu.php:93
 #: includes/Widgets/Posts.php:88
 #: includes/Widgets/Posts.php:93
@@ -772,7 +794,7 @@ msgstr ""
 #: includes/Widgets/Login.php:352
 #: includes/Widgets/Login.php:446
 #: includes/Widgets/Loop_Filter.php:165
-#: includes/Widgets/Loop_Grid.php:543
+#: includes/Widgets/Loop_Grid.php:557
 #: includes/Widgets/Nav_Menu.php:933
 #: includes/Widgets/Off_Canvas.php:329
 #: includes/Widgets/Off_Canvas.php:359
@@ -807,7 +829,7 @@ msgstr ""
 #: includes/Widgets/Hotspot.php:171
 #: includes/Widgets/Icon.php:58
 #: includes/Widgets/Icon_Box.php:108
-#: includes/Widgets/Image.php:239
+#: includes/Widgets/Image.php:283
 #: includes/Widgets/Post_Title.php:116
 #: includes/Widgets/Slides.php:186
 #: includes/Widgets/Text_Editor.php:115
@@ -862,7 +884,7 @@ msgstr ""
 #: includes/Widgets/Image_Compare.php:133
 #: includes/Widgets/Login.php:485
 #: includes/Widgets/Loop_Filter.php:150
-#: includes/Widgets/Loop_Grid.php:335
+#: includes/Widgets/Loop_Grid.php:349
 #: includes/Widgets/Marquee.php:212
 #: includes/Widgets/Nav_Menu.php:107
 #: includes/Widgets/Nav_Menu.php:245
@@ -903,7 +925,7 @@ msgstr ""
 #: includes/Widgets/Login.php:248
 #: includes/Widgets/Login.php:486
 #: includes/Widgets/Loop_Filter.php:151
-#: includes/Widgets/Loop_Grid.php:336
+#: includes/Widgets/Loop_Grid.php:350
 #: includes/Widgets/Lottie.php:167
 #: includes/Widgets/Marquee.php:213
 #: includes/Widgets/Nav_Menu.php:108
@@ -946,7 +968,7 @@ msgstr ""
 #: includes/Widgets/Image_Compare.php:135
 #: includes/Widgets/Login.php:487
 #: includes/Widgets/Loop_Filter.php:152
-#: includes/Widgets/Loop_Grid.php:337
+#: includes/Widgets/Loop_Grid.php:351
 #: includes/Widgets/Marquee.php:214
 #: includes/Widgets/Nav_Menu.php:109
 #: includes/Widgets/Nav_Menu.php:442
@@ -984,7 +1006,7 @@ msgid "The starting size in a row or column. 0% with Grow 1 on each item makes e
 msgstr ""
 
 #: includes/Core/Common_Controls.php:170
-#: includes/Widgets/Loop_Grid.php:251
+#: includes/Widgets/Loop_Grid.php:265
 msgid "Column span"
 msgstr ""
 
@@ -1085,11 +1107,11 @@ msgstr ""
 #: includes/Widgets/Login.php:403
 #: includes/Widgets/Logo_Grid.php:251
 #: includes/Widgets/Loop_Filter.php:160
-#: includes/Widgets/Loop_Grid.php:412
-#: includes/Widgets/Loop_Grid.php:430
-#: includes/Widgets/Loop_Grid.php:448
-#: includes/Widgets/Loop_Grid.php:497
-#: includes/Widgets/Loop_Grid.php:515
+#: includes/Widgets/Loop_Grid.php:426
+#: includes/Widgets/Loop_Grid.php:444
+#: includes/Widgets/Loop_Grid.php:462
+#: includes/Widgets/Loop_Grid.php:511
+#: includes/Widgets/Loop_Grid.php:529
 #: includes/Widgets/Nav_Menu.php:527
 #: includes/Widgets/Nav_Menu.php:545
 #: includes/Widgets/Nav_Menu.php:574
@@ -1184,7 +1206,7 @@ msgstr ""
 #: includes/Widgets/Hotspot.php:310
 #: includes/Widgets/Icon_Box.php:295
 #: includes/Widgets/Icon_Box.php:519
-#: includes/Widgets/Image.php:262
+#: includes/Widgets/Image.php:306
 #: includes/Widgets/Image_Box.php:229
 #: includes/Widgets/Image_Box.php:331
 #: includes/Widgets/Image_Carousel.php:166
@@ -1194,7 +1216,7 @@ msgstr ""
 #: includes/Widgets/Login.php:318
 #: includes/Widgets/Login.php:388
 #: includes/Widgets/Logo_Grid.php:255
-#: includes/Widgets/Loop_Grid.php:529
+#: includes/Widgets/Loop_Grid.php:543
 #: includes/Widgets/Nav_Menu.php:818
 #: includes/Widgets/Nav_Menu.php:947
 #: includes/Widgets/Nav_Menu.php:1092
@@ -1244,7 +1266,7 @@ msgstr ""
 #: includes/Widgets/Hotspot.php:375
 #: includes/Widgets/Icon_Box.php:287
 #: includes/Widgets/Icon_Box.php:514
-#: includes/Widgets/Image.php:257
+#: includes/Widgets/Image.php:301
 #: includes/Widgets/Image_Box.php:221
 #: includes/Widgets/Image_Box.php:326
 #: includes/Widgets/Image_Carousel.php:161
@@ -1255,8 +1277,8 @@ msgstr ""
 #: includes/Widgets/Login.php:343
 #: includes/Widgets/Login.php:437
 #: includes/Widgets/Logo_Grid.php:260
-#: includes/Widgets/Loop_Grid.php:458
-#: includes/Widgets/Loop_Grid.php:534
+#: includes/Widgets/Loop_Grid.php:472
+#: includes/Widgets/Loop_Grid.php:548
 #: includes/Widgets/Marquee.php:399
 #: includes/Widgets/Nav_Menu.php:812
 #: includes/Widgets/Nav_Menu.php:942
@@ -1383,7 +1405,7 @@ msgstr ""
 
 #: includes/Core/Common_Controls.php:316
 #: includes/Widgets/Featured_Image.php:183
-#: includes/Widgets/Image.php:239
+#: includes/Widgets/Image.php:283
 #: includes/Widgets/Progress_Bar.php:177
 msgid "Fill"
 msgstr ""
@@ -1661,8 +1683,8 @@ msgstr ""
 #: includes/Widgets/Login.php:301
 #: includes/Widgets/Login.php:371
 #: includes/Widgets/Logo_Grid.php:216
-#: includes/Widgets/Loop_Grid.php:399
-#: includes/Widgets/Loop_Grid.php:484
+#: includes/Widgets/Loop_Grid.php:413
+#: includes/Widgets/Loop_Grid.php:498
 #: includes/Widgets/Marquee.php:246
 #: includes/Widgets/Nav_Menu.php:514
 #: includes/Widgets/Nav_Menu.php:664
@@ -1720,8 +1742,8 @@ msgstr ""
 #: includes/Widgets/Link_In_Bio.php:611
 #: includes/Widgets/Login.php:390
 #: includes/Widgets/Logo_Grid.php:229
-#: includes/Widgets/Loop_Grid.php:417
-#: includes/Widgets/Loop_Grid.php:502
+#: includes/Widgets/Loop_Grid.php:431
+#: includes/Widgets/Loop_Grid.php:516
 #: includes/Widgets/Marquee.php:256
 #: includes/Widgets/Nav_Menu.php:532
 #: includes/Widgets/Nav_Menu.php:682
@@ -1793,7 +1815,7 @@ msgstr ""
 #: includes/Widgets/Google_Maps.php:158
 #: includes/Widgets/Google_Maps.php:161
 #: includes/Widgets/Hotspot.php:238
-#: includes/Widgets/Image.php:264
+#: includes/Widgets/Image.php:308
 #: includes/Widgets/Image_Box.php:345
 #: includes/Widgets/Image_Box.php:348
 #: includes/Widgets/Image_Carousel.php:167
@@ -2300,6 +2322,7 @@ msgid "Site title"
 msgstr ""
 
 #: includes/Dynamic/Core_Tags.php:252
+#: includes/Site/Page_Checks.php:314
 msgid "Site tagline"
 msgstr ""
 
@@ -2431,11 +2454,11 @@ msgid "No"
 msgstr ""
 
 #: includes/Editor/Admin_Bar.php:57
-#: includes/Editor/Editor.php:70
-#: includes/Editor/Editor.php:127
-#: includes/Editor/Editor.php:160
-#: includes/Editor/Editor.php:216
-#: includes/Editor/Editor.php:217
+#: includes/Editor/Editor.php:98
+#: includes/Editor/Editor.php:155
+#: includes/Editor/Editor.php:188
+#: includes/Editor/Editor.php:244
+#: includes/Editor/Editor.php:245
 msgid "Edit with Uncoder"
 msgstr ""
 
@@ -2443,6 +2466,7 @@ msgstr ""
 #: includes/Rest/Templates_Controller.php:252
 #: includes/Site/Elementor_Import.php:239
 #: includes/Site/Live_Search.php:101
+#: includes/Site/Starter_Rewrite.php:108
 #: includes/Widgets/Sitemap.php:504
 msgid "(no title)"
 msgstr ""
@@ -2453,7 +2477,8 @@ msgstr ""
 
 #: includes/Editor/Admin_Bar.php:129
 #: includes/Forms/Privacy.php:133
-#: includes/Site/Starters.php:141
+#: includes/Site/Page_Checks.php:755
+#: includes/Site/Starters.php:143
 msgid "Page"
 msgstr ""
 
@@ -2479,71 +2504,397 @@ msgstr ""
 msgid "Could not clear the cache"
 msgstr ""
 
-#: includes/Editor/Editor.php:105
-#: includes/Editor/Editor.php:164
+#: includes/Editor/Editor.php:62
+#: includes/Editor/Editor.php:258
+#: includes/Rest/Overview_Controller.php:166
+#: includes/Site/Cloud_Library.php:355
+msgid "Untitled"
+msgstr ""
+
+#: includes/Editor/Editor.php:133
+#: includes/Editor/Editor.php:192
 msgid "page"
 msgstr ""
 
 #. translators: %s: post type name, e.g. "page".
-#: includes/Editor/Editor.php:129
+#: includes/Editor/Editor.php:157
 #, php-format
 msgid "This %s is built with Uncoder"
 msgstr ""
 
-#: includes/Editor/Editor.php:130
+#: includes/Editor/Editor.php:158
 msgid "Its design, content and layout are edited in Uncoder. Title, status, permalink and other settings still work here."
 msgstr ""
 
-#: includes/Editor/Editor.php:131
+#: includes/Editor/Editor.php:159
 msgid "Switch back to the WordPress editor"
 msgstr ""
 
 #. translators: %s: post type name, e.g. "page".
-#: includes/Editor/Editor.php:133
+#: includes/Editor/Editor.php:161
 #, php-format
 msgid "Show the WordPress editor content on this %s instead of the Uncoder design? The design is kept: choose Edit with Uncoder to bring it back (it then replaces what you wrote in the WordPress editor)."
 msgstr ""
 
-#: includes/Editor/Editor.php:183
+#: includes/Editor/Editor.php:211
 msgid "Sorry, you are not allowed to edit this item."
 msgstr ""
 
-#: includes/Editor/Editor.php:197
+#: includes/Editor/Editor.php:225
 msgid "Sorry, you are not allowed to edit this item with Uncoder."
 msgstr ""
 
-#: includes/Editor/Editor.php:201
+#: includes/Editor/Editor.php:229
 msgid "This item cannot be edited."
 msgstr ""
 
-#: includes/Editor/Editor.php:210
+#: includes/Editor/Editor.php:238
 msgid "Edit with Uncoder?"
 msgstr ""
 
 #. translators: %s: post title.
-#: includes/Editor/Editor.php:213
+#: includes/Editor/Editor.php:241
 #, php-format
 msgid "\"%s\" is not built with Uncoder yet. Opening it in Uncoder converts its current content into editable elements."
 msgstr ""
 
-#: includes/Editor/Editor.php:216
-#: includes/Mcp/OAuth.php:619
+#: includes/Editor/Editor.php:244
+#: includes/Mcp/OAuth.php:635
 msgid "Cancel"
 msgstr ""
 
-#: includes/Editor/Editor.php:230
-#: includes/Rest/Overview_Controller.php:164
-msgid "Untitled"
-msgstr ""
-
 #. translators: %s: post title.
-#: includes/Editor/Editor.php:387
+#: includes/Editor/Editor.php:417
 #, php-format
 msgid "Uncoder | %s"
 msgstr ""
 
-#: includes/Editor/Editor.php:406
+#: includes/Editor/Editor.php:436
 msgid "Loading Uncoder…"
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:21
+msgid "A box that holds other elements. Use it for sections, rows, columns and cards."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:22
+msgid "Questions or topics that open and close when clicked. Great for FAQs."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:23
+msgid "A coloured notice box for a tip, a success message, a warning or an error."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:24
+msgid "A heading with a moving effect, like an underline that draws itself or words that change."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:25
+msgid "The description of the category, tag or author being viewed. For archive templates."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:26
+msgid "The name of the category, tag, author or search being viewed. For archive templates."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:27
+msgid "The writer of the post, with photo, name and short bio."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:28
+msgid "A quote that stands out, with the name of the person who said it."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:29
+msgid "Shows where visitors are on your site, like Home › Blog › This post."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:30
+msgid "A button that links somewhere, like “Get a quote” or “Book now”."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:31
+msgid "A promo box with an image, a short message and one or two buttons."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:32
+msgid "Slides that visitors can swipe through. Each slide can hold anything."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:33
+msgid "Shows a piece of code nicely formatted, with a copy button."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:34
+msgid "A timer counting down to a date, like the end of a sale."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:35
+msgid "A number that counts up when it comes into view, like “500+ happy clients”."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:36
+msgid "A line to separate content, with an optional word or icon in the middle."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:37
+msgid "Shows a Facebook page, post or video on your site."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:38
+msgid "The main image of the post being viewed. For post templates."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:39
+msgid "A card that flips over on hover to show more on the back."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:40
+msgid "A contact or sign-up form. Messages are saved and emailed to you."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:41
+msgid "A Google map showing your address or any place."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:42
+msgid "A title or subtitle. Use one main heading (h1) per page."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:43
+msgid "An image with clickable dots that show a little note."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:44
+msgid "Paste your own HTML code, like an embed from another service."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:45
+msgid "A single icon, from a large icon library or your own SVG."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:46
+msgid "An icon with a title and a short text. Good for features and services."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:47
+msgid "A list where each line starts with an icon, like a checklist or contact details."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:48
+msgid "A picture from your media library, with an optional caption and link."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:49
+msgid "A picture with a title and a short text. Good for services, team or articles."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:50
+msgid "A row of pictures visitors can swipe through."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:51
+msgid "Two pictures with a slider to compare them, like before and after."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:52
+msgid "A grid of pictures that open larger when clicked."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:53
+msgid "Lets visitors switch to another language of your site (WPML or Polylang)."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:54
+msgid "A complete “link in bio” page: your photo, a short bio and big link buttons."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:55
+msgid "A login form for people with an account on your site."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:56
+msgid "The logos of your clients or partners, in a grid or a scrolling row."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:57
+msgid "Your posts as cards in a carousel, using a card design you make once."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:58
+msgid "Buttons or a search box that filter a post grid on the same page."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:59
+msgid "Your posts as cards in a grid, using a card design you make once."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:60
+msgid "A smooth animation from a Lottie file."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:61
+msgid "Text, icons or images that scroll past endlessly."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:62
+msgid "An invisible marker that menu links can jump to on the same page."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:63
+msgid "Your site menu, with dropdowns and a mobile menu button."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:64
+msgid "A button that slides in a side panel, for a menu, a form or anything else."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:65
+msgid "The comments of the post being viewed, and the form to add one."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:66
+msgid "The text of the post or page being viewed. For post and page templates."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:67
+msgid "A short summary of the post being viewed."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:68
+msgid "Details of the post being viewed, like author, date and categories."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:69
+msgid "Links to the previous and next post."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:70
+msgid "The title of the post or page being viewed. For templates."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:71
+msgid "A list or grid of your latest posts, with image, title and summary."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:72
+msgid "A menu-style price list, like dishes or services with their prices."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:73
+msgid "A pricing plan card with price, features and a button."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:74
+msgid "A bar that fills to a percentage, for skills or goals."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:75
+msgid "A thin bar at the top that fills as visitors scroll down."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:76
+msgid "A button that lets visitors switch between light and dark mode."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:77
+msgid "A search box for your site, or a search icon that opens one."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:78
+msgid "Buttons to share the page on Facebook, X, LinkedIn, WhatsApp and more."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:79
+msgid "Shows a shortcode from another plugin, like a booking form."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:80
+msgid "Your site logo, linked to the home page. Changes when you change your logo."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:81
+msgid "Your site’s tagline, from the WordPress settings."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:82
+msgid "Your site’s name, linked to the home page."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:83
+msgid "A list of all your pages and posts, for a sitemap page."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:84
+msgid "A big slideshow with a picture, text and buttons on each slide."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:85
+msgid "Icons that link to your social media profiles."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:86
+msgid "A SoundCloud player for a track or playlist."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:87
+msgid "Empty space between elements."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:88
+msgid "A rating shown as stars, like 4.5 out of 5."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:89
+msgid "A numbered “how it works” process, step by step."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:90
+msgid "A table with rows and columns, for data or comparisons."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:91
+msgid "A clickable list of the headings on the page."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:92
+msgid "Content split into tabs that visitors click between."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:93
+msgid "A card for a person: photo, name, role and social links."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:94
+msgid "Shows a saved section. Edit it once and it updates everywhere."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:95
+msgid "A quote from a happy customer, with their name and photo."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:96
+msgid "Several customer quotes in a carousel."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:97
+msgid "Paragraphs of text, with bold, links and lists."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:98
+msgid "Text that follows a curve or circle, like a round badge."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:99
+msgid "Events in order along a line, like your company history."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:100
+msgid "A YouTube, Vimeo or uploaded video."
+msgstr ""
+
+#: includes/Editor/Widget_Tips.php:101
+msgid "A video player with a list of videos next to it."
 msgstr ""
 
 #: includes/Elements/Container.php:27
@@ -2614,7 +2965,7 @@ msgstr ""
 #: includes/Widgets/Icon_List.php:124
 #: includes/Widgets/Image_Gallery.php:125
 #: includes/Widgets/Logo_Grid.php:94
-#: includes/Widgets/Loop_Grid.php:134
+#: includes/Widgets/Loop_Grid.php:148
 #: includes/Widgets/Posts.php:106
 #: includes/Widgets/Price_List.php:131
 #: includes/Widgets/Share_Buttons.php:281
@@ -2665,7 +3016,7 @@ msgstr ""
 #: includes/Widgets/Icon_List.php:188
 #: includes/Widgets/Language_Switcher.php:120
 #: includes/Widgets/Login.php:488
-#: includes/Widgets/Loop_Grid.php:467
+#: includes/Widgets/Loop_Grid.php:481
 #: includes/Widgets/Posts.php:727
 #: includes/Widgets/Post_Navigation.php:137
 msgid "Space between"
@@ -2702,7 +3053,7 @@ msgstr ""
 
 #: includes/Elements/Container.php:234
 #: includes/Widgets/Form.php:781
-#: includes/Widgets/Loop_Grid.php:372
+#: includes/Widgets/Loop_Grid.php:386
 #: includes/Widgets/Posts.php:373
 #: includes/Widgets/Sitemap.php:264
 msgid "Row gap"
@@ -2789,8 +3140,8 @@ msgstr ""
 
 #: includes/Elements/Container.php:313
 #: includes/Widgets/Loop_Carousel.php:87
-#: includes/Widgets/Loop_Grid.php:185
-#: includes/Widgets/Loop_Grid.php:190
+#: includes/Widgets/Loop_Grid.php:199
+#: includes/Widgets/Loop_Grid.php:204
 #: includes/Widgets/Posts.php:61
 #: includes/Widgets/Posts.php:66
 msgid "Query"
@@ -2911,7 +3262,7 @@ msgstr ""
 #: includes/Widgets/Featured_Image.php:150
 #: includes/Widgets/Flip_Box.php:242
 #: includes/Widgets/Google_Maps.php:87
-#: includes/Widgets/Image.php:209
+#: includes/Widgets/Image.php:253
 #: includes/Widgets/Marquee.php:174
 #: includes/Widgets/Off_Canvas.php:185
 #: includes/Widgets/Progress_Bar.php:158
@@ -2986,11 +3337,11 @@ msgstr ""
 #: includes/Widgets/Login.php:395
 #: includes/Widgets/Login.php:459
 #: includes/Widgets/Loop_Filter.php:159
-#: includes/Widgets/Loop_Grid.php:404
-#: includes/Widgets/Loop_Grid.php:422
-#: includes/Widgets/Loop_Grid.php:440
-#: includes/Widgets/Loop_Grid.php:489
-#: includes/Widgets/Loop_Grid.php:507
+#: includes/Widgets/Loop_Grid.php:418
+#: includes/Widgets/Loop_Grid.php:436
+#: includes/Widgets/Loop_Grid.php:454
+#: includes/Widgets/Loop_Grid.php:503
+#: includes/Widgets/Loop_Grid.php:521
 #: includes/Widgets/Nav_Menu.php:519
 #: includes/Widgets/Nav_Menu.php:537
 #: includes/Widgets/Nav_Menu.php:565
@@ -3335,6 +3686,62 @@ msgstr ""
 msgid "Back to top"
 msgstr ""
 
+#: includes/Licence/Licence.php:207
+msgid "That does not look like a licence key. It looks like UNC-XXXXX-XXXXX-XXXXX-XXXXX."
+msgstr ""
+
+#: includes/Licence/Licence.php:221
+msgid "The licence server answered, but its signature did not check out. Update Uncoder and try again."
+msgstr ""
+
+#. translators: %s: the connection error.
+#: includes/Licence/Licence.php:375
+#, php-format
+msgid "Could not reach uncoderbuilder.com (%s). Try again in a moment."
+msgstr ""
+
+#. translators: %d: HTTP status code.
+#: includes/Licence/Licence.php:388
+#, php-format
+msgid "The licence server answered with an error (%d). Try again in a moment."
+msgstr ""
+
+#: includes/Licence/Licence.php:394
+msgid "This licence key does not exist. Check it for typos, or find it in your purchase email."
+msgstr ""
+
+#: includes/Licence/Licence.php:395
+msgid "This licence has expired. Renew it to use the paid features again; everything you built keeps working."
+msgstr ""
+
+#: includes/Licence/Licence.php:396
+msgid "This licence is no longer active. Write to hello@uncoderbuilder.com if that is a surprise."
+msgstr ""
+
+#: includes/Licence/Licence.php:397
+msgid "This licence was refunded."
+msgstr ""
+
+#: includes/Licence/Licence.php:398
+msgid "This licence is already active on all its sites. Free a site in your account, or deactivate the licence on a site you no longer use."
+msgstr ""
+
+#: includes/Licence/Licence.php:399
+msgid "This site is no longer activated on the licence (it may have been removed from your account). Activate it again."
+msgstr ""
+
+#: includes/Licence/Licence.php:400
+msgid "Too many attempts. Wait a few minutes and try again."
+msgstr ""
+
+#: includes/Licence/Licence.php:401
+msgid "The licence server is being set up. Try again later."
+msgstr ""
+
+#: includes/Licence/Licence.php:403
+msgid "The licence could not be checked."
+msgstr ""
+
 #: includes/Mcp/Abilities_Bridge.php:41
 msgid "Build and edit pages, theme templates, the design system, menus and media with Uncoder."
 msgstr ""
@@ -3371,67 +3778,67 @@ msgstr ""
 msgid "Connect an AI app"
 msgstr ""
 
-#: includes/Mcp/OAuth.php:483
+#: includes/Mcp/OAuth.php:499
 msgid "This application is not registered with this site."
 msgstr ""
 
-#: includes/Mcp/OAuth.php:486
+#: includes/Mcp/OAuth.php:502
 msgid "The redirect address does not match the application registration."
 msgstr ""
 
-#: includes/Mcp/OAuth.php:494
+#: includes/Mcp/OAuth.php:510
 msgid "The MCP server is disabled on this site."
 msgstr ""
 
-#: includes/Mcp/OAuth.php:497
+#: includes/Mcp/OAuth.php:513
 msgid "Only response_type=code is supported."
 msgstr ""
 
-#: includes/Mcp/OAuth.php:500
+#: includes/Mcp/OAuth.php:516
 msgid "PKCE with code_challenge_method=S256 is required."
 msgstr ""
 
-#: includes/Mcp/OAuth.php:503
+#: includes/Mcp/OAuth.php:519
 msgid "Your account is not allowed to connect AI clients to this site. Ask an administrator to allow your role in Uncoder → AI & MCP."
 msgstr ""
 
-#: includes/Mcp/OAuth.php:574
+#: includes/Mcp/OAuth.php:590
 msgid "Connection problem"
 msgstr ""
 
-#: includes/Mcp/OAuth.php:575
+#: includes/Mcp/OAuth.php:591
 msgid "Can’t connect this application"
 msgstr ""
 
-#: includes/Mcp/OAuth.php:576
+#: includes/Mcp/OAuth.php:592
 msgid "Back to the dashboard"
 msgstr ""
 
-#: includes/Mcp/OAuth.php:589
+#: includes/Mcp/OAuth.php:605
 msgid "Authorize application"
 msgstr ""
 
 #. translators: 1: application name, 2: site name.
-#: includes/Mcp/OAuth.php:598
+#: includes/Mcp/OAuth.php:614
 #, php-format
 msgid "%1$s wants to connect to %2$s"
 msgstr ""
 
 #. translators: 1: user name, 2: host.
-#: includes/Mcp/OAuth.php:599
+#: includes/Mcp/OAuth.php:615
 #, php-format
 msgid "Signed in as %1$s · returns to %2$s"
 msgstr ""
 
-#: includes/Mcp/OAuth.php:608
+#: includes/Mcp/OAuth.php:624
 msgid "It will be able to:"
 msgstr ""
 
-#: includes/Mcp/OAuth.php:617
+#: includes/Mcp/OAuth.php:633
 msgid "Every change the application makes is logged and can be undone from Uncoder → AI & MCP. You can revoke access at any time."
 msgstr ""
 
-#: includes/Mcp/OAuth.php:620
+#: includes/Mcp/OAuth.php:636
 msgid "Approve"
 msgstr ""
 
@@ -3627,7 +4034,7 @@ msgid "Pattern not found."
 msgstr ""
 
 #: includes/Rest/Documents_Controller.php:156
-#: includes/Rest/Settings_Controller.php:205
+#: includes/Rest/Settings_Controller.php:202
 msgid "Invalid JSON body."
 msgstr ""
 
@@ -3665,23 +4072,23 @@ msgstr ""
 msgid "Only its author can delete this note."
 msgstr ""
 
-#: includes/Rest/Overview_Controller.php:158
+#: includes/Rest/Overview_Controller.php:160
 msgid "Uncoder is not enabled for pages. Enable it in Uncoder → Settings."
 msgstr ""
 
-#: includes/Rest/Settings_Controller.php:212
+#: includes/Rest/Settings_Controller.php:209
 msgid "postTypes must be a list."
 msgstr ""
 
-#: includes/Rest/Settings_Controller.php:260
+#: includes/Rest/Settings_Controller.php:249
 msgid "roleAccess must be an object."
 msgstr ""
 
-#: includes/Rest/Settings_Controller.php:267
+#: includes/Rest/Settings_Controller.php:256
 msgid "maintenance must be an object."
 msgstr ""
 
-#: includes/Rest/Settings_Controller.php:277
+#: includes/Rest/Settings_Controller.php:266
 msgid "Unknown font delivery option."
 msgstr ""
 
@@ -3820,76 +4227,81 @@ msgstr ""
 msgid "This project has no fonts yet. Add fonts to it on fonts.adobe.com, then sync again."
 msgstr ""
 
-#: includes/Site/Ai_Images.php:99
-msgid "Describe the image you want."
+#: includes/Site/Cloud_Library.php:143
+msgid "There is nothing to save."
 msgstr ""
 
-#: includes/Site/Ai_Images.php:106
-msgid "Too many images in a short time. Please wait a few minutes."
+#: includes/Site/Cloud_Library.php:196
+msgid "The site kit could not be created."
 msgstr ""
 
-#: includes/Site/Ai_Images.php:134
-msgid "Could not reach the image service. Try again in a moment."
+#: includes/Site/Cloud_Library.php:235
+msgid "The upload stopped before the end. Try again."
 msgstr ""
 
-#: includes/Site/Ai_Images.php:139
-msgid "The image service rejected the API key. Check it under Uncoder → AI & MCP → AI writing."
+#: includes/Site/Cloud_Library.php:260
+msgid "This item has nothing to insert."
 msgstr ""
 
-#: includes/Site/Ai_Images.php:140
-msgid "The image service returned an error."
+#: includes/Site/Cloud_Library.php:286
+msgid "Only pages and templates are imported this way: insert sections from the editor."
 msgstr ""
 
-#: includes/Site/Ai_Images.php:157
-msgid "The image service sent no image."
+#: includes/Site/Cloud_Library.php:305
+msgid "This item is not a site kit."
 msgstr ""
 
-#: includes/Site/Ai_Images.php:184
-msgid "The image service sent something that is not an image."
+#: includes/Site/Cloud_Library.php:310
+#: includes/Site/Library.php:123
+msgid "The download stopped before the end. Try again."
 msgstr ""
 
-#: includes/Site/Ai_Writer.php:119
-msgid "There is no text to work on yet."
+#: includes/Site/Cloud_Library.php:314
+msgid "The site kit was damaged on the way. Try again."
 msgstr ""
 
-#: includes/Site/Ai_Writer.php:122
-msgid "The text is too long for the AI tools (12,000 characters at most)."
+#: includes/Site/Cloud_Library.php:412
+msgid "Before cloud library insert"
 msgstr ""
 
-#: includes/Site/Ai_Writer.php:137
-msgid "Unknown AI action."
+#: includes/Site/Cloud_Library.php:428
+msgid "Saving to the cloud library needs an active Agency licence. Your saved items can still be inserted."
 msgstr ""
 
-#: includes/Site/Ai_Writer.php:177
-msgid "Choose an image from the media library first."
+#: includes/Site/Cloud_Library.php:461
+msgid "The cloud library could not be reached. Try again in a moment."
 msgstr ""
 
-#: includes/Site/Ai_Writer.php:242
-msgid "Alt text can be written for JPEG, PNG, GIF and WebP images."
+#: includes/Site/Cloud_Library.php:464
+msgid "The cloud library sent an answer that could not be read."
 msgstr ""
 
-#: includes/Site/Ai_Writer.php:257
-msgid "The image file could not be read (or is larger than 4 MB)."
+#: includes/Site/Cloud_Library.php:479
+msgid "The cloud library comes with the Agency licence."
 msgstr ""
 
-#: includes/Site/Ai_Writer.php:270
-msgid "Too many AI requests. Please wait a few minutes."
+#: includes/Site/Cloud_Library.php:480
+msgid "Your licence has expired: the cloud library is read-only until you renew it."
 msgstr ""
 
-#: includes/Site/Ai_Writer.php:297
-msgid "Could not reach the AI service. Try again in a moment."
+#: includes/Site/Cloud_Library.php:481
+#: includes/Site/Library.php:114
+#: includes/Site/Section_Library.php:170
+msgid "Your licence is no longer active."
 msgstr ""
 
-#: includes/Site/Ai_Writer.php:304
-msgid "The AI service rejected the API key. Check it under Uncoder → AI & MCP → AI writing."
+#: includes/Site/Cloud_Library.php:482
+#: includes/Site/Library.php:115
+#: includes/Site/Section_Library.php:171
+msgid "This site is not activated on your licence. Activate it again under Settings → Licence."
 msgstr ""
 
-#: includes/Site/Ai_Writer.php:305
-msgid "The AI service is busy. Try again in a moment."
+#: includes/Site/Cloud_Library.php:483
+msgid "This item is no longer in the cloud library."
 msgstr ""
 
-#: includes/Site/Ai_Writer.php:305
-msgid "The AI service returned an error."
+#: includes/Site/Cloud_Library.php:486
+msgid "Too many requests. Wait a few minutes and try again."
 msgstr ""
 
 #: includes/Site/Code_Snippets.php:92
@@ -4125,7 +4537,7 @@ msgid "Popup triggers and layout were not converted: set them in the popup setti
 msgstr ""
 
 #: includes/Site/Elementor_Import.php:623
-#: includes/Site/Site_Kit.php:671
+#: includes/Site/Site_Kit.php:678
 msgid "The file did not arrive. It may be larger than the server allows."
 msgstr ""
 
@@ -4134,7 +4546,7 @@ msgid "No Elementor template was found in this file. Export templates in Element
 msgstr ""
 
 #: includes/Site/Elementor_Import.php:675
-#: includes/Site/Site_Kit.php:674
+#: includes/Site/Site_Kit.php:693
 msgid "This server cannot open zip files (the PHP zip extension is missing)."
 msgstr ""
 
@@ -4156,6 +4568,45 @@ msgstr ""
 
 #: includes/Site/Find_Replace.php:70
 msgid "Unknown scope."
+msgstr ""
+
+#. translators: %s: who to contact, e.g. an email address.
+#: includes/Site/Handoff.php:136
+#, php-format
+msgid "This site was handed over: you can change texts, images and links. For design changes, contact %s."
+msgstr ""
+
+#: includes/Site/Handoff.php:137
+msgid "This site was handed over: you can change texts, images and links. Design changes are made by the people who built it."
+msgstr ""
+
+#: includes/Site/Handoff.php:199
+msgid "Client handoff comes with the Agency licence."
+msgstr ""
+
+#: includes/Site/Library.php:57
+#: includes/Site/Library.php:106
+msgid "The starter-site library could not be reached. Check your connection and try again."
+msgstr ""
+
+#: includes/Site/Library.php:61
+msgid "The starter-site library sent an answer Uncoder could not read."
+msgstr ""
+
+#: includes/Site/Library.php:112
+msgid "This starter site comes with Pro and Agency. Add a licence under Settings → Licence."
+msgstr ""
+
+#: includes/Site/Library.php:113
+msgid "Your licence has expired. Renew it to import Pro starter sites; free ones still work."
+msgstr ""
+
+#: includes/Site/Library.php:117
+msgid "The starter site could not be downloaded. Try again in a moment."
+msgstr ""
+
+#: includes/Site/Library.php:127
+msgid "The downloaded starter site was damaged on the way. Try again."
 msgstr ""
 
 #: includes/Site/Lottie_Files.php:73
@@ -4206,100 +4657,345 @@ msgstr ""
 msgid "You cannot create this item."
 msgstr ""
 
-#: includes/Site/Role_Manager.php:99
+#: includes/Site/Page_Checks.php:110
+msgid "Page-check reports"
+msgstr ""
+
+#: includes/Site/Page_Checks.php:185
+msgid "Choose the pages to check."
+msgstr ""
+
+#: includes/Site/Page_Checks.php:284
+msgid "Secure connection (HTTPS)"
+msgstr ""
+
+#: includes/Site/Page_Checks.php:285
+msgid "Serve the site over HTTPS: browsers mark plain HTTP sites as “Not secure”. Your host can turn on a free certificate."
+msgstr ""
+
+#: includes/Site/Page_Checks.php:290
+msgid "Visible to search engines"
+msgstr ""
+
+#: includes/Site/Page_Checks.php:291
+msgid "Search engines are asked not to index this site. Untick “Discourage search engines” under Settings → Reading when the site is ready."
+msgstr ""
+
+#: includes/Site/Page_Checks.php:296
+msgid "Site icon"
+msgstr ""
+
+#: includes/Site/Page_Checks.php:297
+msgid "Add a site icon (the small image in browser tabs and bookmarks) in the Design System or under Appearance → Customize."
+msgstr ""
+
+#: includes/Site/Page_Checks.php:302
+msgid "Readable page addresses"
+msgstr ""
+
+#: includes/Site/Page_Checks.php:303
+msgid "Choose “Post name” under Settings → Permalinks, so addresses read like /about/ instead of /?p=12."
+msgstr ""
+
+#: includes/Site/Page_Checks.php:308
+msgid "Privacy policy page"
+msgstr ""
+
+#: includes/Site/Page_Checks.php:309
+msgid "Publish a privacy policy and choose it under Settings → Privacy. Most countries require one when a site has forms or analytics."
+msgstr ""
+
+#: includes/Site/Page_Checks.php:315
+msgid "Write a short tagline under Settings → General; some themes and search results show it."
+msgstr ""
+
+#: includes/Site/Page_Checks.php:375
+msgid "Run the checks first."
+msgstr ""
+
+#. translators: %s: date.
+#: includes/Site/Page_Checks.php:412
+#, php-format
+msgid "Website check · %s"
+msgstr ""
+
+#: includes/Site/Page_Checks.php:429
+msgid "This report no longer exists."
+msgstr ""
+
+#: includes/Site/Page_Checks.php:577
+msgid "This report link does not exist or was replaced by a new one."
+msgstr ""
+
+#: includes/Site/Page_Checks.php:577
+msgid "Report not found"
+msgstr ""
+
+#. translators: 1: client or site name, 2: site address.
+#: includes/Site/Page_Checks.php:677
+#, php-format
+msgid "Prepared for %1$s · %2$s"
+msgstr ""
+
+#. translators: %d: score.
+#: includes/Site/Page_Checks.php:685
+#, php-format
+msgid "Score %d out of 100"
+msgstr ""
+
+#: includes/Site/Page_Checks.php:687
+msgid "The site is in good shape. The points below are small improvements."
+msgstr ""
+
+#: includes/Site/Page_Checks.php:687
+msgid "The site is in fair shape. Fixing the points below makes it easier to use and to find."
+msgstr ""
+
+#: includes/Site/Page_Checks.php:687
+msgid "The site needs attention. Start with the issues marked “Fix”."
+msgstr ""
+
+#: includes/Site/Page_Checks.php:689
+msgid "page checked"
+msgid_plural "pages checked"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/Site/Page_Checks.php:690
+msgid "to fix"
+msgstr ""
+
+#: includes/Site/Page_Checks.php:691
+msgid "to improve"
+msgstr ""
+
+#: includes/Site/Page_Checks.php:692
+msgid "notes"
+msgstr ""
+
+#: includes/Site/Page_Checks.php:698
+msgid "Site setup"
+msgstr ""
+
+#: includes/Site/Page_Checks.php:702
+msgid "OK"
+msgstr ""
+
+#: includes/Site/Page_Checks.php:702
+#: includes/Site/Page_Checks.php:731
+#: includes/Site/Page_Checks.php:779
+msgid "Fix"
+msgstr ""
+
+#: includes/Site/Page_Checks.php:702
+#: includes/Site/Page_Checks.php:731
+#: includes/Site/Page_Checks.php:779
+msgid "Improve"
+msgstr ""
+
+#: includes/Site/Page_Checks.php:726
+msgid "Fix once, improve many pages"
+msgstr ""
+
+#: includes/Site/Page_Checks.php:727
+msgid "These points repeat across pages, usually because they come from one shared style or template: fixing them there fixes every page at once."
+msgstr ""
+
+#: includes/Site/Page_Checks.php:731
+#: includes/Site/Page_Checks.php:779
+msgid "Note"
+msgstr ""
+
+#. translators: %d: number of pages.
+#: includes/Site/Page_Checks.php:733
+#, php-format
+msgid "%d page"
+msgid_plural "%d pages"
+msgstr[0] ""
+msgstr[1] ""
+
+#: includes/Site/Page_Checks.php:741
+msgid "By topic"
+msgstr ""
+
+#: includes/Site/Page_Checks.php:742
+msgid "Topic"
+msgstr ""
+
+#: includes/Site/Page_Checks.php:742
+#: includes/Site/Page_Checks.php:755
+msgid "Points"
+msgstr ""
+
+#: includes/Site/Page_Checks.php:754
+#: includes/Widgets/Sitemap.php:61
+#: includes/Widgets/Sitemap.php:95
+#: includes/Widgets/Sitemap.php:205
+msgid "Pages"
+msgstr ""
+
+#: includes/Site/Page_Checks.php:755
+msgid "Score"
+msgstr ""
+
+#: includes/Site/Page_Checks.php:765
+msgid "Details"
+msgstr ""
+
+#: includes/Site/Page_Checks.php:770
+msgid "No issues found."
+msgstr ""
+
+#. translators: %d: number of places on the page.
+#: includes/Site/Page_Checks.php:781
+#, php-format
+msgid "%d place"
+msgid_plural "%d places"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: agency name.
+#: includes/Site/Page_Checks.php:793
+#, php-format
+msgid "Report by %s"
+msgstr ""
+
+#. translators: %s: agency name.
+#: includes/Site/Page_Checks.php:793
+msgid "Website check"
+msgstr ""
+
+#: includes/Site/Page_Checks.php:797
+msgid "Print or save as PDF"
+msgstr ""
+
+#: includes/Site/Page_Checks.php:805
+msgid "Branded reports come with the Agency licence."
+msgstr ""
+
+#: includes/Site/Role_Manager.php:102
 msgid "Your role can edit content only: elements cannot be added, removed or moved."
 msgstr ""
 
-#: includes/Site/Role_Manager.php:106
+#: includes/Site/Role_Manager.php:109
 msgid "Your role can edit content only: elements cannot be replaced, moved or hidden."
 msgstr ""
 
 #. translators: 1: setting label, 2: element name.
-#: includes/Site/Role_Manager.php:119
+#: includes/Site/Role_Manager.php:122
 #, php-format
 msgid "Your role can edit content only: “%1$s” of %2$s is a design setting."
 msgstr ""
 
-#: includes/Site/Site_Kit.php:203
+#: includes/Site/Section_Library.php:61
+#: includes/Site/Section_Library.php:162
+msgid "The section library could not be reached. Check your connection and try again."
+msgstr ""
+
+#: includes/Site/Section_Library.php:65
+msgid "The section library sent an answer that could not be read."
+msgstr ""
+
+#: includes/Site/Section_Library.php:114
+msgid "Premium section"
+msgstr ""
+
+#: includes/Site/Section_Library.php:168
+msgid "Premium sections come with Pro and Agency. Add a licence under Settings → Licence."
+msgstr ""
+
+#: includes/Site/Section_Library.php:169
+msgid "Your licence has expired. Renew it to insert premium sections; the ones you inserted stay."
+msgstr ""
+
+#: includes/Site/Section_Library.php:173
+msgid "The section could not be loaded. Try again in a moment."
+msgstr ""
+
+#: includes/Site/Section_Library.php:261
+msgid "Before inserting a premium section"
+msgstr ""
+
+#: includes/Site/Site_Kit.php:211
 msgid "This server cannot create zip files (the PHP zip extension is missing)."
 msgstr ""
 
-#: includes/Site/Site_Kit.php:297
+#: includes/Site/Site_Kit.php:305
 msgid "The export file could not be created."
 msgstr ""
 
-#: includes/Site/Site_Kit.php:379
+#: includes/Site/Site_Kit.php:387
 msgid "You cannot download this file."
 msgstr ""
 
-#: includes/Site/Site_Kit.php:384
+#: includes/Site/Site_Kit.php:392
 msgid "This export has expired. Export again."
 msgstr ""
 
-#: includes/Site/Site_Kit.php:678
+#: includes/Site/Site_Kit.php:697
 msgid "This is not a zip file."
 msgstr ""
 
-#: includes/Site/Site_Kit.php:682
+#: includes/Site/Site_Kit.php:701
 msgid "This zip holds too many files to be an Uncoder site kit."
 msgstr ""
 
-#: includes/Site/Site_Kit.php:714
+#: includes/Site/Site_Kit.php:733
 msgid "This site kit is too large to unpack on this server."
 msgstr ""
 
-#: includes/Site/Site_Kit.php:736
+#: includes/Site/Site_Kit.php:755
 msgid "This zip is not an Uncoder site kit (or it comes from a newer version of Uncoder)."
 msgstr ""
 
-#: includes/Site/Site_Kit.php:866
+#: includes/Site/Site_Kit.php:885
 msgid "This import has expired. Upload the kit again."
 msgstr ""
 
-#: includes/Site/Site_Kit.php:992
+#: includes/Site/Site_Kit.php:1011
 msgid "Before site kit import"
 msgstr ""
 
-#: includes/Site/Site_Kit.php:1021
+#: includes/Site/Site_Kit.php:1040
 msgid "Custom code was not imported: your account cannot add unfiltered HTML."
 msgstr ""
 
 #. translators: 1: item title, 2: content type.
-#: includes/Site/Site_Kit.php:1156
+#: includes/Site/Site_Kit.php:1182
 #, php-format
 msgid "“%1$s” was skipped: “%2$s” is not available on this site."
 msgstr ""
 
-#: includes/Site/Site_Kit.php:1169
-#: includes/Site/Site_Kit.php:1298
-#: includes/Site/Transfer.php:289
+#: includes/Site/Site_Kit.php:1195
+#: includes/Site/Site_Kit.php:1327
+#: includes/Site/Transfer.php:291
 msgid "Imported"
 msgstr ""
 
-#: includes/Site/Site_Kit.php:1388
+#: includes/Site/Site_Kit.php:1418
 msgid "(imported)"
 msgstr ""
 
-#: includes/Site/Site_Kit.php:1529
+#: includes/Site/Site_Kit.php:1572
 msgid "This SVG was not imported: it contains active content."
 msgstr ""
 
-#: includes/Site/Starters.php:107
+#: includes/Site/Starters.php:109
 msgid "Unknown starter site."
 msgstr ""
 
-#: includes/Site/Starters.php:112
+#: includes/Site/Starters.php:114
 msgid "The section library is not available."
 msgstr ""
 
 #. translators: 1: starter site name, 2: Header or Footer.
-#: includes/Site/Starters.php:123
+#: includes/Site/Starters.php:125
 #, php-format
 msgid "%1$s – %2$s"
 msgstr ""
 
 #. translators: 1: starter site name, 2: Header or Footer.
-#: includes/Site/Starters.php:123
+#: includes/Site/Starters.php:125
 #: includes/Widgets/Code_Highlight.php:269
 #: includes/Widgets/Price_Table.php:46
 #: includes/Widgets/Price_Table.php:440
@@ -4308,14 +5004,22 @@ msgid "Header"
 msgstr ""
 
 #. translators: 1: starter site name, 2: Header or Footer.
-#: includes/Site/Starters.php:123
+#: includes/Site/Starters.php:125
 #: includes/Widgets/Link_In_Bio.php:359
 #: includes/Widgets/Link_In_Bio.php:746
 msgid "Footer"
 msgstr ""
 
-#: includes/Site/Starters.php:149
+#: includes/Site/Starters.php:151
 msgid "Import is not available."
+msgstr ""
+
+#: includes/Site/Starter_Rewrite.php:284
+msgid "“Make it yours” comes with Pro and Agency."
+msgstr ""
+
+#: includes/Site/Starter_Rewrite.php:288
+msgid "Add the business name and what it does first."
 msgstr ""
 
 #: includes/Site/Style_Book.php:50
@@ -4400,31 +5104,31 @@ msgid "Nothing to export."
 msgstr ""
 
 #. translators: %d: post id.
-#: includes/Site/Transfer.php:126
+#: includes/Site/Transfer.php:128
 #, php-format
 msgid "You cannot export #%d."
 msgstr ""
 
 #. translators: %s: post title.
-#: includes/Site/Transfer.php:131
+#: includes/Site/Transfer.php:133
 #, php-format
 msgid "“%s” is not built with Uncoder."
 msgstr ""
 
-#: includes/Site/Transfer.php:177
+#: includes/Site/Transfer.php:179
 msgid "This is not an Uncoder export file (or it comes from a newer version)."
 msgstr ""
 
-#: includes/Site/Transfer.php:190
+#: includes/Site/Transfer.php:192
 msgid "Importing the Design System requires the edit_theme_options capability."
 msgstr ""
 
-#: includes/Site/Transfer.php:203
+#: includes/Site/Transfer.php:205
 msgid "Before import"
 msgstr ""
 
 #. translators: %d: number of references.
-#: includes/Site/Transfer.php:235
+#: includes/Site/Transfer.php:237
 #, php-format
 msgid "%d element refers to a template that is not in the file: pick it again in the editor."
 msgid_plural "%d elements refer to templates that are not in the file: pick them again in the editor."
@@ -4432,7 +5136,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %d: number of images.
-#: includes/Site/Transfer.php:239
+#: includes/Site/Transfer.php:241
 #, php-format
 msgid "%d image could not be copied and still loads from the original site."
 msgid_plural "%d images could not be copied and still load from the original site."
@@ -4440,31 +5144,39 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: template type.
-#: includes/Site/Transfer.php:261
+#: includes/Site/Transfer.php:263
 #, php-format
 msgid "Unknown template type “%s”."
 msgstr ""
 
-#: includes/Site/Transfer.php:264
+#: includes/Site/Transfer.php:266
 msgid "Your account cannot create templates of this type."
 msgstr ""
 
 #. translators: %s: post type.
-#: includes/Site/Transfer.php:270
+#: includes/Site/Transfer.php:272
 #, php-format
 msgid "The content type “%s” is not enabled for Uncoder on this site."
 msgstr ""
 
-#: includes/Site/Transfer.php:272
+#: includes/Site/Transfer.php:274
 msgid "Your account cannot create this content."
 msgstr ""
 
-#: includes/Site/Transfer.php:274
+#: includes/Site/Transfer.php:276
 msgid "Unknown item in the file."
 msgstr ""
 
-#: includes/Site/Updater.php:187
+#: includes/Site/Updater.php:193
 msgid "A free visual page and theme builder for WordPress, with an MCP server so your AI can build with it."
+msgstr ""
+
+#: includes/Site/White_Label.php:149
+msgid "Visual website builder with an AI connection."
+msgstr ""
+
+#: includes/Site/White_Label.php:212
+msgid "White-label comes with the Agency licence. Your saved brand keeps applying; changing it needs an active Agency licence."
 msgstr ""
 
 #: includes/Theme/Template_Preview.php:78
@@ -4671,7 +5383,7 @@ msgstr ""
 #: includes/Widgets/Icon_Box.php:296
 #: includes/Widgets/Icon_Box.php:308
 #: includes/Widgets/Icon_Box.php:520
-#: includes/Widgets/Image.php:263
+#: includes/Widgets/Image.php:307
 #: includes/Widgets/Image_Box.php:230
 #: includes/Widgets/Image_Box.php:242
 #: includes/Widgets/Image_Box.php:332
@@ -4743,7 +5455,7 @@ msgstr ""
 #: includes/Widgets/Icon_Box.php:566
 #: includes/Widgets/Icon_Box.php:605
 #: includes/Widgets/Icon_List.php:352
-#: includes/Widgets/Image.php:282
+#: includes/Widgets/Image.php:326
 #: includes/Widgets/Image_Box.php:387
 #: includes/Widgets/Image_Box.php:415
 #: includes/Widgets/Image_Box.php:444
@@ -4760,9 +5472,9 @@ msgstr ""
 #: includes/Widgets/Login.php:369
 #: includes/Widgets/Login.php:454
 #: includes/Widgets/Loop_Filter.php:158
-#: includes/Widgets/Loop_Grid.php:397
-#: includes/Widgets/Loop_Grid.php:482
-#: includes/Widgets/Loop_Grid.php:551
+#: includes/Widgets/Loop_Grid.php:411
+#: includes/Widgets/Loop_Grid.php:496
+#: includes/Widgets/Loop_Grid.php:565
 #: includes/Widgets/Marquee.php:244
 #: includes/Widgets/Nav_Menu.php:512
 #: includes/Widgets/Nav_Menu.php:662
@@ -4851,7 +5563,7 @@ msgstr ""
 #: includes/Widgets/Language_Switcher.php:103
 #: includes/Widgets/Login.php:483
 #: includes/Widgets/Loop_Filter.php:148
-#: includes/Widgets/Loop_Grid.php:333
+#: includes/Widgets/Loop_Grid.php:347
 #: includes/Widgets/Lottie.php:164
 #: includes/Widgets/Nav_Menu.php:105
 #: includes/Widgets/Nav_Menu.php:1029
@@ -4897,7 +5609,7 @@ msgstr ""
 #: includes/Widgets/Icon_Box.php:525
 #: includes/Widgets/Icon_Box.php:558
 #: includes/Widgets/Icon_Box.php:632
-#: includes/Widgets/Image.php:295
+#: includes/Widgets/Image.php:339
 #: includes/Widgets/Image_Box.php:337
 #: includes/Widgets/Image_Box.php:408
 #: includes/Widgets/Image_Box.php:471
@@ -5016,7 +5728,7 @@ msgstr ""
 #: includes/Widgets/Call_To_Action.php:56
 #: includes/Widgets/Form.php:364
 #: includes/Widgets/Link_In_Bio.php:249
-#: includes/Widgets/Loop_Grid.php:323
+#: includes/Widgets/Loop_Grid.php:337
 #: includes/Widgets/Nav_Menu.php:484
 #: includes/Widgets/Share_Buttons.php:225
 #: includes/Widgets/Slides.php:128
@@ -5410,7 +6122,7 @@ msgstr ""
 #: includes/Widgets/Heading.php:154
 #: includes/Widgets/Hotspot.php:338
 #: includes/Widgets/Icon_Box.php:587
-#: includes/Widgets/Image.php:200
+#: includes/Widgets/Image.php:244
 #: includes/Widgets/Login.php:236
 #: includes/Widgets/Lottie.php:196
 #: includes/Widgets/Post_Excerpt.php:113
@@ -5813,7 +6525,7 @@ msgstr ""
 #: includes/Widgets/Button.php:86
 #: includes/Widgets/Call_To_Action.php:54
 #: includes/Widgets/Form.php:362
-#: includes/Widgets/Loop_Grid.php:321
+#: includes/Widgets/Loop_Grid.php:335
 #: includes/Widgets/Nav_Menu.php:482
 #: includes/Widgets/Slides.php:126
 msgid "Primary"
@@ -5822,7 +6534,7 @@ msgstr ""
 #: includes/Widgets/Button.php:87
 #: includes/Widgets/Call_To_Action.php:55
 #: includes/Widgets/Form.php:363
-#: includes/Widgets/Loop_Grid.php:322
+#: includes/Widgets/Loop_Grid.php:336
 #: includes/Widgets/Nav_Menu.php:483
 #: includes/Widgets/Slides.php:127
 msgid "Secondary"
@@ -5831,7 +6543,7 @@ msgstr ""
 #: includes/Widgets/Button.php:89
 #: includes/Widgets/Call_To_Action.php:57
 #: includes/Widgets/Form.php:365
-#: includes/Widgets/Loop_Grid.php:324
+#: includes/Widgets/Loop_Grid.php:338
 #: includes/Widgets/Slides.php:129
 msgid "Ghost"
 msgstr ""
@@ -5872,7 +6584,7 @@ msgstr ""
 #: includes/Widgets/Featured_Image.php:213
 #: includes/Widgets/Form.php:354
 #: includes/Widgets/Icon_Box.php:315
-#: includes/Widgets/Image.php:269
+#: includes/Widgets/Image.php:313
 #: includes/Widgets/Image_Box.php:249
 #: includes/Widgets/Image_Carousel.php:172
 #: includes/Widgets/Image_Gallery.php:249
@@ -5898,7 +6610,7 @@ msgstr ""
 #: includes/Widgets/Login.php:333
 #: includes/Widgets/Login.php:411
 #: includes/Widgets/Loop_Filter.php:161
-#: includes/Widgets/Loop_Grid.php:523
+#: includes/Widgets/Loop_Grid.php:537
 #: includes/Widgets/Off_Canvas.php:300
 #: includes/Widgets/Posts.php:416
 #: includes/Widgets/Post_Comments.php:160
@@ -6022,7 +6734,7 @@ msgstr ""
 #: includes/Widgets/Flip_Box.php:136
 #: includes/Widgets/Google_Maps.php:128
 #: includes/Widgets/Login.php:114
-#: includes/Widgets/Loop_Grid.php:300
+#: includes/Widgets/Loop_Grid.php:314
 #: includes/Widgets/Search_Form.php:118
 #: includes/Widgets/Slides.php:243
 #: includes/Widgets/Video.php:237
@@ -6044,7 +6756,7 @@ msgstr ""
 #: includes/Widgets/Call_To_Action.php:210
 #: includes/Widgets/Flip_Box.php:156
 #: includes/Widgets/Link_In_Bio.php:245
-#: includes/Widgets/Loop_Grid.php:318
+#: includes/Widgets/Loop_Grid.php:332
 #: includes/Widgets/Nav_Menu.php:479
 #: includes/Widgets/Slides.php:711
 msgid "Button style"
@@ -6097,10 +6809,6 @@ msgstr ""
 
 #: includes/Widgets/Call_To_Action.php:277
 msgid "Ribbon text"
-msgstr ""
-
-#: includes/Widgets/Call_To_Action.php:278
-msgid "New"
 msgstr ""
 
 #: includes/Widgets/Call_To_Action.php:279
@@ -6186,7 +6894,7 @@ msgstr ""
 
 #: includes/Widgets/Call_To_Action.php:463
 #: includes/Widgets/Featured_Image.php:218
-#: includes/Widgets/Image.php:274
+#: includes/Widgets/Image.php:318
 #: includes/Widgets/Image_Carousel.php:177
 #: includes/Widgets/Image_Gallery.php:255
 #: includes/Widgets/Team_Member.php:250
@@ -6949,7 +7657,7 @@ msgstr ""
 #: includes/Widgets/Facebook_Embed.php:225
 #: includes/Widgets/Featured_Image.php:159
 #: includes/Widgets/Icon_Box.php:498
-#: includes/Widgets/Image.php:218
+#: includes/Widgets/Image.php:262
 #: includes/Widgets/Image_Box.php:297
 #: includes/Widgets/Image_Carousel.php:120
 #: includes/Widgets/Image_Compare.php:184
@@ -7108,7 +7816,7 @@ msgstr ""
 
 #: includes/Widgets/Featured_Image.php:161
 #: includes/Widgets/Icon_Box.php:500
-#: includes/Widgets/Image.php:220
+#: includes/Widgets/Image.php:264
 #: includes/Widgets/Image_Box.php:299
 #: includes/Widgets/Image_Carousel.php:123
 #: includes/Widgets/Image_Compare.php:186
@@ -7121,18 +7829,18 @@ msgid "Original"
 msgstr ""
 
 #: includes/Widgets/Featured_Image.php:178
-#: includes/Widgets/Image.php:238
+#: includes/Widgets/Image.php:282
 msgid "Object fit"
 msgstr ""
 
 #: includes/Widgets/Featured_Image.php:181
-#: includes/Widgets/Image.php:239
+#: includes/Widgets/Image.php:283
 #: includes/Widgets/Video.php:160
 msgid "Cover"
 msgstr ""
 
 #: includes/Widgets/Featured_Image.php:182
-#: includes/Widgets/Image.php:239
+#: includes/Widgets/Image.php:283
 #: includes/Widgets/Video.php:159
 msgid "Contain"
 msgstr ""
@@ -7144,7 +7852,7 @@ msgstr ""
 #: includes/Widgets/Featured_Image.php:216
 #: includes/Widgets/Flip_Box.php:184
 #: includes/Widgets/Google_Maps.php:62
-#: includes/Widgets/Image.php:272
+#: includes/Widgets/Image.php:316
 #: includes/Widgets/Image_Carousel.php:176
 #: includes/Widgets/Image_Gallery.php:253
 #: includes/Widgets/Team_Member.php:249
@@ -7152,7 +7860,7 @@ msgid "Zoom"
 msgstr ""
 
 #: includes/Widgets/Featured_Image.php:217
-#: includes/Widgets/Image.php:273
+#: includes/Widgets/Image.php:317
 #: includes/Widgets/Image_Gallery.php:254
 #: includes/Widgets/Price_Table.php:412
 #: includes/Widgets/Share_Buttons.php:406
@@ -7160,14 +7868,14 @@ msgid "Lift"
 msgstr ""
 
 #: includes/Widgets/Featured_Image.php:219
-#: includes/Widgets/Image.php:275
+#: includes/Widgets/Image.php:319
 #: includes/Widgets/Image_Carousel.php:178
 msgid "Dim"
 msgstr ""
 
 #: includes/Widgets/Featured_Image.php:228
 #: includes/Widgets/Image.php:113
-#: includes/Widgets/Image.php:281
+#: includes/Widgets/Image.php:325
 #: includes/Widgets/Image_Carousel.php:94
 #: includes/Widgets/Image_Carousel.php:187
 #: includes/Widgets/Image_Gallery.php:188
@@ -7769,7 +8477,7 @@ msgstr ""
 
 #: includes/Widgets/Form.php:771
 #: includes/Widgets/Icon_List.php:177
-#: includes/Widgets/Loop_Grid.php:363
+#: includes/Widgets/Loop_Grid.php:377
 #: includes/Widgets/Posts.php:364
 #: includes/Widgets/Sitemap.php:254
 msgid "Column gap"
@@ -8445,7 +9153,35 @@ msgstr ""
 msgid "Lazy (default)"
 msgstr ""
 
-#: includes/Widgets/Image.php:247
+#: includes/Widgets/Image.php:186
+msgid "Hover reveal"
+msgstr ""
+
+#: includes/Widgets/Image.php:191
+msgid "Reveal a second image"
+msgstr ""
+
+#: includes/Widgets/Image.php:192
+msgid "Moving the pointer over the image paints a second one in under it, with a soft brush that fades away (a sketch turning into the finished render)."
+msgstr ""
+
+#: includes/Widgets/Image.php:200
+msgid "Second image"
+msgstr ""
+
+#: includes/Widgets/Image.php:209
+msgid "Brush size"
+msgstr ""
+
+#: includes/Widgets/Image.php:220
+msgid "Fade (ms)"
+msgstr ""
+
+#: includes/Widgets/Image.php:221
+msgid "How long a stroke stays before it has faded out."
+msgstr ""
+
+#: includes/Widgets/Image.php:291
 msgid "Object position"
 msgstr ""
 
@@ -8695,7 +9431,7 @@ msgid "All"
 msgstr ""
 
 #: includes/Widgets/Image_Gallery.php:116
-#: includes/Widgets/Loop_Grid.php:145
+#: includes/Widgets/Loop_Grid.php:159
 msgid "Masonry"
 msgstr ""
 
@@ -9368,20 +10104,20 @@ msgid "Each slide is a Loop item template: create one in Uncoder → Theme Build
 msgstr ""
 
 #: includes/Widgets/Loop_Carousel.php:75
-#: includes/Widgets/Loop_Grid.php:122
+#: includes/Widgets/Loop_Grid.php:136
 msgid "Loop item template"
 msgstr ""
 
 #: includes/Widgets/Loop_Carousel.php:102
-#: includes/Widgets/Loop_Grid.php:205
-#: includes/Widgets/Loop_Grid.php:550
+#: includes/Widgets/Loop_Grid.php:219
+#: includes/Widgets/Loop_Grid.php:564
 #: includes/Widgets/Posts.php:81
 #: includes/Widgets/Posts.php:734
 msgid "Nothing found message"
 msgstr ""
 
 #: includes/Widgets/Loop_Carousel.php:111
-#: includes/Widgets/Loop_Grid.php:178
+#: includes/Widgets/Loop_Grid.php:192
 msgid "Featured image as CSS variable"
 msgstr ""
 
@@ -9394,19 +10130,19 @@ msgid "Create a Loop item template in Theme Builder, design the card with dynami
 msgstr ""
 
 #: includes/Widgets/Loop_Carousel.php:136
-#: includes/Widgets/Loop_Grid.php:870
+#: includes/Widgets/Loop_Grid.php:885
 msgid "The selected loop item template no longer exists. Choose another one."
 msgstr ""
 
 #. translators: %d: template id.
 #: includes/Widgets/Loop_Carousel.php:138
-#: includes/Widgets/Loop_Grid.php:872
+#: includes/Widgets/Loop_Grid.php:887
 #, php-format
 msgid "Template #%d is not a Loop item template. Choose a template of type “Loop item”."
 msgstr ""
 
 #: includes/Widgets/Loop_Carousel.php:139
-#: includes/Widgets/Loop_Grid.php:873
+#: includes/Widgets/Loop_Grid.php:888
 msgid "The selected loop item template is not published."
 msgstr ""
 
@@ -9415,12 +10151,12 @@ msgid "This loop item template is already shown here: a loop cannot display the 
 msgstr ""
 
 #: includes/Widgets/Loop_Carousel.php:146
-#: includes/Widgets/Loop_Grid.php:859
+#: includes/Widgets/Loop_Grid.php:874
 msgid "Open Theme Builder"
 msgstr ""
 
 #: includes/Widgets/Loop_Carousel.php:164
-#: includes/Widgets/Loop_Grid.php:925
+#: includes/Widgets/Loop_Grid.php:940
 msgid "No posts match this query."
 msgstr ""
 
@@ -9568,82 +10304,82 @@ msgstr ""
 msgid "No terms to show yet."
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:71
-#: includes/Widgets/Loop_Grid.php:876
+#: includes/Widgets/Loop_Grid.php:85
+#: includes/Widgets/Loop_Grid.php:891
 msgid "Loop Grid"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:87
+#: includes/Widgets/Loop_Grid.php:101
 msgid "Repeats a Loop item template (a card designed with dynamic tags) for every post of a query, in a responsive grid with pagination, load more or infinite scroll. Use source \"current\" in archive and search templates."
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:115
+#: includes/Widgets/Loop_Grid.php:129
 msgid "Each card is a Loop item template: create one in Uncoder → Theme Builder → Loop items, design it with dynamic tags such as Post title, Featured image and Post URL, publish it, then choose it here."
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:135
+#: includes/Widgets/Loop_Grid.php:149
 #: includes/Widgets/Posts.php:107
 msgid "Empty fits as many columns as the space allows."
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:146
+#: includes/Widgets/Loop_Grid.php:160
 msgid "Cards keep their own height and move up into the gaps."
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:154
+#: includes/Widgets/Loop_Grid.php:168
 msgid "Masonry order"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:155
+#: includes/Widgets/Loop_Grid.php:169
 msgid "Column by column: card 1 in the first column, card 2 in the second… and so on, each under the previous card of its column (with an alternate template every second card this forms a checkerboard)."
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:158
+#: includes/Widgets/Loop_Grid.php:172
 msgid "Shortest column first"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:159
+#: includes/Widgets/Loop_Grid.php:173
 msgid "Column by column"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:168
+#: includes/Widgets/Loop_Grid.php:182
 #: includes/Widgets/Support/Carousel_Engine.php:202
 msgid "Equal height"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:169
+#: includes/Widgets/Loop_Grid.php:183
 msgid "Stretches the cards of a row to the tallest one."
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:179
+#: includes/Widgets/Loop_Grid.php:193
 msgid "Adds --uncoder-loop-image to every card, e.g. for custom CSS \"background-image: var(--uncoder-loop-image)\"."
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:206
+#: includes/Widgets/Loop_Grid.php:220
 #: includes/Widgets/Posts.php:82
 msgid "Nothing found. Try another search or browse the latest posts."
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:212
-#: includes/Widgets/Loop_Grid.php:217
+#: includes/Widgets/Loop_Grid.php:226
+#: includes/Widgets/Loop_Grid.php:231
 msgid "Alternate template"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:218
+#: includes/Widgets/Loop_Grid.php:232
 msgid "Optional second Loop item template shown at a set position, e.g. a highlighted card."
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:242
+#: includes/Widgets/Loop_Grid.php:256
 msgid "On: every Nth card. Off: only the Nth card."
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:252
+#: includes/Widgets/Loop_Grid.php:266
 msgid "Keep it at or below the number of columns."
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:261
-#: includes/Widgets/Loop_Grid.php:266
-#: includes/Widgets/Loop_Grid.php:392
+#: includes/Widgets/Loop_Grid.php:275
+#: includes/Widgets/Loop_Grid.php:280
+#: includes/Widgets/Loop_Grid.php:406
 #: includes/Widgets/Posts.php:301
 #: includes/Widgets/Posts.php:306
 #: includes/Widgets/Posts.php:643
@@ -9653,54 +10389,54 @@ msgstr ""
 msgid "Pagination"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:270
+#: includes/Widgets/Loop_Grid.php:284
 #: includes/Widgets/Posts.php:310
 msgid "Numbers"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:271
+#: includes/Widgets/Loop_Grid.php:285
 #: includes/Widgets/Posts.php:311
 msgid "Previous / next"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:272
+#: includes/Widgets/Loop_Grid.php:286
 #: includes/Widgets/Posts.php:312
 msgid "Numbers with previous / next"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:273
-#: includes/Widgets/Loop_Grid.php:477
+#: includes/Widgets/Loop_Grid.php:287
+#: includes/Widgets/Loop_Grid.php:491
 msgid "Load more button"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:274
+#: includes/Widgets/Loop_Grid.php:288
 msgid "Infinite scroll"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:282
+#: includes/Widgets/Loop_Grid.php:296
 #: includes/Widgets/Posts.php:320
 msgid "Previous text"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:291
+#: includes/Widgets/Loop_Grid.php:305
 #: includes/Widgets/Posts.php:329
 msgid "Next text"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:301
-#: includes/Widgets/Loop_Grid.php:758
+#: includes/Widgets/Loop_Grid.php:315
+#: includes/Widgets/Loop_Grid.php:773
 msgid "Load more"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:309
+#: includes/Widgets/Loop_Grid.php:323
 msgid "Loading text"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:381
+#: includes/Widgets/Loop_Grid.php:395
 msgid "Pagination distance"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:435
+#: includes/Widgets/Loop_Grid.php:449
 #: includes/Widgets/Nav_Menu.php:560
 #: includes/Widgets/Nav_Menu.php:700
 #: includes/Widgets/Nav_Menu.php:997
@@ -9712,41 +10448,41 @@ msgstr ""
 msgid "Active"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:769
+#: includes/Widgets/Loop_Grid.php:784
 msgid "Next page"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:807
+#: includes/Widgets/Loop_Grid.php:822
 #: includes/Widgets/Posts.php:995
 msgid "Posts pagination"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:843
+#: includes/Widgets/Loop_Grid.php:858
 msgid "All items are loaded."
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:844
+#: includes/Widgets/Loop_Grid.php:859
 msgid "Could not load more items. Please try again."
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:856
+#: includes/Widgets/Loop_Grid.php:871
 msgid "Choose a loop item template"
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:857
+#: includes/Widgets/Loop_Grid.php:872
 msgid "Create a Loop item template in Theme Builder, design the card with dynamic tags (featured image, post title, excerpt, read more), publish it, then pick it in Layout → Loop item template."
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:875
+#: includes/Widgets/Loop_Grid.php:890
 msgid "This loop item template is already shown here: a loop grid cannot display the template it is placed in."
 msgstr ""
 
-#: includes/Widgets/Loop_Grid.php:919
+#: includes/Widgets/Loop_Grid.php:934
 msgid "This loop item template is not published yet: the cards only show on the live site once it is."
 msgstr ""
 
 #. translators: %s: number of items.
-#: includes/Widgets/Loop_Grid.php:940
+#: includes/Widgets/Loop_Grid.php:955
 #, php-format
 msgid "%s more item loaded"
 msgid_plural "%s more items loaded"
@@ -11862,12 +12598,6 @@ msgstr ""
 msgid "An HTML sitemap: columns listing the site's published pages (as a tree), posts, custom post types, categories, tags or other taxonomies, straight from WordPress. Use it on a Sitemap page or a 404 page; it updates itself as content is added."
 msgstr ""
 
-#: includes/Widgets/Sitemap.php:61
-#: includes/Widgets/Sitemap.php:95
-#: includes/Widgets/Sitemap.php:205
-msgid "Pages"
-msgstr ""
-
 #: includes/Widgets/Sitemap.php:67
 msgid "Latest posts"
 msgstr ""
@@ -13592,7 +14322,7 @@ msgid "Content of this copy"
 msgstr ""
 
 #: includes/Widgets/Template.php:80
-msgid "Create sections in Uncoder → Theme Builder → Saved sections, or right-click a section in the builder → Save as template. Changes to the template show everywhere it is used."
+msgid "Create sections in Uncoder → Library → Saved sections, or right-click a section in the builder → Save as template. Changes to the template show everywhere it is used."
 msgstr ""
 
 #: includes/Widgets/Template.php:97

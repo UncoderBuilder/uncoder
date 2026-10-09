@@ -95,7 +95,7 @@ final class Server {
 					return $is_notification ? null : self::error( $id, -32601, 'Method not found: ' . $method );
 			}
 		} catch ( \Throwable $e ) {
-			return self::error( $id, -32603, 'Internal error: ' . $e->getMessage() );
+			return self::error( $id, -32603, 'Internal error: ' . self::exception_message( $e ) );
 		}
 		return $is_notification ? null : array(
 			'jsonrpc' => '2.0',
@@ -222,7 +222,7 @@ final class Server {
 		try {
 			$result = call_user_func( $tool['callback'], $args, $call );
 		} catch ( \Throwable $e ) {
-			$result = new WP_Error( 'exception', $e->getMessage() );
+			$result = new WP_Error( 'exception', self::exception_message( $e ) );
 		}
 		\Uncoder\Builder\Core\Document::$source = $source;
 		Context::$current                       = $previous_ctx;
@@ -356,5 +356,16 @@ final class Server {
 				'message' => $message,
 			),
 		);
+	}
+
+	/**
+	 * What a client sees of an unexpected error: the message (it helps an AI client correct its call) without the
+	 * server's file paths. The full error goes to the PHP error log.
+	 */
+	private static function exception_message( \Throwable $e ): string {
+		error_log( 'Uncoder MCP: ' . get_class( $e ) . ': ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine() ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- unexpected errors must reach the site's log.
+		$message = str_replace( array( wp_normalize_path( ABSPATH ), ABSPATH ), '', $e->getMessage() );
+		$message = (string) preg_replace( '#(?:[A-Za-z]:)?[\\\\/][^\s:]*\.php#', '[file]', $message );
+		return '' !== trim( $message ) ? $message : 'Unexpected error.';
 	}
 }

@@ -34,6 +34,7 @@ final class Container_Loop {
 		if ( 'current' === ( $q['source'] ?? 'posts' ) ) {
 			global $wp_query;
 			if ( ! $ctx->editor && $wp_query instanceof \WP_Query && ( $wp_query->is_archive() || $wp_query->is_home() || $wp_query->is_search() ) ) {
+				\Uncoder\Builder\Widgets\Loop_Grid::prime_caches( $wp_query );
 				return array_map( static fn( $p ) => array( 'post' => $p ), array_filter( (array) $wp_query->posts, static fn( $p ) => $p instanceof \WP_Post ) );
 			}
 			// Not an archive request (e.g. a preview): the latest posts stand in.
@@ -56,6 +57,7 @@ final class Container_Loop {
 			$args['post__not_in'] = array_values( array_unique( array_merge( (array) ( $args['post__not_in'] ?? array() ), $shown ) ) ); // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_post__not_in -- a handful of ids already on the page.
 		}
 		$query = new \WP_Query( $args );
+		\Uncoder\Builder\Widgets\Loop_Grid::prime_caches( $query );
 		$posts = array_filter( (array) $query->posts, static fn( $p ) => $p instanceof \WP_Post );
 		if ( ! $ctx->editor ) {
 			\Uncoder\Builder\Widgets\Loop_Grid::mark_shown( array_map( static fn( $p ) => (int) $p->ID, $posts ) );

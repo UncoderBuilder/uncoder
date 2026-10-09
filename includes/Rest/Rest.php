@@ -25,7 +25,8 @@ final class Rest {
 	 * Opens a request body the editor wrapped in base64 ({"uncoder_body": "…"} with the X-Uncoder-Wrapped header),
 	 * which it does when a host firewall refused the plain JSON (src/editor/lib/api.ts). Runs before the route and
 	 * its permission check, so every endpoint sees the JSON it was sent. Any route: the editor also writes WordPress
-	 * core routes.
+	 * core routes. Only for a signed-in user who can edit (REST authentication, the wp_rest nonce included, has run
+	 * by now), so an anonymous client cannot use the wrapper to hide a payload from the host's firewall.
 	 *
 	 * @param mixed            $result  Response to short-circuit with, or null.
 	 * @param \WP_REST_Server  $server  Server.
@@ -34,6 +35,9 @@ final class Rest {
 	 */
 	public function unwrap_body( $result, $server, $request ) {
 		if ( null !== $result || ! $request instanceof \WP_REST_Request || '1' !== $request->get_header( 'X-Uncoder-Wrapped' ) ) {
+			return $result;
+		}
+		if ( ! current_user_can( 'edit_posts' ) ) {
 			return $result;
 		}
 		$params = $request->get_json_params();

@@ -33,27 +33,33 @@ final class Elements {
 		'other'     => 'Other',
 	);
 
+	/**
+	 * Elements made one by one by get() before the full registry was needed, by name.
+	 *
+	 * @var array<string, Element_Base>
+	 */
+	private array $lazy = array();
+
+	/**
+	 * The full registry: the container, every widget, then third-party ones. Needed for lists (the editor's
+	 * schema, the Insert panel, AI guides); rendering a page asks get() for the types it uses, which loads only
+	 * those, so a page with three widgets does not read eighty widget files (costly without OPcache).
+	 */
 	private function load(): void {
 		if ( $this->loaded ) {
 			return;
 		}
 		$this->loaded = true;
-		$this->register( new Container() );
-
-		$files = glob( UNCODER_WB_PATH . 'includes/Widgets/*.php' );
-		sort( $files );
-		foreach ( (array) $files as $file ) {
-			$class = 'Uncoder\\Builder\\Widgets\\' . basename( $file, '.php' );
-			if ( class_exists( $class ) ) {
-				$reflection = new \ReflectionClass( $class );
-				if ( ! $reflection->isAbstract() && $reflection->isSubclassOf( Element_Base::class ) ) {
-					$widget = new $class();
-					if ( ! method_exists( $widget, 'is_available' ) || $widget->is_available() ) {
-						$this->register( $widget );
-					}
-				}
+		// Same order as always: elements registered directly by other code first, then the built-ins (reusing any
+		// get() already made), then the register action.
+		$this->register( $this->lazy['container'] ?? new Container() );
+		foreach ( self::files() as $name => $base ) {
+			$widget = $this->lazy[ $name ] ?? self::make( $base );
+			if ( $widget ) {
+				$this->register( $widget );
 			}
 		}
+		$this->lazy = array();
 
 		/**
 		 * Register third-party widgets: $elements->register( new My_Widget() ).
@@ -61,6 +67,60 @@ final class Elements {
 		 * @param Elements $elements Registry.
 		 */
 		do_action( 'uncoder_wb/widgets/register', $this );
+	}
+
+	/**
+	 * Built-in widget files by element name: Nav_Menu.php is "nav-menu" (every widget's name() follows its file
+	 * name; one that did not would still be found by the full load).
+	 *
+	 * @return array<string,string> Name => class base name, sorted.
+	 */
+	private static function files(): array {
+		static $files = null;
+		if ( null === $files ) {
+			$files = array();
+			$list  = (array) glob( UNCODER_WB_PATH . 'includes/Widgets/*.php' );
+			sort( $list );
+			foreach ( $list as $file ) {
+				$base                                                  = basename( (string) $file, '.php' );
+				$files[ strtolower( str_replace( '_', '-', $base ) ) ] = $base;
+			}
+		}
+		return $files;
+	}
+
+	private static function make( string $base ): ?Element_Base {
+		$class = 'Uncoder\\Builder\\Widgets\\' . $base;
+		if ( ! class_exists( $class ) ) {
+			return null;
+		}
+		$reflection = new \ReflectionClass( $class );
+		if ( $reflection->isAbstract() || ! $reflection->isSubclassOf( Element_Base::class ) ) {
+			return null;
+		}
+		$widget = new $class();
+		return ! method_exists( $widget, 'is_available' ) || $widget->is_available() ? $widget : null;
+	}
+
+	/**
+	 * One built-in element without loading the others. Not when other code hooks the register action: it may
+	 * replace or remove built-ins, so the full registry decides.
+	 */
+	private function load_one( string $name ): ?Element_Base {
+		if ( has_action( 'uncoder_wb/widgets/register' ) ) {
+			return null;
+		}
+		if ( 'container' === $name ) {
+			$this->lazy[ $name ] = new Container();
+			return $this->lazy[ $name ];
+		}
+		$base = self::files()[ $name ] ?? '';
+		$el   = '' !== $base ? self::make( $base ) : null;
+		if ( ! $el || $el->name() !== $name ) {
+			return null;
+		}
+		$this->lazy[ $name ] = $el;
+		return $el;
 	}
 
 	public function register( Element_Base $element ): void {
@@ -73,6 +133,12 @@ final class Elements {
 	}
 
 	public function get( string $name ): ?Element_Base {
+		if ( ! $this->loaded ) {
+			$one = $this->lazy[ $name ] ?? $this->load_one( $name );
+			if ( $one ) {
+				return $one;
+			}
+		}
 		$this->load();
 		return $this->types[ $name ] ?? null;
 	}

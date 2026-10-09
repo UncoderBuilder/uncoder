@@ -4,7 +4,7 @@ Tags: page builder, website builder, theme builder, drag and drop, mcp
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 0.1.1
+Stable tag: 0.1.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,7 +34,7 @@ Everything is free and GPL. There is no account, no upsell and no tracking.
   * rate limits
   * an activity log with per-change undo
 * The tools are also registered as WordPress Abilities (WordPress 6.9+), so other AI integrations can use them.
-* Optional AI writing and AI images inside the editor, with your own API key.
+* No AI provider key needed: AI works through the AI app you already use, connected over MCP.
 
 = Visual editor =
 
@@ -236,25 +236,6 @@ This applies only when an editor adds a Slack or Discord webhook URL, or any web
 Slack: https://slack.com/ — Privacy policy: https://slack.com/trust/privacy/privacy-policy — Terms: https://slack.com/terms-of-service
 Discord: https://discord.com/ — Privacy policy: https://discord.com/privacy — Terms: https://discord.com/terms
 
-= Anthropic API (optional AI writing) =
-
-This applies only when an administrator turns on "AI writing" in **Uncoder → AI & MCP** and enters their own Anthropic API key.
-
-* When an editor clicks an AI action on a text field or image in the editor, that field's text or that image is sent from your server to the Anthropic API (api.anthropic.com). The rewritten text or alt text is returned.
-* Nothing is sent otherwise, and visitors never contact Anthropic.
-
-Anthropic: https://www.anthropic.com/ — Privacy policy: https://www.anthropic.com/legal/privacy — Commercial terms: https://www.anthropic.com/legal/commercial-terms
-
-= OpenAI Images API or a compatible service (optional AI images) =
-
-This applies only when an administrator enters their own API key under **Uncoder → AI & MCP → AI images**.
-
-* When an editor clicks **Generate with AI** on an image field and submits a description, that description is sent from your server to the OpenAI Images API (api.openai.com), or to the compatible address the administrator entered.
-* The generated image is saved to your media library.
-* Nothing is sent otherwise, and visitors never contact the service.
-
-OpenAI: https://openai.com/ — Privacy policy: https://openai.com/policies/privacy-policy/ — Terms: https://openai.com/policies/terms-of-use/
-
 = Openverse (image search for AI clients) =
 
 When a connected AI client calls the `search_images` tool, the search words are sent from your server to the Openverse API (api.openverse.org) to find openly licensed images. No personal data is sent. Image search can be turned off in **Uncoder → AI & MCP**.
@@ -332,6 +313,17 @@ Bundled assets:
 
 == Changelog ==
 
+= 0.1.2 =
+* A redesigned editor: a slim rail on the left for Insert, Layers, Styles and the page's settings, panels edge to edge for a wider canvas, and Checks, Notes and Ask AI one click away in the rail.
+* Clearer settings: a value set on this device shows its label in blue, an inherited one is underlined, and right-clicking a label resets it. Labels are never cut off.
+* Insert shows widgets as tiles with a plain-language tip on each, and Insert → Sections has collapsible groups.
+* Edit the header or footer straight from the page you are on, and come back to it in one click.
+* Link fields add https:// for you, the right-click menu stays next to the pointer, and the editor offers to restore unsaved work if it ever hits an error.
+* New Uncoder → Library: starter sites, saved sections, premium sections (save one to your sections in one click), the cloud library, and import & export.
+* A reorganised admin menu and Settings (Builder, Visitors, Developer, Account), the Style book inside the Design System, and a Page Checks count of pages to fix. Old links keep working.
+* Faster pages: a page loads only the widgets it uses.
+* Security hardening for REST requests, MCP sign-in, rate limits behind a proxy or CDN, and MCP error messages.
+
 = 0.1.1 =
 * Pro and Agency licences, activated under Settings → Licence.
 * Starter Sites: a library of complete starter sites, newest first, many of them free, imported in one click.
@@ -346,6 +338,9 @@ Bundled assets:
 * First release.
 
 == Upgrade Notice ==
+
+= 0.1.2 =
+A redesigned editor and a new Library menu for starter sites, sections and imports. Old admin links keep working.
 
 = 0.1.1 =
 Starter sites, Pro and Agency licences, agency tools and Page Checks. The AI buttons that needed your own AI key are replaced by your connected AI app, and saved AI keys are deleted.

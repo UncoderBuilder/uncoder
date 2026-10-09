@@ -60,6 +60,20 @@ class Loop_Grid extends Widget_Base {
 		}
 	}
 
+	/**
+	 * Loads the featured images and authors of a query's posts in a few queries. Cards are rendered without
+	 * the_post(), which is what normally does this, so each card would otherwise query its own.
+	 */
+	public static function prime_caches( \WP_Query $query ): void {
+		if ( ! $query->posts ) {
+			return;
+		}
+		update_post_thumbnail_cache( $query );
+		if ( function_exists( 'update_post_author_caches' ) ) {
+			update_post_author_caches( array_filter( array_map( 'get_post', $query->posts ) ) );
+		}
+	}
+
 	/** @var array<string,int> Grid ids handed out on this page (keeps DOM ids unique). */
 	private static array $ids = array();
 
@@ -677,6 +691,7 @@ class Loop_Grid extends Widget_Base {
 		$html  = '';
 		$count = 0;
 		$start = ( $result['paged'] - 1 ) * $result['per_page'];
+		self::prime_caches( $result['query'] );
 		foreach ( $result['query']->posts as $raw ) {
 			$post = get_post( $raw );
 			if ( ! $post instanceof \WP_Post ) {
