@@ -227,7 +227,7 @@ class Video extends Widget_Base {
 					'source'    => array( 'hosted', 'external' ),
 					'controls!' => 'yes',
 				),
-				'ai'          => 'For a silent background-style loop (autoplay + mute + loop, controls off) add "toggle":true: a "Pause" / "Play" pill on the video. Style it with toggle_background, toggle_color, toggle_blur, toggle_padding, toggle_radius, toggle_typography, toggle_offset_x / toggle_offset_y.',
+				'ai'          => 'For a silent background-style loop (autoplay + mute + loop, controls off) add "toggle":true: a "Pause" / "Play" pill on the video. Style it with toggle_background, toggle_color, toggle_blur, toggle_padding, toggle_radius, toggle_typography, toggle_offset_x / toggle_offset_y. toggle_position "center" puts it in the middle (a big play button over a film); toggle_play_text / toggle_pause_text replace the words ("Watch the film").',
 			)
 		);
 		$this->add_control(
@@ -241,6 +241,25 @@ class Video extends Widget_Base {
 			)
 		);
 		$this->add_control(
+			'toggle_play_text',
+			array(
+				'type'        => 'text',
+				'label'       => __( 'Play text', 'uncoder' ),
+				'placeholder' => __( 'Play', 'uncoder' ),
+				'description' => __( 'The words while the video is paused, e.g. "Watch the film". Screen readers still hear "Play video".', 'uncoder' ),
+				'condition'   => array( 'toggle' => 'yes', 'toggle_text' => 'yes' ),
+			)
+		);
+		$this->add_control(
+			'toggle_pause_text',
+			array(
+				'type'        => 'text',
+				'label'       => __( 'Pause text', 'uncoder' ),
+				'placeholder' => __( 'Pause', 'uncoder' ),
+				'condition'   => array( 'toggle' => 'yes', 'toggle_text' => 'yes' ),
+			)
+		);
+		$this->add_control(
 			'toggle_position',
 			array(
 				'type'      => 'select',
@@ -251,6 +270,7 @@ class Video extends Widget_Base {
 					'bottom-right' => __( 'Bottom right', 'uncoder' ),
 					'top-left'     => __( 'Top left', 'uncoder' ),
 					'top-right'    => __( 'Top right', 'uncoder' ),
+					'center'       => __( 'Centre', 'uncoder' ),
 				),
 				'condition' => array( 'toggle' => 'yes' ),
 			)
@@ -481,9 +501,11 @@ class Video extends Widget_Base {
 	 * @param array<string,mixed> $s Settings.
 	 */
 	private function toggle_button( array $s, bool $playing ): string {
-		$position = in_array( $s['toggle_position'] ?? '', array( 'bottom-left', 'bottom-right', 'top-left', 'top-right' ), true ) ? (string) $s['toggle_position'] : 'bottom-left';
-		$play     = __( 'Play', 'uncoder' );
-		$pause    = __( 'Pause', 'uncoder' );
+		$position = in_array( $s['toggle_position'] ?? '', array( 'bottom-left', 'bottom-right', 'top-left', 'top-right', 'center' ), true ) ? (string) $s['toggle_position'] : 'bottom-left';
+		$play     = trim( (string) ( $s['toggle_play_text'] ?? '' ) );
+		$play     = '' !== $play ? $play : __( 'Play', 'uncoder' );
+		$pause    = trim( (string) ( $s['toggle_pause_text'] ?? '' ) );
+		$pause    = '' !== $pause ? $pause : __( 'Pause', 'uncoder' );
 		$attrs    = array(
 			'type'             => 'button',
 			'class'            => array( 'uncoder-video__toggle', 'uncoder-video__toggle--' . $position, $playing ? 'is-playing' : '' ),

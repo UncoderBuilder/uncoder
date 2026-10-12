@@ -53,7 +53,7 @@ final class Converter {
 		'flipInY'           => 'flip-up',
 		'bounceIn'          => 'zoom-in',
 		'bounceInUp'        => 'fade-up',
-		'bounceInDown'      => 'fade-down',
+		'bounceInDown'      => 'drop-in',
 		'bounceInLeft'      => 'fade-left',
 		'bounceInRight'     => 'fade-right',
 		'rotateIn'          => 'zoom-in',
@@ -66,7 +66,7 @@ final class Converter {
 	);
 
 	/** Exact equivalents (the others are approximated and noted). */
-	private const EXACT_ANIMATIONS = array( 'fadeIn', 'fadeInUp', 'fadeInDown', 'fadeInLeft', 'fadeInRight', 'zoomIn', 'slideInUp', 'slideInDown', 'slideInLeft', 'slideInRight', 'flipInX' );
+	private const EXACT_ANIMATIONS = array( 'fadeIn', 'fadeInUp', 'fadeInDown', 'fadeInLeft', 'fadeInRight', 'zoomIn', 'slideInUp', 'slideInDown', 'slideInLeft', 'slideInRight', 'flipInX', 'bounceInDown' );
 
 	private const SHAPES = array(
 		'mountains'            => 'mountains',

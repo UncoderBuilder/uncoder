@@ -4,7 +4,7 @@ Tags: page builder, website builder, theme builder, drag and drop, mcp
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 0.1.2
+Stable tag: 0.1.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -313,6 +313,17 @@ Bundled assets:
 
 == Changelog ==
 
+= 0.1.3 =
+* Heading: a reflection under the title (mirror or water).
+* Button: open a picture or a video (YouTube, Vimeo or a video file) in a lightbox, a label for screen readers, and rounded icon corners.
+* Tabs: a picture on each tab, picture-only tabs, and tabs after the content. Timeline: a line that fills as you scroll, and dates beside the line.
+* Site Logo with the site title beside it, Marquee items with a picture, Icon List icons after the text, Image Compare "after" colours, Loop Filter term order, Video play/pause in the centre with your own words, Google and Yelp in Social Icons.
+* Featured Image: "Same link as the title", so a card with a linked photo and title is one link for keyboards and screen readers.
+* Headers: a side header (a column beside the page on desktops), and transparency on chosen devices only.
+* Hide on laptop (and on any optional breakpoint you turn on), a Drop in entrance animation, figure and figcaption container tags.
+* Editor: reorder list items with the keyboard, inline editing of accordion titles, Edit template on an embedded section, and the Checks panel lists images without alt text.
+* Fixes: search and archive excerpts, vertical menus (alignment, dividers, no mega panels), reveal headers, carousels with one page, Icon List and Social Icons spacing, Site Kit logos and image custom fields, and more accurate Page Checks.
+
 = 0.1.2 =
 * A redesigned editor: a slim rail on the left for Insert, Layers, Styles and the page's settings, panels edge to edge for a wider canvas, and Checks, Notes and Ask AI one click away in the rail.
 * Clearer settings: a value set on this device shows its label in blue, an inherited one is underlined, and right-clicking a label resets it. Labels are never cut off.
@@ -338,6 +349,9 @@ Bundled assets:
 * First release.
 
 == Upgrade Notice ==
+
+= 0.1.3 =
+New widget options (reflections, lightbox buttons, pictures on tabs, a filling timeline), side headers, Hide on laptop and editor fixes. Nothing to migrate.
 
 = 0.1.2 =
 A redesigned editor and a new Library menu for starter sites, sections and imports. Old admin links keep working.

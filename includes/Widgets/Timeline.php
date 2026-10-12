@@ -39,7 +39,7 @@ class Timeline extends Widget_Base {
 	}
 
 	public function description(): string {
-		return __( 'Vertical timeline of events (date, title, text, optional icon). Layouts: alternating around a centre line (stacks on phones), line on the left or right. Items fade in as they scroll into view.', 'uncoder' );
+		return __( 'Vertical timeline of events (date, title, text, optional icon). Layouts: alternating around a centre line (stacks on phones), line on the left or right, or the dates in a column beside the line. Items fade in as they scroll into view.', 'uncoder' );
 	}
 
 	public function frontend_scripts(): array {
@@ -133,8 +133,9 @@ class Timeline extends Widget_Base {
 					'alternate' => __( 'Alternating (centre line)', 'uncoder' ),
 					'left'      => __( 'Line on the left', 'uncoder' ),
 					'right'     => __( 'Line on the right', 'uncoder' ),
+					'dates'     => __( 'Dates beside the line', 'uncoder' ),
 				),
-				'ai'      => 'alternate switches to the left layout below 768px.',
+				'ai'      => 'alternate and dates switch to the left layout below 768px. dates: every date in a column left of the line (date_width, default 160px), every card right of it, like a CV or a company history.',
 			)
 		);
 		$this->add_control(
@@ -173,6 +174,15 @@ class Timeline extends Widget_Base {
 				),
 			)
 		);
+		$this->add_control(
+			'progress',
+			array(
+				'type'        => 'switch',
+				'label'       => __( 'Fill the line while scrolling', 'uncoder' ),
+				'description' => __( 'The line fills down to the middle of the screen, and the events it has not reached yet are dimmed. Without motion (reduced motion, the editor) the line shows filled.', 'uncoder' ),
+				'ai'          => 'Scroll progress: true fills the line (progress_color) down to the middle of the screen; events not reached yet fade to progress_dim (0-1, default 0.45) and reached markers take the fill color. Pairs well with marker "ring" and a light line_color.',
+			)
+		);
 		$this->end_section();
 
 		/* ------------------------------------------------------------ Style */
@@ -185,6 +195,17 @@ class Timeline extends Widget_Base {
 				'label'      => __( 'Space between events', 'uncoder' ),
 				'size_units' => array( 'px', 'em', 'rem' ),
 				'selectors'  => array( '{{WRAPPER}}' => '--uncoder-tl-row-gap: {{VALUE}}' ),
+			)
+		);
+		$this->add_responsive_control(
+			'date_width',
+			array(
+				'type'       => 'slider',
+				'label'      => __( 'Date column width', 'uncoder' ),
+				'size_units' => array( 'px', 'em', 'rem' ),
+				'range'      => array( 'px' => array( 'min' => 40, 'max' => 600 ) ),
+				'condition'  => array( 'layout' => 'dates' ),
+				'selectors'  => array( '{{WRAPPER}}' => '--uncoder-tl-date-w: {{VALUE}}' ),
 			)
 		);
 		$this->add_responsive_control(
@@ -225,6 +246,28 @@ class Timeline extends Widget_Base {
 					'dotted' => __( 'Dotted', 'uncoder' ),
 				),
 				'selectors' => array( '{{WRAPPER}}' => '--uncoder-tl-line-style: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'progress_color',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Filled line color', 'uncoder' ),
+				'condition' => array( 'progress' => 'yes' ),
+				'selectors' => array( '{{WRAPPER}}' => '--uncoder-tl-fill: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'progress_dim',
+			array(
+				'type'        => 'number',
+				'label'       => __( 'Events not reached', 'uncoder' ),
+				'description' => __( 'Opacity of the events below the fill (0 to 1, default 0.45).', 'uncoder' ),
+				'min'         => 0,
+				'max'         => 1,
+				'step'        => 0.05,
+				'condition'   => array( 'progress' => 'yes' ),
+				'selectors'   => array( '{{WRAPPER}}' => '--uncoder-tl-dim: {{VALUE}}' ),
 			)
 		);
 		$this->end_section();
@@ -357,7 +400,7 @@ class Timeline extends Widget_Base {
 			}
 			return;
 		}
-		$layout = in_array( $s['layout'] ?? 'alternate', array( 'alternate', 'left', 'right' ), true ) ? $s['layout'] : 'alternate';
+		$layout = in_array( $s['layout'] ?? 'alternate', array( 'alternate', 'left', 'right', 'dates' ), true ) ? $s['layout'] : 'alternate';
 		$marker = in_array( $s['marker'] ?? 'dot', array( 'dot', 'ring', 'icon', 'number' ), true ) ? $s['marker'] : 'dot';
 		$reveal = in_array( $s['reveal'] ?? '', array( 'fade-up', 'fade-in', 'slide' ), true ) ? $s['reveal'] : '';
 		$tag    = Utils::tag( $s['title_tag'] ?? 'h3', Utils::HEADING_TAGS, 'h3' );
@@ -365,6 +408,9 @@ class Timeline extends Widget_Base {
 		$classes = array( 'uncoder-timeline', 'uncoder-timeline--' . $layout, 'uncoder-timeline--marker-' . $marker );
 		if ( ! empty( $s['card_arrow'] ) ) {
 			$classes[] = 'uncoder-timeline--arrow';
+		}
+		if ( ! empty( $s['progress'] ) ) {
+			$classes[] = 'uncoder-timeline--progress';
 		}
 		if ( '' !== $reveal ) {
 			$classes[] = 'uncoder-timeline--reveal';

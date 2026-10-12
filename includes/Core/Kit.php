@@ -398,7 +398,8 @@ final class Kit {
 					$errors[] = sprintf( 'typography[%d]: missing "id".', $i );
 					continue;
 				}
-				$value = 'normalize' === $mode ? $typo->normalize( $preset['value'] ?? array(), array() ) : $typo->sanitize( $preset['value'] ?? array(), array() );
+				$raw = is_array( $preset['value'] ?? null ) ? self::typography_aliases( $preset['value'], $id, $errors ) : ( $preset['value'] ?? array() );
+				$value = 'normalize' === $mode ? $typo->normalize( $raw, array() ) : $typo->sanitize( $raw, array() );
 				unset( $value['preset'] );
 				$out['typography'][] = array(
 					'id'    => $id,
@@ -806,7 +807,10 @@ final class Kit {
 		foreach ( self::device_queries() as $device => $query ) {
 			$rules = '.uncoder-hide-' . $device . '{display:none!important}.uncoder-sticky-off-' . $device . '{position:relative!important;top:auto!important;bottom:auto!important}'
 				// A transparent header that is not sticky on this device overlays the page and scrolls away with it.
-				. '.uncoder-header-overlay-' . $device . '{position:absolute!important;top:var(--wp-admin--admin-bar--height,0px)!important}';
+				. '.uncoder-header-overlay-' . $device . '{position:absolute!important;top:var(--wp-admin--admin-bar--height,0px)!important}'
+				// A transparent header left out on this device ("Transparent on") is an ordinary bar in the flow there.
+				. '.uncoder-header-solid-' . $device . '.uncoder-header--transparent{position:relative!important;top:auto!important}'
+				. '.uncoder-header-solid-' . $device . '.uncoder-header--transparent.uncoder-header--sticky{position:sticky!important;top:calc(var(--wp-admin--admin-bar--height,0px) - var(--uncoder-header-skip,0px))!important}';
 			$css  .= '' !== $query ? '@media ' . $query . '{' . $rules . '}' : $rules;
 		}
 		return $css;
@@ -945,6 +949,52 @@ final class Kit {
 			'path' => $file,
 			'ver'  => substr( md5( $this->css_build() ), 0, 10 ),
 		);
+	}
+
+	/**
+	 * A text style's value with CSS-style key names ("font_size", "font-weight", "line-height"…) turned into the
+	 * typography control's own ("size", "weight", "line_height"…), each rename reported. Keys the control does not
+	 * know are reported too: the sanitizer drops them, and a caller would otherwise believe they were saved.
+	 *
+	 * @param array<string,mixed> $value  The style as given.
+	 * @param string              $id     The preset id, for the messages.
+	 * @param string[]            $errors Collected warnings.
+	 * @return array<string,mixed>
+	 */
+	public static function typography_aliases( array $value, string $id, array &$errors ): array {
+		$aliases = array(
+			'font_size'       => 'size',
+			'font_weight'     => 'weight',
+			'font_family'     => 'family',
+			'font_style'      => 'style',
+			'text_transform'  => 'transform',
+			'text_decoration' => 'decoration',
+		);
+		$known   = array( 'preset', 'family', 'size', 'weight', 'transform', 'style', 'decoration', 'line_height', 'letter_spacing', 'word_spacing' );
+		$out     = array();
+		$unknown = array();
+		foreach ( $value as $key => $v ) {
+			$key    = str_replace( '-', '_', (string) $key );
+			// Every breakpoint's suffix (laptop, tablet_extra… as well as tablet and mobile): a style that gives a laptop
+			// size kept it only once the sanitizer already knew the breakpoint, and an unknown suffix was dropped.
+			$suffix = preg_match( '/_(' . implode( '|', array_map( 'preg_quote', array_keys( Breakpoints::DEFAULTS ) ) ) . ')$/', $key, $m ) ? $m[0] : '';
+			$base   = $suffix ? substr( $key, 0, -strlen( $suffix ) ) : $key;
+			if ( isset( $aliases[ $base ] ) ) {
+				$errors[] = sprintf( 'typography "%s": "%s" read as "%s".', $id, $key, $aliases[ $base ] . $suffix );
+				$base     = $aliases[ $base ];
+			}
+			if ( ! in_array( $base, $known, true ) ) {
+				$unknown[] = $key;
+				continue;
+			}
+			if ( ! array_key_exists( $base . $suffix, $out ) ) {
+				$out[ $base . $suffix ] = $v;
+			}
+		}
+		if ( $unknown ) {
+			$errors[] = sprintf( 'typography "%s": ignored unknown key(s) %s. Use family, size, weight, line_height, letter_spacing, word_spacing, transform, style, decoration (size, line_height and the spacings also per breakpoint: _tablet, _mobile, _laptop…).', $id, implode( ', ', $unknown ) );
+		}
+		return $out;
 	}
 
 	/**

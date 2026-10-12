@@ -96,6 +96,15 @@ class Featured_Image extends Widget_Base {
 				'dynamic'   => true,
 			)
 		);
+		$this->add_control(
+			'link_duplicate',
+			array(
+				'type'      => 'switch',
+				'label'     => __( 'Same link as the title', 'uncoder' ),
+				'condition' => array( 'link_to' => 'post' ),
+				'ai'        => 'In a card whose title already links to the post: the photo links there too for the mouse, but keyboards and screen readers skip it (tabindex -1, aria-hidden), so the card is not announced twice.',
+			)
+		);
 		$this->add_control( 'caption', array( 'type' => 'switch', 'label' => __( 'Show caption', 'uncoder' ) ) );
 		$this->add_control(
 			'loading',
@@ -306,6 +315,11 @@ class Featured_Image extends Widget_Base {
 		$link = array();
 		if ( 'post' === $link_to ) {
 			$link = array( 'href' => $post ? get_permalink( $post ) : '#' );
+			// The card's title links to the post as well: the photo's link is for the mouse only.
+			if ( ! empty( $s['link_duplicate'] ) ) {
+				$link['tabindex']    = '-1';
+				$link['aria-hidden'] = 'true';
+			}
 		} elseif ( 'file' === $link_to && $image_id ) {
 			$full = wp_get_attachment_image_url( $image_id, 'full' );
 			if ( $full ) {

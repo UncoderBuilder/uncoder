@@ -1,6 +1,6 @@
 <?php
 /**
- * Header behaviour: sticky / reveal-on-scroll-up, transparent overlay, scrolled state, shrink.
+ * Header behaviour: sticky / reveal-on-scroll-up, transparent overlay, scrolled state, shrink, side column.
  *
  * @package Uncoder\Builder
  */
@@ -23,7 +23,20 @@ defined( 'ABSPATH' ) || exit;
  */
 final class Header_Behavior {
 
-	public const KEYS = array( 'header_sticky', 'header_transparent', 'header_transparent_color', 'header_transparent_logo', 'header_transparent_logo_white', 'header_transparent_keep_colors', 'header_scrolled_bg', 'header_scrolled_shadow', 'header_scrolled_height', 'header_scroll_offset' );
+	public const KEYS = array( 'header_sticky', 'header_transparent', 'header_transparent_color', 'header_transparent_logo', 'header_transparent_logo_white', 'header_transparent_keep_colors', 'header_scrolled_bg', 'header_scrolled_shadow', 'header_scrolled_height', 'header_scroll_offset', 'header_side', 'header_side_width', 'header_transparent_devices' );
+
+	/** Side header column width: default and limits (px). */
+	private const SIDE_WIDTH = 320;
+	private const SIDE_MIN   = 160;
+	private const SIDE_MAX   = 640;
+
+	/** Optional devices and the device whose "Transparent on" choice they follow. */
+	private const FOLLOWS = array(
+		'widescreen'   => 'desktop',
+		'laptop'       => 'desktop',
+		'tablet_extra' => 'tablet',
+		'mobile_extra' => 'mobile',
+	);
 
 	/** Alternate logo (attachment id) for the header being rendered while transparent; read by the site-logo widget. */
 	public static int $transparent_logo = 0;
@@ -79,13 +92,28 @@ final class Header_Behavior {
 		if ( array_key_exists( 'header_scroll_offset', $raw ) ) {
 			$out['header_scroll_offset'] = max( 0, min( 2000, (int) $raw['header_scroll_offset'] ) );
 		}
+		if ( array_key_exists( 'header_transparent_devices', $raw ) ) {
+			$list = is_array( $raw['header_transparent_devices'] ) ? $raw['header_transparent_devices'] : array();
+			$out['header_transparent_devices'] = array_values( array_intersect( Breakpoints::devices(), array_map( 'strval', $list ) ) );
+		}
+		if ( array_key_exists( 'header_side', $raw ) ) {
+			$out['header_side'] = in_array( $raw['header_side'], array( 'left', 'right' ), true ) ? $raw['header_side'] : '';
+		}
+		if ( array_key_exists( 'header_side_width', $raw ) ) {
+			$width = $raw['header_side_width'];
+			if ( is_array( $width ) ) {
+				$width = isset( $width['size'] ) && is_numeric( $width['size'] ) ? $width['size'] . ( is_string( $width['unit'] ?? null ) ? $width['unit'] : 'px' ) : '';
+			}
+			$size                     = Utils::parse_size( is_numeric( $width ) ? $width . 'px' : $width );
+			$out['header_side_width'] = $size && 'px' === $size['unit'] ? max( self::SIDE_MIN, min( self::SIDE_MAX, (int) $size['size'] ) ) : 0;
+		}
 		return $out;
 	}
 
 	/**
 	 * Behaviour of a header template for the current request.
 	 *
-	 * @return array{sticky:string, transparent:bool, settings:array<string,mixed>}
+	 * @return array{side:string, side_width:int, sticky:string, transparent:bool, settings:array<string,mixed>}
 	 */
 	public static function resolve( int $header_id ): array {
 		if ( isset( self::$cache[ $header_id ] ) ) {
@@ -120,7 +148,12 @@ final class Header_Behavior {
 		$transparent = 'yes' === $page_choice
 			|| ( 'no' !== $page_choice && ( 'all' === $mode || ( 'front' === $mode && is_front_page() ) ) );
 
+		$side  = in_array( $s['header_side'] ?? '', array( 'left', 'right' ), true ) ? (string) $s['header_side'] : '';
+		$width = (int) ( $s['header_side_width'] ?? 0 );
+
 		self::$cache[ $header_id ] = array(
+			'side'        => $side,
+			'side_width'  => $width >= self::SIDE_MIN && $width <= self::SIDE_MAX ? $width : self::SIDE_WIDTH,
 			'sticky'      => in_array( $sticky, array( 'always', 'reveal' ), true ) ? $sticky : '',
 			'sticky_from' => $from,
 			'sticky_off'  => $off,
@@ -161,11 +194,15 @@ final class Header_Behavior {
 	public static function wrapper_args( int $header_id, array $args ): array {
 		$b = self::resolve( $header_id );
 		$s = $b['settings'];
-		if ( '' === $b['sticky'] && ! $b['transparent'] ) {
+		if ( '' === $b['sticky'] && ! $b['transparent'] && '' === $b['side'] ) {
 			return $args;
 		}
 		$classes = array();
 		$vars    = array();
+		if ( '' !== $b['side'] ) {
+			// A full-height column fixed beside the page on desktops (side_css()); a bar across the top below that.
+			$classes[] = 'uncoder-header--side uncoder-header--side-' . $b['side'];
+		}
 		if ( '' !== $b['sticky'] ) {
 			$classes[] = 'uncoder-header--sticky';
 			// Devices left out of "Sticky on" scroll normally (the visibility CSS ranges); a transparent header
@@ -188,8 +225,23 @@ final class Header_Behavior {
 				$vars[]    = '--uncoder-hdr-scrolled-h:' . (int) $s['header_scrolled_height'] . 'px';
 			}
 		}
+		$solid = array();
 		if ( $b['transparent'] ) {
 			$classes[] = 'uncoder-header--transparent is-transparent';
+			// "Transparent on" leaves devices out: there the header is an ordinary (sticky) bar in the flow.
+			$on = $s['header_transparent_devices'] ?? null;
+			if ( is_array( $on ) && $on ) {
+				$queries = \Uncoder\Builder\Core\Kit::device_queries();
+				foreach ( array_diff( Breakpoints::devices(), $on ) as $device ) {
+					// The field offers desktop, tablet and mobile: an optional device (laptop, widescreen…) follows
+					// the one it sits under, so "Desktop" also covers a laptop range.
+					if ( in_array( self::FOLLOWS[ $device ] ?? '', $on, true ) ) {
+						continue;
+					}
+					$classes[] = 'uncoder-header-solid-' . sanitize_html_class( (string) $device );
+					$solid[]   = '' !== ( $queries[ $device ] ?? '' ) ? $queries[ $device ] : 'all';
+				}
+			}
 			// "Keep colors": the header only overlays the page (a light hero); otherwise its text, menu and icons
 			// switch to the transparent text color (white by default) while it is transparent.
 			if ( empty( $s['header_transparent_keep_colors'] ) ) {
@@ -205,11 +257,18 @@ final class Header_Behavior {
 			'transparent' => $b['transparent'],
 			'offset'      => isset( $s['header_scroll_offset'] ) ? (int) $s['header_scroll_offset'] : 10,
 		);
+		if ( $solid ) {
+			$settings['solid'] = implode( ', ', $solid ); // the media query where the header is not transparent
+		}
 		if ( '' !== $b['sticky'] && '' !== $b['sticky_from'] ) {
 			$settings['from'] = $b['sticky_from'];
 		}
 		$args['class'] = trim( ( $args['class'] ?? '' ) . ' ' . implode( ' ', $classes ) );
 		$attrs         = (array) ( $args['attrs'] ?? array() );
+		if ( '' === $b['sticky'] && ! $b['transparent'] ) {
+			$args['attrs'] = $attrs; // A side header alone needs no script.
+			return $args;
+		}
 		$attrs['data-uncoder-js']   = trim( ( $attrs['data-uncoder-js'] ?? '' ) . ' header' );
 		$attrs['data-settings'] = (string) wp_json_encode( $settings );
 		if ( $vars ) {
@@ -232,7 +291,30 @@ final class Header_Behavior {
 		self::$transparent_logo = $b['transparent'] ? absint( is_array( $logo ) ? ( $logo['id'] ?? 0 ) : $logo ) : 0;
 		$html                   = $builder->render_template( $header_id, $args );
 		self::$transparent_logo = 0;
-		return $html;
+		return self::side_css( $b ) . $html;
+	}
+
+	/**
+	 * The side header's rules: on desktops the header is a full-height column fixed to one side (scrolling on its own
+	 * when taller than the screen) and the page makes room for it; tablets and phones keep the header across the top.
+	 * Printed with the header because the column width and the desktop range are settings.
+	 *
+	 * @param array<string,mixed> $b Resolved behaviour.
+	 */
+	private static function side_css( array $b ): string {
+		if ( '' === ( $b['side'] ?? '' ) ) {
+			return '';
+		}
+		$w     = (int) $b['side_width'] . 'px';
+		$edge  = 'right' === $b['side'] ? 'right' : 'left';
+		$other = 'right' === $edge ? 'left' : 'right';
+		// Every width above the tablet range, laptops included (the desktop query alone stops at an optional laptop).
+		$tablet = (int) ( Breakpoints::active()['tablet']['value'] ?? 0 );
+		$query  = $tablet > 0 ? '(min-width:' . ( $tablet + 1 ) . 'px)' : ( \Uncoder\Builder\Core\Kit::device_queries()['desktop'] ?? '' );
+		$rules = '.uncoder-location--header.uncoder-header--side{position:fixed;top:var(--wp-admin--admin-bar--height,0px);bottom:0;' . $edge . ':0;' . $other . ':auto;width:' . $w . ';transform:none;box-shadow:none;overflow-y:auto;overscroll-behavior:contain;z-index:990}'
+			. '.uncoder-location--header.uncoder-header--side>.uncoder-container{min-height:100%}'
+			. 'body.uncoder-has-side-header{padding-' . $edge . ':' . $w . '}';
+		return '<style id="uncoder-side-header">' . ( '' !== $query ? '@media ' . $query . '{' . $rules . '}' : $rules ) . '</style>';
 	}
 
 	/**
@@ -251,6 +333,9 @@ final class Header_Behavior {
 		}
 		if ( '' !== $b['sticky'] ) {
 			$classes[] = 'uncoder-has-sticky-header';
+		}
+		if ( '' !== $b['side'] ) {
+			$classes[] = 'uncoder-has-side-header';
 		}
 		return $classes;
 	}

@@ -24,7 +24,7 @@ final class Utils {
 
 	public const HEADING_TAGS = array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'span', 'p' );
 
-	public const CONTAINER_TAGS = array( 'div', 'section', 'header', 'footer', 'main', 'article', 'aside', 'nav', 'a' );
+	public const CONTAINER_TAGS = array( 'div', 'section', 'header', 'footer', 'main', 'article', 'aside', 'nav', 'figure', 'figcaption', 'a' );
 
 	/**
 	 * Generates a 7-character element id (base36).

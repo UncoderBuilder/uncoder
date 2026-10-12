@@ -107,6 +107,11 @@ final class Mega_Menu {
 		if ( '' !== (string) $content || (int) $depth > 0 || empty( $item->ID ) ) {
 			return (string) $content;
 		}
+		// Panels open under a horizontal menu bar. A vertical menu (a footer or sidebar menu that reuses the
+		// header's menu) shows the item as a normal link, with its regular sub-items.
+		if ( 'vertical' === ( $settings['layout'] ?? 'horizontal' ) ) {
+			return '';
+		}
 		$mega = self::get( (int) $item->ID );
 		if ( ! $mega || isset( $this->rendering[ $mega['template'] ] ) ) {
 			return '';

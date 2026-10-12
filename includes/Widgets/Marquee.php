@@ -96,6 +96,12 @@ class Marquee extends Widget_Base {
 						'description' => __( 'Optional, shown before the text.', 'uncoder' ),
 						'condition'   => array( 'type!' => 'image' ),
 					),
+					'thumb'        => array(
+						'type'        => 'media',
+						'label'       => __( 'Picture', 'uncoder' ),
+						'description' => __( 'Optional: a small picture before the text, in place of the icon (a logo, a dish).', 'uncoder' ),
+						'condition'   => array( 'type!' => 'image' ),
+					),
 					'image'        => array(
 						'type'      => 'media',
 						'label'     => __( 'Image', 'uncoder' ),
@@ -283,6 +289,26 @@ class Marquee extends Widget_Base {
 				'size_units' => array( 'px', 'em', 'rem' ),
 				'range'      => array( 'px' => array( 'min' => 0, 'max' => 160 ) ),
 				'selectors'  => array( self::ROOT => '--uncoder-marquee-gap: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'item_gap',
+			array(
+				'type'       => 'slider',
+				'label'      => __( 'Icon spacing', 'uncoder' ),
+				'size_units' => array( 'px', 'em' ),
+				'range'      => array( 'px' => array( 'min' => 0, 'max' => 40 ) ),
+				'selectors'  => array( self::ROOT => '--uncoder-marquee-item-gap: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'thumb_radius',
+			array(
+				'type'       => 'slider',
+				'label'      => __( 'Picture corners', 'uncoder' ),
+				'size_units' => array( 'px', '%' ),
+				'range'      => array( 'px' => array( 'min' => 0, 'max' => 60 ) ),
+				'selectors'  => array( self::ROOT => '--uncoder-marquee-thumb-radius: {{VALUE}}' ),
 			)
 		);
 		$this->add_control(
@@ -509,7 +535,9 @@ class Marquee extends Widget_Base {
 				if ( '' === trim( wp_strip_all_tags( $text ) ) && ! $this->has_icon( $row['icon'] ?? null ) ) {
 					continue;
 				}
-				$icon  = $this->has_icon( $row['icon'] ?? null ) ? $this->render_icon( $row['icon'], array( 'class' => 'uncoder-marquee__icon' ) ) : '';
+				// A picture before the words is decoration (the words name the item), so it has no alt text.
+				$thumb = $this->image( $row['thumb'] ?? null, 'thumbnail', array( 'class' => 'uncoder-marquee__thumb', 'alt' => '' ) );
+				$icon  = '' !== $thumb ? $thumb : ( $this->has_icon( $row['icon'] ?? null ) ? $this->render_icon( $row['icon'], array( 'class' => 'uncoder-marquee__icon' ) ) : '' );
 				$inner = $icon . '<span class="uncoder-marquee__text"' . ( $copy ? '' : $ctx->inline( 'items.' . $i . '.text' ) ) . '>' . $text . '</span>';
 			}
 			$link = $this->link_attrs( $row['link'] ?? array() );

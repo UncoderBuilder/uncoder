@@ -160,9 +160,16 @@ class Archive_Title extends Widget_Base {
 			if ( ! $ctx->editor ) {
 				return;
 			}
-			$name  = '<span>' . esc_html( Theme_Context::sample()['category'] ) . '</span>';
-			/* translators: %s: category name. */
-			$title = $remove ? $name : sprintf( esc_html__( 'Category: %s', 'uncoder' ), $name );
+			if ( 'search-results' === $ctx->doc_type ) {
+				// A search results template previews a search, as the visitor will see it.
+				$words = '<span>' . esc_html__( 'roof', 'uncoder' ) . '</span>';
+				/* translators: %s: search query. */
+				$title = $remove ? $words : sprintf( esc_html__( 'Search results for “%s”', 'uncoder' ), $words );
+			} else {
+				$name  = '<span>' . esc_html( Theme_Context::sample()['category'] ) . '</span>';
+				/* translators: %s: category name. */
+				$title = $remove ? $name : sprintf( esc_html__( 'Category: %s', 'uncoder' ), $name );
+			}
 		}
 		$tag   = Utils::tag( $s['tag'] ?? 'h1', Utils::HEADING_TAGS, 'h1' );
 		$class = 'uncoder-archive-title' . ( 'center' === ( $s['align'] ?? '' ) ? ' uncoder-archive-title--centered' : '' );

@@ -27,6 +27,16 @@ final class Audit {
 	/** Depth of containers hidden on phones around the node being checked (their rows never show there). */
 	private int $hidden_mobile = 0;
 
+	/** Depth of aria-hidden elements around the node: decoration (a faded giant wordmark) has no contrast minimum. */
+	private int $decorative = 0;
+
+	/**
+	 * The design system's typography presets (id => value), to tell large text from normal text.
+	 *
+	 * @var array<string,array<string,mixed>>
+	 */
+	private array $presets = array();
+
 	private const DEFAULT_COPY = array( 'add your heading text here', 'click here', 'lorem ipsum', 'add your text here', 'button', 'your title here' );
 
 	/**
@@ -43,12 +53,22 @@ final class Audit {
 		foreach ( Plugin::instance()->kit()->get( 'colors', array() ) as $c ) {
 			$this->kit_colors[ $c['id'] ] = $c['value'];
 		}
+		$this->presets = array();
+		foreach ( Plugin::instance()->kit()->get( 'typography', array() ) as $preset ) {
+			if ( isset( $preset['id'] ) && is_array( $preset['value'] ?? null ) ) {
+				$this->presets[ (string) $preset['id'] ] = $preset['value'];
+			}
+		}
 		$elements = Plugin::instance()->documents()->get( $post->ID )->elements();
 		$state    = array(
 			'headings' => array(),
 			'fonts'    => array(),
 		);
-		$this->walk( $elements, 0, null, '#ffffff', $state );
+		// Sections without their own background sit on the page: the design system's page background (a dark site
+		// sets it once in its theme), else white.
+		$theme = (array) Plugin::instance()->kit()->get( 'theme', array() );
+		$page  = ! empty( $theme['enabled'] ) ? $this->resolve_color( (string) ( $theme['background'] ?? '' ) ) : '';
+		$this->walk( $elements, 0, null, '' !== $page && self::alpha( $page ) >= 1.0 ? $page : '#ffffff', $state );
 
 		// Rendered HTML: icon-only links and buttons, form labels, images in any widget, frames, ids.
 		try {
@@ -140,7 +160,11 @@ final class Audit {
 				}
 			}
 
+			$decor             = self::aria_hidden( $s );
+			$this->decorative += $decor ? 1 : 0;
 			$this->check_widget( $id, $type, $s, $eff, $node, $my_bg, $state, $my_text );
+			$this->check_wrapper_label( $id, $type, $s );
+			$this->check_sticky_position( $id, $s );
 
 			if ( ! empty( $node['children'] ) ) {
 				$hidden               = ! empty( $s['_hide_mobile'] );
@@ -148,6 +172,7 @@ final class Audit {
 				$this->walk( (array) $node['children'], $depth + 1, $node, $my_bg, $state, $my_text );
 				$this->hidden_mobile -= $hidden ? 1 : 0;
 			}
+			$this->decorative -= $decor ? 1 : 0;
 		}
 	}
 
@@ -182,11 +207,21 @@ final class Audit {
 					$this->add( 'warning', 'content', $id, 'Very long heading (' . mb_strlen( $title ) . ' characters).', 'Shorten it; move detail into a paragraph.', 'long-heading' );
 				}
 			}
-			$this->check_contrast( $id, (string) ( $s['color'] ?? '' ), $bg, '' !== $text ? $text : 'var(--uncoder-c-heading)', true );
+			$this->check_contrast( $id, (string) ( $s['color'] ?? '' ), $bg, '' !== $text ? $text : 'var(--uncoder-c-heading)', $this->large_text( $eff ) ?? true );
 		}
 
 		if ( 'text-editor' === $type ) {
-			$this->check_contrast( $id, (string) ( $s['color'] ?? '' ), $bg, '' !== $text ? $text : 'var(--uncoder-c-text)', false );
+			$this->check_contrast( $id, (string) ( $s['color'] ?? '' ), $bg, '' !== $text ? $text : 'var(--uncoder-c-text)', $this->large_text( $eff ) ?? false );
+		}
+
+		// Buttons and form buttons/fields with their own colors: the words on their own ground (the section's ground
+		// shows through a half-transparent one).
+		if ( 'button' === $type ) {
+			$this->check_pair( $id, (string) ( $eff['text_color'] ?? '' ), self::classic_color( $eff['background'] ?? null ), $bg, $this->large_text( $eff ) ?? false, 'button' );
+		}
+		if ( 'form' === $type ) {
+			$this->check_pair( $id, (string) ( $eff['button_color'] ?? '' ), self::classic_color( $eff['button_background'] ?? null ), $bg, false, 'submit button' );
+			$this->check_pair( $id, (string) ( $eff['field_color'] ?? '' ), (string) ( $eff['field_bg'] ?? '' ), $bg, false, 'form field' );
 		}
 
 		// Leftover default copy.
@@ -214,8 +249,9 @@ final class Audit {
 			if ( ! isset( $dynamic['link'] ) && ! $acts && ( '' === $url || '#' === $url ) ) {
 				$this->add( 'warning', 'links', $id, 'Button links to "' . ( '' === $url ? '(nothing)' : '#' ) . '".', 'Set link to a real page URL, #section anchor or tel:/mailto:.', 'button-link' );
 			}
-			if ( '' === trim( (string) ( $eff['text'] ?? '' ) ) && ! isset( $dynamic['text'] ) ) {
-				$this->add( 'error', 'accessibility', $id, 'Button without text.', 'Give the button a label.', 'button-text' );
+			// An icon-only button is named by its "Label for screen readers" (aria_label).
+			if ( '' === trim( (string) ( $eff['text'] ?? '' ) ) && ! isset( $dynamic['text'] ) && '' === trim( (string) ( $eff['aria_label'] ?? '' ) ) ) {
+				$this->add( 'error', 'accessibility', $id, 'Button without text.', 'Give the button a label, or for an icon-only button set "Label for screen readers" (aria_label).', 'button-text' );
 			}
 		}
 
@@ -298,8 +334,9 @@ final class Audit {
 		if ( ! empty( $border['style'] ) && 'none' !== $border['style'] ) {
 			return true;
 		}
-		// A layer painted in custom CSS (a gradient shade, a masked tint) or placed over its parent (an overlay).
-		if ( preg_match( '/(^|[\s;{])background(-color|-image)?\s*:/i', (string) ( $s['_custom_css'] ?? '' ) ) ) {
+		// A layer painted in custom CSS (a gradient shade, a masked tint, ruled sides or a hairline) or placed over its
+		// parent (an overlay).
+		if ( preg_match( '/(^|[\s;{])(background(-color|-image)?|border(-(top|right|bottom|left|block|inline)(-(start|end))?)?|outline|box-shadow)\s*:/i', (string) ( $s['_custom_css'] ?? '' ) ) ) {
 			return true;
 		}
 		return in_array( (string) ( $s['_position'] ?? '' ), array( 'absolute', 'fixed' ), true );
@@ -312,7 +349,9 @@ final class Audit {
 		// Rows of small items (avatar + name, icon tile + label, time · icon · text, buttons) may stay rows;
 		// layouts of two or more real columns should stack. A column is a container that is not a small fixed
 		// tile (≤ 160px wide), or a wide widget (text, image or media that is not a small fixed size).
-		// A header bar (logo · menu · button) stays a row too: its menu turns into a toggle on phones.
+		// A header bar (logo · menu · button, the menu maybe in a group of the bar) stays a row too: its menu turns
+		// into a toggle on phones, and so does a sideways strip (custom CSS width: max-content, overflow-x:
+		// auto/scroll or scroll-snap-type).
 		// Content-sized items (an icon tile, a price next to "/ month"), items hidden on phones and decorations
 		// placed with absolute / fixed positioning (out of the flow) are not columns.
 		$small   = static function ( array $c ): bool {
@@ -339,15 +378,36 @@ final class Audit {
 				}
 			)
 		);
-		$has_menu  = (bool) array_filter( $children, static fn( $c ) => 'nav-menu' === ( $c['type'] ?? '' ) );
-		$is_layout = $columns >= 2 && ! $has_menu;
+		// The menu may sit in a group of the bar (a left and a right group around a centred logo).
+		$holds_menu = static function ( array $c, int $depth = 0 ) use ( &$holds_menu ): bool {
+			if ( 'nav-menu' === ( $c['type'] ?? '' ) ) {
+				return true;
+			}
+			if ( $depth >= 2 || 'container' !== ( $c['type'] ?? '' ) ) {
+				return false;
+			}
+			foreach ( (array) ( $c['children'] ?? array() ) as $child ) {
+				if ( is_array( $child ) && $holds_menu( $child, $depth + 1 ) ) {
+					return true;
+				}
+			}
+			return false;
+		};
+		$has_menu  = (bool) array_filter( $children, static fn( $c ) => is_array( $c ) && $holds_menu( $c ) );
+		// A strip meant to scroll or slide sideways (its own CSS makes it wider than the screen or a scroller)
+		// is a row on purpose: cards in a carousel-like band, a pinned horizontal scroll.
+		$css       = is_string( $s['_custom_css'] ?? null ) ? $s['_custom_css'] : '';
+		$strip     = '' !== $css && preg_match( '/\bselector\s*\{[^}]*(?:width\s*:\s*max-content|overflow-x\s*:\s*(?:auto|scroll)|scroll-snap-type\s*:)/i', $css );
+		$is_layout = $columns >= 2 && ! $has_menu && ! $strip;
 		if ( 'grid' !== ( $s['layout'] ?? '' ) && in_array( self::on_mobile( $s, 'direction', 'column' ), array( 'row', 'row-reverse' ), true ) && $is_layout && 'wrap' !== self::on_mobile( $s, 'wrap', '' ) ) {
 			$this->add( 'warning', 'responsive', $id, sprintf( 'Row with %d columns keeps the row layout on phones.', count( $children ) ), 'Add "direction_mobile": "column" (and a smaller gap_mobile).', 'row-mobile' );
 		}
 		// A custom column template (grid_template "1fr 1fr") decides the columns; grid_columns is ignored then.
 		$template    = trim( (string) self::on_mobile( $s, 'grid_template', '' ) );
 		$mobile_cols = '' !== $template ? self::template_tracks( $template ) : (int) self::on_mobile( $s, 'grid_columns', 3 );
-		if ( 'grid' === ( $s['layout'] ?? '' ) && $mobile_cols >= 3 && ! isset( $s['grid_template_mobile'] ) ) {
+		// A grid of pictures only (a photo strip, a logo wall, a gallery) may keep three or four small columns.
+		$pictures = $children && ! array_filter( $children, static fn( $c ) => ! in_array( (string) ( $c['type'] ?? '' ), array( 'image', 'icon', 'site-logo' ), true ) );
+		if ( 'grid' === ( $s['layout'] ?? '' ) && $mobile_cols >= 3 && ! isset( $s['grid_template_mobile'] ) && ! ( $pictures && $mobile_cols <= 4 ) ) {
 			$this->add( 'warning', 'responsive', $id, 'Grid keeps ' . $mobile_cols . ' columns on phones.', 'Add "grid_columns_mobile": 1 (and grid_columns_tablet: 2).', 'grid-mobile' );
 		}
 	}
@@ -413,7 +473,101 @@ final class Audit {
 		return '' === $c ? 0.0 : 1.0;
 	}
 
+	/**
+	 * Whether an element's custom attributes hide it from assistive technology ("aria-hidden|true").
+	 *
+	 * @param array<string,mixed> $s Element settings.
+	 */
+	private static function aria_hidden( array $s ): bool {
+		return (bool) preg_match( '/(^|[,\n])\s*aria-hidden\s*\|\s*true\s*([,\n]|$)/i', (string) ( $s['_attributes'] ?? '' ) );
+	}
+
+	/**
+	 * An aria-label (or aria-labelledby) in an element's Attributes lands on its outer box: a plain <div> that screen
+	 * readers do not announce. A label belongs on the link itself (Link → Attributes) or in the HTML (<ul aria-label>);
+	 * a box with a role, or a container with a landmark or list tag, can carry one.
+	 *
+	 * @param array<string,mixed> $s Settings.
+	 */
+	private function check_wrapper_label( string $id, string $type, array $s ): void {
+		$attrs = Utils::parse_custom_attributes( (string) ( $s['_attributes'] ?? '' ) );
+		if ( ( ! isset( $attrs['aria-label'] ) && ! isset( $attrs['aria-labelledby'] ) ) || isset( $attrs['role'] ) ) {
+			return;
+		}
+		// A box that is a link names the link (its tag is the <a>); a figure takes a label too.
+		if ( 'container' === $type && in_array( (string) ( $s['tag'] ?? 'div' ), array( 'section', 'nav', 'aside', 'form', 'header', 'footer', 'main', 'article', 'ul', 'ol', 'a', 'figure' ), true ) ) {
+			return;
+		}
+		$fix = in_array( $type, array( 'button', 'image', 'icon', 'heading' ), true )
+			? 'Move it to the link: link.attributes "aria-label|…" (or make the visible text say where it goes).'
+			: 'Put the label on the element it names (for a list, <ul aria-label="…"> in the HTML), or give the box a role ("role|region").';
+		$this->add( 'warning', 'accessibility', $id, 'aria-label on a plain wrapper is not announced.', $fix, 'wrapper-label' );
+	}
+
+	/**
+	 * An element set to "Sticky: Top" (or the row a header sticks from) whose own custom CSS sets `position` on it:
+	 * the CSS wins over the sticky position, so the element scrolls away and a header never pins from it.
+	 *
+	 * @param array<string,mixed> $s Settings.
+	 */
+	private function check_sticky_position( string $id, array $s ): void {
+		if ( ! in_array( (string) ( $s['_sticky'] ?? '' ), array( 'top', 'bottom' ), true ) ) {
+			return;
+		}
+		// Only the rules aimed at the element itself ("selector { … }"), outside media queries.
+		$css = preg_replace( '/@media[^{]*\{(?:[^{}]*\{[^{}]*\})*[^{}]*\}/', '', (string) ( $s['_custom_css'] ?? '' ) );
+		if ( preg_match( '/(^|\})\s*selector\s*\{[^}]*\bposition\s*:(?!\s*sticky)/i', (string) $css ) ) {
+			$this->add( 'warning', 'structure', $id, 'Custom CSS sets position on a sticky element, so it no longer sticks.', 'Remove "position" from the element’s custom CSS (Sticky sets it), or move that rule to a child.', 'sticky-position' );
+		}
+	}
+
+	/**
+	 * Large text in the WCAG sense (at least 24px, or 18.66px at weight 700 or more), from the widget's typography or
+	 * its preset, at its smallest size (desktop, tablet, phone). Null when the size is unknown (inherited, relative).
+	 *
+	 * @param array<string,mixed> $s Effective settings.
+	 */
+	private function large_text( array $s ): ?bool {
+		$t      = is_array( $s['typography'] ?? null ) ? $s['typography'] : array();
+		$preset = isset( $t['preset'] ) ? ( $this->presets[ (string) $t['preset'] ] ?? array() ) : array();
+		$sizes  = array();
+		foreach ( array( 'size', 'size_tablet', 'size_mobile' ) as $key ) {
+			$px = self::px_size( $t[ $key ] ?? null ) ?? self::px_size( $preset[ $key ] ?? null );
+			if ( null !== $px ) {
+				$sizes[] = $px;
+			}
+		}
+		if ( ! $sizes ) {
+			return null;
+		}
+		$size   = min( $sizes );
+		$weight = (int) ( $t['weight'] ?? ( $preset['weight'] ?? 400 ) );
+		return $size >= 24 || ( $size >= 18.66 && $weight >= 700 );
+	}
+
+	/**
+	 * A font size in px: a {size, unit} value or a "48px" / "3rem" string (rem and em count as 16px); null otherwise.
+	 *
+	 * @param mixed $v Value.
+	 */
+	private static function px_size( $v ): ?float {
+		if ( is_array( $v ) && isset( $v['size'] ) && is_numeric( $v['size'] ) && '' !== (string) $v['size'] ) {
+			$unit = (string) ( $v['unit'] ?? 'px' );
+			if ( 'px' === $unit ) {
+				return (float) $v['size'];
+			}
+			return in_array( $unit, array( 'rem', 'em' ), true ) ? (float) $v['size'] * 16 : null;
+		}
+		if ( is_string( $v ) && preg_match( '/^\s*([\d.]+)\s*(px|rem|em)?\s*$/', $v, $m ) ) {
+			return ( isset( $m[2] ) && in_array( $m[2], array( 'rem', 'em' ), true ) ) ? (float) $m[1] * 16 : (float) $m[1];
+		}
+		return null;
+	}
+
 	private function check_contrast( string $id, string $color, string $bg, string $default, bool $large ): void {
+		if ( $this->decorative > 0 ) {
+			return; // hidden from assistive tech: ornament, not content
+		}
 		$fg = $this->resolve_color( '' !== $color ? $color : $default );
 		$fg = self::over( $fg, $bg ); // half-transparent text shows lighter (or darker) than its color
 		$fg_rgb = self::rgb( $fg );
@@ -426,6 +580,43 @@ final class Audit {
 		if ( $ratio < $min ) {
 			$this->add( 'error', 'accessibility', $id, sprintf( 'Low contrast %.1f:1 (text %s on %s; minimum %.1f:1).', $ratio, $fg, $bg, $min ), 'Darken/lighten the text color or change the section background. On dark sections set the container text_color to #fff.', 'contrast' );
 		}
+	}
+
+	/**
+	 * Contrast of a widget's own words on its own ground (a button, a form's submit button or fields), checked only
+	 * when both colors are set on the widget.
+	 */
+	private function check_pair( string $id, string $color, string $ground, string $section_bg, bool $large, string $what ): void {
+		if ( $this->decorative > 0 || '' === trim( $color ) || '' === trim( $ground ) ) {
+			return;
+		}
+		$under  = self::over( $this->resolve_color( $ground ), $section_bg );
+		$fg     = self::over( $this->resolve_color( $color ), $under );
+		$fg_rgb = self::rgb( $fg );
+		$bg_rgb = self::rgb( $under );
+		if ( ! $fg_rgb || ! $bg_rgb ) {
+			return;
+		}
+		$ratio = self::contrast( $fg_rgb, $bg_rgb );
+		$min   = $large ? 3.0 : 4.5;
+		if ( $ratio < $min ) {
+			$this->add( 'error', 'accessibility', $id, sprintf( 'Low contrast %.1f:1 on the %s (text %s on %s; minimum %.1f:1).', $ratio, $what, $fg, $under, $min ), 'Darken the ' . $what . ' background or change its text color.', 'contrast' );
+		}
+	}
+
+	/**
+	 * The color of a classic background group value ('' for gradients, images or none).
+	 *
+	 * @param mixed $v Background group value.
+	 */
+	private static function classic_color( $v ): string {
+		if ( is_string( $v ) ) {
+			return $v;
+		}
+		if ( ! is_array( $v ) || ( isset( $v['type'] ) && 'classic' !== $v['type'] ) ) {
+			return '';
+		}
+		return (string) ( $v['color'] ?? '' );
 	}
 
 	private function resolve_color( string $value ): string {
