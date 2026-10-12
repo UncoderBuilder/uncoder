@@ -57,7 +57,7 @@ final class Page_Checks {
 		'long-heading'     => 'Shorten the heading and move the detail into the text below it.',
 		'placeholder'      => 'Replace the placeholder text with real content.',
 		'button-link'      => 'Point the button at a real page, a section of the page, a phone number or an email address.',
-		'button-text'      => 'Give the button a short label that says what it does.',
+		'button-text'      => 'Give the button a short label that says what it does. A button that shows only an icon (a play button, an arrow) needs its "Label for screen readers".',
 		'image-missing'    => 'Choose an image, or remove the empty image block.',
 		'image-alt'        => 'Describe the image in its alternative text, so screen readers and search engines know what it shows.',
 		'image-hotlink'    => 'Upload the image to this site’s media library instead of loading it from another website.',
@@ -73,6 +73,8 @@ final class Page_Checks {
 		'duplicate-id'     => 'Give each element its own CSS ID.',
 		'tabindex'         => 'Remove the custom tab order so keyboard users move through the page in reading order.',
 		'autoplay-sound'   => 'Mute videos that play by themselves, or let visitors start them.',
+		'wrapper-label'    => 'Put the label on the link or button itself (its Link → Attributes), or give the box a role; screen readers skip a label on a plain box.',
+		'sticky-position'  => 'Remove “position” from the box’s custom CSS: Sticky sets it, and the custom value stops the box (and a header pinned from it) from sticking.',
 	);
 
 	/** Report sections: the audit's categories, grouped for people. */
@@ -294,7 +296,7 @@ final class Page_Checks {
 				'id'     => 'icon',
 				'status' => has_site_icon() ? 'pass' : 'warn',
 				'title'  => __( 'Site icon', 'uncoder' ),
-				'fix'    => __( 'Add a site icon (the small image in browser tabs and bookmarks) in the Design System or under Appearance → Customize.', 'uncoder' ),
+				'fix'    => __( 'Add a site icon (the small image in browser tabs, bookmarks and search results) under Settings → General.', 'uncoder' ),
 			),
 			array(
 				'id'     => 'permalinks',

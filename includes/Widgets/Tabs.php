@@ -31,8 +31,8 @@ class Tabs extends Widget_Base {
 
 	/** CSS variables per layout (consumed by widgets/tabs.css; the horizontal values are the CSS defaults). */
 	public const LAYOUTS = array(
-		'horizontal' => '--uncoder-tabs-dir:column;--uncoder-tabs-list-display:flex;--uncoder-tabs-list-dir:row;--uncoder-tabs-list-overflow:auto hidden;--uncoder-tabs-list-basis:auto;--uncoder-tabs-acc-display:none;--uncoder-tabs-ws:nowrap;--uncoder-tabs-line-shadow:inset 0 calc(-1 * var(--uncoder-tabs-line-width)) 0 var(--uncoder-tabs-line-color);--uncoder-tabs-line-inline:0px;--uncoder-tabs-ind-block:auto 0;--uncoder-tabs-ind-inline:0;--uncoder-tabs-ind-w:auto;--uncoder-tabs-ind-h:var(--uncoder-tabs-indicator-size);--uncoder-tabs-ind-hidden:scaleX(0);--uncoder-tabs-panel-pad:0px;--uncoder-tabs-title-align-auto:center',
-		'vertical'   => '--uncoder-tabs-dir:row;--uncoder-tabs-list-display:flex;--uncoder-tabs-list-dir:column;--uncoder-tabs-list-overflow:visible;--uncoder-tabs-list-basis:var(--uncoder-tabs-list-width);--uncoder-tabs-acc-display:none;--uncoder-tabs-ws:normal;--uncoder-tabs-line-shadow:none;--uncoder-tabs-line-inline:var(--uncoder-tabs-line-width);--uncoder-tabs-ind-block:0;--uncoder-tabs-ind-inline:auto calc(-1 * var(--uncoder-tabs-line-width));--uncoder-tabs-ind-w:var(--uncoder-tabs-indicator-size);--uncoder-tabs-ind-h:auto;--uncoder-tabs-ind-hidden:scaleY(0);--uncoder-tabs-panel-pad:0px;--uncoder-tabs-title-align-auto:flex-start',
+		'horizontal' => '--uncoder-tabs-dir:column;--uncoder-tabs-list-display:flex;--uncoder-tabs-list-dir:row;--uncoder-tabs-list-overflow:auto hidden;--uncoder-tabs-list-basis:auto;--uncoder-tabs-acc-display:none;--uncoder-tabs-ws:nowrap;--uncoder-tabs-line-shadow:inset 0 calc(var(--uncoder-tabs-line-sign, -1) * var(--uncoder-tabs-line-width)) 0 var(--uncoder-tabs-line-color);--uncoder-tabs-line-inline:0px;--uncoder-tabs-ind-block:var(--uncoder-tabs-ind-block-h, auto 0);--uncoder-tabs-ind-inline:0;--uncoder-tabs-ind-w:auto;--uncoder-tabs-ind-h:var(--uncoder-tabs-indicator-size);--uncoder-tabs-ind-hidden:scaleX(0);--uncoder-tabs-panel-pad:0px;--uncoder-tabs-title-align-auto:center',
+		'vertical'   => '--uncoder-tabs-dir:row;--uncoder-tabs-list-display:flex;--uncoder-tabs-list-dir:column;--uncoder-tabs-list-overflow:visible;--uncoder-tabs-list-basis:var(--uncoder-tabs-list-width);--uncoder-tabs-acc-display:none;--uncoder-tabs-ws:normal;--uncoder-tabs-line-shadow:none;--uncoder-tabs-line-inline:var(--uncoder-tabs-line-width);--uncoder-tabs-ind-block:0;--uncoder-tabs-ind-inline:var(--uncoder-tabs-ind-inline-v, auto calc(-1 * var(--uncoder-tabs-line-width)));--uncoder-tabs-ind-w:var(--uncoder-tabs-indicator-size);--uncoder-tabs-ind-h:auto;--uncoder-tabs-ind-hidden:scaleY(0);--uncoder-tabs-panel-pad:0px;--uncoder-tabs-title-align-auto:flex-start',
 		// Tabs one under another above the panel (a phone layout for tabs with long titles); the active tab is marked
 		// at its start.
 		'stacked'    => '--uncoder-tabs-dir:column;--uncoder-tabs-list-display:flex;--uncoder-tabs-list-dir:column;--uncoder-tabs-list-overflow:visible;--uncoder-tabs-list-basis:auto;--uncoder-tabs-acc-display:none;--uncoder-tabs-ws:normal;--uncoder-tabs-line-shadow:none;--uncoder-tabs-line-inline:0px;--uncoder-tabs-ind-block:0;--uncoder-tabs-ind-inline:0 auto;--uncoder-tabs-ind-w:var(--uncoder-tabs-indicator-size);--uncoder-tabs-ind-h:auto;--uncoder-tabs-ind-hidden:scaleY(0);--uncoder-tabs-panel-pad:0px;--uncoder-tabs-title-align-auto:flex-start',
@@ -106,6 +106,11 @@ class Tabs extends Widget_Base {
 						'inline'  => true,
 					),
 					'icon'   => array( 'type' => 'icon', 'label' => __( 'Icon', 'uncoder' ) ),
+					'image'  => array(
+						'type'        => 'media',
+						'label'       => __( 'Picture', 'uncoder' ),
+						'description' => __( 'Shown before the title: a face, a product, a logo.', 'uncoder' ),
+					),
 					'badge'  => array(
 						'type'        => 'text',
 						'label'       => __( 'Badge', 'uncoder' ),
@@ -120,7 +125,7 @@ class Tabs extends Widget_Base {
 					),
 				),
 				'default'     => $this->default_tabs(),
-				'ai'          => 'Each row owns the child container at the same index (children[i]). Add/remove rows together with children.',
+				'ai'          => 'Each row owns the child container at the same index (children[i]). Add/remove rows together with children. A row\'s "image" ({"id":…}) shows a picture before its title (faces or products as tab buttons; image_only hides the titles visually, keeping them for screen readers).',
 			)
 		);
 		$this->add_control(
@@ -158,6 +163,20 @@ class Tabs extends Widget_Base {
 				'selectors_dictionary' => self::LAYOUTS,
 				'selectors'            => array( self::ROOT => '{{VALUE}}' ),
 				'ai'                   => 'Common: "horizontal" on desktop with layout_mobile "accordion". "stacked": the tabs one under another above the panel (e.g. layout "vertical" with layout_mobile "stacked").',
+			)
+		);
+		$this->add_control(
+			'list_position',
+			array(
+				'type'        => 'choose',
+				'label'       => __( 'Tabs position', 'uncoder' ),
+				'default'     => 'before',
+				'options'     => array(
+					'before' => array( 'label' => __( 'Before the content', 'uncoder' ), 'icon' => 'arrow-up-to-line' ),
+					'after'  => array( 'label' => __( 'After the content', 'uncoder' ), 'icon' => 'arrow-down-to-line' ),
+				),
+				'description' => __( 'After: the tabs sit under the content (beside it on the right in the vertical layout), like logos under a story. Keyboard users still reach the tabs first.', 'uncoder' ),
+				'ai'          => '"after" places the tab list under the panels (horizontal/stacked) or to their right (vertical); the divider line and indicator move to the side facing the content. No effect on the accordion layout.',
 			)
 		);
 		$this->add_responsive_control(
@@ -275,6 +294,14 @@ class Tabs extends Widget_Base {
 				'type'        => 'text',
 				'label'       => __( 'Accessible name', 'uncoder' ),
 				'description' => __( 'Optional name of the tab list for screen readers, e.g. "Plans".', 'uncoder' ),
+			)
+		);
+		$this->add_control(
+			'image_only',
+			array(
+				'type'        => 'switch',
+				'label'       => __( 'Pictures only', 'uncoder' ),
+				'description' => __( 'Tabs with a picture show just the picture; their titles stay for screen readers.', 'uncoder' ),
 			)
 		);
 		$this->end_section();
@@ -586,7 +613,26 @@ class Tabs extends Widget_Base {
 		$this->end_tabs();
 		$this->end_section();
 
-		$this->start_section( 'style_icon', array( 'label' => __( 'Icon', 'uncoder' ), 'tab' => 'style' ) );
+		$this->start_section( 'style_icon', array( 'label' => __( 'Icon & picture', 'uncoder' ), 'tab' => 'style' ) );
+		$this->add_responsive_control(
+			'image_size',
+			array(
+				'type'       => 'slider',
+				'label'      => __( 'Picture size', 'uncoder' ),
+				'size_units' => array( 'px', 'em' ),
+				'range'      => array( 'px' => array( 'min' => 16, 'max' => 240 ) ),
+				'selectors'  => array( self::ROOT => '--uncoder-tabs-image-size: {{VALUE}}' ),
+			)
+		);
+		$this->add_responsive_control(
+			'image_radius',
+			array(
+				'type'       => 'dimensions',
+				'label'      => __( 'Picture corners', 'uncoder' ),
+				'size_units' => array( 'px', '%' ),
+				'selectors'  => array( self::ROOT . ' .uncoder-tabs__image' => 'border-radius: {{VALUE}}' ),
+			)
+		);
 		$this->add_responsive_control(
 			'icon_size',
 			array(
@@ -704,6 +750,12 @@ class Tabs extends Widget_Base {
 		if ( empty( $s['indicator'] ) ) {
 			$classes[] = 'uncoder-tabs--no-indicator';
 		}
+		if ( ! empty( $s['image_only'] ) ) {
+			$classes[] = 'uncoder-tabs--image-only';
+		}
+		if ( 'after' === ( $s['list_position'] ?? '' ) ) {
+			$classes[] = 'uncoder-tabs--list-after';
+		}
 		$acc_icon = $this->render_icon( $this->has_icon( $s['accordion_icon'] ?? null ) ? $s['accordion_icon'] : 'chevron-down', array( 'class' => 'uncoder-tabs__acc-icon' ) );
 
 		$ids = array();
@@ -795,9 +847,12 @@ class Tabs extends Widget_Base {
 	 * @param string              $inline data-uncoder-inline attribute string.
 	 */
 	private function label( array $row, string $inline ): string {
-		$icon = $this->has_icon( $row['icon'] ?? null ) ? $this->render_icon( $row['icon'], array( 'class' => 'uncoder-tabs__icon' ) ) : '';
+		$icon  = $this->has_icon( $row['icon'] ?? null ) ? $this->render_icon( $row['icon'], array( 'class' => 'uncoder-tabs__icon' ) ) : '';
+		$media = is_array( $row['image'] ?? null ) ? $row['image'] : array();
+		// The title names the tab, so the picture is decorative (empty alt).
+		$image = ! empty( $media['id'] ) || ! empty( $media['url'] ) ? $this->image( $media, 'medium', array( 'class' => 'uncoder-tabs__image', 'alt' => '' ) ) : '';
 		$badge = trim( (string) ( $row['badge'] ?? '' ) );
-		return $icon . '<span class="uncoder-tabs__title"' . $inline . '>' . $this->inline_html( $row['title'] ?? '' ) . '</span>'
+		return $image . $icon . '<span class="' . ( '' !== $image ? 'uncoder-tabs__title uncoder-tabs__title--pictured' : 'uncoder-tabs__title' ) . '"' . $inline . '>' . $this->inline_html( $row['title'] ?? '' ) . '</span>'
 			. ( '' !== $badge ? '<span class="uncoder-tabs__badge">' . esc_html( $badge ) . '</span>' : '' );
 	}
 

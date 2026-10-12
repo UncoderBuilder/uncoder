@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { NAME } from '@shared/brand';
 import { Loader } from '../ui/Brand';
+import { openTemplate } from '../app/actions';
 import { createRoot, type Root } from 'react-dom/client';
 import { config } from '../lib/config';
 import { attachCss, detachCss } from '../lib/cssManager';
@@ -88,10 +89,16 @@ export function Canvas() {
     doc.documentElement.classList.add('uncoder-editing');
     doc.documentElement.setAttribute('data-uncoder-ui-device', useUi.getState().device);
     doc.documentElement.style.setProperty('--uncoder-ui-inv-scale', String(1 / scaleRef.current));
-    // Links inside the canvas never navigate away.
+    // Links inside the canvas never navigate away. "Edit template" on an embedded section opens that section in the
+    // editor, like Edit Header (unsaved changes are asked about, and the way back is kept).
     doc.addEventListener('click', (e) => {
       const a = (e.target as Element).closest?.('a');
-      if (a) e.preventDefault();
+      if (!a) return;
+      e.preventDefault();
+      if (a.classList.contains('uncoder-template__edit')) {
+        const id = new URL(a.href).searchParams.get('post');
+        if (id) void openTemplate(id, 'Section');
+      }
     });
     fonts.attach(doc);
     attachCss(doc);

@@ -15,8 +15,9 @@
   justify-content: var(--uncoder-ilist-justify, flex-start);
   gap: var(--uncoder-ilist-gap);
 }
-/* Resets win over theme rules such as ".entry-content ul" / ".entry-content a". */
-.uncoder ul.uncoder-icon-list {
+/* Resets win over theme rules such as ".entry-content ul" / ".entry-content a" (0,1,1), while the element's own
+   Padding and Margin settings (".uncoder .uncoder-<id>", loaded later) still win over them: (0,2,0), not (0,2,1). */
+.uncoder :where(ul).uncoder-icon-list {
   margin: 0;
   padding: 0;
   list-style: none;

@@ -121,6 +121,9 @@ export function checkAccessibility(root: Element, opts: { needsH1?: boolean } = 
     if (img.closest('[aria-hidden="true"]') || img.getAttribute('role') === 'presentation') continue;
     const alt = img.getAttribute('alt');
     if (alt === null) add(img, 'error', 'image-alt', 'Image without an alt attribute.', 'Describe the image in its alt text, or mark it decorative (empty alt).');
+    // An Image widget with an empty alt that is not marked Decorative: the alt text was never written (as in Page Checks).
+    else if (!alt.trim() && img.classList.contains('uncoder-image__img') && !img.classList.contains('uncoder-image__img--placeholder') && !img.hasAttribute('data-uncoder-decorative'))
+      add(img, 'error', 'image-alt', 'Image without alt text.', 'Describe the image in its Alt text, or turn on Decorative if it is only ornamental.');
     else if (/\.(jpe?g|png|webp|gif|avif|svg)$/i.test(alt.trim()) || /^(img|dsc|image|photo)[-_ ]?\d+/i.test(alt.trim())) add(img, 'warning', 'image-alt', `Alt text looks like a file name ("${alt}").`, 'Write what the image shows, in a short sentence.');
   }
 

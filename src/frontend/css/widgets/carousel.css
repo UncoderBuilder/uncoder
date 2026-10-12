@@ -386,6 +386,13 @@ html:not(.uncoder-js) .uncoder-carousel > .uncoder-carousel__viewport > .uncoder
   display: none;
 }
 
+/* ...and no row for them: the gap between the slides and the arrows' row goes too. */
+.uncoder-carousel--arrows-bottom.is-static,
+.uncoder-carousel--arrows-bottom-center.is-static,
+.uncoder-carousel--arrows-top.is-static {
+  row-gap: 0;
+}
+
 .uncoder-carousel--arrows-outside.is-static {
   padding-inline: 0;
 }

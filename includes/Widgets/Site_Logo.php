@@ -118,6 +118,36 @@ class Site_Logo extends Widget_Base {
 			)
 		);
 		$this->add_control(
+			'show_title',
+			array(
+				'type'    => 'switch',
+				'label'   => __( 'Show the site title beside the logo', 'uncoder' ),
+				'default' => false,
+				'ai'      => 'For a logo made of a small mark and the name set in the site fonts: the image is the mark, the title the name (style it under "Site title").',
+			)
+		);
+		$this->add_control(
+			'title_text',
+			array(
+				'type'        => 'text',
+				'html'        => 'inline',
+				'label'       => __( 'Title text', 'uncoder' ),
+				'description' => __( 'Defaults to the site title. <strong>…</strong> sets a word bolder.', 'uncoder' ),
+				'condition'   => array( 'show_title' => true ),
+			)
+		);
+		$this->add_responsive_control(
+			'title_gap',
+			array(
+				'type'       => 'slider',
+				'label'      => __( 'Space between', 'uncoder' ),
+				'size_units' => array( 'px', 'rem' ),
+				'range'      => array( 'px' => array( 'min' => 0, 'max' => 40 ) ),
+				'condition'  => array( 'show_title' => true ),
+				'selectors'  => array( '{{WRAPPER}}' => '--uncoder-logo-gap: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
 			'fallback',
 			array(
 				'type'    => 'select',
@@ -222,9 +252,8 @@ class Site_Logo extends Widget_Base {
 		$this->start_section(
 			'style_fallback',
 			array(
-				'label'     => __( 'Site title fallback', 'uncoder' ),
-				'tab'       => 'style',
-				'condition' => array( 'fallback' => 'title' ),
+				'label' => __( 'Site title', 'uncoder' ),
+				'tab'   => 'style',
 			)
 		);
 		$this->add_group( 'title_typography', array( 'type' => 'typography', 'label' => __( 'Typography', 'uncoder' ), 'selector' => '{{WRAPPER}} .uncoder-site-logo__text' ) );
@@ -278,6 +307,11 @@ class Site_Logo extends Widget_Base {
 		if ( '' === $alt ) {
 			$alt = '' !== $site ? $site : __( 'Home', 'uncoder' );
 		}
+		// With the title beside it, the mark is decorative: the title names the link.
+		$with_title = ! empty( $s['show_title'] );
+		if ( $with_title ) {
+			$alt = '';
+		}
 		$size = sanitize_key( (string) ( $s['size'] ?? 'full' ) );
 		$img  = $this->image(
 			$media,
@@ -306,7 +340,11 @@ class Site_Logo extends Widget_Base {
 				$inner = str_replace( 'class="uncoder-site-logo__img', 'class="uncoder-site-logo__img uncoder-site-logo__img--normal', $img ) . $alt_img;
 			}
 		}
-		if ( '' === $inner ) {
+		if ( $with_title ) {
+			$title = trim( (string) ( $s['title_text'] ?? '' ) );
+			$title = '' !== $title ? wp_kses( $title, Utils::kses_inline() ) : esc_html( '' !== $site ? $site : __( 'Site title', 'uncoder' ) );
+			$inner = $inner . '<span class="uncoder-site-logo__text">' . $title . '</span>';
+		} elseif ( '' === $inner ) {
 			if ( 'title' === ( $s['fallback'] ?? 'title' ) && ( '' !== $site || $ctx->editor ) ) {
 				$inner = '<span class="uncoder-site-logo__text">' . esc_html( '' !== $site ? $site : __( 'Site title', 'uncoder' ) ) . '</span>';
 			} elseif ( $ctx->editor ) {
@@ -330,10 +368,12 @@ class Site_Logo extends Widget_Base {
 			$link = $this->link_attrs( $s['link'] ?? array() );
 		}
 
-		echo '<div class="uncoder-site-logo">';
+		echo '<div class="uncoder-site-logo' . ( $with_title ? ' uncoder-site-logo--with-title' : '' ) . '">';
 		if ( $link ) {
 			$link['class'] = 'uncoder-site-logo__link';
 			echo '<a' . Utils::attrs( $link ) . '>' . $inner . '</a>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- attrs() escapes; $inner is core image markup or escaped text.
+		} elseif ( $with_title ) {
+			echo '<span class="uncoder-site-logo__link">' . $inner . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- core image markup and kses'd text.
 		} else {
 			echo $inner; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- core image markup or escaped text.
 		}

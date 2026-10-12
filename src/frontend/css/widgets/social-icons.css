@@ -7,8 +7,9 @@
   align-items: center;
   gap: 8px;
 }
-/* Resets win over theme rules such as ".entry-content ul". */
-.uncoder ul.uncoder-social-icons {
+/* Resets win over theme rules such as ".entry-content ul" (0,1,1), while the element's own Padding and Margin
+   settings (".uncoder .uncoder-<id>", loaded later) still win over them: (0,2,0), not (0,2,1). */
+.uncoder :where(ul).uncoder-social-icons {
   margin: 0;
   padding: 0;
   list-style: none;
@@ -42,6 +43,8 @@
 .uncoder-social-icons__item--phone { --uncoder-si-brand: #16a34a; }
 .uncoder-social-icons__item--website { --uncoder-si-brand: #475569; }
 .uncoder-social-icons__item--rss { --uncoder-si-brand: #f26522; }
+.uncoder-social-icons__item--google { --uncoder-si-brand: #4285f4; }
+.uncoder-social-icons__item--yelp { --uncoder-si-brand: #d32323; }
 
 .uncoder-social-icons__link {
   display: inline-flex;
@@ -99,6 +102,9 @@
   --uncoder-si-bg: transparent;
   --uncoder-si-fg: var(--uncoder-si-accent);
   padding: 0;
+  /* Icon only still gets a 24px target around small icons (WCAG 2.5.8), the icon itself keeps its size. */
+  min-width: 24px;
+  min-height: 24px;
 }
 .uncoder-social-icons--minimal .uncoder-social-icons__link:is(:hover, :focus-visible) {
   opacity: 0.75;

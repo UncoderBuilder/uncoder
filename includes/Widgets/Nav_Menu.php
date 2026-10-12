@@ -110,10 +110,10 @@ class Nav_Menu extends Widget_Base {
 					'justify' => array( 'label' => __( 'Stretch', 'uncoder' ), 'icon' => 'align-justify' ),
 				),
 				'selectors_dictionary' => array(
-					'start'   => 'justify-content:flex-start;--uncoder-nav-item-grow:0',
-					'center'  => 'justify-content:center;--uncoder-nav-item-grow:0',
-					'end'     => 'justify-content:flex-end;--uncoder-nav-item-grow:0',
-					'justify' => 'justify-content:space-between;--uncoder-nav-item-grow:1',
+					'start'   => 'justify-content:flex-start;--uncoder-nav-item-grow:0;--uncoder-nav-v-items:flex-start;--uncoder-nav-v-link:flex-start',
+					'center'  => 'justify-content:center;--uncoder-nav-item-grow:0;--uncoder-nav-v-items:center;--uncoder-nav-v-link:center',
+					'end'     => 'justify-content:flex-end;--uncoder-nav-item-grow:0;--uncoder-nav-v-items:flex-end;--uncoder-nav-v-link:flex-end',
+					'justify' => 'justify-content:space-between;--uncoder-nav-item-grow:1;--uncoder-nav-v-items:stretch;--uncoder-nav-v-link:flex-start',
 				),
 				'selectors'            => array( '{{WRAPPER}} .uncoder-menu--main' => '{{VALUE}}' ),
 			)
@@ -1019,7 +1019,8 @@ class Nav_Menu extends Widget_Base {
 			array(
 				'type'      => 'color',
 				'label'     => __( 'Divider color', 'uncoder' ),
-				'selectors' => array( '{{WRAPPER}}' => '--uncoder-nav-m-divider: {{VALUE}}' ),
+				// The panel sheet has no lines between items until a divider color is chosen.
+				'selectors' => array( '{{WRAPPER}}' => '--uncoder-nav-m-divider: {{VALUE}}; --uncoder-nav-m-panel-divider: 1px solid {{VALUE}}' ),
 			)
 		);
 		$this->add_responsive_control(

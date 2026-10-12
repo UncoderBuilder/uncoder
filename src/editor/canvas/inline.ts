@@ -143,6 +143,16 @@ export function startInline(id: string, target: HTMLElement, point?: { x: number
       onInput();
     }
   };
+  // Text inside a <summary> (an accordion title): the browser toggles the <details> when Space or Enter is released or
+  // the title is clicked, which closed the item and ended editing after the first word.
+  const inSummary = !!target.closest('summary');
+  const onKeyUp = (e: KeyboardEvent) => {
+    e.stopPropagation();
+    if (inSummary && (e.key === ' ' || e.key === 'Enter')) e.preventDefault();
+  };
+  const onClick = (e: MouseEvent) => {
+    if (inSummary) e.preventDefault();
+  };
   const onPaste = (e: ClipboardEvent) => {
     e.preventDefault();
     const text = e.clipboardData?.getData('text/plain') ?? '';
@@ -152,6 +162,8 @@ export function startInline(id: string, target: HTMLElement, point?: { x: number
 
   target.addEventListener('input', onInput);
   target.addEventListener('keydown', onKey);
+  target.addEventListener('keyup', onKeyUp);
+  target.addEventListener('click', onClick);
   target.addEventListener('paste', onPaste);
   target.addEventListener('blur', onBlur);
 
@@ -166,6 +178,8 @@ export function startInline(id: string, target: HTMLElement, point?: { x: number
     cleanup: () => {
       target.removeEventListener('input', onInput);
       target.removeEventListener('keydown', onKey);
+      target.removeEventListener('keyup', onKeyUp);
+      target.removeEventListener('click', onClick);
       target.removeEventListener('paste', onPaste);
       target.removeEventListener('blur', onBlur);
       target.removeAttribute('contenteditable');

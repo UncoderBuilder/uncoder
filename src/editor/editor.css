@@ -10,6 +10,24 @@ body.uncoder-ui-editor-body {
 body.uncoder-ui-editor-body #wpadminbar {
   display: none;
 }
+/* WordPress's own helper class (wp-admin's common.css is not loaded here): the media library and other WordPress
+   dialogs label things for screen readers with it, and without it those labels show and overlap the dialog title. */
+body.uncoder-ui-editor-body .screen-reader-text {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  clip-path: inset(50%);
+  word-wrap: normal !important;
+}
+body.uncoder-ui-editor-body .screen-reader-text:focus {
+  width: auto;
+  height: auto;
+  clip-path: none;
+}
 
 .uncoder-ui-boot {
   position: fixed;
@@ -1933,11 +1951,18 @@ body.uncoder-ui-scrubbing * {
   width: 24px;
   height: 24px;
 }
-.uncoder-ui-rep__grip {
+/* A button (keyboard: the arrow keys move the row), drawn as the plain grip it was. */
+.uncoder-ui-app .uncoder-ui-rep__grip {
   display: flex;
   cursor: grab;
   color: var(--uncoder-ui-tx-4);
   padding: 2px;
+  border: 0;
+  border-radius: var(--uncoder-ui-r-sm);
+  background: none;
+}
+.uncoder-ui-rep__grip:is(:hover, :focus-visible) {
+  color: var(--uncoder-ui-tx-2);
 }
 .uncoder-ui-rep__title {
   flex: 1;

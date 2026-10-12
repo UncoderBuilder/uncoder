@@ -302,6 +302,11 @@ a.uncoder-container {
   text-decoration: none;
 }
 
+/* A figure box (a picture with its caption box) keeps the layout's spacing, not the browser's figure margin. */
+figure.uncoder-container {
+  margin: 0;
+}
+
 .uncoder-container--overlay,
 .uncoder-container--video,
 .uncoder-container--bg,
@@ -540,6 +545,33 @@ img.uncoder-svg--img {
 }
 .uncoder-heading--centered {
   margin-inline: auto !important;
+}
+/* Reflection: the title's text again under it (::after, from data-reflection), its lower part shown upside down and
+   faded out; "water" ripples it with an SVG displacement filter. The alt text "" keeps it out of screen readers. */
+.uncoder .uncoder-heading--reflect::after {
+  content: attr(data-reflection);
+  content: attr(data-reflection) / "";
+  /* a grid keeps the copy's lower edge at the bottom of the strip and follows the title's text-align */
+  display: grid;
+  align-content: end;
+  height: var(--uncoder-reflect-h, 0.55em);
+  margin-top: var(--uncoder-reflect-gap, 0px);
+  overflow: hidden;
+  opacity: var(--uncoder-reflect-o, 0.55);
+  transform: scaleY(-1);
+  -webkit-mask-image: linear-gradient(to top, #000, transparent);
+  mask-image: linear-gradient(to top, #000, transparent);
+  pointer-events: none;
+  user-select: none;
+}
+.uncoder-heading--water::after {
+  filter: var(--uncoder-reflect-filter, none);
+}
+.uncoder-heading__filter {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
 }
 
 /* Text */
@@ -1002,6 +1034,9 @@ html:not(.uncoder-editing) .uncoder-ix-hidden {
 [data-uncoder-anim="slide-right"] { --uncoder-anim-name: uncoder-slide-right; }
 [data-uncoder-anim="flip-up"] { --uncoder-anim-name: uncoder-flip-up; }
 [data-uncoder-anim="blur-in"] { --uncoder-anim-name: uncoder-blur-in; }
+/* Falls from above the screen and bounces to rest (1.3s unless Duration is set). It moves with `translate`, so the
+   element keeps its own rotation and scale on the way down: a cushion tipped at -14deg falls tipped. */
+[data-uncoder-anim="drop-in"] { --uncoder-anim-name: uncoder-drop-in; --uncoder-anim-duration: 1300ms; }
 
 @keyframes uncoder-fade-in { from { opacity: 0; } }
 @keyframes uncoder-fade-up { from { opacity: 0; transform: translateY(28px); } }
@@ -1016,6 +1051,14 @@ html:not(.uncoder-editing) .uncoder-ix-hidden {
 @keyframes uncoder-slide-right { from { transform: translateX(100px); } }
 @keyframes uncoder-flip-up { from { opacity: 0; transform: perspective(800px) rotateX(35deg); } }
 @keyframes uncoder-blur-in { from { opacity: 0; filter: blur(12px); } }
+@keyframes uncoder-drop-in {
+  0% { translate: 0 -110vh; animation-timing-function: cubic-bezier(0.5, 0, 1, 0.5); }
+  58% { translate: 0 0; animation-timing-function: cubic-bezier(0, 0.5, 0.5, 1); }
+  72% { translate: 0 -9%; animation-timing-function: cubic-bezier(0.5, 0, 1, 0.5); }
+  84% { translate: 0 0; animation-timing-function: cubic-bezier(0, 0.5, 0.5, 1); }
+  92% { translate: 0 -2.5%; animation-timing-function: cubic-bezier(0.5, 0, 1, 0.5); }
+  100% { translate: 0 0; }
+}
 
 /* Timeline animations (Common_Controls::animations, module animate). An element that starts hidden or
    moved stays invisible until the module has put it in its start state; the failsafe shows it anyway

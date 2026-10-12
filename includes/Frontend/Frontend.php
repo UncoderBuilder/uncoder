@@ -146,6 +146,11 @@ final class Frontend {
 		if ( isset( $this->rendering[ $post_id ] ) ) {
 			return '';
 		}
+		// An excerpt (search results, archives) comes from the plain HTML copy in post_content: its blocks sit on
+		// lines of their own, so the texts of neighbouring elements do not run together, and no layout is rendered.
+		if ( doing_filter( 'get_the_excerpt' ) ) {
+			return (string) $content;
+		}
 		if ( $this->is_preview() && (int) get_queried_object_id() === $post_id ) {
 			return (string) apply_filters( 'uncoder_wb/preview/mount', '', $post_id );
 		}

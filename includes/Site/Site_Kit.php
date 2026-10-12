@@ -39,6 +39,14 @@ final class Site_Kit {
 
 	/** @var array<int,string> New page id => the slug the kit gave it (set again once the page has its parent). */
 	private array $slugs = array();
+	/**
+	 * Each imported document's page settings as the kit has them (new id => settings), for the relink pass: saving
+	 * cleans them, and the cleaning drops media ids that do not name an image on this site yet (the header's
+	 * transparent logo), so relinking the saved copy would find nothing to point at the imported file.
+	 *
+	 * @var array<int,array<string,mixed>>
+	 */
+	private array $kit_settings = array();
 
 	public const FORMAT  = 'uncoder-site-kit';
 	public const VERSION = 1;
@@ -486,6 +494,7 @@ final class Site_Kit {
 				'description' => $seo['description'],
 			),
 			'meta'           => self::public_meta( $id ),
+			'media_meta'     => self::media_meta( $id ),
 		);
 	}
 
@@ -495,6 +504,22 @@ final class Site_Kit {
 	 *
 	 * @return array<string,string>
 	 */
+	/**
+	 * The public custom fields whose value is an attachment id (an image field read by the Custom field tag): their
+	 * files travel with the kit and the importer points them at the new attachments.
+	 *
+	 * @return string[]
+	 */
+	private static function media_meta( int $id ): array {
+		$keys = array();
+		foreach ( self::public_meta( $id ) as $key => $value ) {
+			if ( ctype_digit( $value ) && (int) $value > 0 && 'attachment' === get_post_type( (int) $value ) ) {
+				$keys[] = $key;
+			}
+		}
+		return $keys;
+	}
+
 	private static function public_meta( int $id ): array {
 		$out = array();
 		foreach ( (array) get_post_meta( $id ) as $key => $values ) {
@@ -650,6 +675,15 @@ final class Site_Kit {
 				foreach ( $v as $k => $child ) {
 					if ( 'thumbnail' === $k && is_int( $child ) && $child > 0 ) {
 						$ids[ $child ] = true;
+					}
+					// A post's image fields (media_meta lists their keys).
+					if ( 'media_meta' === $k && is_array( $child ) && is_array( $v['meta'] ?? null ) ) {
+						foreach ( $child as $key ) {
+							$att = (int) ( $v['meta'][ $key ] ?? 0 );
+							if ( $att > 0 ) {
+								$ids[ $att ] = true;
+							}
+						}
 					}
 					$walk( $child );
 				}
@@ -892,6 +926,10 @@ final class Site_Kit {
 			'warnings' => array(),
 		);
 		if ( 'media' === $request->get_param( 'step' ) ) {
+			// The site's own logo, noted before any media arrives (the kit's files may take over ids a deleted logo had).
+			if ( ! isset( $state['logo_before'] ) ) {
+				$state['logo_before'] = self::site_logo_id();
+			}
 			$list = ! empty( $parts['media'] ) ? self::read( $dir, 'media.json' ) : array();
 			require_once ABSPATH . 'wp-admin/includes/file.php';
 			require_once ABSPATH . 'wp-admin/includes/media.php';
@@ -1016,11 +1054,17 @@ final class Site_Kit {
 				$report['warnings'][] = 'Design System: ' . $e;
 			}
 			// Logo and site icon: taken over when the kit replaces this site's design, or when the site has none.
-			$logo = absint( $brand['logo']['id'] ?? 0 );
-			if ( $logo && \Uncoder\Builder\Core\Media::is_image( $logo ) && ( 'replace' === $conflicts || ! self::site_logo_id() ) ) {
+			$logo     = absint( $brand['logo']['id'] ?? 0 );
+			$had_logo = isset( $state['logo_before'] ) ? (int) $state['logo_before'] : self::site_logo_id();
+			if ( $logo && \Uncoder\Builder\Core\Media::is_image( $logo ) && ( 'replace' === $conflicts || ! $had_logo ) ) {
 				set_theme_mod( 'custom_logo', $logo );
 				update_option( 'site_logo', $logo );
 				$report['brand'][] = 'logo';
+			} elseif ( ! $logo && isset( $state['logo_before'] ) && ! $state['logo_before'] && ( get_theme_mod( 'custom_logo' ) || get_option( 'site_logo' ) ) ) {
+				// A kit with a text logo, on a site whose logo id named a deleted image (an id the kit's files may
+				// now have taken): the dead reference goes, so the site title shows instead of an unrelated picture.
+				remove_theme_mod( 'custom_logo' );
+				delete_option( 'site_logo' );
 			}
 			$icon = absint( $brand['icon']['id'] ?? 0 );
 			if ( $icon && wp_attachment_is_image( $icon ) && ( 'replace' === $conflicts || ! get_option( 'site_icon' ) ) ) {
@@ -1141,7 +1185,7 @@ final class Site_Kit {
 			// The plain HTML copy (post_content) is rewritten too: the first save still had the kit's old
 			// image and link addresses, and SEO plugins read their images from it. Templates have none.
 			$doc->save( $elements, array( 'content_fallback' => true ) );
-			$settings = $doc->page_settings();
+			$settings = $this->kit_settings[ $new ] ?? $doc->page_settings();
 			if ( $settings ) {
 				$doc->save_page_settings( self::relink( $settings, $state, $ids, $old_home ) );
 			}
@@ -1237,6 +1281,7 @@ final class Site_Kit {
 		$doc->save( is_array( $item['elements'] ?? null ) ? $item['elements'] : array(), array( 'content_fallback' => ! $is_template ) );
 		if ( is_array( $item['page_settings'] ?? null ) ) {
 			$doc->save_page_settings( $item['page_settings'] );
+			$this->kit_settings[ $id ] = $item['page_settings'];
 		}
 		$seo = ! $is_template && is_array( $item['seo'] ?? null ) ? $item['seo'] : array();
 		if ( ! empty( $seo['title'] ) || ! empty( $seo['description'] ) ) {
@@ -1371,8 +1416,13 @@ final class Site_Kit {
 			}
 			// Custom fields: public keys only, values filtered like post text, links to the old site and its media
 			// pointed here.
+			// Image fields hold the old site's attachment ids: point them at the imported files.
+			$media_keys = array_map( 'sanitize_key', array_filter( (array) ( $item['media_meta'] ?? array() ), 'is_string' ) );
 			foreach ( (array) ( $item['meta'] ?? array() ) as $key => $value ) {
 				$key = sanitize_key( (string) $key );
+				if ( in_array( $key, $media_keys, true ) && is_scalar( $value ) && isset( $state['media'][ (string) (int) $value ] ) ) {
+					$value = (string) $state['media'][ (string) (int) $value ];
+				}
 				if ( '' !== $key && ! is_protected_meta( $key, 'post' ) && is_scalar( $value ) ) {
 					update_post_meta( $id, $key, wp_slash( wp_kses_post( self::relink_text( (string) $value, $state, $old_home ) ) ) );
 				}
@@ -1635,7 +1685,9 @@ final class Site_Kit {
 	/** The site logo attachment (theme mod, or the block themes' site_logo option). */
 	private static function site_logo_id(): int {
 		$id = (int) get_theme_mod( 'custom_logo' );
-		return $id ? $id : (int) get_option( 'site_logo' );
+		$id = $id ? $id : (int) get_option( 'site_logo' );
+		// A logo whose attachment was deleted is no logo.
+		return $id && \Uncoder\Builder\Core\Media::is_image( $id ) ? $id : 0;
 	}
 
 	/**

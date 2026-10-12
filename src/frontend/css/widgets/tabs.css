@@ -13,11 +13,11 @@
   --uncoder-tabs-ws: nowrap;
   --uncoder-tabs-line-width: 1px;
   --uncoder-tabs-line-color: var(--uncoder-c-border, #e5e7eb);
-  --uncoder-tabs-line-shadow: inset 0 calc(-1 * var(--uncoder-tabs-line-width)) 0 var(--uncoder-tabs-line-color);
+  --uncoder-tabs-line-shadow: inset 0 calc(var(--uncoder-tabs-line-sign, -1) * var(--uncoder-tabs-line-width)) 0 var(--uncoder-tabs-line-color);
   --uncoder-tabs-line-inline: 0px;
   --uncoder-tabs-indicator: var(--uncoder-c-primary, #2b59ff);
   --uncoder-tabs-indicator-size: 2px;
-  --uncoder-tabs-ind-block: auto 0;
+  --uncoder-tabs-ind-block: var(--uncoder-tabs-ind-block-h, auto 0);
   --uncoder-tabs-ind-inline: 0;
   --uncoder-tabs-ind-w: auto;
   --uncoder-tabs-ind-h: var(--uncoder-tabs-indicator-size);
@@ -64,6 +64,21 @@
 
 .uncoder-tabs > .uncoder-tabs__list::-webkit-scrollbar {
   display: none;
+}
+
+/* Tabs after the content: the list moves under the panels (or to their right when vertical); the divider line and
+   the indicator move to the side that faces the content. The DOM keeps the tabs first, so keyboard users reach them
+   before the panel. */
+.uncoder-tabs--list-after {
+  --uncoder-tabs-line-sign: 1;
+  --uncoder-tabs-ind-block-h: 0 auto;
+  --uncoder-tabs-ind-inline-v: calc(-1 * var(--uncoder-tabs-line-width)) auto;
+}
+
+.uncoder-tabs--list-after > .uncoder-tabs__list {
+  order: 1;
+  border-inline-end: 0;
+  border-inline-start: var(--uncoder-tabs-line-inline) solid var(--uncoder-tabs-line-color);
 }
 
 /* Tab buttons and accordion headers share their look (theme button styles are reset). */
@@ -207,6 +222,29 @@
 
 .uncoder-tabs__title {
   min-width: 0;
+}
+
+/* A row's picture (faces, products as tab buttons). */
+.uncoder-tabs__image {
+  display: block;
+  flex: none;
+  width: var(--uncoder-tabs-image-size, 48px);
+  height: var(--uncoder-tabs-image-size, 48px);
+  object-fit: cover;
+  transition: opacity 0.2s, box-shadow 0.2s;
+}
+
+/* Pictures only: the titles of pictured tabs stay for screen readers. */
+.uncoder-tabs--image-only .uncoder-tabs__title--pictured {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* ------------------------------------------------------------------ Panels */

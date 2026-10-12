@@ -29,6 +29,7 @@ final class Common_Controls {
 		'slide-right' => 'Slide from right',
 		'flip-up'     => 'Flip up',
 		'blur-in'     => 'Blur in',
+		'drop-in'     => 'Drop in (falls and bounces)',
 	);
 
 	/** Widgets whose text can be revealed word by word, letter by letter or line by line. */
@@ -508,6 +509,21 @@ final class Common_Controls {
 
 		$el->start_section( '_section_visibility', array( 'label' => __( 'Visibility', 'uncoder' ), 'tab' => 'advanced' ) );
 		$el->add_control( '_hide_desktop', array( 'type' => 'switch', 'label' => __( 'Hide on desktop', 'uncoder' ) ) );
+		// One switch per optional breakpoint the site uses (laptop, tablet extra…), between desktop and tablet as the
+		// cascade runs: without it a "hide on laptop" was dropped on save and desktop-only items showed on laptops.
+		foreach ( array_keys( Breakpoints::active() ) as $device ) {
+			if ( in_array( $device, array( 'tablet', 'mobile' ), true ) ) {
+				continue;
+			}
+			$el->add_control(
+				'_hide_' . $device,
+				array(
+					'type'  => 'switch',
+					/* translators: %s: breakpoint name, e.g. Laptop */
+					'label' => sprintf( __( 'Hide on %s', 'uncoder' ), strtolower( Breakpoints::active()[ $device ]['label'] ) ),
+				)
+			);
+		}
 		$el->add_control( '_hide_tablet', array( 'type' => 'switch', 'label' => __( 'Hide on tablet', 'uncoder' ) ) );
 		$el->add_control( '_hide_mobile', array( 'type' => 'switch', 'label' => __( 'Hide on mobile', 'uncoder' ) ) );
 		$el->add_control(

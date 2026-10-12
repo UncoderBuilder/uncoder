@@ -1,4 +1,6 @@
 // Accessible lightbox for links with data-uncoder-lightbox. Links sharing data-uncoder-gallery form a set.
+// A link to a video (YouTube, Vimeo or a video file) plays in a 16:9 player instead of the picture; the player is
+// removed when the lightbox closes or moves on, so nothing keeps playing.
 (() => {
   const api = window.UncoderWB;
   let dialog: HTMLDialogElement | null = null;
@@ -9,6 +11,18 @@
   // Design System → Lightbox.
   const opts: { auto?: boolean; bg?: string; ui?: string; caption?: boolean; counter?: boolean; download?: boolean; i18n?: Record<string, string> } = api.config.lightbox || {};
   const IMAGE = /\.(jpe?g|png|gif|webp|avif|svg)(\?.*)?$/i;
+  const FILE = /\.(mp4|webm|m4v|mov|ogv)(\?.*)?$/i;
+  /** The player for a video link: a privacy-mode YouTube or Vimeo embed, or a video file; null for anything else. */
+  const video = (a: HTMLAnchorElement): { src: string; file: boolean } | null => {
+    const host = a.hostname.replace(/^(www|m)\./, '');
+    let id = '';
+    if (host === 'youtu.be') id = a.pathname.slice(1);
+    else if (host === 'youtube.com' || host === 'youtube-nocookie.com') id = new URLSearchParams(a.search).get('v') || (a.pathname.match(/^\/(?:embed|shorts|live)\/([\w-]+)/)?.[1] ?? '');
+    if (/^[\w-]{6,}$/.test(id)) return { src: `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&playsinline=1`, file: false };
+    const vimeo = host === 'vimeo.com' || host === 'player.vimeo.com' ? a.pathname.match(/(\d{5,})/)?.[1] : '';
+    if (vimeo) return { src: `https://player.vimeo.com/video/${vimeo}?autoplay=1&dnt=1`, file: false };
+    return FILE.test(a.pathname) ? { src: a.href, file: true } : null;
+  };
   /** Links to image files that open in the lightbox without being set up for it (post content, galleries). */
   const autoLink = (a: HTMLAnchorElement) =>
     !!opts.auto && IMAGE.test(a.pathname + a.search) && !!a.querySelector('img') && !a.hasAttribute('data-uncoder-no-lightbox') && !a.closest('[data-uncoder-no-lightbox]') && a.origin === location.origin;
@@ -36,6 +50,7 @@
       '.uncoder-lightbox__counter{position:fixed;top:24px;left:20px;font:600 13px/1 system-ui,sans-serif;opacity:.8;letter-spacing:.04em}.uncoder-lightbox__download{top:16px;right:72px;display:flex;align-items:center;justify-content:center;color:inherit}.uncoder-lightbox__download[hidden],.uncoder-lightbox__counter:empty{display:none}' +
       '.uncoder-lightbox::backdrop{background:transparent}.uncoder-lightbox__figure{margin:0;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:56px 72px}' +
       '.uncoder-lightbox__img{max-width:100%;max-height:calc(100vh - 140px);object-fit:contain;border-radius:6px}.uncoder-lightbox__caption{font:14px/1.4 system-ui,sans-serif;opacity:.85;text-align:center}' +
+      '.uncoder-lightbox__img[hidden]{display:none}.uncoder-lightbox__player{width:min(100%,calc((100vh - 140px) * 16 / 9),1280px);aspect-ratio:16/9;border:0;border-radius:6px;background:#000;display:block}' +
       '.uncoder-lightbox__btn{position:fixed;width:44px;height:44px;border:0;border-radius:50%;background:color-mix(in srgb,currentColor 14%,transparent);color:inherit;font-size:28px;line-height:1;cursor:pointer}' +
       '.uncoder-lightbox__btn:hover,.uncoder-lightbox__btn:focus-visible{background:color-mix(in srgb,currentColor 26%,transparent);outline:none}.uncoder-lightbox__close{top:16px;right:16px}' +
       '.uncoder-lightbox__prev{left:16px;top:50%;transform:translateY(-50%)}.uncoder-lightbox__next{right:16px;top:50%;transform:translateY(-50%)}' +
@@ -52,7 +67,10 @@
       if (e.key === 'ArrowRight') show(index + 1);
       if (e.key === 'ArrowLeft') show(index - 1);
     });
-    dialog.addEventListener('close', () => lastFocus?.focus());
+    dialog.addEventListener('close', () => {
+      stop();
+      lastFocus?.focus();
+    });
     let startX = 0;
     dialog.addEventListener('touchstart', (e) => (startX = e.touches[0].clientX), { passive: true });
     dialog.addEventListener('touchend', (e) => {
@@ -67,7 +85,24 @@
     const a = items[index];
     const img = dialog.querySelector<HTMLImageElement>('.uncoder-lightbox__img')!;
     const inner = a.querySelector('img');
-    img.src = a.href;
+    stop();
+    const clip = video(a);
+    img.hidden = !!clip;
+    if (clip) {
+      const player = document.createElement(clip.file ? 'video' : 'iframe');
+      player.className = 'uncoder-lightbox__player';
+      player.setAttribute('src', clip.src);
+      if (player instanceof HTMLVideoElement) {
+        player.controls = player.autoplay = player.playsInline = true;
+      } else {
+        player.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture; fullscreen');
+        player.setAttribute('allowfullscreen', '');
+        player.setAttribute('title', a.getAttribute('aria-label') || a.textContent?.trim() || opts.i18n?.video || 'Video');
+      }
+      img.after(player);
+    } else {
+      img.src = a.href;
+    }
     img.alt = inner?.alt || '';
     const caption = a.getAttribute('data-caption') || a.closest('figure')?.querySelector('figcaption')?.textContent?.trim() || '';
     dialog.querySelector('.uncoder-lightbox__caption')!.textContent = opts.caption === false ? '' : caption;
@@ -75,8 +110,13 @@
     dialog.querySelectorAll<HTMLElement>('.uncoder-lightbox__prev,.uncoder-lightbox__next').forEach((b) => (b.hidden = !multi));
     dialog.querySelector('.uncoder-lightbox__counter')!.textContent = multi && opts.counter !== false ? `${index + 1} / ${items.length}` : '';
     const dl = dialog.querySelector<HTMLAnchorElement>('.uncoder-lightbox__download')!;
-    dl.hidden = !opts.download;
+    dl.hidden = !opts.download || !!clip;
     dl.href = a.href;
+  }
+
+  /** Removes the video player (stops playback). */
+  function stop() {
+    dialog?.querySelector('.uncoder-lightbox__player')?.remove();
   }
 
   function open(a: HTMLAnchorElement) {

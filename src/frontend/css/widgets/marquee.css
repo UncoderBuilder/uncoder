@@ -141,7 +141,7 @@
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
-  gap: 0.4em;
+  gap: var(--uncoder-marquee-item-gap, 0.4em);
   color: var(--uncoder-c-heading, #111827);
   font-size: 1.5rem;
   font-weight: 600;
@@ -168,6 +168,14 @@ a.uncoder-marquee__item:focus-visible {
   width: var(--uncoder-marquee-icon-size, 1em);
   height: var(--uncoder-marquee-icon-size, 1em);
   color: var(--uncoder-marquee-icon-color, currentColor);
+}
+
+.uncoder-marquee__item > .uncoder-marquee__thumb {
+  flex: none;
+  width: var(--uncoder-marquee-icon-size, 1.25em);
+  height: var(--uncoder-marquee-icon-size, 1.25em);
+  object-fit: cover;
+  border-radius: var(--uncoder-marquee-thumb-radius, 0);
 }
 
 .uncoder-marquee__group > .uncoder-marquee__sep {

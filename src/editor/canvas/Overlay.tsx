@@ -136,9 +136,11 @@ export function Overlay() {
     while (n && n.parent) n = nodes[n.parent];
     return n && isContainer(n.id) ? n.id : null;
   };
-  // Only while the pointer is over the section (a selection inside it has its own toolbar).
+  // Only while the pointer is over the section (a selection inside it has its own toolbar), and only near its top
+  // edge, where a new section would go: anywhere else it would cover the content (a header is all top edge).
   const sectionId = !dragging && !editing ? sectionOf(hovered) : null;
-  const sectionRect = sectionId ? rectOf(sectionId) : null;
+  const nearTop = useNearTop(sectionId, zoom);
+  const sectionRect = sectionId && nearTop ? rectOf(sectionId) : null;
   const root = useDoc.getState().doc.root;
   const template = useTemplateHover();
   const notes = useNotes((s) => s.notes);
@@ -328,6 +330,40 @@ function headingTag(id: string): string {
  * The header or footer around the page (another template, shown but not editable here) under the pointer. The page
  * marks them with data-uncoder-edit-title (Theme_Builder::canvas_attrs, canvas only).
  */
+/**
+ * Whether the pointer is in the top band of a section (about 30 screen pixels), where "+ Section" adds one above.
+ * Changes state only when that answer changes, not on every pointer move.
+ */
+function useNearTop(sectionId: string | null, zoom: number): boolean {
+  const [near, setNear] = useState(false);
+  const idRef = useRef(sectionId);
+  idRef.current = sectionId;
+  const zoomRef = useRef(zoom);
+  zoomRef.current = zoom;
+  useEffect(() => {
+    const doc = frame.doc;
+    if (!doc) return;
+    const onMove = (e: PointerEvent) => {
+      const id = idRef.current;
+      const el = id ? elementFor(id) : null;
+      let inBand = false;
+      if (el) {
+        // Over the pill itself: keep it.
+        if ((e.target as Element | null)?.closest?.('.uncoder-ui-ov__secadd')) inBand = true;
+        else {
+          const top = el.getBoundingClientRect().top;
+          const y = e.clientY - top;
+          inBand = y >= -2 && y <= 30 / (zoomRef.current || 1);
+        }
+      }
+      setNear((cur) => (cur === inBand ? cur : inBand));
+    };
+    doc.addEventListener('pointermove', onMove, true);
+    return () => doc.removeEventListener('pointermove', onMove, true);
+  }, []);
+  return near && !!sectionId;
+}
+
 function useTemplateHover(): HTMLElement | null {
   const [el, setEl] = useState<HTMLElement | null>(null);
   useEffect(() => {

@@ -384,6 +384,10 @@ class Image extends Widget_Base {
 			// Empty alt (not missing): assistive tech skips the image instead of reading its file name.
 			$attrs['alt'] = '';
 			$media['alt'] = '';
+			if ( $ctx->editor ) {
+				// The editor's checks tell a decorative image from one whose alt text was never written (both alt="").
+				$attrs['data-uncoder-decorative'] = '1';
+			}
 		} elseif ( isset( $s['alt'] ) && '' !== $s['alt'] ) {
 			$attrs['alt'] = (string) $s['alt'];
 		}

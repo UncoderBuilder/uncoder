@@ -10,7 +10,7 @@ import { EmptyContainer } from './EmptyContainer';
 import { ShapeSvg, SHAPES } from '../lib/shapes';
 import { elementAnchor } from '@shared/css';
 
-const CONTAINER_TAGS = ['div', 'section', 'header', 'footer', 'main', 'article', 'aside', 'nav', 'a'];
+const CONTAINER_TAGS = ['div', 'section', 'header', 'footer', 'main', 'article', 'aside', 'nav', 'figure', 'figcaption', 'a'];
 
 /** Twin of Container::auto_tag(): <section> for page sections, <article> for loop-item cards, <div> elsewhere. */
 const autoTag = (depth: number): string => {

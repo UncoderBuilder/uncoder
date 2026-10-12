@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
 import type { ControlDef, Settings } from '@shared/types';
 import { schemaOf } from '../lib/config';
 import { visible } from '../lib/schema';
@@ -34,6 +34,11 @@ function mediaName(media: { url?: string; alt?: string }): string {
   return file.replace(/-\d+x\d+(?=\.)/, '').replace(/\.[a-z0-9]+$/i, '').replace(/[-_]+/g, ' ').trim();
 }
 
+/** What identifies a row across a move: its _id, or its content for rows saved without one. */
+function rowKey(row: Settings): string {
+  return typeof row._id === 'string' && row._id ? row._id : JSON.stringify(row);
+}
+
 function defaults(fields: Record<string, ControlDef>): Settings {
   const out: Settings = {};
   for (const [k, c] of Object.entries(fields)) if (c.default !== undefined) out[k] = structuredClone(c.default);
@@ -44,6 +49,10 @@ export function RepeaterControl({ control, value, placeholder, onChange, id, key
   const rows: Settings[] = value ?? (placeholder as Settings[]) ?? [];
   const [open, setOpen] = useState<string | null>(null);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
+  // Keyboard moves: the row's handle keeps the focus, and screen readers hear the new position.
+  const [pendingFocus, setPendingFocus] = useState<{ index: number; key: string } | null>(null);
+  const [announce, setAnnounce] = useState('');
+  const listRef = useRef<HTMLDivElement>(null);
   const nodeType = useDoc((s) => s.doc.nodes[id]?.type);
   const nested = nodeType ? schemaOf(nodeType)?.nested?.items === keyName : false;
   const fields = control.fields ?? {};
@@ -60,7 +69,9 @@ export function RepeaterControl({ control, value, placeholder, onChange, id, key
   };
   const remove = (i: number) => emit(rows.filter((_, j) => j !== i), { type: 'remove', index: i });
   const duplicate = (i: number) => {
-    const copy = { ...structuredClone(rows[i]), _id: newId() };
+    const copy: Settings = { ...structuredClone(rows[i]), _id: newId() };
+    // A form field's ID must be unique in its form: the copy goes back to "Automatic" (made from its label).
+    if ('field_id' in fields) delete copy.field_id;
     const next = [...rows];
     next.splice(i + 1, 0, copy);
     emit(next, { type: 'duplicate', index: i });
@@ -71,7 +82,27 @@ export function RepeaterControl({ control, value, placeholder, onChange, id, key
     const [r] = next.splice(from, 1);
     next.splice(to, 0, r);
     emit(next, { type: 'move', from, to });
+    setAnnounce(`${rowTitle(r, control, to)}: position ${to + 1} of ${rows.length}`);
   };
+  /** Arrow keys on a row's handle move the row (Home and End: to the top or the bottom). */
+  const onGripKey = (e: KeyboardEvent, i: number) => {
+    const to = { ArrowUp: i - 1, ArrowDown: i + 1, Home: 0, End: rows.length - 1 }[e.key];
+    if (to === undefined || e.ctrlKey || e.metaKey || e.altKey) return;
+    e.preventDefault();
+    // Not an editor shortcut (they listen on the window).
+    e.stopPropagation();
+    if (to < 0 || to >= rows.length || to === i) return;
+    move(i, to);
+    setPendingFocus({ index: to, key: rowKey(rows[i]) });
+  };
+  useEffect(() => {
+    // Once the list shows the moved row in its new place, put the focus back on its handle (React moves the row's
+    // element in the list, which can drop the focus).
+    if (!pendingFocus || !rows[pendingFocus.index] || rowKey(rows[pendingFocus.index]) !== pendingFocus.key) return;
+    const grips = listRef.current?.querySelectorAll<HTMLElement>(':scope > .uncoder-ui-rep__row > .uncoder-ui-rep__head > .uncoder-ui-rep__grip');
+    grips?.[pendingFocus.index]?.focus();
+    setPendingFocus(null);
+  }, [pendingFocus, rows]);
   const update = (i: number, key: string, v: any) => {
     const next = rows.map((r, j) => {
       if (j !== i) return r;
@@ -87,10 +118,11 @@ export function RepeaterControl({ control, value, placeholder, onChange, id, key
   };
 
   return (
-    <div className="uncoder-ui-rep">
+    <div className="uncoder-ui-rep" ref={listRef}>
       {rows.map((row, i) => {
         const rid = String(row._id ?? i);
         const isOpen = open === rid;
+        const title = rowTitle(row, control, i);
         return (
           <div
             key={rid}
@@ -106,11 +138,20 @@ export function RepeaterControl({ control, value, placeholder, onChange, id, key
             }}
           >
             <div className="uncoder-ui-rep__head">
-              <span className="uncoder-ui-rep__grip" draggable onDragStart={() => setDragIndex(i)} onDragEnd={() => setDragIndex(null)} aria-label="Drag to reorder">
+              <button
+                type="button"
+                className="uncoder-ui-rep__grip"
+                draggable
+                onDragStart={() => setDragIndex(i)}
+                onDragEnd={() => setDragIndex(null)}
+                onKeyDown={(e) => onGripKey(e, i)}
+                aria-label={`Move ${title}, position ${i + 1} of ${rows.length}. Use the arrow keys.`}
+                data-tip="Drag, or use the arrow keys, to move"
+              >
                 <Icon name="grip-vertical" size={13} />
-              </span>
+              </button>
               <button type="button" className="uncoder-ui-rep__title" aria-expanded={isOpen} onClick={() => setOpen(isOpen ? null : rid)}>
-                {rowTitle(row, control, i)}
+                {title}
               </button>
               <IconButton icon="copy" label="Duplicate item" size={12} onClick={() => duplicate(i)} />
               <IconButton icon="trash-2" label="Delete item" size={12} tone="danger" onClick={() => remove(i)} />
@@ -126,6 +167,9 @@ export function RepeaterControl({ control, value, placeholder, onChange, id, key
       <Button size="sm" icon="plus" onClick={add} className="uncoder-ui-rep__add">
         Add item
       </Button>
+      <span className="screen-reader-text" role="status" aria-live="polite">
+        {announce}
+      </span>
     </div>
   );
 }

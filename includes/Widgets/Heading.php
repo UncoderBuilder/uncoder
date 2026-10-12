@@ -186,6 +186,57 @@ class Heading extends Widget_Base {
 				'selectors' => array( '{{WRAPPER}}' => 'text-wrap: {{VALUE}}' ),
 			)
 		);
+		$this->add_control(
+			'reflection',
+			array(
+				'type'        => 'select',
+				'label'       => __( 'Reflection', 'uncoder' ),
+				'options'     => array(
+					''       => __( 'None', 'uncoder' ),
+					'mirror' => __( 'Mirror', 'uncoder' ),
+					'water'  => __( 'Water', 'uncoder' ),
+				),
+				'description' => __( 'A faded, upside-down copy of the title under it, as on a calm surface. Water adds a ripple. Screen readers read the title once.', 'uncoder' ),
+				'ai'          => 'Decorative reflection under a big display title: "mirror" (clean) or "water" (rippled). Tune reflection_height (how much of the letters shows, default 0.55em), reflection_opacity (0-1, default 0.55) and reflection_gap. Best on short one-line titles.',
+			)
+		);
+		$this->add_responsive_control(
+			'reflection_height',
+			array(
+				'type'       => 'slider',
+				'label'      => __( 'Reflection height', 'uncoder' ),
+				'size_units' => array( 'em', 'px' ),
+				'range'      => array(
+					'em' => array( 'min' => 0.1, 'max' => 1.5, 'step' => 0.05 ),
+					'px' => array( 'min' => 4, 'max' => 200 ),
+				),
+				'condition'  => array( 'reflection!' => '' ),
+				'selectors'  => array( '{{WRAPPER}}' => '--uncoder-reflect-h: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'reflection_opacity',
+			array(
+				'type'      => 'number',
+				'label'     => __( 'Reflection opacity', 'uncoder' ),
+				'min'       => 0,
+				'max'       => 1,
+				'step'      => 0.05,
+				'condition' => array( 'reflection!' => '' ),
+				'selectors' => array( '{{WRAPPER}}' => '--uncoder-reflect-o: {{VALUE}}' ),
+			)
+		);
+		$this->add_responsive_control(
+			'reflection_gap',
+			array(
+				'type'       => 'slider',
+				'label'      => __( 'Reflection gap', 'uncoder' ),
+				'size_units' => array( 'px', 'em' ),
+				'range'      => array( 'px' => array( 'min' => -40, 'max' => 40 ) ),
+				'condition'  => array( 'reflection!' => '' ),
+				'selectors'  => array( '{{WRAPPER}}' => '--uncoder-reflect-gap: {{VALUE}}' ),
+			)
+		);
 		$this->end_section();
 	}
 
@@ -195,14 +246,29 @@ class Heading extends Widget_Base {
 		if ( '' === trim( wp_strip_all_tags( $title ) ) && ! $ctx->editor ) {
 			return;
 		}
-		$link = $this->link_attrs( $s['link'] ?? array() );
-		$max  = ! empty( $s['max_width']['size'] ) && in_array( $s['align'] ?? '', array( 'center' ), true ) ? ' uncoder-heading--centered' : '';
-		echo '<' . $tag . ' class="uncoder-heading' . esc_attr( $max ) . '"' . ( $link ? '' : $ctx->inline( 'title' ) ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $tag is allow-listed, inline() is escaped.
+		$link    = $this->link_attrs( $s['link'] ?? array() );
+		$classes = ! empty( $s['max_width']['size'] ) && in_array( $s['align'] ?? '', array( 'center' ), true ) ? ' uncoder-heading--centered' : '';
+		// The reflection is the title's plain text drawn by ::after (data-reflection), so it is not page text.
+		$reflect = in_array( $s['reflection'] ?? '', array( 'mirror', 'water' ), true ) ? $s['reflection'] : '';
+		$extra   = '';
+		$filter  = '';
+		if ( '' !== $reflect ) {
+			$plain    = trim( preg_replace( '/\s+/', ' ', wp_strip_all_tags( $title ) ) );
+			$classes .= ' uncoder-heading--reflect';
+			$extra    = ' data-reflection="' . esc_attr( $plain ) . '"';
+			if ( 'water' === $reflect ) {
+				$fid      = 'uncoder-water-' . sanitize_html_class( '' !== $ctx->element_id ? $ctx->element_id : wp_unique_id() );
+				$classes .= ' uncoder-heading--water';
+				$extra   .= ' style="--uncoder-reflect-filter:url(#' . esc_attr( $fid ) . ')"';
+				$filter   = '<svg class="uncoder-heading__filter" width="0" height="0" aria-hidden="true" focusable="false"><filter id="' . esc_attr( $fid ) . '" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.012 0.14" numOctaves="2" seed="7" result="noise"/><feDisplacementMap in="SourceGraphic" in2="noise" scale="12" xChannelSelector="R" yChannelSelector="G"/></filter></svg>';
+			}
+		}
+		echo '<' . $tag . ' class="uncoder-heading' . esc_attr( $classes ) . '"' . $extra . ( $link ? '' : $ctx->inline( 'title' ) ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $tag is allow-listed, $extra and inline() are escaped.
 		if ( $link ) {
 			echo '<a' . Utils::attrs( $link ) . $ctx->inline( 'title' ) . '>' . $title . '</a>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- attrs() escapes; $title is kses'd.
 		} else {
 			echo $title; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses'd inline HTML.
 		}
-		echo '</' . $tag . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $filter . '</' . $tag . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static markup with an escaped id.
 	}
 }

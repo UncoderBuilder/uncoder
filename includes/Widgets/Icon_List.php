@@ -317,6 +317,19 @@ class Icon_List extends Widget_Base {
 			)
 		);
 		$this->add_control(
+			'icon_position',
+			array(
+				'type'    => 'choose',
+				'label'   => __( 'Icon position', 'uncoder' ),
+				'default' => 'before',
+				'options' => array(
+					'before' => array( 'label' => __( 'Before the text', 'uncoder' ), 'icon' => 'arrow-left-to-line' ),
+					'after'  => array( 'label' => __( 'After the text', 'uncoder' ), 'icon' => 'arrow-right-to-line' ),
+				),
+				'ai'      => '"after" puts each icon behind its text: link lists such as "Instagram ↗" or "Read more →".',
+			)
+		);
+		$this->add_control(
 			'icon_valign',
 			array(
 				'type'                 => 'choose',
@@ -406,8 +419,9 @@ class Icon_List extends Widget_Base {
 				continue;
 			}
 			$row_id = isset( $item['_id'] ) ? sanitize_html_class( (string) $item['_id'] ) : '';
-			$inner  = ( '' !== $icon ? '<span class="uncoder-icon-list__icon">' . $icon . '</span>' : '' )
-				. '<span class="uncoder-icon-list__text"' . $ctx->inline( 'items.' . $i . '.text' ) . '>' . $text . '</span>';
+			$icon_html = '' !== $icon ? '<span class="uncoder-icon-list__icon">' . $icon . '</span>' : '';
+			$text_html = '<span class="uncoder-icon-list__text"' . $ctx->inline( 'items.' . $i . '.text' ) . '>' . $text . '</span>';
+			$inner     = 'after' === ( $s['icon_position'] ?? 'before' ) ? $text_html . $icon_html : $icon_html . $text_html;
 
 			echo '<li class="' . esc_attr( trim( 'uncoder-icon-list__item ' . ( '' !== $row_id ? 'uncoder-ri-' . $row_id : '' ) ) ) . '">';
 			$link = $this->link_attrs( $item['link'] ?? array() );

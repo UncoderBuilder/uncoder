@@ -26,6 +26,22 @@
   transition: opacity 0.2s, filter 0.2s;
 }
 
+/* A mark with the site title beside it, in one link. */
+.uncoder-site-logo--with-title .uncoder-site-logo__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--uncoder-logo-gap, 10px);
+  line-height: normal;
+}
+
+.uncoder-site-logo--with-title .uncoder-site-logo__img {
+  flex: none;
+}
+
+.uncoder-site-logo--with-title .uncoder-site-logo__text {
+  white-space: nowrap;
+}
+
 .uncoder-site-logo__img--placeholder {
   width: 160px;
   aspect-ratio: 4 / 1;

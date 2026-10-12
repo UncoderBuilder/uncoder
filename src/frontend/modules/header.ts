@@ -8,6 +8,8 @@ interface HeaderSettings {
   transparent?: boolean;
   offset?: number;
   from?: string;
+  /** Media query where the header is not transparent ("Transparent on" leaves those devices out). */
+  solid?: string;
 }
 
 window.UncoderWB.register('header', (el, api) => {
@@ -16,6 +18,7 @@ window.UncoderWB.register('header', (el, api) => {
   const sticky = s.sticky === 'always' || s.sticky === 'reveal';
   const offset = Math.max(0, Number(s.offset ?? 10));
   const from = sticky && s.from ? el.querySelector<HTMLElement>(`.uncoder-${CSS.escape(s.from)}`) : null;
+  const solid = s.transparent && s.solid ? window.matchMedia(s.solid) : null;
 
   // How far the sticky part starts below the header's top: 0 when the element is hidden on this device or its
   // "Sticky on" leaves this device out (then the whole header follows the header's own setting).
@@ -35,14 +38,19 @@ window.UncoderWB.register('header', (el, api) => {
   const setHeight = () => {
     measure();
     applySkip();
-    if (sticky) root.style.setProperty('--uncoder-header-h', `${el.offsetHeight - skip}px`);
+    // A side header (a column fixed beside the page on desktops) covers nothing above an anchor: no offset then.
+    const side = fixed && el.classList.contains('uncoder-header--side') && el.offsetWidth < window.innerWidth / 2;
+    if (sticky) root.style.setProperty('--uncoder-header-h', side ? '0px' : `${el.offsetHeight - skip}px`);
   };
   setHeight();
   const ro = 'ResizeObserver' in window ? new ResizeObserver(setHeight) : null;
   ro?.observe(el);
 
-  // Do not hide the header while its menu, a dropdown or a search panel is open.
-  const menuOpen = () => !!el.querySelector('[aria-expanded="true"]');
+  // Do not hide the header while its menu, a dropdown or a search panel is open. Toggles that are not on screen do not
+  // count: the phone panel's accordion opens the submenu holding the current page while the panel itself is closed,
+  // and that kept a "reveal" header from ever hiding on those pages.
+  const menuOpen = () =>
+    Array.from(el.querySelectorAll<HTMLElement>('[aria-expanded="true"]')).some((t) => t.getClientRects().length > 0);
   // An open mobile menu panel is solid, so the bar above it turns solid too.
   const mobileOpen = () => !!el.querySelector('.uncoder-nav-menu__toggle[aria-expanded="true"]');
 
@@ -56,7 +64,7 @@ window.UncoderWB.register('header', (el, api) => {
     el.classList.toggle('is-scrolled', scrolled);
     if (s.transparent) {
       // A fixed transparent header turns solid once the page scrolls; a non-sticky one scrolls away as is.
-      el.classList.toggle('is-transparent', !mobileOpen() && (sticky ? !scrolled : true));
+      el.classList.toggle('is-transparent', !solid?.matches && !mobileOpen() && (sticky ? !scrolled : true));
     }
     if (s.sticky === 'reveal') {
       const down = y > lastY;
@@ -73,12 +81,18 @@ window.UncoderWB.register('header', (el, api) => {
 
   update();
   window.addEventListener('scroll', onScroll, { passive: true });
+  const onSolid = () => {
+    setHeight();
+    update();
+  };
+  solid?.addEventListener('change', onSolid);
   el.addEventListener('focusin', onFocus);
   const mo = s.transparent ? new MutationObserver(onScroll) : null;
   mo?.observe(el, { subtree: true, attributes: true, attributeFilter: ['aria-expanded'] });
 
   return () => {
     window.removeEventListener('scroll', onScroll);
+    solid?.removeEventListener('change', onSolid);
     el.removeEventListener('focusin', onFocus);
     ro?.disconnect();
     mo?.disconnect();

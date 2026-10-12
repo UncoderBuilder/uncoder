@@ -192,8 +192,47 @@
   content: none;
 }
 
-/* Alternate collapses to the left layout on phones. */
+/* ---------------------------------------------------------------- Dates beside the line */
+
+.uncoder .uncoder-timeline--dates .uncoder-timeline__item {
+  --uncoder-tl-line-x: calc(var(--uncoder-tl-date-w, 160px) + var(--uncoder-tl-col-gap) + var(--uncoder-tl-marker) / 2);
+  grid-template-columns: var(--uncoder-tl-date-w, 160px) var(--uncoder-tl-marker) minmax(0, 1fr);
+}
+.uncoder-timeline--dates .uncoder-timeline__date {
+  grid-column: 1;
+  grid-row: 1;
+}
+.uncoder-timeline--dates .uncoder-timeline__marker {
+  grid-column: 2;
+  grid-row: 1;
+}
+.uncoder-timeline--dates .uncoder-timeline__card {
+  grid-column: 3;
+  grid-row: 1;
+}
+.uncoder-timeline--dates.uncoder-timeline--arrow .uncoder-timeline__card::before {
+  left: -7px;
+}
+
+/* Alternate and dates collapse to the left layout on phones. */
 @media (max-width: 767px) {
+  .uncoder .uncoder-timeline--dates .uncoder-timeline__item {
+    --uncoder-tl-line-x: calc(var(--uncoder-tl-marker) / 2);
+    grid-template-columns: var(--uncoder-tl-marker) minmax(0, 1fr);
+  }
+  .uncoder-timeline--dates .uncoder-timeline__marker {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+  }
+  .uncoder-timeline--dates .uncoder-timeline__date {
+    grid-column: 2;
+    grid-row: 1;
+    margin-bottom: 10px;
+  }
+  .uncoder-timeline--dates .uncoder-timeline__card {
+    grid-column: 2;
+    grid-row: 2;
+  }
   .uncoder .uncoder-timeline--alternate .uncoder-timeline__item {
     --uncoder-tl-line-x: calc(var(--uncoder-tl-marker) / 2);
     grid-template-columns: var(--uncoder-tl-marker) minmax(0, 1fr);
@@ -215,6 +254,41 @@
   .uncoder-timeline--alternate .uncoder-timeline__item:nth-child(n) .uncoder-timeline__card::before {
     content: none;
   }
+}
+
+/* ---------------------------------------------------------------- Scroll progress (timeline module)
+   Each item draws the filled part of its own segment over the line, scaled by --uncoder-tl-p
+   (0-1, set while scrolling). Until the module runs (no JavaScript, the editor, reduced
+   motion) the line shows filled and every event is reached. */
+
+.uncoder-timeline--progress .uncoder-timeline__item::after {
+  content: "";
+  position: absolute;
+  top: var(--uncoder-tl-anchor);
+  bottom: calc(-1 * (var(--uncoder-tl-row-gap) + var(--uncoder-tl-anchor)));
+  left: var(--uncoder-tl-line-x);
+  border-left: var(--uncoder-tl-line-w) solid var(--uncoder-tl-fill, var(--uncoder-tl-accent));
+  transform: translateX(-50%) scaleY(var(--uncoder-tl-p, 1));
+  transform-origin: top;
+  pointer-events: none;
+}
+.uncoder-timeline--progress .uncoder-timeline__item:last-child::after {
+  content: none;
+}
+.uncoder-timeline--progress:not(.is-tracking) .uncoder-timeline__marker,
+.uncoder-timeline--progress .uncoder-timeline__item.is-reached .uncoder-timeline__marker {
+  border-color: var(--uncoder-tl-fill, var(--uncoder-tl-accent));
+  background-color: var(--uncoder-tl-fill, var(--uncoder-tl-accent));
+  box-shadow: 0 0 0 5px var(--uncoder-tl-halo, color-mix(in srgb, var(--uncoder-tl-fill, var(--uncoder-tl-accent)) 16%, transparent));
+}
+.uncoder-timeline--progress .uncoder-timeline__date,
+.uncoder-timeline--progress .uncoder-timeline__card,
+.uncoder-timeline--progress .uncoder-timeline__marker {
+  transition: opacity 0.35s ease, background-color 0.35s ease, border-color 0.35s ease;
+}
+.uncoder-timeline--progress.is-tracking .uncoder-timeline__item:not(.is-reached) .uncoder-timeline__date,
+.uncoder-timeline--progress.is-tracking .uncoder-timeline__item:not(.is-reached) .uncoder-timeline__card {
+  opacity: var(--uncoder-tl-dim, 0.45);
 }
 
 /* ---------------------------------------------------------------- Entrance (timeline module) */
@@ -268,6 +342,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .uncoder-timeline--progress .uncoder-timeline__date,
+  .uncoder-timeline--progress .uncoder-timeline__card,
+  .uncoder-timeline--progress .uncoder-timeline__marker,
   .uncoder-timeline--reveal .uncoder-timeline__item::before,
   .uncoder-timeline--reveal .uncoder-timeline__card,
   .uncoder-timeline--reveal .uncoder-timeline__date,

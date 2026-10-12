@@ -382,6 +382,9 @@ final class Document {
 				if ( 'image' === ( $node['type'] ?? '' ) && is_array( $s ) && '' !== \Uncoder\Builder\Widgets\Image::reveal_url( $s ) ) {
 					$scripts[] = 'image-reveal';
 				}
+				if ( 'button' === ( $node['type'] ?? '' ) && ! empty( $s['link_lightbox'] ) ) {
+					$scripts[] = 'lightbox';
+				}
 			}
 		);
 		$compiled = array(

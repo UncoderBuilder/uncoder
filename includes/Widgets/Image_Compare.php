@@ -297,6 +297,23 @@ class Image_Compare extends Widget_Base {
 				'selectors' => array( self::LABEL => 'background-color: {{VALUE}}' ),
 			)
 		);
+		$this->add_control(
+			'after_label_color',
+			array(
+				'type'        => 'color',
+				'label'       => __( '"After" color', 'uncoder' ),
+				'description' => __( 'The "after" label in its own colors (leave empty to match "before").', 'uncoder' ),
+				'selectors'   => array( '{{WRAPPER}} .uncoder-image-compare__label--after' => 'color: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'after_label_background',
+			array(
+				'type'      => 'color',
+				'label'     => __( '"After" background', 'uncoder' ),
+				'selectors' => array( '{{WRAPPER}} .uncoder-image-compare__label--after' => 'background-color: {{VALUE}}' ),
+			)
+		);
 		$this->add_responsive_control(
 			'label_padding',
 			array(

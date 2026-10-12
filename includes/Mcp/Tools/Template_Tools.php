@@ -39,6 +39,8 @@ final class Template_Tools {
 
 	/** Types that are placed by conditions (the others are used by reference). */
 	private const CONDITIONAL = array( 'header', 'footer', 'single-post', 'single-page', 'single', 'archive', 'search-results', 'error-404', 'popup' );
+	/** Types a template can be switched between after it was made (they share how they are stored and placed). */
+	private const SWITCHABLE = array( 'header', 'footer', 'single-post', 'single-page', 'single', 'archive', 'search-results', 'error-404' );
 
 	public function register( Registry $r ): void {
 		$types      = array_keys( Post_Types::TEMPLATE_TYPES );
@@ -90,7 +92,7 @@ final class Template_Tools {
 						'popup'      => $popup,
 						'page_settings' => array(
 							'type'        => 'object',
-							'description' => 'Template settings. Headers: header_sticky ("" | "always" | "reveal"; to pin only part of the header, set "_sticky":"top" on the row that should stay and the rows above it scroll away), header_scrolled_shadow (bool), header_scrolled_bg (color), header_scrolled_height ("64px" shrink), header_scroll_offset (px), header_transparent ("" | "all" | "front" | "selected"), header_transparent_color, header_transparent_logo ({"id":…}), header_transparent_logo_white (bool), header_transparent_keep_colors (bool: only overlay the page and keep the header colors, for light heroes).',
+							'description' => 'Template settings. Headers: header_sticky ("" | "always" | "reveal"; to pin only part of the header, set "_sticky":"top" on the row that should stay and the rows above it scroll away), header_scrolled_shadow (bool), header_scrolled_bg (color), header_scrolled_height ("64px" shrink), header_scroll_offset (px), header_transparent ("" | "all" | "front" | "selected"), header_transparent_color, header_transparent_logo ({"id":…}), header_transparent_logo_white (bool), header_transparent_keep_colors (bool: only overlay the page and keep the header colors, for light heroes), header_transparent_devices (devices where it is transparent, e.g. ["desktop"]; the others get an ordinary bar; default all), header_side ("" | "left" | "right": on desktops a full-height column fixed beside the page, the page makes room; tablets and phones keep the bar across the top), header_side_width (px, 160–640, default 320).',
 						),
 						'strict'     => array( 'type' => 'boolean' ),
 					),
@@ -104,7 +106,7 @@ final class Template_Tools {
 			array(
 				'name'        => 'update_template',
 				'title'       => 'Update template',
-				'description' => 'Updates a template: element tree (replaces it), title, status, conditions or popup settings. For small content edits use edit_elements with the template id.',
+				'description' => 'Updates a template: element tree (replaces it), title, status, type, conditions or popup settings. For small content edits use edit_elements with the template id.',
 				'scope'       => 'design',
 				'annotations' => array( 'readOnlyHint' => false, 'destructiveHint' => true, 'idempotentHint' => true, 'openWorldHint' => false ),
 				'input'       => array(
@@ -112,6 +114,11 @@ final class Template_Tools {
 					'properties' => array(
 						'id'         => array( 'type' => 'integer' ),
 						'title'      => array( 'type' => 'string' ),
+						'type'       => array(
+							'type'        => 'string',
+							'enum'        => self::SWITCHABLE,
+							'description' => 'Change the template type (e.g. a single-page template that should be the 404 page: "error-404"). Only between header, footer, single-post, single-page, single, archive, search-results and error-404. Pass conditions too when the new type needs different ones.',
+						),
 						'elements'   => array(
 							'type'  => 'array',
 							'items' => array( 'type' => 'object' ),
@@ -121,7 +128,7 @@ final class Template_Tools {
 						'popup'      => $popup,
 						'page_settings' => array(
 							'type'        => 'object',
-							'description' => 'Template settings. Headers: header_sticky ("" | "always" | "reveal"; to pin only part of the header, set "_sticky":"top" on the row that should stay and the rows above it scroll away), header_scrolled_shadow (bool), header_scrolled_bg (color), header_scrolled_height ("64px" shrink), header_scroll_offset (px), header_transparent ("" | "all" | "front" | "selected"), header_transparent_color, header_transparent_logo ({"id":…}), header_transparent_logo_white (bool), header_transparent_keep_colors (bool: only overlay the page and keep the header colors, for light heroes).',
+							'description' => 'Template settings. Headers: header_sticky ("" | "always" | "reveal"; to pin only part of the header, set "_sticky":"top" on the row that should stay and the rows above it scroll away), header_scrolled_shadow (bool), header_scrolled_bg (color), header_scrolled_height ("64px" shrink), header_scroll_offset (px), header_transparent ("" | "all" | "front" | "selected"), header_transparent_color, header_transparent_logo ({"id":…}), header_transparent_logo_white (bool), header_transparent_keep_colors (bool: only overlay the page and keep the header colors, for light heroes), header_transparent_devices (devices where it is transparent, e.g. ["desktop"]; the others get an ordinary bar; default all), header_side ("" | "left" | "right": on desktops a full-height column fixed beside the page, the page makes room; tablets and phones keep the bar across the top), header_side_width (px, 160–640, default 320).',
 						),
 						'strict'     => array( 'type' => 'boolean' ),
 					),
@@ -316,6 +323,15 @@ final class Template_Tools {
 		if ( isset( $a['status'] ) && 'publish' === $a['status'] && 'publish' !== $post->post_status && ! current_user_can( 'publish_post', $post->ID ) ) {
 			return new WP_Error( 'forbidden', 'You cannot publish this template (nothing was saved).' );
 		}
+		$new_type = isset( $a['type'] ) ? sanitize_key( (string) $a['type'] ) : $type;
+		if ( $new_type !== $type ) {
+			if ( ! in_array( $new_type, self::SWITCHABLE, true ) || ! in_array( $type, self::SWITCHABLE, true ) ) {
+				return new WP_Error( 'invalid', sprintf( 'A "%s" template cannot become "%s" (nothing was saved). Only header, footer, single-post, single-page, single, archive, search-results and error-404 templates switch between each other; create a new template instead.', $type, $new_type ) );
+			}
+			if ( Post_Types::needs_theme_caps( $new_type ) && ! current_user_can( 'edit_theme_options' ) ) {
+				return new WP_Error( 'forbidden', sprintf( '"%s" templates change the whole site and require the edit_theme_options capability (nothing was saved).', $new_type ) );
+			}
+		}
 		$call->snapshot_post( $post->ID );
 
 		$out = array();
@@ -336,6 +352,14 @@ final class Template_Tools {
 			foreach ( array_merge( $errors, $result['errors'] ) as $e ) {
 				$call->warn( $e );
 			}
+		}
+		if ( $new_type !== $type ) {
+			update_post_meta( $post->ID, Utils::META_TYPE, $new_type );
+			$call->warn( sprintf( 'Type changed from "%s" to "%s".', $type, $new_type ) );
+			if ( ! isset( $conds ) ) {
+				$call->warn( 'The template kept its display conditions; pass conditions when the new type needs others.' );
+			}
+			$type = $new_type;
 		}
 		if ( isset( $conds ) ) {
 			update_post_meta( $post->ID, Utils::META_CONDS, $conds );

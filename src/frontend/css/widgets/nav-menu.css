@@ -121,7 +121,9 @@
 .uncoder-nav-menu--vertical .uncoder-menu--main {
   flex-direction: column;
   flex-wrap: nowrap;
-  align-items: stretch;
+  /* The Alignment setting lines the items up across the column (each item then hugs its label, so a hover underline
+     is as wide as the words); unset, they stretch to the widest one. */
+  align-items: var(--uncoder-nav-v-items, stretch);
 }
 
 .uncoder-menu--main > .uncoder-menu__item {
@@ -147,7 +149,7 @@
 }
 
 .uncoder-nav-menu--vertical .uncoder-menu--main > .uncoder-menu__item > .uncoder-menu__link {
-  justify-content: flex-start;
+  justify-content: var(--uncoder-nav-v-link, flex-start);
 }
 
 .uncoder-menu--main > .uncoder-menu__item:is(:hover, .is-open) > .uncoder-menu__link {
@@ -833,10 +835,11 @@
   min-height: calc(100dvh - var(--uncoder-nav-panel-vtop, 0px));
 }
 
+/* The sheet is airy: no lines between items, unless the widget sets a divider color. */
 .uncoder-nav-menu__panel--header .uncoder-menu--mobile > .uncoder-menu__item + .uncoder-menu__item,
 .uncoder-nav-menu__panel--header .uncoder-menu--mobile .uncoder-menu__sub > .uncoder-menu__item,
 .uncoder-nav-menu__panel--header .uncoder-menu--mobile :is(.uncoder-menu__sub, .uncoder-menu__mega) {
-  border-top: 0;
+  border-top: var(--uncoder-nav-m-panel-divider, 0);
 }
 
 .uncoder-nav-menu__panel--header .uncoder-menu--mobile .uncoder-menu__link {

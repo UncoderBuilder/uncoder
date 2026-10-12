@@ -1,6 +1,45 @@
 {
   "changelog": [
     {
+      "version": "0.1.3",
+      "date": "2026-10-12",
+      "title": "Side headers, reflections and pictures on tabs",
+      "groups": [
+        {
+          "label": "Widgets",
+          "items": [
+            "Heading: a reflection under the title, Mirror or Water, with its height, opacity and gap.",
+            "Button: Open in a lightbox shows a picture or plays a video (YouTube, Vimeo or a video file) over the page. A label for screen readers for icon-only buttons, and rounded icon corners.",
+            "Tabs: a picture on each tab, Pictures only, and tabs after the content. Timeline: Fill the line while scrolling, and the Dates beside the line layout.",
+            "Site Logo with the site title beside it, Marquee items with a picture, Icon List icons after the text, Before/after “after” colours, Loop Filter term order, Video play/pause in the centre with your own words, Google and Yelp in Social Icons.",
+            "Featured Image: Same link as the title, so a card whose photo and title both open the post is one link for keyboards and screen readers."
+          ]
+        },
+        {
+          "label": "Layout and headers",
+          "items": [
+            "Side header: a header template can be a column beside the page on desktops. Transparent on limits a transparent header to chosen devices.",
+            "Hide on laptop (and on any optional breakpoint you turn on), text styles keep their Laptop sizes, a Drop in entrance animation, and figure and figcaption tags for containers.",
+            "Vertical menus follow their Alignment, phone panels draw dividers, and a vertical menu that reuses the header menu no longer opens mega panels."
+          ]
+        },
+        {
+          "label": "Editor",
+          "items": [
+            "Reorder repeater rows with the keyboard (focus the grip, then the arrow keys, Home and End). Inline editing of accordion titles, Edit template on an embedded section, and images without alt text in the Checks panel.",
+            "A duplicated form field gets its own Field ID, + Section appears only near the top of a section, and the media window has no stray text over its title."
+          ]
+        },
+        {
+          "label": "Fixes",
+          "items": [
+            "Search and archive excerpts of builder pages, the Archive Title preview in search templates, reveal headers on pages in a submenu, one-page carousels, Icon List and Social Icons spacing, and 24px click areas for small social icons.",
+            "Site Kits carry images in custom fields and the header’s transparent logo. Page Checks read contrast more accurately and flag labels on plain wrappers and CSS that stops an element sticking."
+          ]
+        }
+      ]
+    },
+    {
       "version": "0.1.2",
       "date": "2026-10-10",
       "title": "A redesigned editor and the Library",
@@ -132,6 +171,17 @@
     }
   ],
   "news": [
+    {
+      "id": "2026-10-release-0-1-3",
+      "date": "2026-10-12",
+      "tag": "release",
+      "title": "Uncoder 0.1.3: side headers and reflections",
+      "body": "Reflections under headings, lightbox buttons, pictures on tabs, a timeline that fills as you scroll, side headers and Hide on laptop.",
+      "link": {
+        "label": "See what’s new",
+        "docs": "changelog/"
+      }
+    },
     {
       "id": "2026-10-release-0-1-2",
       "date": "2026-10-10",

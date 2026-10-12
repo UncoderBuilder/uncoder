@@ -77,6 +77,24 @@ class Button extends Widget_Base {
 			)
 		);
 		$this->add_control(
+			'link_lightbox',
+			array(
+				'type'        => 'switch',
+				'label'       => __( 'Open in a lightbox', 'uncoder' ),
+				'description' => __( 'A picture or a video (YouTube, Vimeo or a video file) opens over the page instead of leaving it.', 'uncoder' ),
+				'ai'          => 'true on a button whose link is a YouTube / Vimeo / .mp4 address (or an image file) plays it in the site lightbox: a "Watch the film" or round play button. Pair an icon-only button with aria_label.',
+			)
+		);
+		$this->add_control(
+			'aria_label',
+			array(
+				'type'        => 'text',
+				'label'       => __( 'Label for screen readers', 'uncoder' ),
+				'description' => __( 'What the button does, read out instead of its text. Needed when it shows only an icon.', 'uncoder' ),
+				'placeholder' => __( 'Play the video', 'uncoder' ),
+			)
+		);
+		$this->add_control(
 			'variant',
 			array(
 				'type'    => 'select',
@@ -272,6 +290,18 @@ class Button extends Widget_Base {
 				'selectors'  => array( '{{WRAPPER}} .uncoder-btn .uncoder-svg.uncoder-btn__icon' => '--uncoder-btn-icon-box: {{VALUE}}; box-sizing: border-box; width: {{VALUE}}; height: {{VALUE}}; padding: calc(({{VALUE}} - var(--uncoder-btn-icon, 1em)) / 2); border-radius: 50%; flex-shrink: 0' ),
 			)
 		);
+		// A rounded square instead of the circle ("Get a quote  [→]").
+		$this->add_responsive_control(
+			'icon_radius',
+			array(
+				'type'       => 'slider',
+				'label'      => __( 'Icon corner radius', 'uncoder' ),
+				'size_units' => array( 'px', '%' ),
+				'range'      => array( 'px' => array( 'min' => 0, 'max' => 48 ) ),
+				'condition'  => array( 'icon_background!' => '' ),
+				'selectors'  => array( '{{WRAPPER}} .uncoder-btn .uncoder-btn__icon, {{WRAPPER}} .uncoder-btn .uncoder-svg.uncoder-btn__icon' => 'border-radius: {{VALUE}}' ),
+			)
+		);
 		$this->end_section();
 	}
 
@@ -287,12 +317,22 @@ class Button extends Widget_Base {
 		if ( ! empty( $s['button_id'] ) ) {
 			$attrs['id'] = sanitize_html_class( (string) $s['button_id'] );
 		}
+		if ( isset( $attrs['href'] ) && ! empty( $s['link_lightbox'] ) ) {
+			$attrs['data-uncoder-lightbox'] = 'media';
+		}
+		$aria = trim( (string) ( $s['aria_label'] ?? '' ) );
+		if ( '' !== $aria ) {
+			$attrs['aria-label'] = $aria;
+		}
 		$tag = isset( $attrs['href'] ) ? 'a' : 'span';
 		if ( 'span' === $tag ) {
 			$attrs['role'] = 'presentation';
 		}
 		$icon = $this->has_icon( $s['icon'] ?? null ) ? $this->render_icon( $s['icon'], array( 'class' => 'uncoder-btn__icon' ) ) : '';
-		$text = '<span class="uncoder-btn__text"' . $ctx->inline( 'text' ) . '>' . esc_html( (string) ( $s['text'] ?? '' ) ) . '</span>';
+		$label = (string) ( $s['text'] ?? '' );
+		// An icon-only button drops its empty label on the page, so the icon spacing does not push the icon off-centre
+		// (the editor keeps it to type into).
+		$text = ( '' === trim( $label ) && '' !== $icon && ! $ctx->editor ) ? '' : '<span class="uncoder-btn__text"' . $ctx->inline( 'text' ) . '>' . esc_html( $label ) . '</span>';
 
 		echo '<div class="uncoder-button">';
 		echo '<' . $tag . Utils::attrs( $attrs ) . '>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by attrs().

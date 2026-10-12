@@ -116,6 +116,31 @@ class Loop_Filter extends Widget_Base {
 		$this->add_control( 'hide_empty', array( 'type' => 'switch', 'label' => __( 'Hide empty terms', 'uncoder' ), 'default' => true, 'condition' => array( 'filter' => 'taxonomy' ) ) );
 		$this->add_control( 'top_level', array( 'type' => 'switch', 'label' => __( 'Top-level terms only', 'uncoder' ), 'condition' => array( 'filter' => 'taxonomy' ) ) );
 		$this->add_control(
+			'term_order',
+			array(
+				'type'      => 'select',
+				'label'     => __( 'Order', 'uncoder' ),
+				'default'   => '',
+				'options'   => array(
+					''       => __( 'By name', 'uncoder' ),
+					'count'  => __( 'Most posts first', 'uncoder' ),
+					'custom' => __( 'In the order below', 'uncoder' ),
+				),
+				'condition' => array( 'filter' => 'taxonomy' ),
+				'ai'        => 'The order of the terms: "" A–Z, "count" the most used first, "custom" exactly the slugs in term_list (e.g. "insight, press, news"; only those are shown).',
+			)
+		);
+		$this->add_control(
+			'term_list',
+			array(
+				'type'        => 'text',
+				'label'       => __( 'Terms, in order', 'uncoder' ),
+				'placeholder' => 'insight, press, news',
+				'description' => __( 'Comma-separated slugs. Only these are shown, in this order.', 'uncoder' ),
+				'condition'   => array( 'filter' => 'taxonomy', 'term_order' => 'custom' ),
+			)
+		);
+		$this->add_control(
 			'exclude',
 			array(
 				'type'        => 'text',
@@ -255,6 +280,19 @@ class Loop_Filter extends Widget_Base {
 		$exclude = array_values( array_filter( array_map( 'absint', preg_split( '/[\s,]+/', (string) ( $s['exclude'] ?? '' ), -1, PREG_SPLIT_NO_EMPTY ) ?: array() ) ) );
 		if ( $exclude ) {
 			$args['exclude'] = $exclude;
+		}
+		// The order: A–Z (the default), the most used first, or a given list of slugs (slugs, not ids, so a Site Kit
+		// import keeps it).
+		$order = (string) ( $s['term_order'] ?? '' );
+		if ( 'count' === $order ) {
+			$args['orderby'] = 'count';
+			$args['order']   = 'DESC';
+		} elseif ( 'custom' === $order ) {
+			$slugs = array_values( array_filter( array_map( 'sanitize_title', preg_split( '/\s*,\s*/', trim( (string) ( $s['term_list'] ?? '' ) ), -1, PREG_SPLIT_NO_EMPTY ) ?: array() ) ) );
+			if ( $slugs ) {
+				$args['slug']    = $slugs;
+				$args['orderby'] = 'slug__in';
+			}
 		}
 		$terms = get_terms( $args );
 		if ( is_wp_error( $terms ) || ! $terms ) {
