@@ -117,6 +117,11 @@ class Tabs extends Widget_Base {
 						'placeholder' => __( 'Save 20%', 'uncoder' ),
 						'description' => __( 'A small tag after the title.', 'uncoder' ),
 					),
+					'description' => array(
+						'type'        => 'textarea',
+						'label'       => __( 'Description', 'uncoder' ),
+						'description' => __( 'A line under the title, inside the tab: on the open tab only, or on every tab (Show descriptions).', 'uncoder' ),
+					),
 					'anchor' => array(
 						'type'        => 'text',
 						'label'       => __( 'Anchor', 'uncoder' ),
@@ -125,7 +130,7 @@ class Tabs extends Widget_Base {
 					),
 				),
 				'default'     => $this->default_tabs(),
-				'ai'          => 'Each row owns the child container at the same index (children[i]). Add/remove rows together with children. A row\'s "image" ({"id":…}) shows a picture before its title (faces or products as tab buttons; image_only hides the titles visually, keeping them for screen readers).',
+				'ai'          => 'Each row owns the child container at the same index (children[i]). Add/remove rows together with children. A row\'s "image" ({"id":…}) shows a picture before its title (faces or products as tab buttons; image_only hides the titles visually, keeping them for screen readers). A row\'s "description" is a line under its title inside the tab (feature tabs: vertical list of steps, each panel a picture); description_show "" open tab only, "all" every tab.',
 			)
 		);
 		$this->add_control(
@@ -294,6 +299,18 @@ class Tabs extends Widget_Base {
 				'type'        => 'text',
 				'label'       => __( 'Accessible name', 'uncoder' ),
 				'description' => __( 'Optional name of the tab list for screen readers, e.g. "Plans".', 'uncoder' ),
+			)
+		);
+		$this->add_control(
+			'description_show',
+			array(
+				'type'    => 'select',
+				'label'   => __( 'Show descriptions', 'uncoder' ),
+				'default' => '',
+				'options' => array(
+					''    => __( 'On the open tab', 'uncoder' ),
+					'all' => __( 'On every tab', 'uncoder' ),
+				),
 			)
 		);
 		$this->add_control(
@@ -553,6 +570,21 @@ class Tabs extends Widget_Base {
 		$this->end_section();
 
 		$badge = '{{WRAPPER}} .uncoder-tabs__badge';
+		$this->start_section( 'style_description', array( 'label' => __( 'Description', 'uncoder' ), 'tab' => 'style' ) );
+		$this->add_group( 'description_typography', array( 'type' => 'typography', 'label' => __( 'Typography', 'uncoder' ), 'selector' => '{{WRAPPER}} .uncoder-tabs__desc' ) );
+		$this->add_control( 'description_color', array( 'type' => 'color', 'label' => __( 'Color', 'uncoder' ), 'selectors' => array( '{{WRAPPER}}' => '--uncoder-tabs-desc-color: {{VALUE}}' ) ) );
+		$this->add_responsive_control(
+			'description_spacing',
+			array(
+				'type'       => 'slider',
+				'label'      => __( 'Space above', 'uncoder' ),
+				'size_units' => array( 'px' ),
+				'range'      => array( 'px' => array( 'min' => 0, 'max' => 40 ) ),
+				'selectors'  => array( '{{WRAPPER}}' => '--uncoder-tabs-desc-gap: {{VALUE}}' ),
+			)
+		);
+		$this->end_section();
+
 		$this->start_section( 'style_badge', array( 'label' => __( 'Badge', 'uncoder' ), 'tab' => 'style' ) );
 		$this->add_group( 'badge_typography', array( 'type' => 'typography', 'label' => __( 'Typography', 'uncoder' ), 'selector' => $badge ) );
 		$this->add_responsive_control(
@@ -753,6 +785,9 @@ class Tabs extends Widget_Base {
 		if ( ! empty( $s['image_only'] ) ) {
 			$classes[] = 'uncoder-tabs--image-only';
 		}
+		if ( 'all' === ( $s['description_show'] ?? '' ) ) {
+			$classes[] = 'uncoder-tabs--desc-all';
+		}
 		if ( 'after' === ( $s['list_position'] ?? '' ) ) {
 			$classes[] = 'uncoder-tabs--list-after';
 		}
@@ -787,21 +822,25 @@ class Tabs extends Widget_Base {
 		) . '>';
 		// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
 		foreach ( $rows as $i => $row ) {
-			$on = $i === $active;
+			$on   = $i === $active;
+			$desc = '' !== trim( (string) ( $row['description'] ?? '' ) );
 			// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by attrs().
 			echo '<button' . Utils::attrs(
 				array(
-					'type'          => 'button',
-					'role'          => 'tab',
-					'id'            => $ids[ $i ]['tab'],
-					'class'         => array( 'uncoder-tabs__tab', self::row_class( $row ), $on ? 'is-active' : '' ),
-					'aria-selected' => $on ? 'true' : 'false',
-					'aria-controls' => $ids[ $i ]['panel'],
-					'tabindex'      => $on ? '0' : '-1',
+					'type'             => 'button',
+					'role'             => 'tab',
+					'id'               => $ids[ $i ]['tab'],
+					'class'            => array( 'uncoder-tabs__tab', self::row_class( $row ), $on ? 'is-active' : '', $desc ? 'uncoder-tabs__tab--desc' : '' ),
+					'aria-selected'    => $on ? 'true' : 'false',
+					'aria-controls'    => $ids[ $i ]['panel'],
+					// A tab with a description is named by its title alone, and the description describes it.
+					'aria-labelledby'  => $desc ? $ids[ $i ]['tab'] . '-title' : null,
+					'aria-describedby' => $desc ? $ids[ $i ]['tab'] . '-desc' : null,
+					'tabindex'         => $on ? '0' : '-1',
 				)
 			) . '>';
 			// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo $this->label( $row, $ctx->inline( 'tabs.' . $i . '.title' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped parts.
+			echo $this->label( $row, $ctx->inline( 'tabs.' . $i . '.title' ), $ids[ $i ]['tab'] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped parts.
 			echo '</button>';
 			if ( 0 === $i && 2 === $count && ! empty( $s['switch'] ) ) {
 				echo '<span class="uncoder-tabs__switch" aria-hidden="true"></span>';
@@ -845,15 +884,20 @@ class Tabs extends Widget_Base {
 	 *
 	 * @param array<string,mixed> $row    Repeater row.
 	 * @param string              $inline data-uncoder-inline attribute string.
+	 * @param string              $id     The tab's id: with one, the row's description follows the title (tab buttons
+	 *                                    only; the accordion layout's headers leave it out).
 	 */
-	private function label( array $row, string $inline ): string {
+	private function label( array $row, string $inline, string $id = '' ): string {
 		$icon  = $this->has_icon( $row['icon'] ?? null ) ? $this->render_icon( $row['icon'], array( 'class' => 'uncoder-tabs__icon' ) ) : '';
 		$media = is_array( $row['image'] ?? null ) ? $row['image'] : array();
 		// The title names the tab, so the picture is decorative (empty alt).
 		$image = ! empty( $media['id'] ) || ! empty( $media['url'] ) ? $this->image( $media, 'medium', array( 'class' => 'uncoder-tabs__image', 'alt' => '' ) ) : '';
 		$badge = trim( (string) ( $row['badge'] ?? '' ) );
-		return $image . $icon . '<span class="' . ( '' !== $image ? 'uncoder-tabs__title uncoder-tabs__title--pictured' : 'uncoder-tabs__title' ) . '"' . $inline . '>' . $this->inline_html( $row['title'] ?? '' ) . '</span>'
-			. ( '' !== $badge ? '<span class="uncoder-tabs__badge">' . esc_html( $badge ) . '</span>' : '' );
+		$desc  = '' !== $id ? trim( (string) ( $row['description'] ?? '' ) ) : '';
+		$title = '' !== $desc ? ' id="' . esc_attr( $id . '-title' ) . '"' : '';
+		return $image . $icon . '<span' . $title . ' class="' . ( '' !== $image ? 'uncoder-tabs__title uncoder-tabs__title--pictured' : 'uncoder-tabs__title' ) . '"' . $inline . '>' . $this->inline_html( $row['title'] ?? '' ) . '</span>'
+			. ( '' !== $badge ? '<span class="uncoder-tabs__badge">' . esc_html( $badge ) . '</span>' : '' )
+			. ( '' !== $desc ? '<span id="' . esc_attr( $id . '-desc' ) . '" class="uncoder-tabs__desc">' . nl2br( esc_html( $desc ) ) . '</span>' : '' );
 	}
 
 	/**

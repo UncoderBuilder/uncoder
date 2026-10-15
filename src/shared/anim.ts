@@ -28,6 +28,8 @@ export interface AnimState {
   skewY?: number;
   blur?: number;
   clip?: AnimClip;
+  /** Sprite frame (Behaviour → Animations → Sprite frames): the strip shows frame n; whole numbers, wrapping. */
+  frame?: number;
 }
 export type AnimProp = keyof AnimState;
 
@@ -85,6 +87,7 @@ export const NATURAL: Record<AnimProp, number | string> = {
   skewY: 0,
   blur: 0,
   clip: 'none',
+  frame: 0,
 };
 
 const INSET: Record<AnimClip, string> = {
@@ -205,6 +208,10 @@ export interface CompileOptions {
   /** Keyframes are composited on top of the element's own styles (composite: "add"). */
   additive?: boolean;
   random?: () => number;
+  /** Frames in the element's sprite strip (--uncoder-sprite-frames); Frame needs at least 2. */
+  frames?: number;
+  /** Rows of a sprite sheet (--uncoder-sprite-rows); 1 = a strip. */
+  rows?: number;
 }
 
 export interface Compiled {
@@ -240,7 +247,7 @@ function ranks(n: number, order: AnimOrder | undefined, random: () => number): n
   }
 }
 
-function toCss(st: AnimState, used: Set<AnimProp>, circle: boolean, additive: boolean): Keyframe {
+function toCss(st: AnimState, used: Set<AnimProp>, circle: boolean, additive: boolean, frames = 0, rows = 1): Keyframe {
   const v = <P extends AnimProp>(p: P) => st[p] ?? NATURAL[p];
   const out: Keyframe = {};
   if (used.has('opacity')) out.opacity = String(additive ? round(num(v('opacity'), 1) - 1) : num(v('opacity'), 1));
@@ -261,6 +268,18 @@ function toCss(st: AnimState, used: Set<AnimProp>, circle: boolean, additive: bo
     const clip = (v('clip') as AnimClip) in INSET ? (v('clip') as AnimClip) : 'none';
     out.clipPath = circle ? (clip === 'none' ? 'circle(75% at 50% 50%)' : 'circle(0% at 50% 50%)') : INSET[clip];
   }
+  // A strip of frames side by side, repeated across: frame n sits n frame-widths in, and any n (negative too)
+  // lands on a frame, so a sprite can turn either way past its first frame.
+  if (used.has('frame') && frames > 1) {
+    const n = Math.round(num(v('frame'), 0));
+    if (rows > 1) {
+      // A sheet in rows: frame n, wrapped into the sheet, sits in its column and row.
+      const cols = Math.ceil(frames / rows);
+      const k = ((n % frames) + frames) % frames;
+      out.backgroundPositionX = cols > 1 ? `${round(((k % cols) * 100) / (cols - 1), 4)}%` : '0%';
+      out.backgroundPositionY = `${round((Math.floor(k / cols) * 100) / (rows - 1), 4)}%`;
+    } else out.backgroundPositionX = `${round((n * 100) / (frames - 1), 4)}%`;
+  }
   return out;
 }
 
@@ -278,18 +297,53 @@ export function isNatural(state: AnimState): boolean {
   });
 }
 
+/**
+ * A sheet in rows cannot slide from one frame to a far one (the picture would pass through the rows between), so a
+ * step that changes Frame by d becomes d steps of one frame each, sharing its time.
+ */
+function frameByFrame(steps: AnimStep[], from: AnimState | undefined): AnimStep[] {
+  const out: AnimStep[] = [];
+  let cur = Math.round(num(from?.frame, 0));
+  for (const step of steps) {
+    const target = step.to?.frame;
+    if (typeof target !== 'number' || !Number.isFinite(target)) {
+      out.push(step);
+      continue;
+    }
+    const t = Math.round(target);
+    const d = Math.abs(t - cur);
+    if (d <= 1) out.push(step);
+    else
+      for (let j = 1; j <= d; j++) {
+        out.push({ ...step, to: { ...step.to, frame: cur + Math.sign(t - cur) * j }, duration: num(step.duration, 0) / d, delay: j === 1 ? step.delay : 0 });
+      }
+    cur = t;
+  }
+  return out;
+}
+
 export function compile(def: AnimDef, count: number, opts: CompileOptions = {}): Compiled {
-  const steps = def.steps?.length ? def.steps : [{ to: {}, duration: 600 }];
+  const frames = Math.max(0, Math.floor(num(opts.frames, 0)));
+  const rows = Math.max(1, Math.floor(num(opts.rows, 1)));
+  const given = def.steps?.length ? def.steps : [{ to: {}, duration: 600 }];
+  const steps = frames > 1 && rows > 1 ? frameByFrame(given, def.from) : given;
   const list = states({ from: def.from, steps });
   const used = new Set(list.flatMap((s) => Object.keys(s)).filter((k): k is AnimProp => k in NATURAL));
   const circle = list.some((s) => s.clip === 'circle');
-  const css = (st: AnimState) => toCss(st, used, circle, !!opts.additive);
+  const css = (st: AnimState) => toCss(st, used, circle, !!opts.additive, frames, rows);
+  // Frames show one after another: a step that changes the frame advances in whole frames (all of its
+  // properties step with it, so frames are best animated on their own).
+  const framed = (i: number, easing: string) => {
+    if (frames < 2) return easing;
+    const d = Math.abs(Math.round(num(list[i + 1]?.frame, 0)) - Math.round(num(list[i]?.frame, 0)));
+    return d > 0 ? `steps(${d}, end)` : easing;
+  };
 
   // One target's segments: state a → state b over ms (a === b is a hold).
   const segments: Array<{ a: number; b: number; ms: number; easing: string }> = [];
   steps.forEach((step, i) => {
     if (num(step.delay, 0) > 0) segments.push({ a: i, b: i, ms: num(step.delay, 0), easing: 'linear' });
-    segments.push({ a: i, b: i + 1, ms: Math.max(0, num(step.duration, 0)), easing: easeCss(step.ease, opts.linear) });
+    segments.push({ a: i, b: i + 1, ms: Math.max(0, num(step.duration, 0)), easing: framed(i, easeCss(step.ease, opts.linear)) });
   });
   const length = segments.reduce((t, s) => t + s.ms, 0);
   const n = Math.max(1, Math.floor(count));

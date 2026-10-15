@@ -33,9 +33,10 @@ export const PROP_META: Record<Exclude<AnimProp, 'clip'>, { label: string; unit?
   skewX: { label: 'Skew X', unit: '°', min: -80, max: 80, step: 1, nudge: 10 },
   skewY: { label: 'Skew Y', unit: '°', min: -80, max: 80, step: 1, nudge: 10 },
   blur: { label: 'Blur', unit: 'px', min: 0, max: 100, step: 1, nudge: 10 },
+  frame: { label: 'Frame (sprite)', min: -999, max: 999, step: 1, nudge: 3 },
 };
 
-export const PROP_ORDER: AnimProp[] = ['opacity', 'x', 'y', 'scale', 'scaleX', 'scaleY', 'rotate', 'rotateX', 'rotateY', 'skewX', 'skewY', 'blur', 'clip'];
+export const PROP_ORDER: AnimProp[] = ['opacity', 'x', 'y', 'scale', 'scaleX', 'scaleY', 'rotate', 'rotateX', 'rotateY', 'skewX', 'skewY', 'blur', 'clip', 'frame'];
 
 export const CLIP_LABELS: Record<AnimClip, string> = {
   none: 'Fully shown',

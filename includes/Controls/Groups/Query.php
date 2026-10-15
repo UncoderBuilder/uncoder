@@ -14,7 +14,8 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * { source, post_type, posts_per_page, offset, orderby, order, include_ids, exclude_ids, terms, authors,
- *   ignore_sticky, exclude_current, avoid_duplicates }.
+ *   meta_key, meta_value, ignore_sticky, exclude_current, avoid_duplicates }.
+ * meta_key / meta_value: only posts whose custom field has that value (public fields only; "!value" for "is not").
  */
 class Query extends Group_Type {
 
@@ -55,6 +56,18 @@ class Query extends Group_Type {
 			'exclude_ids'      => array( 'type' => 'multiselect', 'label' => __( 'Exclude', 'uncoder' ), 'source' => 'posts' ),
 			'terms'            => array( 'type' => 'multiselect', 'label' => __( 'Terms (taxonomy:id)', 'uncoder' ), 'source' => 'terms' ),
 			'authors'          => array( 'type' => 'multiselect', 'label' => __( 'Authors', 'uncoder' ), 'source' => 'users' ),
+			'meta_key'         => array(
+				'type'        => 'text',
+				'label'       => __( 'Custom field', 'uncoder' ),
+				'placeholder' => 'consultant',
+				'description' => __( 'Only posts whose custom field (this key) has the value below.', 'uncoder' ),
+			),
+			'meta_value'       => array(
+				'type'        => 'text',
+				'label'       => __( 'Field value', 'uncoder' ),
+				'placeholder' => 'nadia-faulkner',
+				'description' => __( 'Start with ! for "is not": !filled.', 'uncoder' ),
+			),
 			'ignore_sticky'    => array( 'type' => 'switch', 'label' => __( 'Ignore sticky posts', 'uncoder' ) ),
 			'exclude_current'  => array( 'type' => 'switch', 'label' => __( 'Exclude current post', 'uncoder' ) ),
 			'avoid_duplicates' => array( 'type' => 'switch', 'label' => __( 'Avoid duplicates', 'uncoder' ) ),
@@ -120,6 +133,33 @@ class Query extends Group_Type {
 			if ( 2 === count( $parts ) && taxonomy_exists( $parts[0] ) ) {
 				$tax_query[ $parts[0] ][] = absint( $parts[1] );
 			}
+		}
+		// One custom field condition: equal to the value, or (with a leading "!") not equal; private fields never.
+		$meta_key = sanitize_key( (string) ( $q['meta_key'] ?? '' ) );
+		if ( '' !== $meta_key && ! is_protected_meta( $meta_key, 'post' ) ) {
+			$value = trim( (string) ( $q['meta_value'] ?? '' ) );
+			$not   = 0 === strpos( $value, '!' );
+			$value = sanitize_text_field( $not ? substr( $value, 1 ) : $value );
+			// "Is not" keeps the posts that do not have the field at all.
+			$args['meta_query'] = $not // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+				? array(
+					'relation' => 'OR',
+					array(
+						'key'     => $meta_key,
+						'value'   => $value,
+						'compare' => '!=',
+					),
+					array(
+						'key'     => $meta_key,
+						'compare' => 'NOT EXISTS',
+					),
+				)
+				: array(
+					array(
+						'key'   => $meta_key,
+						'value' => $value,
+					),
+				);
 		}
 		if ( 'related' === $source && $current_post ) {
 			foreach ( get_object_taxonomies( get_post_type( $current_post ) ) as $tax ) {

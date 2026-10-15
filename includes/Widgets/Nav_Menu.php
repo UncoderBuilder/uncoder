@@ -376,6 +376,20 @@ class Nav_Menu extends Widget_Base {
 			)
 		);
 		$this->add_control(
+			'm_submenus',
+			array(
+				'type'        => 'select',
+				'label'       => __( 'Submenus', 'uncoder' ),
+				'description' => __( 'Listed open: each submenu is shown under its parent, which becomes a small heading.', 'uncoder' ),
+				'options'     => array(
+					''     => __( 'Tap to open', 'uncoder' ),
+					'open' => __( 'Listed open', 'uncoder' ),
+				),
+				'condition'   => array( 'breakpoint!' => 'none' ),
+				'ai'          => '"open" lists every submenu under its parent in the mobile menu (no accordion); the parent becomes a small caption (a plain heading when its link is "#"). Style it with m_caption_typography / m_caption_color.',
+			)
+		);
+		$this->add_control(
 			'toggle_style',
 			array(
 				'type'      => 'choose',
@@ -429,6 +443,18 @@ class Nav_Menu extends Widget_Base {
 				'label'       => __( 'Show label', 'uncoder' ),
 				'description' => __( 'When off, the label is only read by screen readers.', 'uncoder' ),
 				'condition'   => array( 'breakpoint!' => 'none' ),
+			)
+		);
+		$this->add_control(
+			'toggle_open_text',
+			array(
+				'type'        => 'text',
+				'label'       => __( 'Label while open', 'uncoder' ),
+				'description' => __( 'Shown while the menu is open, e.g. "Close". Empty: the same label.', 'uncoder' ),
+				'condition'   => array(
+					'breakpoint!'         => 'none',
+					'toggle_text_visible' => true,
+				),
 			)
 		);
 		$this->add_responsive_control(
@@ -498,6 +524,81 @@ class Nav_Menu extends Widget_Base {
 				'condition'   => array(
 					'breakpoint!'    => 'none',
 					'm_button_text!' => '',
+				),
+			)
+		);
+		$this->add_control(
+			'm_button_2_text',
+			array(
+				'type'        => 'text',
+				'label'       => __( 'Second button', 'uncoder' ),
+				'description' => __( 'A button under the first one, e.g. your phone number. Empty: no second button.', 'uncoder' ),
+				'dynamic'     => true,
+				'condition'   => array(
+					'breakpoint!'    => 'none',
+					'm_button_text!' => '',
+				),
+				'ai'          => 'Optional second button in the mobile menu, under the first (e.g. a "Call" button: m_button_2_link tel:…, m_button_2_variant "outline", m_button_2_icon phone, shown before its text).',
+			)
+		);
+		$this->add_control(
+			'm_button_2_link',
+			array(
+				'type'      => 'url',
+				'label'     => __( 'Second button link', 'uncoder' ),
+				'dynamic'   => true,
+				'condition' => array(
+					'breakpoint!'      => 'none',
+					'm_button_text!'   => '',
+					'm_button_2_text!' => '',
+				),
+			)
+		);
+		$this->add_control(
+			'm_button_2_variant',
+			array(
+				'type'      => 'select',
+				'label'     => __( 'Second button style', 'uncoder' ),
+				'default'   => 'outline',
+				'options'   => array(
+					'primary'   => __( 'Primary', 'uncoder' ),
+					'secondary' => __( 'Secondary', 'uncoder' ),
+					'outline'   => __( 'Outline', 'uncoder' ),
+				),
+				'condition' => array(
+					'breakpoint!'      => 'none',
+					'm_button_text!'   => '',
+					'm_button_2_text!' => '',
+				),
+			)
+		);
+		$this->add_control(
+			'm_button_2_icon',
+			array(
+				'type'        => 'icon',
+				'label'       => __( 'Second button icon', 'uncoder' ),
+				'description' => __( 'Shown before the text, e.g. a phone.', 'uncoder' ),
+				'condition'   => array(
+					'breakpoint!'      => 'none',
+					'm_button_text!'   => '',
+					'm_button_2_text!' => '',
+				),
+			)
+		);
+		$this->add_control(
+			'm_button_position',
+			array(
+				'type'        => 'select',
+				'label'       => __( 'Button position', 'uncoder' ),
+				'description' => __( 'At the bottom: the button sits at the bottom of a menu that fills the screen.', 'uncoder' ),
+				'options'     => array(
+					''       => __( 'After the menu', 'uncoder' ),
+					'bottom' => __( 'At the bottom', 'uncoder' ),
+				),
+				'condition'   => array(
+					'breakpoint!'    => 'none',
+					'm_button_text!' => '',
+					'mobile_mode!'   => 'dropdown',
 				),
 			)
 		);
@@ -957,6 +1058,25 @@ class Nav_Menu extends Widget_Base {
 			)
 		);
 		$this->add_group( 'm_typography', array( 'type' => 'typography', 'label' => __( 'Typography', 'uncoder' ), 'selector' => '{{WRAPPER}} .uncoder-menu--mobile .uncoder-menu__link' ) );
+		$this->add_group( 'm_sub_typography', array( 'type' => 'typography', 'label' => __( 'Submenu typography', 'uncoder' ), 'selector' => '{{WRAPPER}} .uncoder-menu--mobile .uncoder-menu__sub .uncoder-menu__link' ) );
+		$this->add_group(
+			'm_caption_typography',
+			array(
+				'type'      => 'typography',
+				'label'     => __( 'Heading typography', 'uncoder' ),
+				'selector'  => '{{WRAPPER}} .uncoder-menu--mobile .uncoder-menu__caption',
+				'condition' => array( 'm_submenus' => 'open' ),
+			)
+		);
+		$this->add_control(
+			'm_caption_color',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Heading color', 'uncoder' ),
+				'condition' => array( 'm_submenus' => 'open' ),
+				'selectors' => array( '{{WRAPPER}}' => '--uncoder-nav-m-caption: {{VALUE}}' ),
+			)
+		);
 		$this->add_control(
 			'm_bg',
 			array(
@@ -1124,9 +1244,9 @@ class Nav_Menu extends Widget_Base {
 				),
 				'condition'            => array( 'm_button_text!' => '' ),
 				'selectors_dictionary' => array(
-					'left'   => 'justify-content:flex-start;--uncoder-nav-m-btn-w:auto',
-					'center' => 'justify-content:center;--uncoder-nav-m-btn-w:auto',
-					'right'  => 'justify-content:flex-end;--uncoder-nav-m-btn-w:auto',
+					'left'   => 'justify-content:flex-start;--uncoder-nav-m-btn-w:auto;--uncoder-nav-m-btn-justify:start',
+					'center' => 'justify-content:center;--uncoder-nav-m-btn-w:auto;--uncoder-nav-m-btn-justify:center',
+					'right'  => 'justify-content:flex-end;--uncoder-nav-m-btn-w:auto;--uncoder-nav-m-btn-justify:end',
 				),
 				'selectors'            => array( '{{WRAPPER}} .uncoder-nav-menu__cta' => '{{VALUE}}' ),
 			)
@@ -1137,7 +1257,7 @@ class Nav_Menu extends Widget_Base {
 				'type'      => 'color',
 				'label'     => __( 'Button text color', 'uncoder' ),
 				'condition' => array( 'm_button_text!' => '' ),
-				'selectors' => array( '{{WRAPPER}} .uncoder-nav-menu__cta .uncoder-btn' => 'color: {{VALUE}}' ),
+				'selectors' => array( '{{WRAPPER}} .uncoder-nav-menu__cta .uncoder-btn:first-child' => 'color: {{VALUE}}' ),
 			)
 		);
 		$this->add_control(
@@ -1146,7 +1266,34 @@ class Nav_Menu extends Widget_Base {
 				'type'      => 'color',
 				'label'     => __( 'Button background', 'uncoder' ),
 				'condition' => array( 'm_button_text!' => '' ),
-				'selectors' => array( '{{WRAPPER}} .uncoder-nav-menu__cta .uncoder-btn' => 'background: {{VALUE}}; border-color: {{VALUE}}' ),
+				'selectors' => array( '{{WRAPPER}} .uncoder-nav-menu__cta .uncoder-btn:first-child' => 'background: {{VALUE}}; border-color: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'm_button_2_color',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Second button text color', 'uncoder' ),
+				'condition' => array( 'm_button_2_text!' => '' ),
+				'selectors' => array( '{{WRAPPER}} .uncoder-nav-menu__cta .uncoder-nav-menu__btn-2' => 'color: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'm_button_2_bg',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Second button background', 'uncoder' ),
+				'condition' => array( 'm_button_2_text!' => '' ),
+				'selectors' => array( '{{WRAPPER}} .uncoder-nav-menu__cta .uncoder-nav-menu__btn-2' => 'background: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'm_button_2_border',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Second button outline', 'uncoder' ),
+				'condition' => array( 'm_button_2_text!' => '' ),
+				'selectors' => array( '{{WRAPPER}} .uncoder-nav-menu__cta .uncoder-nav-menu__btn-2' => 'box-shadow: inset 0 0 0 1px {{VALUE}}' ),
 			)
 		);
 		$this->add_group(
@@ -1294,7 +1441,18 @@ class Nav_Menu extends Widget_Base {
 		$attrs['class'] = 'uncoder-btn uncoder-btn--' . $variant . ' uncoder-btn--md';
 		$tag            = isset( $attrs['href'] ) ? 'a' : 'span';
 		$icon           = $this->has_icon( $s['m_button_icon'] ?? null ) ? $this->render_icon( $s['m_button_icon'], array( 'class' => 'uncoder-btn__icon' ) ) : '';
-		return '<div class="uncoder-nav-menu__cta"><' . $tag . Utils::attrs( $attrs ) . '><span class="uncoder-btn__text">' . esc_html( $text ) . '</span>' . $icon . '</' . $tag . '></div>';
+		$out            = '<' . $tag . Utils::attrs( $attrs ) . '><span class="uncoder-btn__text">' . esc_html( $text ) . '</span>' . $icon . '</' . $tag . '>';
+		// A second button under the first (a phone number, say), its icon before the text.
+		$text_2 = trim( (string) ( $s['m_button_2_text'] ?? '' ) );
+		if ( '' !== $text_2 ) {
+			$variant_2        = in_array( $s['m_button_2_variant'] ?? 'outline', array( 'primary', 'secondary', 'outline' ), true ) ? $s['m_button_2_variant'] : 'outline';
+			$attrs_2          = $this->link_attrs( $s['m_button_2_link'] ?? array() );
+			$attrs_2['class'] = 'uncoder-btn uncoder-btn--' . $variant_2 . ' uncoder-btn--md uncoder-nav-menu__btn-2';
+			$tag_2            = isset( $attrs_2['href'] ) ? 'a' : 'span';
+			$icon_2           = $this->has_icon( $s['m_button_2_icon'] ?? null ) ? $this->render_icon( $s['m_button_2_icon'], array( 'class' => 'uncoder-btn__icon' ) ) : '';
+			$out             .= '<' . $tag_2 . Utils::attrs( $attrs_2 ) . '>' . $icon_2 . '<span class="uncoder-btn__text">' . esc_html( $text_2 ) . '</span></' . $tag_2 . '>';
+		}
+		return '<div class="uncoder-nav-menu__cta' . ( '' !== $text_2 ? ' uncoder-nav-menu__cta--two' : '' ) . '">' . $out . '</div>';
 	}
 
 	/**
@@ -1534,14 +1692,20 @@ class Nav_Menu extends Widget_Base {
 				echo '<span class="uncoder-nav-menu__toggle-icon uncoder-nav-menu__toggle-icon--close">' . $this->render_icon( $close_icon ) . '</span>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- icon markup.
 			}
 			echo '<span class="' . esc_attr( ! empty( $s['toggle_text_visible'] ) ? 'uncoder-nav-menu__toggle-text' : 'uncoder-nav-menu__toggle-text uncoder-sr-only' ) . '">' . esc_html( $text ) . '</span>';
+			// A label of its own while the menu is open ("Menu" / "Close"); aria-expanded still tells the state.
+			$open_text = ! empty( $s['toggle_text_visible'] ) ? trim( (string) ( $s['toggle_open_text'] ?? '' ) ) : '';
+			if ( '' !== $open_text ) {
+				echo '<span class="uncoder-nav-menu__toggle-text uncoder-nav-menu__toggle-text--open">' . esc_html( $open_text ) . '</span>';
+			}
 			echo '</button>';
 
 			$nav = '<nav class="uncoder-nav-menu__mobile" aria-label="' . esc_attr( $m_label ) . '">' . $copy . '</nav>' . $this->panel_button( $s );
+			$cta_end = 'bottom' === ( $s['m_button_position'] ?? '' ) && '' !== trim( (string) ( $s['m_button_text'] ?? '' ) ) ? 'uncoder-nav-menu__panel--cta-end ' : '';
 			if ( 'dropdown' === $mode || 'panel' === $mode ) {
 				// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped parts.
 				echo '<div' . Utils::attrs(
 					array(
-						'class'  => trim( 'uncoder-nav-menu__panel uncoder-nav-menu__panel--dropdown ' . ( 'panel' === $mode ? 'uncoder-nav-menu__panel--header ' . ( 'fill' === ( $s['m_panel_height'] ?? '' ) ? 'uncoder-nav-menu__panel--fill ' : '' ) : '' ) . $mobile_class ),
+						'class'  => trim( 'uncoder-nav-menu__panel uncoder-nav-menu__panel--dropdown ' . ( 'panel' === $mode ? 'uncoder-nav-menu__panel--header ' . ( 'fill' === ( $s['m_panel_height'] ?? '' ) ? 'uncoder-nav-menu__panel--fill ' . $cta_end : '' ) : '' ) . $mobile_class ),
 						'id'     => $panel_id,
 						'hidden' => true,
 					)
@@ -1552,7 +1716,7 @@ class Nav_Menu extends Widget_Base {
 				// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped parts.
 				echo '<dialog' . Utils::attrs(
 					array(
-						'class'      => trim( 'uncoder-nav-menu__panel uncoder-nav-menu__panel--dialog uncoder-nav-menu__panel--' . $mode . ' uncoder-nav-menu__panel--' . $side . ' ' . $mobile_class ),
+						'class'      => trim( 'uncoder-nav-menu__panel uncoder-nav-menu__panel--dialog uncoder-nav-menu__panel--' . $mode . ' uncoder-nav-menu__panel--' . $side . ' ' . $cta_end . $mobile_class ),
 						'id'         => $panel_id,
 						'aria-label' => $m_label,
 					)

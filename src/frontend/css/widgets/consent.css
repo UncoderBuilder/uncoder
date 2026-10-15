@@ -88,6 +88,25 @@
   accent-color: var(--uncoder-c-primary, #2b59ff);
 }
 
+/* Notice type: what the site stores, then the policy link on its own line. */
+.uncoder-consent__facts {
+  display: grid;
+  gap: 10px;
+  margin: 14px 0 0;
+}
+
+.uncoder-consent__facts dt {
+  font-weight: 600;
+}
+
+.uncoder-consent__facts dd {
+  margin: 0;
+}
+
+.uncoder-consent__more {
+  margin: 12px 0 0;
+}
+
 .uncoder-consent__actions {
   display: flex;
   flex-wrap: wrap;

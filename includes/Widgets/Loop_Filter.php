@@ -80,9 +80,47 @@ class Loop_Filter extends Widget_Base {
 				'default' => 'taxonomy',
 				'options' => array(
 					'taxonomy' => __( 'Category, tag or taxonomy', 'uncoder' ),
+					'field'    => __( 'Custom field', 'uncoder' ),
 					'search'   => __( 'Search', 'uncoder' ),
 					'sort'     => __( 'Sort order', 'uncoder' ),
 				),
+			)
+		);
+		$this->add_control(
+			'field_key',
+			array(
+				'type'        => 'text',
+				'label'       => __( 'Field key', 'uncoder' ),
+				'placeholder' => 'location',
+				'description' => __( 'The custom field (meta key) the posts of the grid have, for example location or salary_from. Private fields, whose key starts with _, cannot filter.', 'uncoder' ),
+				'condition'   => array( 'filter' => 'field' ),
+				'ai'          => 'Meta key of a public custom field on the grid\'s posts (set with create_post/update_post meta). Several Loop Filters on different fields narrow the grid together.',
+			)
+		);
+		$this->add_control(
+			'field_compare',
+			array(
+				'type'      => 'select',
+				'label'     => __( 'Show posts whose field', 'uncoder' ),
+				'default'   => '',
+				'options'   => array(
+					''    => __( 'Is the chosen value', 'uncoder' ),
+					'min' => __( 'Is at least the chosen number', 'uncoder' ),
+					'max' => __( 'Is at most the chosen number', 'uncoder' ),
+				),
+				'condition' => array( 'filter' => 'field' ),
+				'ai'        => '"" exact match (one of the chosen values); "min"/"max" numeric thresholds, e.g. a salary_from field with options "£40,000+|40000".',
+			)
+		);
+		$this->add_control(
+			'field_options',
+			array(
+				'type'        => 'textarea',
+				'label'       => __( 'Options', 'uncoder' ),
+				'placeholder' => "Manchester\nLondon\nRemote (UK)|remote",
+				'description' => __( 'One per line: the value, or Label|value. Empty: the values the posts have, A–Z. For numbers, list the thresholds, for example £40,000+|40000.', 'uncoder' ),
+				'condition'   => array( 'filter' => 'field' ),
+				'ai'          => 'Newline-separated "value" or "Label|value". Needed for min/max; optional for exact match (empty lists the distinct values found).',
 			)
 		);
 		$this->add_control(
@@ -106,12 +144,12 @@ class Loop_Filter extends Widget_Base {
 					'dropdown'   => array( 'label' => __( 'Dropdown', 'uncoder' ), 'icon' => 'chevron-down' ),
 					'checkboxes' => array( 'label' => __( 'Checkboxes', 'uncoder' ), 'icon' => 'list-checks' ),
 				),
-				'condition' => array( 'filter' => 'taxonomy' ),
+				'condition' => array( 'filter' => array( 'taxonomy', 'field' ) ),
 			)
 		);
-		$this->add_control( 'multiple', array( 'type' => 'switch', 'label' => __( 'Allow several at once', 'uncoder' ), 'condition' => array( 'filter' => 'taxonomy', 'display' => 'pills' ) ) );
-		$this->add_control( 'show_all', array( 'type' => 'switch', 'label' => __( 'Show “All”', 'uncoder' ), 'default' => true, 'condition' => array( 'filter' => 'taxonomy', 'display!' => 'checkboxes' ) ) );
-		$this->add_control( 'all_label', array( 'type' => 'text', 'label' => __( '“All” label', 'uncoder' ), 'placeholder' => __( 'All', 'uncoder' ), 'condition' => array( 'filter' => 'taxonomy' ) ) );
+		$this->add_control( 'multiple', array( 'type' => 'switch', 'label' => __( 'Allow several at once', 'uncoder' ), 'condition' => array( 'filter' => array( 'taxonomy', 'field' ), 'display' => 'pills' ) ) );
+		$this->add_control( 'show_all', array( 'type' => 'switch', 'label' => __( 'Show “All”', 'uncoder' ), 'default' => true, 'condition' => array( 'filter' => array( 'taxonomy', 'field' ), 'display!' => 'checkboxes' ) ) );
+		$this->add_control( 'all_label', array( 'type' => 'text', 'label' => __( '“All” label', 'uncoder' ), 'placeholder' => __( 'All', 'uncoder' ), 'condition' => array( 'filter' => array( 'taxonomy', 'field' ) ) ) );
 		$this->add_control( 'show_count', array( 'type' => 'switch', 'label' => __( 'Show counts', 'uncoder' ), 'condition' => array( 'filter' => 'taxonomy' ) ) );
 		$this->add_control( 'hide_empty', array( 'type' => 'switch', 'label' => __( 'Hide empty terms', 'uncoder' ), 'default' => true, 'condition' => array( 'filter' => 'taxonomy' ) ) );
 		$this->add_control( 'top_level', array( 'type' => 'switch', 'label' => __( 'Top-level terms only', 'uncoder' ), 'condition' => array( 'filter' => 'taxonomy' ) ) );
@@ -163,6 +201,20 @@ class Loop_Filter extends Widget_Base {
 			)
 		);
 		$this->add_control( 'label', array( 'type' => 'text', 'label' => __( 'Label', 'uncoder' ), 'description' => __( 'Shown before the filter; also its accessible name.', 'uncoder' ) ) );
+		$this->add_control(
+			'label_position',
+			array(
+				'type'      => 'select',
+				'label'     => __( 'Label position', 'uncoder' ),
+				'default'   => '',
+				'options'   => array(
+					''      => __( 'Beside the filter', 'uncoder' ),
+					'above' => __( 'Above the filter', 'uncoder' ),
+				),
+				'condition' => array( 'label!' => '' ),
+				'ai'        => '"above" puts the label on its own line and stretches a dropdown or search box to the full width (a row of filters in a filter bar).',
+			)
+		);
 		$this->end_section();
 
 		$this->start_section( 'style_items', array( 'label' => __( 'Buttons & fields', 'uncoder' ), 'tab' => 'style' ) );
@@ -207,7 +259,11 @@ class Loop_Filter extends Widget_Base {
 	}
 
 	public function wrapper_attributes( array $s, Render_Context $ctx ): array {
-		return array( 'data-uncoder-filter' => $this->key( $s ) );
+		$attrs = array( 'data-uncoder-filter' => $this->key( $s ) );
+		if ( 'above' === ( $s['label_position'] ?? '' ) && '' !== trim( (string) ( $s['label'] ?? '' ) ) ) {
+			$attrs['class'] = 'uncoder-loop-filter-wrap--label-above';
+		}
+		return $attrs;
 	}
 
 	private function key( array $s ): string {
@@ -233,7 +289,7 @@ class Loop_Filter extends Widget_Base {
 
 	protected function render( array $s, Render_Context $ctx ): void {
 		$key    = $this->key( $s );
-		$filter = in_array( $s['filter'] ?? 'taxonomy', array( 'taxonomy', 'search', 'sort' ), true ) ? $s['filter'] : 'taxonomy';
+		$filter = in_array( $s['filter'] ?? 'taxonomy', array( 'taxonomy', 'field', 'search', 'sort' ), true ) ? $s['filter'] : 'taxonomy';
 		$label  = trim( (string) ( $s['label'] ?? '' ) );
 		$head   = '' !== $label ? '<span class="uncoder-loop-filter__label">' . esc_html( $label ) . '</span>' : '';
 
@@ -261,14 +317,86 @@ class Loop_Filter extends Widget_Base {
 			return;
 		}
 
-		$tax = sanitize_key( (string) ( $s['taxonomy'] ?? 'category' ) );
-		// Only public taxonomies filter a grid (Site\Loop_Filters ignores the others).
-		if ( ! taxonomy_exists( $tax ) || ! is_taxonomy_viewable( $tax ) ) {
-			if ( $ctx->editor ) {
-				echo '<p class="uncoder-loop-filter__empty">' . esc_html__( 'Choose a taxonomy.', 'uncoder' ) . '</p>';
+		if ( 'field' === $filter ) {
+			$items = $this->field_items( $s, $ctx );
+			if ( null === $items ) {
+				return;
 			}
+			$mode  = in_array( $s['field_compare'] ?? '', array( 'min', 'max' ), true ) ? (string) $s['field_compare'] : 'f';
+			$field = sanitize_key( (string) ( $s['field_key'] ?? '' ) );
+			$name  = $mode . '_' . $field;
+			$aria  = '' !== $label ? $label : ucfirst( str_replace( array( '_', '-' ), ' ', $field ) );
+		} else {
+			$tax = sanitize_key( (string) ( $s['taxonomy'] ?? 'category' ) );
+			// Only public taxonomies filter a grid (Site\Loop_Filters ignores the others).
+			if ( ! taxonomy_exists( $tax ) || ! is_taxonomy_viewable( $tax ) ) {
+				if ( $ctx->editor ) {
+					echo '<p class="uncoder-loop-filter__empty">' . esc_html__( 'Choose a taxonomy.', 'uncoder' ) . '</p>';
+				}
+				return;
+			}
+			$items = $this->term_items( $s, $tax );
+			if ( ! $items ) {
+				if ( $ctx->editor ) {
+					echo '<p class="uncoder-loop-filter__empty">' . esc_html__( 'No terms to show yet.', 'uncoder' ) . '</p>';
+				}
+				return;
+			}
+			$mode = 'f';
+			$name = $tax;
+			$aria = '' !== $label ? $label : get_taxonomy( $tax )->labels->name;
+		}
+		$param    = Loop_Filters::param( $key, $name );
+		$active   = Loop_Filters::values( $key, $name );
+		$display  = in_array( $s['display'] ?? 'pills', array( 'pills', 'dropdown', 'checkboxes' ), true ) ? $s['display'] : 'pills';
+		// A number threshold takes one choice: checkboxes become a dropdown, buttons stay single.
+		$single   = 'f' !== $mode;
+		$display  = $single && 'checkboxes' === $display ? 'dropdown' : $display;
+		$multiple = ! $single && ( ! empty( $s['multiple'] ) || 'checkboxes' === $display );
+		$all      = trim( (string) ( $s['all_label'] ?? '' ) ) ?: __( 'All', 'uncoder' );
+		$counts   = 'field' !== $filter && ! empty( $s['show_count'] );
+		$count    = static fn( $item ) => $counts ? ' <span class="uncoder-loop-filter__count">' . (int) $item['count'] . '</span>' : '';
+
+		if ( 'dropdown' === $display ) {
+			echo '<form class="uncoder-loop-filter uncoder-loop-filter--dropdown" method="get" data-filter="' . esc_attr( $name ) . '">' . $head . $this->keep( $key, $name ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped parts.
+			echo '<select class="uncoder-loop-filter__field" name="' . esc_attr( $param ) . '" aria-label="' . esc_attr( $aria ) . '">';
+			echo '<option value="">' . esc_html( $all ) . '</option>';
+			foreach ( $items as $item ) {
+				echo '<option value="' . esc_attr( $item['value'] ) . '"' . selected( in_array( $item['value'], $active, true ), true, false ) . '>' . esc_html( $item['label'] ) . ( $counts ? ' (' . (int) $item['count'] . ')' : '' ) . '</option>';
+			}
+			echo '</select><noscript><button type="submit" class="uncoder-loop-filter__pill">' . esc_html__( 'Filter', 'uncoder' ) . '</button></noscript></form>';
 			return;
 		}
+
+		if ( 'checkboxes' === $display ) {
+			echo '<form class="uncoder-loop-filter uncoder-loop-filter--checkboxes" method="get" data-filter="' . esc_attr( $name ) . '"><fieldset><legend class="uncoder-loop-filter__label' . ( '' === $label ? ' uncoder-sr-only' : '' ) . '">' . esc_html( $aria ) . '</legend>' . $this->keep( $key, $name ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped parts.
+			foreach ( $items as $item ) {
+				echo '<label class="uncoder-loop-filter__check"><input type="checkbox" name="' . esc_attr( $param ) . '[]" value="' . esc_attr( $item['value'] ) . '"' . checked( in_array( $item['value'], $active, true ), true, false ) . '> <span>' . esc_html( $item['label'] ) . '</span>' . $count( $item ) . '</label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped parts.
+			}
+			echo '</fieldset><noscript><button type="submit" class="uncoder-loop-filter__pill">' . esc_html__( 'Filter', 'uncoder' ) . '</button></noscript></form>';
+			return;
+		}
+
+		// Buttons: links to the filtered URL (aria-pressed state for assistive technology).
+		echo '<nav class="uncoder-loop-filter uncoder-loop-filter--pills" aria-label="' . esc_attr( $aria ) . '" data-filter="' . esc_attr( $name ) . '">' . $head; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped parts.
+		if ( ! array_key_exists( 'show_all', $s ) || ! empty( $s['show_all'] ) ) {
+			echo '<a class="uncoder-loop-filter__pill' . ( $active ? '' : ' is-active' ) . '" href="' . esc_url( Loop_Filters::url( array( $param => '' ) ) ) . '"' . ( $active ? '' : ' aria-current="true"' ) . '>' . esc_html( $all ) . '</a>';
+		}
+		foreach ( $items as $item ) {
+			$on   = in_array( $item['value'], $active, true );
+			$next = $multiple ? ( $on ? array_values( array_diff( $active, array( $item['value'] ) ) ) : array_merge( $active, array( $item['value'] ) ) ) : ( $on ? array() : array( $item['value'] ) );
+			echo '<a class="uncoder-loop-filter__pill' . ( $on ? ' is-active' : '' ) . '" href="' . esc_url( Loop_Filters::url( array( $param => $next ) ) ) . '"' . ( $on ? ' aria-current="true"' : '' ) . '>' . esc_html( $item['label'] ) . $count( $item ) . '</a>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped parts.
+		}
+		echo '</nav>';
+	}
+
+	/**
+	 * The terms a taxonomy filter lists, as value / label / count items.
+	 *
+	 * @param array<string,mixed> $s Settings.
+	 * @return array<int, array{value:string,label:string,count:int}>
+	 */
+	private function term_items( array $s, string $tax ): array {
 		$args = array(
 			'taxonomy'   => $tax,
 			'hide_empty' => ! array_key_exists( 'hide_empty', $s ) || ! empty( $s['hide_empty'] ),
@@ -295,50 +423,67 @@ class Loop_Filter extends Widget_Base {
 			}
 		}
 		$terms = get_terms( $args );
-		if ( is_wp_error( $terms ) || ! $terms ) {
+		if ( is_wp_error( $terms ) ) {
+			return array();
+		}
+		return array_map(
+			static fn( $term ) => array(
+				'value' => (string) $term->slug,
+				'label' => (string) $term->name,
+				'count' => (int) $term->count,
+			),
+			$terms
+		);
+	}
+
+	/**
+	 * The choices of a custom field filter: the typed options ("value" or "Label|value" per line), or else the
+	 * values the published posts have, A–Z. Null when there is nothing to show (with a hint in the editor).
+	 *
+	 * @param array<string,mixed> $s Settings.
+	 * @return array<int, array{value:string,label:string,count:int}>|null
+	 */
+	private function field_items( array $s, Render_Context $ctx ): ?array {
+		$field = sanitize_key( (string) ( $s['field_key'] ?? '' ) );
+		if ( '' === $field || is_protected_meta( $field, 'post' ) ) {
 			if ( $ctx->editor ) {
-				echo '<p class="uncoder-loop-filter__empty">' . esc_html__( 'No terms to show yet.', 'uncoder' ) . '</p>';
+				echo '<p class="uncoder-loop-filter__empty">' . esc_html__( 'Type the key of a custom field (one that does not start with _).', 'uncoder' ) . '</p>';
 			}
-			return;
+			return null;
 		}
-		$param    = Loop_Filters::param( $key, $tax );
-		$active   = Loop_Filters::values( $key, $tax );
-		$display  = in_array( $s['display'] ?? 'pills', array( 'pills', 'dropdown', 'checkboxes' ), true ) ? $s['display'] : 'pills';
-		$multiple = ! empty( $s['multiple'] ) || 'checkboxes' === $display;
-		$all      = trim( (string) ( $s['all_label'] ?? '' ) ) ?: __( 'All', 'uncoder' );
-		$count    = static fn( $term ) => ! empty( $s['show_count'] ) ? ' <span class="uncoder-loop-filter__count">' . (int) $term->count . '</span>' : '';
-		$name     = '' !== $label ? $label : get_taxonomy( $tax )->labels->name;
-
-		if ( 'dropdown' === $display ) {
-			echo '<form class="uncoder-loop-filter uncoder-loop-filter--dropdown" method="get" data-filter="' . esc_attr( $tax ) . '">' . $head . $this->keep( $key, $tax ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped parts.
-			echo '<select class="uncoder-loop-filter__field" name="' . esc_attr( $param ) . '" aria-label="' . esc_attr( $name ) . '">';
-			echo '<option value="">' . esc_html( $all ) . '</option>';
-			foreach ( $terms as $term ) {
-				echo '<option value="' . esc_attr( $term->slug ) . '"' . selected( in_array( $term->slug, $active, true ), true, false ) . '>' . esc_html( $term->name ) . ( ! empty( $s['show_count'] ) ? ' (' . (int) $term->count . ')' : '' ) . '</option>';
+		$items = array();
+		foreach ( preg_split( '/\r\n|\r|\n/', (string) ( $s['field_options'] ?? '' ) ) ?: array() as $line ) {
+			$line = trim( $line );
+			if ( '' === $line ) {
+				continue;
 			}
-			echo '</select><noscript><button type="submit" class="uncoder-loop-filter__pill">' . esc_html__( 'Filter', 'uncoder' ) . '</button></noscript></form>';
-			return;
-		}
-
-		if ( 'checkboxes' === $display ) {
-			echo '<form class="uncoder-loop-filter uncoder-loop-filter--checkboxes" method="get" data-filter="' . esc_attr( $tax ) . '"><fieldset><legend class="uncoder-loop-filter__label' . ( '' === $label ? ' uncoder-sr-only' : '' ) . '">' . esc_html( $name ) . '</legend>' . $this->keep( $key, $tax ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped parts.
-			foreach ( $terms as $term ) {
-				echo '<label class="uncoder-loop-filter__check"><input type="checkbox" name="' . esc_attr( $param ) . '[]" value="' . esc_attr( $term->slug ) . '"' . checked( in_array( $term->slug, $active, true ), true, false ) . '> <span>' . esc_html( $term->name ) . '</span>' . $count( $term ) . '</label>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped parts.
+			$parts   = array_map( 'trim', explode( '|', $line, 2 ) );
+			$value   = sanitize_text_field( $parts[1] ?? $parts[0] );
+			$items[] = array(
+				'value' => $value,
+				'label' => sanitize_text_field( $parts[0] ),
+				'count' => 0,
+			);
+			if ( count( $items ) >= 100 ) {
+				break;
 			}
-			echo '</fieldset><noscript><button type="submit" class="uncoder-loop-filter__pill">' . esc_html__( 'Filter', 'uncoder' ) . '</button></noscript></form>';
-			return;
 		}
-
-		// Buttons: links to the filtered URL (aria-pressed state for assistive technology).
-		echo '<nav class="uncoder-loop-filter uncoder-loop-filter--pills" aria-label="' . esc_attr( $name ) . '" data-filter="' . esc_attr( $tax ) . '">' . $head; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped parts.
-		if ( ! array_key_exists( 'show_all', $s ) || ! empty( $s['show_all'] ) ) {
-			echo '<a class="uncoder-loop-filter__pill' . ( $active ? '' : ' is-active' ) . '" href="' . esc_url( Loop_Filters::url( array( $param => '' ) ) ) . '"' . ( $active ? '' : ' aria-current="true"' ) . '>' . esc_html( $all ) . '</a>';
+		if ( ! $items ) {
+			global $wpdb;
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- distinct values of one public field, small and read-only.
+			$values = (array) $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT pm.meta_value FROM {$wpdb->postmeta} pm INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id WHERE pm.meta_key = %s AND p.post_status = 'publish' AND pm.meta_value <> '' ORDER BY pm.meta_value ASC LIMIT 100", $field ) );
+			foreach ( $values as $value ) {
+				$value   = sanitize_text_field( (string) $value );
+				$items[] = array(
+					'value' => $value,
+					'label' => $value,
+					'count' => 0,
+				);
+			}
 		}
-		foreach ( $terms as $term ) {
-			$on   = in_array( $term->slug, $active, true );
-			$next = $multiple ? ( $on ? array_values( array_diff( $active, array( $term->slug ) ) ) : array_merge( $active, array( $term->slug ) ) ) : ( $on ? array() : array( $term->slug ) );
-			echo '<a class="uncoder-loop-filter__pill' . ( $on ? ' is-active' : '' ) . '" href="' . esc_url( Loop_Filters::url( array( $param => $next ) ) ) . '"' . ( $on ? ' aria-current="true"' : '' ) . '>' . esc_html( $term->name ) . $count( $term ) . '</a>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped parts.
+		if ( ! $items && $ctx->editor ) {
+			echo '<p class="uncoder-loop-filter__empty">' . esc_html__( 'No values to show yet: no published post has this field, and no options are typed.', 'uncoder' ) . '</p>';
 		}
-		echo '</nav>';
+		return $items ? $items : null;
 	}
 }

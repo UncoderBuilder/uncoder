@@ -29,6 +29,8 @@ final class Licence {
 	public const OPTION  = 'uncoder_wb_licence';
 	public const CRON    = 'uncoder_wb_licence_refresh';
 	public const SERVER  = 'https://uncoderbuilder.com/wp-json/uncoder-cloud/v1/';
+	/** The content server: the starter-site library, premium sections and the private cloud library. */
+	public const CONTENT = 'https://cloud.uncoderbuilder.com/wp-json/uncoder-cloud/v1/';
 	public const PRICING = 'https://uncoderbuilder.com/pricing/';
 	/** The account page, opened on "email me my keys" (Storefront on uncoderbuilder.com). */
 	public const FIND_KEY = 'https://uncoderbuilder.com/account/?keys';
@@ -256,13 +258,18 @@ final class Licence {
 			$code          = $res->get_error_code();
 			$data['error'] = array( 'code' => $code, 'message' => $res->get_error_message() );
 			if ( in_array( $code, array( 'invalid_key', 'not_activated', 'disabled', 'expired', 'refunded' ), true ) ) {
-				unset( $data['token'] );
+				unset( $data['token'], $data['read_token'] );
 				$info = $res->get_error_data();
 				if ( is_array( $info ) && is_array( $info['licence'] ?? null ) ) {
 					$data['licence'] = $info['licence'];
 				}
+				// An expired Agency licence still reads its private cloud library (only that: the token is past its end).
+				if ( is_array( $info ) && ! empty( $info['read_token'] ) && self::verify( (string) $info['read_token'] ) ) {
+					$data['read_token'] = (string) $info['read_token'];
+				}
 			}
 		} elseif ( self::verify( (string) $res['token'] ) ) {
+			unset( $data['read_token'] );
 			$data['token']   = (string) $res['token'];
 			$data['licence'] = (array) ( $res['licence'] ?? array() );
 			$data['error']   = null;
@@ -291,6 +298,80 @@ final class Licence {
 		 * @param string $url API base, ending in a slash.
 		 */
 		return trailingslashit( (string) apply_filters( 'uncoder_wb/licence/server', $url ) );
+	}
+
+	/**
+	 * The content server's API address (the starter-site library, premium sections, the private cloud library). A
+	 * development setup that names only UNCODER_CLOUD_URL gets everything from that one server.
+	 */
+	public static function content_server(): string {
+		if ( defined( 'UNCODER_CLOUD_CONTENT_URL' ) ) {
+			$url = (string) UNCODER_CLOUD_CONTENT_URL;
+		} else {
+			$url = defined( 'UNCODER_CLOUD_URL' ) ? (string) UNCODER_CLOUD_URL : self::CONTENT;
+		}
+		/**
+		 * Filters the content server's API address.
+		 *
+		 * @param string $url API base, ending in a slash.
+		 */
+		return trailingslashit( (string) apply_filters( 'uncoder_wb/licence/content_server', $url ) );
+	}
+
+	/**
+	 * What a call to the content server sends for this site: its address and the token the licence server signed for
+	 * it, refreshed first when it is more than 20 hours old (the content server takes tokens up to two days old). The
+	 * key only goes to the licence server, so it is sent only when that one server also serves the content.
+	 *
+	 * @param bool $read Whether the call only reads (an expired Agency licence's read token then works too).
+	 * @return array<string,string>
+	 */
+	public static function content_params( bool $read = false ): array {
+		$data   = self::data();
+		$token  = self::fresh_token();
+		$params = array(
+			'site_url' => home_url( '/' ),
+			'token'    => '' !== $token ? $token : ( $read ? (string) ( self::data()['read_token'] ?? '' ) : '' ),
+			'env'      => function_exists( 'wp_get_environment_type' ) ? wp_get_environment_type() : 'production',
+			'version'  => defined( 'UNCODER_WB_VERSION' ) ? UNCODER_WB_VERSION : '',
+		);
+		if ( self::content_server() === self::server() && ! empty( $data['key'] ) ) {
+			$params['key'] = (string) $data['key'];
+		}
+		return $params;
+	}
+
+	/**
+	 * A POST to the content server, the body base64-wrapped ({ "b64": … }): web firewalls refuse bodies that name
+	 * "localhost" (a development site's address) or carry style code.
+	 *
+	 * @param array<string,mixed> $params What to send.
+	 * @return array<string,mixed>|WP_Error The HTTP response.
+	 */
+	public static function content_post( string $path, array $params, int $timeout = 20 ) {
+		return wp_remote_post(
+			self::content_server() . $path,
+			array(
+				'timeout' => $timeout,
+				'headers' => array( 'Content-Type' => 'application/json', 'Accept' => 'application/json' ),
+				'body'    => (string) wp_json_encode( array( 'b64' => base64_encode( (string) wp_json_encode( $params ) ) ) ),
+			)
+		);
+	}
+
+	/** This site's token, refreshed when it is more than 20 hours old or missing ('' without a usable one). */
+	public static function fresh_token(): string {
+		$data = self::data();
+		if ( empty( $data['key'] ) ) {
+			return '';
+		}
+		$payload = self::payload();
+		$stale   = ! $payload || (int) ( $payload['iat'] ?? 0 ) < time() - 20 * HOUR_IN_SECONDS;
+		// One try every ten minutes at most, so an unreachable server does not slow every call.
+		if ( $stale && (int) ( $data['checked_at'] ?? 0 ) < time() - 10 * MINUTE_IN_SECONDS ) {
+			self::refresh();
+		}
+		return self::payload() ? (string) ( self::data()['token'] ?? '' ) : '';
 	}
 
 	/** @return array<string,string> */

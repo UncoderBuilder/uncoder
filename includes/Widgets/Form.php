@@ -22,6 +22,9 @@ defined( 'ABSPATH' ) || exit;
  */
 class Form extends Widget_Base {
 
+	/** The tag of the section titles of the form being rendered (allow-listed in render()). */
+	private string $section_tag = 'h3';
+
 	/** Column width option → span of a 12-column grid. */
 	private const WIDTHS = array(
 		'100' => '100%',
@@ -154,6 +157,7 @@ class Form extends Widget_Base {
 							'hidden'     => __( 'Hidden', 'uncoder' ),
 							'file'       => __( 'File upload', 'uncoder' ),
 							'step'       => __( '— Step break —', 'uncoder' ),
+							'heading'    => __( '— Section title —', 'uncoder' ),
 						),
 					),
 					'label'           => array(
@@ -176,7 +180,7 @@ class Form extends Widget_Base {
 						'type'      => 'switch',
 						'label'     => __( 'Required', 'uncoder' ),
 						'default'   => false,
-						'condition' => array( 'type!' => array( 'hidden', 'step' ) ),
+						'condition' => array( 'type!' => array( 'hidden', 'step', 'heading' ) ),
 					),
 					'options'         => array(
 						'type'        => 'textarea',
@@ -201,7 +205,7 @@ class Form extends Widget_Base {
 						'type'        => 'text',
 						'label'       => __( 'Default value', 'uncoder' ),
 						'description' => __( 'For checkboxes, separate several values with commas.', 'uncoder' ),
-						'condition'   => array( 'type!' => array( 'file', 'acceptance', 'step' ) ),
+						'condition'   => array( 'type!' => array( 'file', 'acceptance', 'step', 'heading' ) ),
 					),
 					'min'             => array(
 						'type'      => 'number',
@@ -244,16 +248,17 @@ class Form extends Widget_Base {
 						'condition'   => array( 'type' => array( 'text', 'email', 'tel', 'url' ) ),
 					),
 					'help'            => array(
-						'type'      => 'text',
-						'label'     => __( 'Help text', 'uncoder' ),
-						'condition' => array( 'type!' => array( 'hidden', 'step' ) ),
+						'type'        => 'text',
+						'label'       => __( 'Help text', 'uncoder' ),
+						'description' => __( 'On a section title: a short line under it.', 'uncoder' ),
+						'condition'   => array( 'type!' => array( 'hidden', 'step' ) ),
 					),
 					'show_if_field'   => array(
 						'type'        => 'text',
 						'label'       => __( 'Show only if field', 'uncoder' ),
 						'placeholder' => __( 'Field ID', 'uncoder' ),
 						'description' => __( 'Conditional field: hidden (and not required) unless this other field matches.', 'uncoder' ),
-						'condition'   => array( 'type!' => array( 'hidden', 'step' ) ),
+						'condition'   => array( 'type!' => array( 'hidden', 'step', 'heading' ) ),
 					),
 					'show_if_op'      => array(
 						'type'      => 'select',
@@ -284,11 +289,11 @@ class Form extends Widget_Base {
 						'options'              => self::WIDTHS,
 						'selectors_dictionary' => self::SPANS,
 						'selectors'            => array( '{{WRAPPER}} {{CURRENT_ITEM}}' => '{{VALUE}}' ),
-						'condition'            => array( 'type!' => array( 'hidden', 'step' ) ),
+						'condition'            => array( 'type!' => array( 'hidden', 'step', 'heading' ) ),
 					),
 				),
 				'default'     => self::default_fields(),
-				'ai'          => 'Rows: {"type":"text|email|tel|url|number|textarea|select|radio|checkbox|acceptance|date|hidden|file|step","label":"…","field_id":"snake_case","required":true,"placeholder":"…","options":"One\nTwo|two","width":"100|75|66|50|33|25"}. Fields stack full width on phones unless width_mobile is set. File fields need allow_uploads. Multi-step: a {"type":"step","label":"Step title"} row starts the next step. Conditional field: "show_if_field":"<field_id>","show_if_op":"is|is_not|contains|filled|empty","show_if_value":"…".',
+				'ai'          => 'Rows: {"type":"text|email|tel|url|number|textarea|select|radio|checkbox|acceptance|date|hidden|file|step","label":"…","field_id":"snake_case","required":true,"placeholder":"…","options":"One\nTwo|two","width":"100|75|66|50|33|25"}. Fields stack full width on phones unless width_mobile is set. File fields need allow_uploads. Multi-step: a {"type":"step","label":"Step title"} row starts the next step. A {"type":"heading","label":"The job","help":"One line under it"} row is a section title between fields (not an input; number them with section_numbers; its help is a description line styled by section_note_typography / section_note_color). Conditional field: "show_if_field":"<field_id>","show_if_op":"is|is_not|contains|filled|empty","show_if_value":"…".',
 			)
 		);
 		$this->add_control(
@@ -335,6 +340,30 @@ class Form extends Widget_Base {
 				'label'   => __( 'Text', 'uncoder' ),
 				'default' => __( 'Send message', 'uncoder' ),
 				'inline'  => true,
+			)
+		);
+		$this->add_control(
+			'button_note',
+			array(
+				'type'        => 'text',
+				'html'        => 'inline',
+				'label'       => __( 'Note above the button', 'uncoder' ),
+				'description' => __( 'A short line just above the button, e.g. "We use these details only to reply. Our <a href="/privacy/">privacy notice</a> explains the rest." Links allowed.', 'uncoder' ),
+			)
+		);
+		$this->add_control(
+			'note_position',
+			array(
+				'type'        => 'select',
+				'label'       => __( 'Note position', 'uncoder' ),
+				'default'     => '',
+				'options'     => array(
+					''       => __( 'Above the button', 'uncoder' ),
+					'beside' => __( 'Beside the button', 'uncoder' ),
+					'below'  => __( 'Below the button', 'uncoder' ),
+				),
+				'description' => __( 'Beside: the note on the left and the button on the right, on one line; the button drops below it when the form is too narrow. Below: under the button, aligned like it.', 'uncoder' ),
+				'condition'   => array( 'button_note!' => '' ),
 			)
 		);
 		$this->add_control( 'button_icon', array( 'type' => 'icon', 'label' => __( 'Icon', 'uncoder' ) ) );
@@ -836,6 +865,92 @@ class Form extends Widget_Base {
 		$this->end_section();
 
 		/* ---------------------------------------------------------------- Style: fields */
+		$this->start_section( 'style_sections', array( 'label' => __( 'Section titles', 'uncoder' ), 'tab' => 'style' ) );
+		$this->add_control(
+			'section_tag',
+			array(
+				'type'        => 'select',
+				'label'       => __( 'HTML tag', 'uncoder' ),
+				'default'     => 'h3',
+				'options'     => array(
+					'h2'  => 'H2',
+					'h3'  => 'H3',
+					'h4'  => 'H4',
+					'h5'  => 'H5',
+					'h6'  => 'H6',
+					'p'   => 'p',
+				),
+				'description' => __( 'The heading level of the section titles: one below the nearest heading above the form (H2 when the page title is the only heading before it).', 'uncoder' ),
+				'ai'          => 'Heading level of the "— Section title —" rows (default h3). Use h2 when the form follows the page h1 with no h2 in between, so heading levels do not skip.',
+			)
+		);
+		$this->add_control(
+			'section_numbers',
+			array(
+				'type'        => 'switch',
+				'label'       => __( 'Number them', 'uncoder' ),
+				'description' => __( 'Puts 1, 2, 3… before the section titles (the "— Section title —" rows).', 'uncoder' ),
+			)
+		);
+		$this->add_group( 'section_typography', array( 'type' => 'typography', 'label' => __( 'Typography', 'uncoder' ), 'selector' => '{{WRAPPER}} .uncoder-form__section-title' ) );
+		$this->add_control(
+			'section_color',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Color', 'uncoder' ),
+				'selectors' => array( '{{WRAPPER}} .uncoder-form__section-title' => 'color: {{VALUE}}' ),
+			)
+		);
+		$this->add_group( 'section_note_typography', array( 'type' => 'typography', 'label' => __( 'Description typography', 'uncoder' ), 'selector' => '{{WRAPPER}} .uncoder-form__section-note' ) );
+		$this->add_control(
+			'section_note_color',
+			array(
+				'type'        => 'color',
+				'label'       => __( 'Description color', 'uncoder' ),
+				'description' => __( 'The line under a section title (its Help text).', 'uncoder' ),
+				'selectors'   => array( '{{WRAPPER}} .uncoder-form__section-note' => 'color: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'section_number_color',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Number color', 'uncoder' ),
+				'condition' => array( 'section_numbers' => true ),
+				'selectors' => array( '{{WRAPPER}}' => '--uncoder-form-section-num: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'section_line',
+			array(
+				'type'        => 'color',
+				'label'       => __( 'Line above', 'uncoder' ),
+				'description' => __( 'A thin rule above each section title.', 'uncoder' ),
+				'selectors'   => array( '{{WRAPPER}}' => '--uncoder-form-section-line: 1px solid {{VALUE}}' ),
+			)
+		);
+		$this->add_responsive_control(
+			'section_spacing',
+			array(
+				'type'        => 'slider',
+				'label'       => __( 'Space above', 'uncoder' ),
+				'description' => __( 'Between the line (or the field above) and the title.', 'uncoder' ),
+				'size_units'  => array( 'px', 'rem' ),
+				'selectors'   => array( '{{WRAPPER}}' => '--uncoder-form-section-pt: {{VALUE}}' ),
+			)
+		);
+		$this->add_responsive_control(
+			'section_gap',
+			array(
+				'type'        => 'slider',
+				'label'       => __( 'Space before a section', 'uncoder' ),
+				'description' => __( 'Added to the field spacing before every section after the first.', 'uncoder' ),
+				'size_units'  => array( 'px', 'rem' ),
+				'selectors'   => array( '{{WRAPPER}}' => '--uncoder-form-section-mt: {{VALUE}}' ),
+			)
+		);
+		$this->end_section();
+
 		$this->start_section( 'style_fields', array( 'label' => __( 'Fields', 'uncoder' ), 'tab' => 'style' ) );
 		$this->add_group( 'field_typography', array( 'type' => 'typography', 'label' => __( 'Typography', 'uncoder' ), 'selector' => self::FIELD ) );
 		$this->start_tabs( 'field_tabs' );
@@ -927,6 +1042,16 @@ class Form extends Widget_Base {
 
 		/* ---------------------------------------------------------------- Style: button */
 		$this->start_section( 'style_button', array( 'label' => __( 'Button', 'uncoder' ), 'tab' => 'style' ) );
+		$this->add_group( 'note_typography', array( 'type' => 'typography', 'label' => __( 'Note typography', 'uncoder' ), 'selector' => '{{WRAPPER}} .uncoder-form__note', 'condition' => array( 'button_note!' => '' ) ) );
+		$this->add_control(
+			'note_color',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Note color', 'uncoder' ),
+				'condition' => array( 'button_note!' => '' ),
+				'selectors' => array( '{{WRAPPER}} .uncoder-form__note' => 'color: {{VALUE}}' ),
+			)
+		);
 		$this->add_group( 'button_typography', array( 'type' => 'typography', 'label' => __( 'Typography', 'uncoder' ), 'selector' => '{{WRAPPER}} .uncoder-form__submit' ) );
 		$this->start_tabs( 'button_tabs' );
 		$this->start_tab( 'normal', __( 'Normal', 'uncoder' ) );
@@ -1051,6 +1176,9 @@ class Form extends Widget_Base {
 			return;
 		}
 
+		$tag               = (string) ( $s['section_tag'] ?? 'h3' );
+		$this->section_tag = in_array( $tag, array( 'h2', 'h3', 'h4', 'h5', 'h6', 'p' ), true ) ? $tag : 'h3';
+
 		$el   = $ctx->element_id;
 		$n    = self::$instances[ $el ] = ( self::$instances[ $el ] ?? 0 ) + 1;
 		$base = 'uncoder-form-' . $el . ( $n > 1 ? '-' . $n : '' );
@@ -1068,7 +1196,7 @@ class Form extends Widget_Base {
 		}
 
 		$attrs = array(
-			'class'          => 'uncoder-form',
+			'class'          => 'uncoder-form' . ( ! empty( $s['section_numbers'] ) ? ' uncoder-form--numbered' : '' ) . $this->note_class( $s ),
 			'method'         => 'post',
 			'accept-charset' => 'UTF-8',
 			'enctype'        => $has_file ? 'multipart/form-data' : null,
@@ -1117,13 +1245,16 @@ class Form extends Widget_Base {
 		if ( $multi ) {
 			// Back / Next appear with JavaScript; the submit button always works (all steps show without JS).
 			// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped parts.
-			echo '<div class="uncoder-form__nav">'
+			$below = 'below' === ( $s['note_position'] ?? '' );
+			echo ( $below ? '' : $this->note_html( $s, $ctx ) ) . '<div class="uncoder-form__nav">'
 				. '<button type="button" class="uncoder-btn uncoder-btn--ghost uncoder-form__prev" hidden>' . esc_html( trim( (string) ( $s['prev_text'] ?? '' ) ) ?: __( 'Back', 'uncoder' ) ) . '</button>'
 				. '<button type="button" class="uncoder-btn uncoder-btn--primary uncoder-form__next" hidden>' . esc_html( trim( (string) ( $s['next_text'] ?? '' ) ) ?: __( 'Next', 'uncoder' ) ) . '</button>'
-				. $this->submit_html( $s, $ctx ) . '</div>';
+				. $this->submit_html( $s, $ctx ) . '</div>' . ( $below ? $this->note_html( $s, $ctx ) : '' );
 			// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
+		} elseif ( 'below' === ( $s['note_position'] ?? '' ) ) {
+			echo $this->submit_html( $s, $ctx ) . $this->note_html( $s, $ctx ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in note_html() and submit_html().
 		} else {
-			echo $this->submit_html( $s, $ctx ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in submit_html().
+			echo $this->note_html( $s, $ctx ) . $this->submit_html( $s, $ctx ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in note_html() and submit_html().
 		}
 		echo '</div>';
 
@@ -1158,6 +1289,16 @@ class Form extends Widget_Base {
 	 * @param array<string,mixed> $f Normalized field.
 	 */
 	private function field_html( array $f, string $base, bool $labels, bool $mark ): string {
+		// "Section title" rows before this field: a heading across the form (not an input).
+		$before = '';
+		foreach ( (array) ( $f['before'] ?? array() ) as $section ) {
+			$section = is_array( $section ) ? $section : array( 'title' => (string) $section, 'note' => '' );
+			$note    = '' !== (string) ( $section['note'] ?? '' ) ? '<p class="uncoder-form__section-note">' . esc_html( (string) $section['note'] ) . '</p>' : '';
+			$before .= '<div class="uncoder-form__section"><' . $this->section_tag . ' class="uncoder-form__section-title">' . esc_html( (string) $section['title'] ) . '</' . $this->section_tag . '>' . $note . '</div>';
+		}
+		if ( '' !== $before ) {
+			return $before . $this->field_html( array_merge( $f, array( 'before' => array() ) ), $base, $labels, $mark );
+		}
 		$type = (string) $f['type'];
 		$id   = $base . '-' . $f['id'];
 		$name = 'fields[' . $f['id'] . ']';
@@ -1354,6 +1495,33 @@ class Form extends Widget_Base {
 		return '<div class="uncoder-form__progress uncoder-form__progress--bar" data-label="' . esc_attr__( 'Step %1$d of %2$d', 'uncoder' ) . '">'
 			. '<div class="uncoder-form__progress-text"><span class="uncoder-form__progress-count">' . esc_html( $label ) . '</span><span class="uncoder-form__progress-name">' . esc_html( $titles[0] ) . '</span></div>'
 			. '<div class="uncoder-form__progress-track" role="progressbar" aria-valuemin="1" aria-valuemax="' . (int) $total . '" aria-valuenow="1"><span style="width:' . esc_attr( (string) round( 100 / $total, 2 ) ) . '%"></span></div></div>';
+	}
+
+	/**
+	 * The note above the button (a privacy line, say): its own full-width row between the fields and the button.
+	 *
+	 * @param array<string,mixed> $s Settings.
+	 */
+	private function note_html( array $s, Render_Context $ctx ): string {
+		$note = trim( (string) ( $s['button_note'] ?? '' ) );
+		return '' !== $note ? '<p class="uncoder-form__note"' . $ctx->inline( 'button_note' ) . '>' . wp_kses( $note, Utils::kses_inline() ) . '</p>' : '';
+	}
+
+	/**
+	 * Form classes for the note position: beside the button, or below it (aligned like the button).
+	 *
+	 * @param array<string,mixed> $s Settings.
+	 */
+	private function note_class( array $s ): string {
+		$position = (string) ( $s['note_position'] ?? '' );
+		if ( '' === trim( (string) ( $s['button_note'] ?? '' ) ) || ! in_array( $position, array( 'beside', 'below' ), true ) ) {
+			return '';
+		}
+		if ( 'beside' === $position ) {
+			return ' uncoder-form--note-beside';
+		}
+		$align = in_array( $s['button_align'] ?? '', array( 'center', 'right', 'stretch' ), true ) ? $s['button_align'] : 'left';
+		return ' uncoder-form--note-below uncoder-form--note-' . ( 'stretch' === $align ? 'center' : $align );
 	}
 
 	private function submit_html( array $s, Render_Context $ctx ): string {

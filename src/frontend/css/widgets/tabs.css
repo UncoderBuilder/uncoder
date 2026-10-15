@@ -224,6 +224,43 @@
   min-width: 0;
 }
 
+/* A row's description: a line under the title, inside the tab (the open tab only, unless "On every tab"). */
+.uncoder-tabs > .uncoder-tabs__list > .uncoder-tabs__tab--desc {
+  flex-wrap: wrap;
+  white-space: normal;
+  text-align: start;
+}
+
+.uncoder-tabs__desc {
+  display: block;
+  flex: 0 0 100%;
+  margin-top: var(--uncoder-tabs-desc-gap, 6px);
+  color: var(--uncoder-tabs-desc-color, inherit);
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.uncoder-tabs:not(.uncoder-tabs--desc-all) > .uncoder-tabs__list > .uncoder-tabs__tab:not(.is-active) > .uncoder-tabs__desc {
+  display: none;
+}
+
+.uncoder-tabs:not(.uncoder-tabs--desc-all) > .uncoder-tabs__list > .uncoder-tabs__tab.is-active > .uncoder-tabs__desc {
+  animation: uncoder-tabs-desc 0.3s ease;
+}
+
+@keyframes uncoder-tabs-desc {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uncoder-tabs__desc {
+    animation: none !important;
+  }
+}
+
 /* A row's picture (faces, products as tab buttons). */
 .uncoder-tabs__image {
   display: block;

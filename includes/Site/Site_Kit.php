@@ -616,9 +616,10 @@ final class Site_Kit {
 	 * site-local switches (PRIVATE_SETTINGS) and service connections (SERVICE_SETTINGS) are left out.
 	 *
 	 * @param array<string,mixed> $incoming Settings from the kit.
+	 * @param string              $old_home The kit site's address (its links are moved to this site).
 	 * @return array<string,mixed>
 	 */
-	private static function import_settings( array $incoming ): array {
+	private static function import_settings( array $incoming, string $old_home = '' ): array {
 		$out = array();
 		if ( is_array( $incoming['post_types'] ?? null ) ) {
 			$out['post_types'] = array_values( array_filter( array_map( 'sanitize_key', array_map( 'strval', array_filter( $incoming['post_types'], 'is_scalar' ) ) ), 'post_type_exists' ) );
@@ -630,6 +631,10 @@ final class Site_Kit {
 			$out['performance'] = Performance::sanitize( $incoming['performance'] );
 		}
 		if ( is_array( $incoming['consent'] ?? null ) ) {
+			// The banner's policy link points to the kit's page: move it to this site.
+			if ( is_string( $incoming['consent']['privacy_url'] ?? null ) ) {
+				$incoming['consent']['privacy_url'] = self::relink_url( $incoming['consent']['privacy_url'], $old_home );
+			}
 			// Different banner settings: visitors are asked again (new consent version).
 			$current        = Consent::get();
 			$clean          = Consent::sanitize( array_merge( $incoming['consent'], array( 'version' => $current['version'] ) ) );
@@ -971,9 +976,11 @@ final class Site_Kit {
 					}
 					continue;
 				}
-				// Sideload a copy (media_handle_sideload moves the file it is given).
+				// Sideload a copy (media_handle_sideload moves the file it is given). The kit's files are already sized
+				// by its author: WordPress does not scale them down again (a sprite sheet keeps its frames sharp).
 				$tmp = wp_tempnam( basename( $src ) );
 				copy( $src, $tmp );
+				add_filter( 'big_image_size_threshold', '__return_false', 99 );
 				$new = media_handle_sideload(
 					array(
 						'name'     => basename( $src ),
@@ -982,6 +989,7 @@ final class Site_Kit {
 					0,
 					sanitize_text_field( (string) ( $m['title'] ?? '' ) )
 				);
+				remove_filter( 'big_image_size_threshold', '__return_false', 99 );
 				if ( is_wp_error( $new ) ) {
 					wp_delete_file( $tmp );
 					$state['warnings'][] = sprintf( '%s: %s', basename( $src ), $new->get_error_message() );
@@ -1075,7 +1083,7 @@ final class Site_Kit {
 		if ( ! empty( $parts['settings'] ) && is_readable( $dir . '/settings.json' ) ) {
 			$current = (array) get_option( Settings_Controller::OPTION, array() );
 			// Each known section goes through its own sanitizer; keys the kit does not carry stay as they are.
-			$merged = array_replace( $current, self::import_settings( self::read( $dir, 'settings.json' ) ) );
+			$merged = array_replace( $current, self::import_settings( self::read( $dir, 'settings.json' ), $old_home ) );
 			update_option( Settings_Controller::OPTION, $merged );
 			$report['parts'][] = 'settings';
 		}
@@ -1192,7 +1200,7 @@ final class Site_Kit {
 			// Conditions that name imported pages.
 			$conds = get_post_meta( $new, Utils::META_CONDS, true );
 			if ( is_array( $conds ) && $conds ) {
-				update_post_meta( $new, Utils::META_CONDS, self::relink_ids( $conds, $ids ) );
+				update_post_meta( $new, Utils::META_CONDS, self::relink_ids( $conds, $ids, (array) ( $state['terms'] ?? array() ) ) );
 			}
 		}
 
@@ -1716,12 +1724,15 @@ final class Site_Kit {
 	 * @param array<int,int>          $ids   Old => new.
 	 * @return array<int|string,mixed>
 	 */
-	private static function relink_ids( array $conds, array $ids ): array {
+	private static function relink_ids( array $conds, array $ids, array $terms = array() ): array {
 		foreach ( $conds as $i => $c ) {
 			if ( is_array( $c ) && isset( $c['ids'] ) && is_array( $c['ids'] ) && in_array( $c['rule'] ?? '', array( 'singular', 'child_of' ), true ) ) {
 				$conds[ $i ]['ids'] = array_map( static fn( $x ) => $ids[ (int) $x ] ?? (int) $x, $c['ids'] );
+			} elseif ( is_array( $c ) && isset( $c['ids'] ) && is_array( $c['ids'] ) && 'in_term' === ( $c['rule'] ?? '' ) && 'category' === ( $c['taxonomy'] ?? '' ) ) {
+				// "Singular in term" names categories: they follow the kit's categories (new ids on this site).
+				$conds[ $i ]['ids'] = array_map( static fn( $x ) => $terms[ (int) $x ] ?? (int) $x, $c['ids'] );
 			} elseif ( is_array( $c ) ) {
-				$conds[ $i ] = self::relink_ids( $c, $ids );
+				$conds[ $i ] = self::relink_ids( $c, $ids, $terms );
 			}
 		}
 		return $conds;

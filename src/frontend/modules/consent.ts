@@ -1,14 +1,16 @@
 // Cookie consent (Site\Consent): remembers the visitor's choice in a cookie, brings held-back code
 // snippets (<template data-uncoder-consent>) to life for the granted categories and updates Google
 // Consent Mode. Withdrawing a category reloads the page, since running scripts cannot be undone.
+// The "notice" type (no optional cookies) only informs: "Got it" and "Done" grant no category.
 window.UncoderWB.register('consent', (el, api) => {
   if (api.editor) return;
-  const s = api.settings<{ version?: number; consentMode?: boolean; cookie?: string }>(el);
+  const s = api.settings<{ version?: number; consentMode?: boolean; cookie?: string; notice?: boolean }>(el);
   const name = s.cookie || 'uncoder_consent';
   const version = `v${s.version || 1}`;
   const prefs = el.querySelector<HTMLFormElement>('.uncoder-consent__prefs');
   const prefsBtn = el.querySelector<HTMLButtonElement>('[data-consent="prefs"]');
   const saveBtn = el.querySelector<HTMLButtonElement>('[data-consent="save"]');
+  const acceptBtn = el.querySelector<HTMLButtonElement>('[data-consent="accept"]');
   const reopen = document.querySelector<HTMLButtonElement>('.uncoder-consent-reopen');
   type Choice = { analytics: boolean; marketing: boolean };
 
@@ -60,7 +62,7 @@ window.UncoderWB.register('consent', (el, api) => {
       if (m) m.checked = !!c?.marketing;
     }
     togglePrefs(withPrefs);
-    if (trigger) el.querySelector<HTMLInputElement>('.uncoder-consent__prefs input:not(:disabled)')?.focus();
+    if (trigger) (el.querySelector<HTMLElement>('.uncoder-consent__prefs input:not(:disabled)') ?? saveBtn)?.focus();
   };
   const close = () => {
     const hadFocus = el.contains(document.activeElement);
@@ -73,6 +75,11 @@ window.UncoderWB.register('consent', (el, api) => {
     if (prefs) prefs.hidden = !on;
     if (saveBtn) saveBtn.hidden = !on;
     prefsBtn?.setAttribute('aria-expanded', String(on));
+    // A notice's details end with one "Done" button.
+    if (s.notice) {
+      if (acceptBtn) acceptBtn.hidden = on;
+      if (prefsBtn) prefsBtn.hidden = on;
+    }
   };
 
   const decide = (c: Choice) => {
@@ -89,9 +96,13 @@ window.UncoderWB.register('consent', (el, api) => {
 
   const onClick = (event: MouseEvent) => {
     const action = (event.target as HTMLElement).closest<HTMLElement>('[data-consent]')?.dataset.consent;
-    if (action === 'accept') decide({ analytics: true, marketing: true });
+    if (action === 'accept') decide({ analytics: !s.notice, marketing: !s.notice });
     else if (action === 'reject') decide({ analytics: false, marketing: false });
-    else if (action === 'prefs') togglePrefs(prefs?.hidden ?? false);
+    else if (action === 'prefs') {
+      togglePrefs(prefs?.hidden ?? false);
+      // A notice hides the pressed button with the details open: keep the keyboard on "Done".
+      if (s.notice && saveBtn && !saveBtn.hidden) saveBtn.focus();
+    }
     else if (action === 'save' && prefs) {
       decide({ analytics: !!(prefs.elements.namedItem('analytics') as HTMLInputElement)?.checked, marketing: !!(prefs.elements.namedItem('marketing') as HTMLInputElement)?.checked });
     }

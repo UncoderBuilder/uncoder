@@ -13,9 +13,11 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * A grid's filters live in the URL as uf-{key}-{name} parameters, so filtered views can be shared,
- * bookmarked and work without JavaScript: uf-{key}-{taxonomy}=slug,slug · uf-{key}-s=words ·
+ * bookmarked and work without JavaScript: uf-{key}-{taxonomy}=slug,slug · uf-{key}-f_{field}=a,b (a custom
+ * field, one of) · uf-{key}-min_{field}=40000 / max_ (a number at least / at most) · uf-{key}-s=words ·
  * uf-{key}-sort=title_asc. The key is the grid's CSS ID (or "loop"), which the Loop Filter widget
- * targets. Only public taxonomies of the queried post type and the listed sort orders are accepted.
+ * targets. Only public taxonomies of the queried post type, public custom fields and the listed sort orders
+ * are accepted. Every filter narrows the others (AND); several choices in one filter widen it (OR).
  */
 final class Loop_Filters {
 
@@ -69,6 +71,28 @@ final class Loop_Filters {
 	}
 
 	/**
+	 * The custom field filters active in the URL for a grid: uf-{key}-f_{field} (one of the values),
+	 * uf-{key}-min_{field} / uf-{key}-max_{field} (a number at least / at most). Private fields (a leading
+	 * underscore) never filter.
+	 *
+	 * @return array<int, array{0:string,1:string}> [mode, field] pairs.
+	 */
+	public static function field_filters( string $key ): array {
+		$out    = array();
+		$prefix = 'uf-' . $key . '-';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- public read-only filtering; names are matched below.
+		foreach ( array_keys( $_GET ) as $param ) {
+			if ( preg_match( '/^' . preg_quote( $prefix, '/' ) . '(f|min|max)_([a-z0-9_\-]{1,64})$/', (string) $param, $m ) && ! is_protected_meta( $m[2], 'post' ) ) {
+				$out[] = array( $m[1], $m[2] );
+			}
+			if ( count( $out ) >= 10 ) {
+				break;
+			}
+		}
+		return $out;
+	}
+
+	/**
 	 * Adds the active filters of a grid to its WP_Query args.
 	 *
 	 * @param array<string,mixed> $args WP_Query args.
@@ -89,6 +113,31 @@ final class Loop_Filters {
 					'terms'    => $slugs,
 				);
 			}
+		}
+		$meta = array();
+		foreach ( self::field_filters( $key ) as list( $mode, $field ) ) {
+			$values = self::values( $key, $mode . '_' . $field );
+			if ( ! $values ) {
+				continue;
+			}
+			if ( 'f' === $mode ) {
+				$meta[] = array(
+					'key'     => $field,
+					'value'   => $values,
+					'compare' => 'IN',
+				);
+			} elseif ( is_numeric( $values[0] ) ) {
+				$meta[] = array(
+					'key'     => $field,
+					'value'   => (float) $values[0],
+					'compare' => 'min' === $mode ? '>=' : '<=',
+					'type'    => 'NUMERIC',
+				);
+			}
+		}
+		if ( $meta ) {
+			$existing           = isset( $args['meta_query'] ) && is_array( $args['meta_query'] ) ? array( $args['meta_query'] ) : array(); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+			$args['meta_query'] = array_merge( array( 'relation' => 'AND' ), $existing, $meta ); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 		}
 		$search = self::values( $key, 's' );
 		if ( $search ) {

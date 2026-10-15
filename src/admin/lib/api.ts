@@ -312,6 +312,7 @@ export type { Kit };
 
 export interface ConsentSettings {
   enabled: boolean;
+  type: '' | 'notice';
   position: 'bar' | 'box-left' | 'box-right';
   title: string;
   message: string;
@@ -319,6 +320,7 @@ export interface ConsentSettings {
   reject_label: string;
   prefs_label: string;
   privacy_url: string;
+  privacy_label: string;
   consent_mode: boolean;
   reopen: boolean;
   version: number;

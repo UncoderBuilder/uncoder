@@ -17,6 +17,7 @@ interface CarouselSettings {
   ticker?: number; // continuous motion: speed in px per second
   center?: boolean; // the current slide sits in the middle (endless with loop)
   endless?: boolean; // copies of the slides on both sides: the row never rewinds
+  start?: number; // the slide shown first (0-based)
 }
 
 /**
@@ -117,6 +118,8 @@ window.UncoderWB.register(
     const total = pagination?.querySelector<HTMLElement>(':scope > .uncoder-carousel__fraction > .uncoder-carousel__total') ?? null;
     const toggle = pagination?.querySelector<HTMLButtonElement>(':scope > .uncoder-carousel__toggle') ?? null;
     const status = root.querySelector<HTMLElement>(':scope > .uncoder-carousel__status');
+    // Icon pagination: one button per slide, with the slide's icon and its label as the name.
+    const dotIcons = [...(pagination?.querySelector<HTMLTemplateElement>(':scope > template.uncoder-carousel__dot-icons')?.content.children ?? [])] as HTMLElement[];
 
     const cleanups: Array<() => void> = [];
     const listen = (target: EventTarget, type: string, fn: (e: any) => void, opts?: AddEventListenerOptions | boolean) => {
@@ -129,6 +132,7 @@ window.UncoderWB.register(
     // that ends on a copy jumps silently to its original, so there is always a neighbour on both sides.
     const center = !!s.center;
     const endless = ((center && !!s.loop) || !!s.endless) && !api.editor && slides.length > 1;
+    const first = Math.max(0, Math.min(slides.length - 1, Math.floor(Number(s.start) || 0)));
     let all = slides;
     if (endless) {
       const copy = (sl: HTMLElement, i: number) => {
@@ -218,7 +222,7 @@ window.UncoderWB.register(
     const measure = () => {
       if (center) {
         // Half the free width on each side lets the first and last slides reach the middle.
-        const keep = index >= 0 ? (targetSlide ?? middleSlide()) : endless ? slides[0] : null;
+        const keep = index >= 0 ? (targetSlide ?? middleSlide()) : endless ? slides[first] : null;
         root.style.setProperty('--uncoder-carousel-edge', `${Math.max(0, (track.clientWidth - slides[0].offsetWidth) / 2)}px`);
         pages = slides.map((el, i) => ({ x: Math.max(0, centerX(el)), slide: i }));
         // Keep the current slide in the middle when the width changes (and start endless loops on the first slide).
@@ -228,8 +232,9 @@ window.UncoderWB.register(
         return;
       }
       if (endless) {
-        // Endless, start-aligned: a page every Slides-to-scroll slides; the row starts on the first original.
-        const keep = index >= 0 ? (targetSlide ?? middleSlide()) : slides[0];
+        // Endless, start-aligned: a page every Slides-to-scroll slides; the row starts on the first original (or the
+        // one Start at slide names).
+        const keep = index >= 0 ? (targetSlide ?? middleSlide()) : slides[first];
         const per = perStep();
         pages = slides.filter((_, i) => i % per === 0).map((el) => ({ x: startX(el), slide: slides.indexOf(el) }));
         if (keep && !anim && !drag) track.scrollLeft = (isRtl() ? -1 : 1) * startX(keep);
@@ -293,6 +298,12 @@ window.UncoderWB.register(
         dot.className = 'uncoder-carousel__dot';
         dot.dataset.slide = String(page.slide);
         dot.setAttribute('aria-label', format(t.goto, page.slide + 1));
+        const item = dotIcons[page.slide];
+        if (item) {
+          dot.append(...[...item.childNodes].map((n) => n.cloneNode(true)));
+          if (item.dataset.label) dot.setAttribute('aria-label', item.dataset.label);
+          if (item.dataset.accent) dot.style.setProperty('--uncoder-carousel-dot-accent', item.dataset.accent);
+        }
         dot.addEventListener('click', () => go(i, true));
         dotsWrap.appendChild(dot);
         return dot;
@@ -662,6 +673,15 @@ window.UncoderWB.register(
 
     root.classList.add('is-ready');
     measure();
+    // Start at slide: open on the page holding that slide, without a transition (endless rows start there in measure).
+    if (first && !endless) {
+      let page = 0;
+      pages.forEach((p, i) => {
+        if (p.slide <= first) page = i;
+      });
+      track.scrollLeft = (isRtl() ? -1 : 1) * pages[page].x;
+      update(false);
+    }
     schedule();
 
     return () => {

@@ -7,6 +7,7 @@
 
 namespace Uncoder\Builder\Widgets;
 
+use Uncoder\Builder\Core\Icons;
 use Uncoder\Builder\Core\Render_Context;
 use Uncoder\Builder\Core\Utils;
 use Uncoder\Builder\Core\Widget_Base;
@@ -18,7 +19,16 @@ defined( 'ABSPATH' ) || exit;
  */
 class Flip_Box extends Widget_Base {
 
-	public const EFFECTS = array( 'flip-x', 'flip-y', 'slide', 'fade', 'zoom' );
+	public const EFFECTS = array( 'flip-x', 'flip-y', 'slide', 'fade', 'zoom', 'circle' );
+
+	/** Where the circle reveal starts. */
+	public const ORIGINS = array(
+		'top-left'     => '0% 0%',
+		'top-right'    => '100% 0%',
+		'bottom-left'  => '0% 100%',
+		'bottom-right' => '100% 100%',
+		'center'       => '50% 50%',
+	);
 
 	public function name(): string {
 		return 'flip-box';
@@ -41,7 +51,7 @@ class Flip_Box extends Widget_Base {
 	}
 
 	public function description(): string {
-		return __( 'Card with a front (icon or image, title, text) and a back (title, text, button) revealed on hover, keyboard focus or tap. Effects: flip horizontal/vertical, slide, fade, zoom.', 'uncoder' );
+		return __( 'Card with a front (icon or image, title, text, a hint) and a back (title, text, a checklist, button) revealed on hover, keyboard focus or tap. Effects: flip horizontal/vertical, slide, fade, zoom, circle reveal.', 'uncoder' );
 	}
 
 	public function frontend_scripts(): array {
@@ -104,6 +114,25 @@ class Flip_Box extends Widget_Base {
 				'inline'  => true,
 			)
 		);
+		$this->add_control(
+			'front_hint',
+			array(
+				'type'        => 'text',
+				'label'       => __( 'Hint', 'uncoder' ),
+				'placeholder' => __( 'Tap for more', 'uncoder' ),
+				'description' => __( 'A short line under the text that says there is more on the back.', 'uncoder' ),
+				'inline'      => true,
+			)
+		);
+		$this->add_control(
+			'front_hint_icon',
+			array(
+				'type'      => 'icon',
+				'label'     => __( 'Hint icon', 'uncoder' ),
+				'default'   => array( 'library' => 'lucide', 'value' => 'arrow-right' ),
+				'condition' => array( 'front_hint!' => '' ),
+			)
+		);
 		$this->end_section();
 
 		$this->start_section( 'content_back', array( 'label' => __( 'Back', 'uncoder' ) ) );
@@ -127,6 +156,34 @@ class Flip_Box extends Widget_Base {
 				'default' => __( 'Import your content, pick a starter layout and follow the checklist to launch.', 'uncoder' ),
 				'dynamic' => true,
 				'inline'  => true,
+			)
+		);
+		$this->add_control(
+			'back_list_title',
+			array(
+				'type'        => 'text',
+				'label'       => __( 'List title', 'uncoder' ),
+				'placeholder' => __( 'What is included', 'uncoder' ),
+				'inline'      => true,
+			)
+		);
+		$this->add_control(
+			'back_list',
+			array(
+				'type'        => 'textarea',
+				'label'       => __( 'List', 'uncoder' ),
+				'rows'        => 4,
+				'description' => __( 'One item per line, each with a tick.', 'uncoder' ),
+				'ai'          => 'Checklist on the back, one item per line ("One-to-one coaching\nProgress tracking").',
+			)
+		);
+		$this->add_control(
+			'back_list_icon',
+			array(
+				'type'      => 'icon',
+				'label'     => __( 'List icon', 'uncoder' ),
+				'default'   => array( 'library' => 'lucide', 'value' => 'check' ),
+				'condition' => array( 'back_list!' => '' ),
 			)
 		);
 		$this->add_control(
@@ -182,7 +239,27 @@ class Flip_Box extends Widget_Base {
 					'slide'  => __( 'Slide', 'uncoder' ),
 					'fade'   => __( 'Fade', 'uncoder' ),
 					'zoom'   => __( 'Zoom', 'uncoder' ),
+					'circle' => __( 'Circle reveal', 'uncoder' ),
 				),
+				'ai'      => '"circle": the back grows out of a corner (reveal_from) as a circle over the front.',
+			)
+		);
+		$this->add_control(
+			'reveal_from',
+			array(
+				'type'                 => 'select',
+				'label'                => __( 'Reveal from', 'uncoder' ),
+				'default'              => 'top-left',
+				'options'              => array(
+					'top-left'     => __( 'Top left corner', 'uncoder' ),
+					'top-right'    => __( 'Top right corner', 'uncoder' ),
+					'bottom-left'  => __( 'Bottom left corner', 'uncoder' ),
+					'bottom-right' => __( 'Bottom right corner', 'uncoder' ),
+					'center'       => __( 'The middle', 'uncoder' ),
+				),
+				'selectors_dictionary' => self::ORIGINS,
+				'selectors'            => array( '{{WRAPPER}}' => '--uncoder-flip-origin: {{VALUE}}' ),
+				'condition'            => array( 'effect' => 'circle' ),
 			)
 		);
 		$this->add_control(
@@ -222,6 +299,38 @@ class Flip_Box extends Widget_Base {
 			)
 		);
 		$this->add_control(
+			'trigger',
+			array(
+				'type'        => 'select',
+				'label'       => __( 'Turn the card', 'uncoder' ),
+				'description' => __( 'With a button, only a press on + turns the card (and − turns it back): nothing flips by accident under the pointer.', 'uncoder' ),
+				'options'     => array(
+					''       => __( 'On hover, focus or tap', 'uncoder' ),
+					'button' => __( 'With a round button', 'uncoder' ),
+				),
+				'ai'          => 'trigger "button": a round + button in the bottom corner turns the card, − turns it back (Framer "Toggle details" cards). Style it with toggle_size, toggle_background, toggle_color, toggle_offset.',
+			)
+		);
+		$this->add_control(
+			'toggle_open_label',
+			array(
+				'type'        => 'text',
+				'label'       => __( 'Button label: show', 'uncoder' ),
+				'placeholder' => __( 'Show details', 'uncoder' ),
+				'description' => __( 'Read by screen readers with the front title.', 'uncoder' ),
+				'condition'   => array( 'trigger' => 'button' ),
+			)
+		);
+		$this->add_control(
+			'toggle_close_label',
+			array(
+				'type'        => 'text',
+				'label'       => __( 'Button label: hide', 'uncoder' ),
+				'placeholder' => __( 'Hide details', 'uncoder' ),
+				'condition'   => array( 'trigger' => 'button' ),
+			)
+		);
+		$this->add_control(
 			'title_tag',
 			array(
 				'type'    => 'select',
@@ -243,7 +352,16 @@ class Flip_Box extends Widget_Base {
 				'size_units' => array( 'px', 'vh', 'rem', 'em' ),
 				'range'      => array( 'px' => array( 'min' => 120, 'max' => 900 ) ),
 				'selectors'  => array( '{{WRAPPER}}' => '--uncoder-flip-h: {{VALUE}}' ),
-				'ai'         => 'Both faces share this height; keep text short enough to fit (default 320px).',
+				'ai'         => 'Both faces share this height; keep text short enough to fit (default 320px), or turn on fit for a height that follows the content.',
+			)
+		);
+		$this->add_control(
+			'fit',
+			array(
+				'type'        => 'switch',
+				'label'       => __( 'Fit the taller side', 'uncoder' ),
+				'description' => __( 'The card is as tall as its longer side, so no text is cut off. Height becomes the least height.', 'uncoder' ),
+				'default'     => false,
 			)
 		);
 		$this->add_responsive_control(
@@ -269,6 +387,55 @@ class Flip_Box extends Widget_Base {
 
 		$this->register_face_style( 'front', __( 'Front', 'uncoder' ) );
 		$this->register_face_style( 'back', __( 'Back', 'uncoder' ) );
+
+		$this->start_section( 'style_toggle', array( 'label' => __( 'Round button', 'uncoder' ), 'tab' => 'style', 'condition' => array( 'trigger' => 'button' ) ) );
+		$this->add_responsive_control(
+			'toggle_size',
+			array(
+				'type'       => 'slider',
+				'label'      => __( 'Size', 'uncoder' ),
+				'size_units' => array( 'px' ),
+				'range'      => array( 'px' => array( 'min' => 24, 'max' => 96 ) ),
+				'selectors'  => array( '{{WRAPPER}}' => '--uncoder-flip-toggle-size: {{VALUE}}' ),
+			)
+		);
+		$this->add_responsive_control(
+			'toggle_icon_size',
+			array(
+				'type'       => 'slider',
+				'label'      => __( 'Icon size', 'uncoder' ),
+				'size_units' => array( 'px' ),
+				'range'      => array( 'px' => array( 'min' => 10, 'max' => 48 ) ),
+				'selectors'  => array( '{{WRAPPER}}' => '--uncoder-flip-toggle-icon: {{VALUE}}' ),
+			)
+		);
+		$this->add_responsive_control(
+			'toggle_offset',
+			array(
+				'type'        => 'slider',
+				'label'       => __( 'Distance from the corner', 'uncoder' ),
+				'size_units'  => array( 'px' ),
+				'range'       => array( 'px' => array( 'min' => 0, 'max' => 80 ) ),
+				'selectors'   => array( '{{WRAPPER}}' => '--uncoder-flip-toggle-offset: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'toggle_background',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Background', 'uncoder' ),
+				'selectors' => array( '{{WRAPPER}}' => '--uncoder-flip-toggle-bg: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'toggle_color',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Icon color', 'uncoder' ),
+				'selectors' => array( '{{WRAPPER}}' => '--uncoder-flip-toggle-color: {{VALUE}}' ),
+			)
+		);
+		$this->end_section();
 
 		$this->start_section( 'style_button', array( 'label' => __( 'Button', 'uncoder' ), 'tab' => 'style', 'condition' => array( 'button_text!' => '' ) ) );
 		$this->add_group( 'button_typography', array( 'type' => 'typography', 'label' => __( 'Typography', 'uncoder' ), 'selector' => '{{WRAPPER}} .uncoder-flip-box__button' ) );
@@ -473,6 +640,80 @@ class Flip_Box extends Widget_Base {
 				'selectors' => array( $sel . ' .uncoder-flip-box__description' => 'color: {{VALUE}}' ),
 			)
 		);
+		if ( 'front' === $face ) {
+			$this->add_control( 'hint_heading', array( 'type' => 'heading', 'label' => __( 'Hint', 'uncoder' ), 'condition' => array( 'front_hint!' => '' ) ) );
+			$this->add_group( 'hint_typography', array( 'type' => 'typography', 'label' => __( 'Typography', 'uncoder' ), 'selector' => '{{WRAPPER}} .uncoder-flip-box__hint', 'condition' => array( 'front_hint!' => '' ) ) );
+			$this->add_control(
+				'hint_color',
+				array(
+					'type'      => 'color',
+					'label'     => __( 'Color', 'uncoder' ),
+					'condition' => array( 'front_hint!' => '' ),
+					'selectors' => array( '{{WRAPPER}} .uncoder-flip-box__hint' => 'color: {{VALUE}}' ),
+				)
+			);
+			$this->add_responsive_control(
+				'hint_spacing',
+				array(
+					'type'       => 'slider',
+					'label'      => __( 'Spacing above', 'uncoder' ),
+					'size_units' => array( 'px', 'em', 'rem' ),
+					'condition'  => array( 'front_hint!' => '' ),
+					'selectors'  => array( '{{WRAPPER}} .uncoder-flip-box__hint' => 'margin-top: {{VALUE}}' ),
+				)
+			);
+		} else {
+			$this->add_control( 'list_heading', array( 'type' => 'heading', 'label' => __( 'List', 'uncoder' ), 'condition' => array( 'back_list!' => '' ) ) );
+			$this->add_group( 'list_title_typography', array( 'type' => 'typography', 'label' => __( 'Title typography', 'uncoder' ), 'selector' => '{{WRAPPER}} .uncoder-flip-box__list-title', 'condition' => array( 'back_list!' => '' ) ) );
+			$this->add_control(
+				'list_title_color',
+				array(
+					'type'      => 'color',
+					'label'     => __( 'Title color', 'uncoder' ),
+					'condition' => array( 'back_list!' => '' ),
+					'selectors' => array( '{{WRAPPER}} .uncoder-flip-box__list-title' => 'color: {{VALUE}}' ),
+				)
+			);
+			$this->add_group( 'list_typography', array( 'type' => 'typography', 'label' => __( 'Typography', 'uncoder' ), 'selector' => '{{WRAPPER}} .uncoder-flip-box__list', 'condition' => array( 'back_list!' => '' ) ) );
+			$this->add_control(
+				'list_color',
+				array(
+					'type'      => 'color',
+					'label'     => __( 'Color', 'uncoder' ),
+					'condition' => array( 'back_list!' => '' ),
+					'selectors' => array( '{{WRAPPER}} .uncoder-flip-box__list' => 'color: {{VALUE}}' ),
+				)
+			);
+			$this->add_control(
+				'list_icon_color',
+				array(
+					'type'      => 'color',
+					'label'     => __( 'Icon color', 'uncoder' ),
+					'condition' => array( 'back_list!' => '' ),
+					'selectors' => array( '{{WRAPPER}} .uncoder-flip-box__list-icon' => 'color: {{VALUE}}' ),
+				)
+			);
+			$this->add_responsive_control(
+				'list_gap',
+				array(
+					'type'       => 'slider',
+					'label'      => __( 'Space between items', 'uncoder' ),
+					'size_units' => array( 'px', 'em', 'rem' ),
+					'condition'  => array( 'back_list!' => '' ),
+					'selectors'  => array( '{{WRAPPER}}' => '--uncoder-flip-list-gap: {{VALUE}}' ),
+				)
+			);
+			$this->add_responsive_control(
+				'list_spacing',
+				array(
+					'type'       => 'slider',
+					'label'      => __( 'Spacing above', 'uncoder' ),
+					'size_units' => array( 'px', 'em', 'rem' ),
+					'condition'  => array( 'back_list!' => '' ),
+					'selectors'  => array( '{{WRAPPER}} .uncoder-flip-box__checklist' => 'margin-top: {{VALUE}}' ),
+				)
+			);
+		}
 		$this->end_section();
 	}
 
@@ -489,6 +730,28 @@ class Flip_Box extends Widget_Base {
 		if ( '' !== trim( wp_strip_all_tags( $desc ) ) ) {
 			$html .= '<p class="uncoder-flip-box__description"' . $ctx->inline( $face . '_description' ) . '>' . $desc . '</p>';
 		}
+		if ( 'front' === $face ) {
+			$hint = trim( (string) ( $s['front_hint'] ?? '' ) );
+			if ( '' !== $hint ) {
+				$icon  = $this->has_icon( $s['front_hint_icon'] ?? null ) ? '<span class="uncoder-flip-box__hint-icon" aria-hidden="true">' . $this->render_icon( $s['front_hint_icon'] ) . '</span>' : '';
+				$html .= '<p class="uncoder-flip-box__hint"><span' . $ctx->inline( 'front_hint' ) . '>' . esc_html( $hint ) . '</span>' . $icon . '</p>';
+			}
+			return $html;
+		}
+		$items = array_values( array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', (string) ( $s['back_list'] ?? '' ) ) ), 'strlen' ) );
+		if ( $items ) {
+			$title = trim( (string) ( $s['back_list_title'] ?? '' ) );
+			$icon  = $this->has_icon( $s['back_list_icon'] ?? null ) ? '<span class="uncoder-flip-box__list-icon" aria-hidden="true">' . $this->render_icon( $s['back_list_icon'] ) . '</span>' : '';
+			$html .= '<div class="uncoder-flip-box__checklist">';
+			if ( '' !== $title ) {
+				$html .= '<p class="uncoder-flip-box__list-title"' . $ctx->inline( 'back_list_title' ) . '>' . esc_html( $title ) . '</p>';
+			}
+			$html .= '<ul class="uncoder-flip-box__list">';
+			foreach ( $items as $item ) {
+				$html .= '<li>' . $icon . '<span>' . esc_html( $item ) . '</span></li>';
+			}
+			$html .= '</ul></div>';
+		}
 		return $html;
 	}
 
@@ -503,6 +766,13 @@ class Flip_Box extends Widget_Base {
 		}
 		if ( ! empty( $s['depth'] ) && in_array( $effect, array( 'flip-x', 'flip-y' ), true ) ) {
 			$classes[] = 'uncoder-flip-box--3d';
+		}
+		if ( ! empty( $s['fit'] ) ) {
+			$classes[] = 'uncoder-flip-box--fit';
+		}
+		$with_button = 'button' === ( $s['trigger'] ?? '' );
+		if ( $with_button ) {
+			$classes[] = 'uncoder-flip-box--button';
 		}
 
 		// Front graphic.
@@ -530,7 +800,21 @@ class Flip_Box extends Widget_Base {
 		}
 
 		$box_attrs = array( 'class' => $classes );
-		if ( '' === $button ) {
+		// With the round button, the buttons are what keyboards reach; the card itself is not focusable.
+		$toggles = array(
+			'front' => '',
+			'back'  => '',
+		);
+		if ( $with_button ) {
+			$front_title = trim( (string) ( $s['front_title'] ?? '' ) );
+			$name        = static fn( string $label ): string => '' !== $front_title ? $label . ': ' . $front_title : $label;
+			$open        = trim( (string) ( $s['toggle_open_label'] ?? '' ) );
+			$close       = trim( (string) ( $s['toggle_close_label'] ?? '' ) );
+			$toggles     = array(
+				'front' => '<button type="button" class="uncoder-flip-box__toggle" data-flip="open" aria-expanded="false" aria-label="' . esc_attr( $name( '' !== $open ? $open : __( 'Show details', 'uncoder' ) ) ) . '">' . Icons::render( 'plus', array( 'aria-hidden' => 'true' ) ) . '</button>',
+				'back'  => '<button type="button" class="uncoder-flip-box__toggle" data-flip="close" aria-label="' . esc_attr( $name( '' !== $close ? $close : __( 'Hide details', 'uncoder' ) ) ) . '">' . Icons::render( 'minus', array( 'aria-hidden' => 'true' ) ) . '</button>',
+			);
+		} elseif ( '' === $button ) {
 			// Nothing focusable on the back: let keyboard users focus the card itself to reveal it.
 			$box_attrs['tabindex'] = '0';
 			$box_attrs['role']     = 'group';
@@ -543,10 +827,10 @@ class Flip_Box extends Widget_Base {
 		echo '<div' . Utils::attrs( $box_attrs ) . '><div class="uncoder-flip-box__inner">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped by attrs().
 		echo '<div class="uncoder-flip-box__face uncoder-flip-box__front"><div class="uncoder-flip-box__content">';
 		echo $graphic . $this->face_text( 'front', $s, $tag, $ctx ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped parts.
-		echo '</div></div>';
-		echo '<div class="uncoder-flip-box__face uncoder-flip-box__back"><div class="uncoder-flip-box__content">';
+		echo '</div>' . $toggles['front'] . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped parts.
+		echo '<div class="uncoder-flip-box__face uncoder-flip-box__back"' . ( $with_button && ! $ctx->editor ? ' inert' : '' ) . '><div class="uncoder-flip-box__content">';
 		echo $this->face_text( 'back', $s, $tag, $ctx ) . $button; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped parts.
-		echo '</div></div>';
+		echo '</div>' . $toggles['back'] . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped parts.
 		echo '</div></div>';
 	}
 }

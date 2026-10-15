@@ -73,7 +73,7 @@ export function TypographyControl({ control, value, onChange }: ControlProps<Set
 const BG_FIELDS: Record<string, string[]> = {
   classic: ['color', 'image', 'position', 'size', 'repeat', 'attachment'],
   gradient: ['color', 'color_stop', 'color_b', 'color_b_stop', 'gradient_type', 'gradient_angle', 'gradient_position'],
-  video: ['video_url', 'video_fallback', 'color'],
+  video: ['video_url', 'video_fallback', 'video_pause', 'color'],
   slideshow: ['slides', 'slide_duration', 'slide_transition', 'slide_speed', 'ken_burns', 'slide_size', 'slide_position', 'color'],
 };
 

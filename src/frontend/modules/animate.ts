@@ -145,18 +145,28 @@ interface Group {
   // ---------------------------------------------------------------- Groups
 
   function build(units: Units, def: AnimDef, delay: number): Group {
-    const compiled = compile(def, units.length, { linear: supportsLinear, additive });
+    const style = getComputedStyle(units[0]?.[0] ?? document.body);
+    const frames = parseInt(style.getPropertyValue('--uncoder-sprite-frames'), 10) || 0;
+    const rows = parseInt(style.getPropertyValue('--uncoder-sprite-rows'), 10) || 1;
+    const compiled = compile(def, units.length, { linear: supportsLinear, additive: additive && !frames, frames, rows });
     const anims: Animation[] = [];
+    const timing = { duration: compiled.duration, iterations: compiled.iterations, direction: compiled.direction, fill: 'both' as const, delay };
+    const add = additive && !frames;
     units.forEach((unit, i) => {
       for (const node of unit) {
-        const a = node.animate(compiled.keyframes[i], {
-          duration: compiled.duration,
-          iterations: compiled.iterations,
-          direction: compiled.direction,
-          fill: 'both',
-          delay,
-          composite: additive ? 'add' : 'replace',
-        });
+        let kf = compiled.keyframes[i];
+        // Opacity runs on its own, in plain values (times the element's own opacity), never added: WebKit clamps an
+        // added opacity of -1 to 0 before adding it, so additive fades never hid anything in Safari.
+        if (add && kf.some((k) => k.opacity !== undefined)) {
+          const own = parseFloat(getComputedStyle(node).opacity) || 1;
+          const fade = kf.map((k) => ({ offset: k.offset, easing: k.easing, opacity: String(clamp((Number(k.opacity) + 1) * own, 0, 1)) }));
+          const fa = node.animate(fade, { ...timing, composite: 'replace' });
+          fa.pause();
+          anims.push(fa);
+          kf = kf.map(({ opacity: _o, ...rest }) => rest);
+          if (!kf.some((k) => Object.keys(k).some((key) => key !== 'offset' && key !== 'easing' && key !== 'composite'))) continue;
+        }
+        const a = node.animate(kf, { ...timing, composite: add ? 'add' : 'replace' });
         a.pause();
         anims.push(a);
       }
@@ -360,7 +370,9 @@ interface Group {
         },
         { rootMargin: '25% 0px' },
       );
-      io.observe(el);
+      // In a scroll scene watch the track: an element that its own animation keeps off the stage (a can waiting below
+      // it) would otherwise never count as near and never start moving.
+      io.observe((s.pinned && pinTrack(el)) || el);
       if (targets.relayout)
         fontsReady().then(() => {
           if (gone) return;

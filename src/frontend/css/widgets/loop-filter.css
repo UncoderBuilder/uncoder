@@ -18,6 +18,22 @@
   font-weight: 600;
 }
 
+/* "Label position: Above the filter": the label on its own line, a dropdown or search box as wide as the widget. */
+.uncoder-loop-filter.uncoder-loop-filter-wrap--label-above,
+.uncoder-loop-filter-wrap--label-above .uncoder-loop-filter {
+  flex-wrap: wrap;
+}
+
+.uncoder-loop-filter-wrap--label-above .uncoder-loop-filter__label {
+  flex: 0 0 100%;
+  margin-right: 0;
+}
+
+:is(.uncoder-loop-filter--dropdown, .uncoder-loop-filter--sort, .uncoder-loop-filter--search):is(.uncoder-loop-filter-wrap--label-above, .uncoder-loop-filter-wrap--label-above *) > .uncoder-loop-filter__field {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
 .uncoder-loop-filter__pill {
   display: inline-flex;
   align-items: center;

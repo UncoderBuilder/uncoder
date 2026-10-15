@@ -54,7 +54,7 @@ final class Page_Checks {
 		'deep-nesting'     => 'Simplify the layout: fewer boxes inside boxes make the page lighter and easier to edit.',
 		'empty-container'  => 'Remove the empty box, or put content in it.',
 		'empty-heading'    => 'Write the heading, or remove it.',
-		'long-heading'     => 'Shorten the heading and move the detail into the text below it.',
+		'long-heading'     => 'Shorten the heading and move the detail into the text below it. If it is a statement rather than a heading, set its HTML tag to P.',
 		'placeholder'      => 'Replace the placeholder text with real content.',
 		'button-link'      => 'Point the button at a real page, a section of the page, a phone number or an email address.',
 		'button-text'      => 'Give the button a short label that says what it does. A button that shows only an icon (a play button, an arrow) needs its "Label for screen readers".',

@@ -83,6 +83,7 @@ final class Widget_Tips {
 			'sitemap'              => __( 'A list of all your pages and posts, for a sitemap page.', 'uncoder' ),
 			'slides'               => __( 'A big slideshow with a picture, text and buttons on each slide.', 'uncoder' ),
 			'social-icons'         => __( 'Icons that link to your social media profiles.', 'uncoder' ),
+			'audio'                => __( 'A sound file with its own play button, seek bar and time.', 'uncoder' ),
 			'soundcloud'           => __( 'A SoundCloud player for a track or playlist.', 'uncoder' ),
 			'spacer'               => __( 'Empty space between elements.', 'uncoder' ),
 			'star-rating'          => __( 'A rating shown as stars, like 4.5 out of 5.', 'uncoder' ),

@@ -24,6 +24,80 @@
   gap: var(--uncoder-form-row-gap) var(--uncoder-form-col-gap);
 }
 
+/* "Note above the button": a full-width line between the fields and the button. */
+.uncoder-form__note {
+  flex: 0 0 100%;
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.uncoder-form__note a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* "Note position: Beside the button": the note takes the free space on the left, the button keeps its own width on
+   the right of the same line (it wraps below the note when the form is narrow). */
+.uncoder-form--note-beside .uncoder-form__note {
+  flex: 1 1 220px;
+  align-self: center;
+}
+
+/* "Note position: Below the button": the note under the button, aligned like it (Alignment). */
+.uncoder-form--note-center .uncoder-form__note {
+  text-align: center;
+}
+
+.uncoder-form--note-right .uncoder-form__note {
+  text-align: right;
+}
+
+.uncoder-form--note-beside .uncoder-form__note + .uncoder-form__group--submit {
+  flex: 0 0 auto;
+  align-self: center;
+  margin-left: auto;
+}
+
+/* "Section title" rows: a heading across the form, optionally numbered, with an optional rule above. */
+.uncoder-form__fields {
+  counter-reset: uncoder-form-section;
+}
+
+.uncoder-form__section {
+  flex: 0 0 100%;
+  padding-top: var(--uncoder-form-section-pt, 0px);
+  border-top: var(--uncoder-form-section-line, 0);
+}
+
+.uncoder-form__section:not(:first-child) {
+  margin-top: var(--uncoder-form-section-mt, 12px);
+}
+
+.uncoder-form__section-title {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.3;
+}
+
+/* The section title's description (its Help text). */
+.uncoder-form__section-note {
+  margin: 4px 0 0;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  opacity: 0.85;
+}
+
+.uncoder-form--numbered .uncoder-form__section-title::before {
+  counter-increment: uncoder-form-section;
+  content: counter(uncoder-form-section);
+  color: var(--uncoder-form-section-num, currentColor);
+}
+
 /* A field spanning n of 12 columns: n twelfths of the row plus the n − 1 gaps inside it. */
 .uncoder-form__group {
   flex: 0 0 calc((100% + var(--uncoder-form-col-gap)) * var(--uncoder-form-span, 12) / 12 - var(--uncoder-form-col-gap));

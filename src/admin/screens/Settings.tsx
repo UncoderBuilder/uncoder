@@ -370,6 +370,16 @@ export function SettingsScreen() {
                     </SettingRow>
                     {draft.consent.enabled && (
                       <>
+                        <SettingRow
+                          title="Type"
+                          htmlFor="uncoder-ui-consent-type"
+                          description={draft.consent.type === 'notice' ? 'For sites without analytics or marketing cookies: the banner says what the site stores and visitors confirm with one button. Snippets marked Analytics or Marketing never run.' : 'Visitors accept or reject analytics and marketing cookies, or choose per category.'}
+                        >
+                          <select id="uncoder-ui-consent-type" className="uncoder-ui-select" value={draft.consent.type} onChange={(e) => set('consent', { ...draft.consent, type: e.currentTarget.value as Draft['consent']['type'] })}>
+                            <option value="">Ask for consent</option>
+                            <option value="notice">Notice only (no optional cookies)</option>
+                          </select>
+                        </SettingRow>
                         <SettingRow title="Position" htmlFor="uncoder-ui-consent-pos">
                           <select id="uncoder-ui-consent-pos" className="uncoder-ui-select" value={draft.consent.position} onChange={(e) => set('consent', { ...draft.consent, position: e.currentTarget.value as Draft['consent']['position'] })}>
                             <option value="bar">Bar along the bottom</option>
@@ -384,14 +394,24 @@ export function SettingsScreen() {
                           </div>
                         </SettingRow>
                         <SettingRow title="Button labels">
-                          <div className="uncoder-ui-formgrid uncoder-ui-formgrid--three">
-                            <input className="uncoder-ui-input" placeholder="Accept all" value={draft.consent.accept_label} aria-label="Accept button" onChange={(e) => set('consent', { ...draft.consent, accept_label: e.currentTarget.value })} />
-                            <input className="uncoder-ui-input" placeholder="Reject all" value={draft.consent.reject_label} aria-label="Reject button" onChange={(e) => set('consent', { ...draft.consent, reject_label: e.currentTarget.value })} />
-                            <input className="uncoder-ui-input" placeholder="Preferences" value={draft.consent.prefs_label} aria-label="Preferences button" onChange={(e) => set('consent', { ...draft.consent, prefs_label: e.currentTarget.value })} />
-                          </div>
+                          {draft.consent.type === 'notice' ? (
+                            <div className="uncoder-ui-formgrid uncoder-ui-formgrid--even">
+                              <input className="uncoder-ui-input" placeholder="Got it" value={draft.consent.accept_label} aria-label="Confirm button" onChange={(e) => set('consent', { ...draft.consent, accept_label: e.currentTarget.value })} />
+                              <input className="uncoder-ui-input" placeholder="Cookie settings" value={draft.consent.prefs_label} aria-label="Details button" onChange={(e) => set('consent', { ...draft.consent, prefs_label: e.currentTarget.value })} />
+                            </div>
+                          ) : (
+                            <div className="uncoder-ui-formgrid uncoder-ui-formgrid--three">
+                              <input className="uncoder-ui-input" placeholder="Accept all" value={draft.consent.accept_label} aria-label="Accept button" onChange={(e) => set('consent', { ...draft.consent, accept_label: e.currentTarget.value })} />
+                              <input className="uncoder-ui-input" placeholder="Reject all" value={draft.consent.reject_label} aria-label="Reject button" onChange={(e) => set('consent', { ...draft.consent, reject_label: e.currentTarget.value })} />
+                              <input className="uncoder-ui-input" placeholder="Preferences" value={draft.consent.prefs_label} aria-label="Preferences button" onChange={(e) => set('consent', { ...draft.consent, prefs_label: e.currentTarget.value })} />
+                            </div>
+                          )}
                         </SettingRow>
-                        <SettingRow title="Privacy policy link" htmlFor="uncoder-ui-consent-privacy" description="Empty: the page set in Settings → Privacy.">
-                          <input id="uncoder-ui-consent-privacy" className="uncoder-ui-input" placeholder="https://" value={draft.consent.privacy_url} onChange={(e) => set('consent', { ...draft.consent, privacy_url: e.currentTarget.value })} />
+                        <SettingRow title="Privacy policy link" description="Empty address: the page set in Settings → Privacy. Empty text: “Privacy policy”.">
+                          <div className="uncoder-ui-formgrid uncoder-ui-formgrid--even">
+                            <input id="uncoder-ui-consent-privacy" className="uncoder-ui-input" placeholder="https://" aria-label="Link address" value={draft.consent.privacy_url} onChange={(e) => set('consent', { ...draft.consent, privacy_url: e.currentTarget.value })} />
+                            <input className="uncoder-ui-input" placeholder="Privacy policy" aria-label="Link text" value={draft.consent.privacy_label} onChange={(e) => set('consent', { ...draft.consent, privacy_label: e.currentTarget.value })} />
+                          </div>
                         </SettingRow>
                         <SettingRow title="Google Consent Mode v2" description="Tells Google tags (Analytics, Ads, Tag Manager) that storage is denied until the visitor agrees. Keep those tags in the “Necessary” category when this is on.">
                           <Toggle checked={draft.consent.consent_mode} onChange={(v) => set('consent', { ...draft.consent, consent_mode: v })} label="Google Consent Mode v2" />

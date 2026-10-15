@@ -1,5 +1,6 @@
 /* Flip Box — .uncoder-flip-box. Flipped by :hover (hover devices), keyboard focus, or the
-   .uncoder-flip-box--flipped class the flip-box module toggles on tap. */
+   .uncoder-flip-box--flipped class the flip-box module toggles on tap. A --button card turns only with its
+   round + / − buttons (the class alone). */
 
 .uncoder-flip-box {
   --uncoder-flip-h: 320px;
@@ -108,6 +109,67 @@
   margin-top: 22px;
 }
 
+/* The front's hint ("Tap for more →") and the back's checklist. */
+.uncoder-flip-box .uncoder-flip-box__hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  margin: 24px 0 0;
+}
+.uncoder-flip-box__hint-icon,
+.uncoder-flip-box__list-icon {
+  display: inline-flex;
+  flex: none;
+  line-height: 0;
+}
+.uncoder-flip-box__hint-icon svg,
+.uncoder-flip-box__list-icon svg {
+  width: 1em;
+  height: 1em;
+}
+.uncoder-flip-box__checklist {
+  margin-top: 20px;
+  text-align: start;
+}
+.uncoder-flip-box .uncoder-flip-box__list-title {
+  margin: 0 0 10px;
+  font-size: 0.8em;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.uncoder-flip-box .uncoder-flip-box__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--uncoder-flip-list-gap, 8px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.uncoder-flip-box__list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6em;
+}
+.uncoder-flip-box__list-icon {
+  margin-top: 0.2em;
+}
+
+/* Fit the taller side: both faces share one grid cell, so the card is as tall as the longer one. */
+.uncoder-flip-box--fit {
+  height: auto;
+}
+.uncoder-flip-box--fit .uncoder-flip-box__inner {
+  display: grid;
+  height: 100%;
+  min-height: var(--uncoder-flip-h);
+}
+.uncoder-flip-box--fit .uncoder-flip-box__face {
+  position: relative;
+  inset: auto;
+  grid-area: 1 / 1;
+}
+
 /* ---------------------------------------------------------------- Flipped state helpers:
    every effect repeats the same trigger list. */
 
@@ -118,17 +180,17 @@
 .uncoder-flip-box--flip-y .uncoder-flip-box__back {
   transform: rotateX(180deg);
 }
-.uncoder-flip-box--flip-x:is(.uncoder-flip-box--flipped, :focus-visible, :has(:focus-visible)) .uncoder-flip-box__inner {
+.uncoder-flip-box--flip-x:is(.uncoder-flip-box--flipped, :not(.uncoder-flip-box--button):focus-visible, :not(.uncoder-flip-box--button):has(:focus-visible)) .uncoder-flip-box__inner {
   transform: rotateY(180deg);
 }
-.uncoder-flip-box--flip-y:is(.uncoder-flip-box--flipped, :focus-visible, :has(:focus-visible)) .uncoder-flip-box__inner {
+.uncoder-flip-box--flip-y:is(.uncoder-flip-box--flipped, :not(.uncoder-flip-box--button):focus-visible, :not(.uncoder-flip-box--button):has(:focus-visible)) .uncoder-flip-box__inner {
   transform: rotateX(180deg);
 }
 @media (hover: hover) {
-  .uncoder-flip-box--flip-x:hover .uncoder-flip-box__inner {
+  .uncoder-flip-box--flip-x:not(.uncoder-flip-box--button):hover .uncoder-flip-box__inner {
     transform: rotateY(180deg);
   }
-  .uncoder-flip-box--flip-y:hover .uncoder-flip-box__inner {
+  .uncoder-flip-box--flip-y:not(.uncoder-flip-box--button):hover .uncoder-flip-box__inner {
     transform: rotateX(180deg);
   }
 }
@@ -147,12 +209,29 @@
   backface-visibility: hidden;
 }
 
-/* Slide, fade and zoom: the back sits on top of the front and animates in. */
+/* Slide, fade, zoom and the circle reveal: the back sits on top of the front and animates in. */
 .uncoder-flip-box--slide,
 .uncoder-flip-box--fade,
-.uncoder-flip-box--zoom {
+.uncoder-flip-box--zoom,
+.uncoder-flip-box--circle {
   overflow: hidden;
   isolation: isolate;
+}
+.uncoder-flip-box--circle .uncoder-flip-box__back {
+  z-index: 1;
+  pointer-events: none;
+  clip-path: circle(0% at var(--uncoder-flip-origin, 0% 0%));
+  transition: clip-path var(--uncoder-flip-duration) var(--uncoder-flip-ease);
+}
+.uncoder-flip-box--circle:is(.uncoder-flip-box--flipped, :not(.uncoder-flip-box--button):focus-visible, :not(.uncoder-flip-box--button):has(:focus-visible)) .uncoder-flip-box__back {
+  clip-path: circle(150% at var(--uncoder-flip-origin, 0% 0%));
+  pointer-events: auto;
+}
+@media (hover: hover) {
+  .uncoder-flip-box--circle:not(.uncoder-flip-box--button):hover .uncoder-flip-box__back {
+    clip-path: circle(150% at var(--uncoder-flip-origin, 0% 0%));
+    pointer-events: auto;
+  }
 }
 .uncoder-flip-box--slide .uncoder-flip-box__back,
 .uncoder-flip-box--fade .uncoder-flip-box__back,
@@ -179,26 +258,26 @@
 .uncoder-flip-box--zoom .uncoder-flip-box__back {
   transform: scale(0.72);
 }
-.uncoder-flip-box--slide:is(.uncoder-flip-box--flipped, :focus-visible, :has(:focus-visible)) .uncoder-flip-box__back,
-.uncoder-flip-box--fade:is(.uncoder-flip-box--flipped, :focus-visible, :has(:focus-visible)) .uncoder-flip-box__back,
-.uncoder-flip-box--zoom:is(.uncoder-flip-box--flipped, :focus-visible, :has(:focus-visible)) .uncoder-flip-box__back {
+.uncoder-flip-box--slide:is(.uncoder-flip-box--flipped, :not(.uncoder-flip-box--button):focus-visible, :not(.uncoder-flip-box--button):has(:focus-visible)) .uncoder-flip-box__back,
+.uncoder-flip-box--fade:is(.uncoder-flip-box--flipped, :not(.uncoder-flip-box--button):focus-visible, :not(.uncoder-flip-box--button):has(:focus-visible)) .uncoder-flip-box__back,
+.uncoder-flip-box--zoom:is(.uncoder-flip-box--flipped, :not(.uncoder-flip-box--button):focus-visible, :not(.uncoder-flip-box--button):has(:focus-visible)) .uncoder-flip-box__back {
   opacity: 1;
   transform: none;
   pointer-events: auto;
 }
-.uncoder-flip-box--zoom:is(.uncoder-flip-box--flipped, :focus-visible, :has(:focus-visible)) .uncoder-flip-box__front {
+.uncoder-flip-box--zoom:is(.uncoder-flip-box--flipped, :not(.uncoder-flip-box--button):focus-visible, :not(.uncoder-flip-box--button):has(:focus-visible)) .uncoder-flip-box__front {
   transform: scale(1.12);
   opacity: 0;
 }
 @media (hover: hover) {
-  .uncoder-flip-box--slide:hover .uncoder-flip-box__back,
-  .uncoder-flip-box--fade:hover .uncoder-flip-box__back,
-  .uncoder-flip-box--zoom:hover .uncoder-flip-box__back {
+  .uncoder-flip-box--slide:not(.uncoder-flip-box--button):hover .uncoder-flip-box__back,
+  .uncoder-flip-box--fade:not(.uncoder-flip-box--button):hover .uncoder-flip-box__back,
+  .uncoder-flip-box--zoom:not(.uncoder-flip-box--button):hover .uncoder-flip-box__back {
     opacity: 1;
     transform: none;
     pointer-events: auto;
   }
-  .uncoder-flip-box--zoom:hover .uncoder-flip-box__front {
+  .uncoder-flip-box--zoom:not(.uncoder-flip-box--button):hover .uncoder-flip-box__front {
     transform: scale(1.12);
     opacity: 0;
   }
@@ -209,19 +288,49 @@
 .uncoder-flip-box--flip-y .uncoder-flip-box__back {
   pointer-events: none;
 }
-.uncoder-flip-box:is(.uncoder-flip-box--flipped, :focus-visible, :has(:focus-visible)) .uncoder-flip-box__back {
+.uncoder-flip-box:is(.uncoder-flip-box--flipped, :not(.uncoder-flip-box--button):focus-visible, :not(.uncoder-flip-box--button):has(:focus-visible)) .uncoder-flip-box__back {
   pointer-events: auto;
 }
-.uncoder-flip-box:is(.uncoder-flip-box--flipped, :focus-visible, :has(:focus-visible)) .uncoder-flip-box__front {
+.uncoder-flip-box:is(.uncoder-flip-box--flipped, :not(.uncoder-flip-box--button):focus-visible, :not(.uncoder-flip-box--button):has(:focus-visible)) .uncoder-flip-box__front {
   pointer-events: none;
 }
 @media (hover: hover) {
-  .uncoder-flip-box:hover .uncoder-flip-box__back {
+  .uncoder-flip-box:not(.uncoder-flip-box--button):hover .uncoder-flip-box__back {
     pointer-events: auto;
   }
-  .uncoder-flip-box:hover .uncoder-flip-box__front {
+  .uncoder-flip-box:not(.uncoder-flip-box--button):hover .uncoder-flip-box__front {
     pointer-events: none;
   }
+}
+
+/* The round button: + on the front, − on the back, in the same bottom corner. */
+.uncoder-flip-box__toggle {
+  position: absolute;
+  right: var(--uncoder-flip-toggle-offset, 24px);
+  bottom: var(--uncoder-flip-toggle-offset, 24px);
+  z-index: 1;
+  display: inline-grid;
+  place-items: center;
+  width: var(--uncoder-flip-toggle-size, 40px);
+  height: var(--uncoder-flip-toggle-size, 40px);
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--uncoder-flip-toggle-bg, #fff);
+  color: var(--uncoder-flip-toggle-color, #111);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.uncoder-flip-box__toggle svg {
+  width: var(--uncoder-flip-toggle-icon, 20px);
+  height: var(--uncoder-flip-toggle-icon, 20px);
+}
+.uncoder-flip-box__toggle:hover {
+  transform: scale(1.06);
+}
+.uncoder-flip-box__toggle:focus-visible {
+  outline: 2px solid var(--uncoder-flip-focus);
+  outline-offset: 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {

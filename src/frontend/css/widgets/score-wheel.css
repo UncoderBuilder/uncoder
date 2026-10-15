@@ -1,0 +1,372 @@
+/* Score Wheel: the wheel (a chart) and, for a check-in, the score rows beside a card with the wheel and the result. */
+.uncoder-score-wheel {
+  color: var(--uncoder-wheel-text, #35222c);
+}
+
+.uncoder-score-wheel--checkin {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 32px;
+  align-items: start;
+}
+
+@media (max-width: 1199px) {
+  .uncoder-score-wheel--checkin {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.uncoder-score-wheel__sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------- the wheel */
+.uncoder-score-wheel__svg {
+  display: block;
+  width: 100%;
+  max-width: var(--uncoder-wheel-width, 540px);
+  height: auto;
+  margin: 0 auto;
+  overflow: visible;
+}
+
+.uncoder-score-wheel__disc {
+  fill: var(--uncoder-wheel-disc, #fffcfa);
+}
+
+.uncoder-score-wheel__rings {
+  fill: none;
+  stroke: var(--uncoder-wheel-ring, #ede2e7);
+  stroke-width: 1.2;
+}
+
+.uncoder-score-wheel__wedge {
+  stroke: var(--uncoder-wheel-disc, #fffcfa);
+  stroke-width: 3;
+  stroke-linejoin: round;
+  transition: d 0.35s ease;
+}
+
+.uncoder-score-wheel__spokes {
+  stroke: var(--uncoder-wheel-ink, #35222c);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  opacity: 0.35;
+}
+
+.uncoder-score-wheel__before {
+  fill: none;
+  stroke: var(--uncoder-wheel-ink, #35222c);
+  stroke-width: 2;
+  stroke-dasharray: 5 5;
+  stroke-linejoin: round;
+}
+
+.uncoder-score-wheel__low {
+  fill: none;
+  stroke: var(--uncoder-wheel-ink, #35222c);
+  stroke-width: 3.5;
+  stroke-linejoin: round;
+  transition: d 0.35s ease;
+}
+
+.uncoder-score-wheel__rim {
+  fill: none;
+  stroke: var(--uncoder-wheel-ink, #35222c);
+  stroke-width: 2.5;
+}
+
+.uncoder-score-wheel__hub {
+  fill: var(--uncoder-wheel-ink, #35222c);
+}
+
+.uncoder-score-wheel__name {
+  fill: var(--uncoder-wheel-ink, #35222c);
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.uncoder-score-wheel .uncoder-score-wheel__name.is-low {
+  fill: var(--uncoder-wheel-accent, #b8406a);
+  font-weight: 700;
+}
+
+.uncoder-score-wheel__legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.uncoder-score-wheel__key {
+  display: inline-block;
+  width: 18px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.uncoder-score-wheel__key--before {
+  border: 1.5px dashed var(--uncoder-wheel-ink, #35222c);
+}
+
+.uncoder-score-wheel__key--after {
+  margin-left: 14px;
+  background: var(--uncoder-wheel-ring, #ede2e7);
+}
+
+/* A chart keeps its lines the same width at any size, so a small wheel stays crisp and a large one stays light. */
+.uncoder-score-wheel--chart .uncoder-score-wheel__svg :is(circle, path, line) {
+  vector-effect: non-scaling-stroke;
+}
+
+.uncoder-score-wheel--chart .uncoder-score-wheel__rings {
+  stroke-width: 1;
+}
+
+.uncoder-score-wheel--chart .uncoder-score-wheel__wedge {
+  stroke-width: 1.5;
+}
+
+.uncoder-score-wheel--chart .uncoder-score-wheel__spokes {
+  stroke-width: 1;
+}
+
+.uncoder-score-wheel--chart .uncoder-score-wheel__before {
+  stroke-width: 1.6;
+  stroke-dasharray: 4 3;
+}
+
+.uncoder-score-wheel--chart .uncoder-score-wheel__low,
+.uncoder-score-wheel--chart .uncoder-score-wheel__rim {
+  stroke-width: 2;
+}
+
+/* ---------------------------------------------------------------- the score rows */
+.uncoder-score-wheel__rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--uncoder-wheel-row-gap, 10px);
+}
+
+.uncoder-score-wheel__row {
+  min-width: 0;
+  margin: 0;
+  padding: 16px 20px 18px;
+  border: 0;
+  border-radius: var(--uncoder-wheel-row-radius, 18px);
+  background: var(--uncoder-wheel-row-bg, #fff);
+}
+
+.uncoder-score-wheel__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 12px;
+  margin-bottom: 12px;
+}
+
+.uncoder-score-wheel__area {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.uncoder-score-wheel__dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--uncoder-wheel-area, #d2c6f4);
+}
+
+.uncoder-score-wheel__hint {
+  font-size: 14px;
+  color: var(--uncoder-wheel-muted, #6b5661);
+  text-align: end;
+}
+
+.uncoder-score-wheel__pills {
+  display: grid;
+  grid-template-columns: repeat(var(--uncoder-wheel-steps, 10), minmax(0, 1fr));
+  gap: 5px;
+}
+
+.uncoder-score-wheel__pill {
+  display: grid;
+  place-items: center;
+  height: 36px;
+  border: 1px solid var(--uncoder-wheel-pill-border, #ede2e7);
+  border-radius: 999px;
+  background: var(--uncoder-wheel-pill-bg, #fffcfa);
+  color: var(--uncoder-wheel-muted, #6b5661);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.uncoder-score-wheel__pill.is-filled {
+  border-color: transparent;
+  background: var(--uncoder-wheel-area, #d2c6f4);
+  color: var(--uncoder-wheel-text, #35222c);
+}
+
+.uncoder-score-wheel__pill.is-score {
+  border-color: var(--uncoder-wheel-ink, #35222c);
+  background: var(--uncoder-wheel-ink, #35222c);
+  color: #fff;
+}
+
+.uncoder-score-wheel__pill:hover {
+  border-color: var(--uncoder-wheel-ink, #35222c);
+}
+
+.uncoder-score-wheel__sr:focus-visible + .uncoder-score-wheel__pill {
+  outline: 2px solid var(--uncoder-wheel-ink, #35222c);
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------- the card */
+.uncoder-score-wheel__card {
+  position: sticky;
+  top: 24px;
+  padding: 28px 32px 32px;
+  border-radius: var(--uncoder-wheel-card-radius, 28px);
+  background: var(--uncoder-wheel-card-bg, #fff);
+}
+
+@media (max-width: 1199px) {
+  .uncoder-score-wheel__card {
+    position: static;
+    order: -1;
+  }
+
+  .uncoder-score-wheel--scores-first .uncoder-score-wheel__card {
+    order: 0;
+  }
+}
+
+.uncoder-score-wheel__note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 6px;
+  color: var(--uncoder-wheel-muted, #6b5661);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.uncoder-score-wheel__note-dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--uncoder-wheel-ring, #ede2e7);
+}
+
+.uncoder-score-wheel__result {
+  margin-top: 10px;
+  padding-top: 22px;
+  border-top: 1px solid var(--uncoder-wheel-ring, #ede2e7);
+}
+
+.uncoder-score-wheel .uncoder-score-wheel__lowest {
+  margin: 0;
+  font-size: 30px;
+  line-height: 1.2;
+}
+
+.uncoder-score-wheel__accent {
+  color: var(--uncoder-wheel-accent, #b8406a);
+}
+
+.uncoder-score-wheel .uncoder-score-wheel__body {
+  margin: 10px 0 0;
+  color: var(--uncoder-wheel-muted, #6b5661);
+}
+
+.uncoder-score-wheel__button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 56px;
+  margin-top: 22px;
+  padding: 0 28px;
+  border-radius: 999px;
+  background: var(--uncoder-wheel-ink, #35222c);
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.uncoder-score-wheel__button svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.uncoder-score-wheel__button:focus-visible {
+  outline: 2px solid var(--uncoder-wheel-ink, #35222c);
+  outline-offset: 3px;
+}
+
+.uncoder-score-wheel .uncoder-score-wheel__average {
+  margin: 14px 0 0;
+  color: var(--uncoder-wheel-muted, #6b5661);
+  font-size: 14px;
+}
+
+/* Phones: the hint goes under the area's name, the button takes the card's width. */
+@media (max-width: 809px) {
+  .uncoder-score-wheel__head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    margin-bottom: 12px;
+  }
+
+  .uncoder-score-wheel__hint {
+    text-align: start;
+  }
+
+  /* the wheel is small here: larger names around it, and slimmer numbers */
+  .uncoder-score-wheel__name {
+    font-size: 31px;
+  }
+
+  .uncoder-score-wheel__pill {
+    height: 34px;
+  }
+
+  .uncoder-score-wheel__pills {
+    gap: 4px;
+  }
+
+  .uncoder-score-wheel__button {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uncoder-score-wheel__wedge,
+  .uncoder-score-wheel__low {
+    transition: none;
+  }
+}

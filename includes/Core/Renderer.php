@@ -394,6 +394,9 @@ final class Renderer {
 		if ( is_array( $bg ) && 'video' === ( $bg['type'] ?? '' ) && ! empty( $bg['video_url'] ) ) {
 			$classes[] = 'uncoder-container--video';
 			$before    = self::background_video( (string) $bg['video_url'], $bg['video_fallback']['url'] ?? '' );
+			if ( ! empty( $bg['video_pause'] ) && ! in_array( $bg['video_pause'], array( 'no', 'false', '0' ), true ) ) {
+				$before .= self::background_video_toggle();
+			}
 		} elseif ( is_array( $bg ) ) {
 			$layer = self::background_layer( $bg, $s );
 			if ( '' !== $layer ) {
@@ -559,6 +562,18 @@ final class Renderer {
 			$out .= '<div class="' . $class . '" aria-hidden="true">' . Shapes::svg( $name, ! empty( $s[ 'shape_' . $side . '_invert' ] ) ) . '</div>';
 		}
 		return $out;
+	}
+
+	/**
+	 * The pause / play button of a video background (bg-video-toggle in src/frontend/modules/bg-video.ts).
+	 */
+	private static function background_video_toggle(): string {
+		$pause = __( 'Pause the background video', 'uncoder' );
+		$play  = __( 'Play the background video', 'uncoder' );
+		return '<button type="button" class="uncoder-bg-video__toggle" data-uncoder-js="bg-video-toggle" aria-label="' . esc_attr( $pause ) . '" data-label-pause="' . esc_attr( $pause ) . '" data-label-play="' . esc_attr( $play ) . '">'
+			. Icons::render( 'pause', array( 'class' => 'uncoder-bg-video__pause' ) )
+			. Icons::render( 'play', array( 'class' => 'uncoder-bg-video__play' ) )
+			. '</button>';
 	}
 
 	private static function background_video( string $url, string $poster ): string {

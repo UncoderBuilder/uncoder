@@ -75,9 +75,10 @@ trait Carousel_Engine {
 				array(
 					'type'       => 'slider',
 					'label'      => __( 'Slide width', 'uncoder' ),
+					'description' => __( 'A fixed width for every slide (the ticker card width). Slide by slide it replaces slides per view: the row runs on past the edge and the arrows step through it.', 'uncoder' ),
+					'condition'   => array( 'center_mode!' => 'yes' ),
 					'size_units' => array( 'px', 'rem', 'vw' ),
 					'range'      => array( 'px' => array( 'min' => 80, 'max' => 1200 ) ),
-					'condition'  => array( 'motion' => 'continuous' ),
 					'selectors'  => array( $root => '--uncoder-carousel-slide-w: {{VALUE}}' ),
 				)
 			);
@@ -360,12 +361,17 @@ trait Carousel_Engine {
 				'label'   => __( 'Pagination', 'uncoder' ),
 				'default'   => 'dots',
 				'condition' => $slides,
-				'options'   => array(
-					''         => __( 'None', 'uncoder' ),
-					'dots'     => __( 'Dots', 'uncoder' ),
-					'fraction' => __( 'Fraction (2 / 5)', 'uncoder' ),
-					'progress' => __( 'Progress bar', 'uncoder' ),
+				'options'   => array_merge(
+					array(
+						''         => __( 'None', 'uncoder' ),
+						'dots'     => __( 'Dots', 'uncoder' ),
+						'fraction' => __( 'Fraction (2 / 5)', 'uncoder' ),
+						'progress' => __( 'Progress bar', 'uncoder' ),
+					),
+					$this->slide_icons() ? array( 'icons' => __( 'Icons (each slide\'s icon)', 'uncoder' ) ) : array()
 				),
+				'description' => $this->slide_icons() ? __( 'Icons: a round button per slide with the slide\'s icon, named by its label, like the tabs of a feature switcher. Set the icons on the slides.', 'uncoder' ) : '',
+				'ai'          => $this->slide_icons() ? '"icons": a round button per slide showing that slide row\'s "icon" (the row\'s "label" is the button\'s accessible name, its "accent" the button\'s color while that slide is current).' : '',
 			)
 		);
 		$this->add_control(
@@ -385,6 +391,20 @@ trait Carousel_Engine {
 				'description' => __( 'The slides repeat on both sides, so the row never rewinds.', 'uncoder' ),
 				'condition'   => $slides,
 				'ai'          => 'An infinite row (a team or logo slider that keeps going, with or without autoplay): "endless":true. Centered carousels loop endlessly with "loop" alone.',
+			)
+		);
+		$this->add_control(
+			'start_slide',
+			array(
+				'type'        => 'number',
+				'label'       => __( 'Start at slide', 'uncoder' ),
+				'min'         => 1,
+				'max'         => 100,
+				'step'        => 1,
+				'default'     => 1,
+				'description' => __( 'The slide shown first when the page opens: the same slider can open on a different slide on each page.', 'uncoder' ),
+				'condition'   => $slides,
+				'ai'          => 'start_slide: the 1-based slide shown first (e.g. 2 opens on the second slide). Use it when one slider is repeated on several pages and each page should open on its own slide.',
 			)
 		);
 		$this->add_control(
@@ -634,8 +654,48 @@ trait Carousel_Engine {
 				'label'      => __( 'Space between dots', 'uncoder' ),
 				'size_units' => array( 'px' ),
 				'range'      => array( 'px' => array( 'min' => 0, 'max' => 40 ) ),
-				'condition'  => array( 'pagination' => 'dots' ),
+				'condition'  => array( 'pagination' => array( 'dots', 'icons' ) ),
 				'selectors'  => array( $root => '--uncoder-carousel-dot-gap: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'dots_icon_size',
+			array(
+				'type'       => 'slider',
+				'label'      => __( 'Button size', 'uncoder' ),
+				'size_units' => array( 'px' ),
+				'range'      => array( 'px' => array( 'min' => 24, 'max' => 80 ) ),
+				'condition'  => array( 'pagination' => 'icons' ),
+				'selectors'  => array( $root => '--uncoder-carousel-icon-dot: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'dots_icon_glyph',
+			array(
+				'type'       => 'slider',
+				'label'      => __( 'Icon size', 'uncoder' ),
+				'size_units' => array( 'px' ),
+				'range'      => array( 'px' => array( 'min' => 10, 'max' => 40 ) ),
+				'condition'  => array( 'pagination' => 'icons' ),
+				'selectors'  => array( $root => '--uncoder-carousel-icon-size: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'dots_icon_color',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Icon color', 'uncoder' ),
+				'condition' => array( 'pagination' => 'icons' ),
+				'selectors' => array( $root => '--uncoder-carousel-dot-icon: {{VALUE}}' ),
+			)
+		);
+		$this->add_control(
+			'dots_icon_active_color',
+			array(
+				'type'      => 'color',
+				'label'     => __( 'Current icon color', 'uncoder' ),
+				'condition' => array( 'pagination' => 'icons' ),
+				'selectors' => array( $root => '--uncoder-carousel-dot-icon-active: {{VALUE}}' ),
 			)
 		);
 		$this->add_control(
@@ -643,7 +703,7 @@ trait Carousel_Engine {
 			array(
 				'type'      => 'color',
 				'label'     => __( 'Dot color', 'uncoder' ),
-				'condition' => array( 'pagination' => 'dots' ),
+				'condition' => array( 'pagination' => array( 'dots', 'icons' ) ),
 				'selectors' => array( $root => '--uncoder-carousel-dot-color: {{VALUE}}' ),
 			)
 		);
@@ -652,7 +712,8 @@ trait Carousel_Engine {
 			array(
 				'type'      => 'color',
 				'label'     => __( 'Active dot color', 'uncoder' ),
-				'condition' => array( 'pagination' => 'dots' ),
+				'description' => $this->slide_icons() ? __( 'Icons: a slide\'s own accent wins.', 'uncoder' ) : '',
+				'condition' => array( 'pagination' => array( 'dots', 'icons' ) ),
 				'selectors' => array( $root => '--uncoder-carousel-dot-active: {{VALUE}}' ),
 			)
 		);
@@ -734,6 +795,7 @@ trait Carousel_Engine {
 			'endless'      => ! empty( $s['endless'] ),
 			'drag'         => ! empty( $s['drag'] ),
 			'speed'        => (int) self::carousel_number( $s['speed'] ?? '', 500, 0, 3000 ),
+			'start'        => (int) self::carousel_number( $s['start_slide'] ?? '', 1, 1, 100 ) - 1,
 			'i18n'         => array(
 				/* translators: %s: slide number. */
 				'goto'   => __( 'Go to slide %s', 'uncoder' ),
@@ -827,7 +889,7 @@ trait Carousel_Engine {
 	 *
 	 * @param array<string,mixed> $s Effective settings.
 	 */
-	protected function carousel_end( array $s, Render_Context $ctx, int $total ): string {
+	protected function carousel_end( array $s, Render_Context $ctx, int $total, array $icons = array() ): string {
 		if ( $this->is_ticker( $s ) ) {
 			return '</div></div></div>';
 		}
@@ -855,7 +917,10 @@ trait Carousel_Engine {
 		}
 		$out .= '</div>';
 
-		$pagination = in_array( $s['pagination'] ?? 'dots', array( 'dots', 'fraction', 'progress' ), true ) ? (string) $s['pagination'] : '';
+		$pagination = in_array( $s['pagination'] ?? 'dots', array( 'dots', 'fraction', 'progress', 'icons' ), true ) ? (string) $s['pagination'] : '';
+		if ( 'icons' === $pagination && ! $this->slide_icons() ) {
+			$pagination = 'dots';
+		}
 		$toggle     = ! empty( $s['autoplay'] ) && ! empty( $s['pause_button'] );
 		if ( '' !== $pagination || $toggle ) {
 			$out .= '<div class="uncoder-carousel__pagination uncoder-carousel__pagination--' . esc_attr( '' !== $pagination ? $pagination : 'none' ) . '">';
@@ -871,6 +936,18 @@ trait Carousel_Engine {
 			}
 			if ( 'dots' === $pagination ) {
 				$out .= '<div class="uncoder-carousel__dots" role="group" aria-label="' . esc_attr__( 'Choose slide', 'uncoder' ) . '"></div>';
+			} elseif ( 'icons' === $pagination ) {
+				// The module builds one button per slide from this template: the slide's icon, its label as the name.
+				$out .= '<div class="uncoder-carousel__dots uncoder-carousel__dots--icons" role="group" aria-label="' . esc_attr__( 'Choose slide', 'uncoder' ) . '"></div><template class="uncoder-carousel__dot-icons">';
+				foreach ( $icons as $item ) {
+					$out .= '<span' . Utils::attrs(
+						array(
+							'data-label'  => (string) ( $item['label'] ?? '' ),
+							'data-accent' => (string) ( $item['accent'] ?? '' ),
+						)
+					) . '>' . ( $item['icon'] ?? '' ) . '</span>';
+				}
+				$out .= '</template>';
 			} elseif ( 'fraction' === $pagination ) {
 				$out .= '<div class="uncoder-carousel__fraction" aria-hidden="true"><span class="uncoder-carousel__current">1</span><span class="uncoder-carousel__sep">/</span><span class="uncoder-carousel__total">' . (int) $total . '</span></div>';
 			} elseif ( 'progress' === $pagination ) {
@@ -880,6 +957,11 @@ trait Carousel_Engine {
 		}
 		$out .= '<div class="uncoder-carousel__status uncoder-sr-only" aria-live="polite" aria-atomic="true"></div>';
 		return $out . '</div>';
+	}
+
+	/** Whether the slides have their own icons (the Carousel's slide rows): enables the "icons" pagination. */
+	protected function slide_icons(): bool {
+		return false;
 	}
 
 	private function carousel_track_id( Render_Context $ctx ): string {

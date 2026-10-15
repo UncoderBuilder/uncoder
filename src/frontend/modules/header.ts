@@ -24,8 +24,15 @@ window.UncoderWB.register('header', (el, api) => {
   // "Sticky on" leaves this device out (then the whole header follows the header's own setting).
   let skip = 0;
   let fixed = false;
+  // Parts marked "Hide while scrolling down": each slides up by its own bottom edge (so it leaves the screen
+  // whatever sits above it in the header) while the page scrolls down.
+  const hiders = sticky ? Array.from(el.querySelectorAll<HTMLElement>('.uncoder-hide-scrolling-down')) : [];
   const measure = () => {
     fixed = getComputedStyle(el).position === 'fixed';
+    const top = el.getBoundingClientRect().top;
+    hiders.forEach((h) => {
+      if (!el.classList.contains('is-scrolling-down')) h.style.setProperty('--uncoder-hide-y', `${Math.ceil(h.getBoundingClientRect().bottom - top) + 8}px`);
+    });
     skip = 0;
     if (from && from.offsetParent !== null && getComputedStyle(from).position === 'sticky') {
       skip = Math.max(0, Math.round(from.getBoundingClientRect().top - el.getBoundingClientRect().top));
@@ -66,6 +73,11 @@ window.UncoderWB.register('header', (el, api) => {
       // A fixed transparent header turns solid once the page scrolls; a non-sticky one scrolls away as is.
       el.classList.toggle('is-transparent', !solid?.matches && !mobileOpen() && (sticky ? !scrolled : true));
     }
+    if (hiders.length) {
+      const down = y > lastY;
+      if (down && y > offset && !menuOpen()) el.classList.add('is-scrolling-down');
+      else if ((!down && y < lastY) || y <= offset) el.classList.remove('is-scrolling-down');
+    }
     if (s.sticky === 'reveal') {
       const down = y > lastY;
       if (down && y > el.offsetHeight && !menuOpen()) el.classList.add('is-hidden');
@@ -77,7 +89,7 @@ window.UncoderWB.register('header', (el, api) => {
     if (!frame) frame = requestAnimationFrame(update);
   };
   // Keyboard users: a focused link inside a hidden header must be visible.
-  const onFocus = () => el.classList.remove('is-hidden');
+  const onFocus = () => el.classList.remove('is-hidden', 'is-scrolling-down');
 
   update();
   window.addEventListener('scroll', onScroll, { passive: true });

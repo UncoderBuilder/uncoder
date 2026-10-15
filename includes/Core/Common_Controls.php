@@ -412,6 +412,30 @@ final class Common_Controls {
 				'targets' => in_array( $el->name(), self::REVEAL_WIDGETS, true ) ? Animations::TARGETS : array( 'self', 'children' ),
 			)
 		);
+		$el->add_control(
+			'_sprite_frames',
+			array(
+				'type'        => 'number',
+				'label'       => __( 'Sprite frames', 'uncoder' ),
+				'description' => __( 'The background image is a strip of this many frames side by side (a turning product, a flip book). The element shows one frame at a time; animate Frame to play them, for example on scroll.', 'uncoder' ),
+				'min'         => 2,
+				'max'         => 400,
+				'selectors'   => array( '{{WRAPPER}}' => '--uncoder-sprite-frames: {{VALUE}}; background-size: calc(var(--uncoder-sprite-cols, {{VALUE}}) * 100%) calc(var(--uncoder-sprite-rows, 1) * 100%); background-repeat: repeat-x; background-position-x: 0%' ),
+				'ai'          => 'A sprite: set the element\'s background image to N frames side by side, "_sprite_frames": N, then animate {"frame": n} (whole numbers, may be negative or above N-1: frames wrap). A sheet in rows (e.g. 24 frames as 6 columns x 4 rows, which WordPress leaves sharp where a 24-frame strip would be scaled down): "_sprite_rows": 4. Frame steps are discrete; animate Frame in its own definition. With trigger "scroll" inside a pinned scene the frames follow the scrollbar.',
+			)
+		);
+		$el->add_control(
+			'_sprite_rows',
+			array(
+				'type'        => 'number',
+				'label'       => __( 'Sprite rows', 'uncoder' ),
+				'description' => __( 'For a sheet of frames in rows (left to right, then the next row): how many rows. Empty: one row. WordPress scales uploads over 2560px down, which a sheet survives and a long strip does not.', 'uncoder' ),
+				'min'         => 2,
+				'max'         => 50,
+				'condition'   => array( '_sprite_frames!' => '' ),
+				'selectors'   => array( '{{WRAPPER}}' => 'background-repeat: no-repeat; background-position-y: 0%' ),
+			)
+		);
 		$el->end_section();
 
 		$el->start_section( '_section_motion', array( 'label' => __( 'Motion & effects', 'uncoder' ), 'tab' => 'advanced' ) );
@@ -436,6 +460,19 @@ final class Common_Controls {
 				'max'       => 10000,
 				'condition' => array( '_animation!' => '' ),
 				'selectors' => array( '{{WRAPPER}}' => '--uncoder-anim-delay: {{VALUE}}ms' ),
+			)
+		);
+		$el->add_control(
+			'_animation_distance',
+			array(
+				'type'        => 'number',
+				'label'       => __( 'Distance (px)', 'uncoder' ),
+				'description' => __( 'How far it travels as it comes in. Empty: 28 for fades up and down, 36 for fades sideways, 80 and 100 for slides.', 'uncoder' ),
+				'min'         => 0,
+				'max'         => 600,
+				'condition'   => array( '_animation' => array( 'fade-up', 'fade-down', 'fade-left', 'fade-right', 'slide-up', 'slide-down', 'slide-left', 'slide-right' ) ),
+				'selectors'   => array( '{{WRAPPER}}' => '--uncoder-anim-distance: {{VALUE}}px' ),
+				'ai'          => 'Travel of fade-up/down/left/right and slide-* entrances in px (Framer "appear" effects often move 100px).',
 			)
 		);
 		if ( in_array( $el->name(), self::REVEAL_WIDGETS, true ) ) {
@@ -493,6 +530,53 @@ final class Common_Controls {
 				'condition'   => array( '_sticky!' => '' ),
 			)
 		);
+		$el->add_control(
+			'_hide_scrolling_down',
+			array(
+				'type'        => 'switch',
+				'label'       => __( 'Hide while scrolling down', 'uncoder' ),
+				'description' => __( 'In a sticky header: this part slides out of view while the page scrolls down and comes back when it scrolls up or reaches the top. The rest of the header (a top bar, say) stays.', 'uncoder' ),
+				'ai'          => 'Header children only, with the header template sticky ("always"): e.g. keep an announcement bar fixed while the floating menu bar under it hides on scroll down.',
+			)
+		);
+		if ( $el->is_container() ) {
+			$el->add_control(
+				'_scroll_loop',
+				array(
+					'type'        => 'select',
+					'label'       => __( 'Endless scroll', 'uncoder' ),
+					'description' => __( 'Moves the content round in an endless loop, like a ticker: a wall of reviews, a strip of cards. It pauses while the pointer or the keyboard is on it, and stays still for visitors who prefer reduced motion. Up and down need a container height.', 'uncoder' ),
+					'options'     => array(
+						''      => __( 'None', 'uncoder' ),
+						'left'  => __( 'Left', 'uncoder' ),
+						'right' => __( 'Right', 'uncoder' ),
+						'up'    => __( 'Up', 'uncoder' ),
+						'down'  => __( 'Down', 'uncoder' ),
+					),
+					'ai'          => 'Container ticker for rich children (cards): "_scroll_loop":"up"|"down"|"left"|"right", "_scroll_loop_duration" seconds per round (default 40), "_scroll_loop_fade" true for soft edges. (Not "_loop": that is the query loop.) Up/down columns need a fixed height on the container (e.g. _custom_css "selector { height: 640px; }"). Use the Marquee widget for plain texts and logos.',
+				)
+			);
+			$el->add_control(
+				'_scroll_loop_duration',
+				array(
+					'type'        => 'number',
+					'label'       => __( 'Seconds per round', 'uncoder' ),
+					'description' => __( 'Empty: 40. More seconds, slower.', 'uncoder' ),
+					'min'         => 2,
+					'max'         => 600,
+					'condition'   => array( '_scroll_loop!' => '' ),
+					'selectors'   => array( '{{WRAPPER}}' => '--uncoder-scroll-loop-duration: {{VALUE}}s' ),
+				)
+			);
+			$el->add_control(
+				'_scroll_loop_fade',
+				array(
+					'type'      => 'switch',
+					'label'     => __( 'Fade the edges', 'uncoder' ),
+					'condition' => array( '_scroll_loop!' => '' ),
+				)
+			);
+		}
 		$el->add_group( '_filters', array( 'type' => 'css_filters', 'label' => __( 'CSS filters', 'uncoder' ), 'selector' => '{{WRAPPER}}' ) );
 		$el->add_group(
 			'_backdrop',
@@ -833,6 +917,23 @@ final class Common_Controls {
 				'selectors'   => array( '{{WRAPPER}}' => '--uncoder-reveal-blur: {{VALUE}}px' ),
 			)
 		);
+		// Framer's text effects often rise a set distance while they fade or unblur (12px, 16px…).
+		$el->add_control(
+			'_reveal_distance',
+			array(
+				'type'        => 'number',
+				'label'       => __( 'Rise (px)', 'uncoder' ),
+				'description' => __( 'How far each piece rises as it appears. Empty: about half a line for Fade up, none for Blur in.', 'uncoder' ),
+				'min'         => 0,
+				'max'         => 200,
+				'condition'   => array(
+					'_reveal!'        => '',
+					'_reveal_effect' => array( 'fade-up', 'blur' ),
+				),
+				'selectors'   => array( '{{WRAPPER}}' => '--uncoder-reveal-rise: {{VALUE}}px' ),
+				'ai'          => 'Framer-style text effects: "_reveal":"letters"|"words","_reveal_effect":"blur","_reveal_blur":4,"_reveal_distance":12 (blur and rise 12px).',
+			)
+		);
 		$el->add_control(
 			'_reveal_stagger',
 			array(
@@ -900,6 +1001,12 @@ final class Common_Controls {
 		return empty( $s['_animations'] ) ? array() : (array) Animations::sanitize_list( $s['_animations'] );
 	}
 
+	/** The endless scroll direction of a container ("_scroll_loop"), or ''. */
+	public static function scroll_loop( array $s ): string {
+		$loop = (string) ( $s['_scroll_loop'] ?? '' );
+		return in_array( $loop, array( 'left', 'right', 'up', 'down' ), true ) ? $loop : '';
+	}
+
 	public static function wrapper( array $s ): array {
 		$classes = array();
 		$attrs   = array();
@@ -940,9 +1047,16 @@ final class Common_Controls {
 			$attrs['data-uncoder-animate'] = Animations::attribute( $animations );
 			$modules[]                     = 'animate';
 		}
+		// A sprite sheet in rows: its columns follow from the frames and the rows (for the background size and the
+		// Frame animation).
+		$sprite_frames = absint( $s['_sprite_frames'] ?? 0 );
+		$sprite_rows   = min( 50, absint( $s['_sprite_rows'] ?? 0 ) );
+		if ( $sprite_frames > 1 && $sprite_rows > 1 ) {
+			$attrs['style'] = '--uncoder-sprite-cols:' . (int) ceil( $sprite_frames / $sprite_rows ) . ';--uncoder-sprite-rows:' . $sprite_rows;
+		}
 		if ( ! empty( $s['_sticky'] ) && in_array( $s['_sticky'], array( 'top', 'bottom' ), true ) ) {
 			$classes[]      = 'bottom' === $s['_sticky'] ? 'uncoder-sticky uncoder-sticky--bottom' : 'uncoder-sticky';
-			$attrs['style'] = '--uncoder-sticky-offset:' . absint( $s['_sticky_offset'] ?? 0 ) . 'px';
+			$attrs['style'] = ( isset( $attrs['style'] ) ? $attrs['style'] . ';' : '' ) . '--uncoder-sticky-offset:' . absint( $s['_sticky_offset'] ?? 0 ) . 'px';
 			// Devices left out of "Sticky on" scroll normally (Kit::visibility_css() ranges).
 			if ( isset( $s['_sticky_on'] ) && is_array( $s['_sticky_on'] ) ) {
 				foreach ( Breakpoints::devices() as $device ) {
@@ -952,6 +1066,18 @@ final class Common_Controls {
 				}
 			}
 			$modules[]      = 'sticky';
+		}
+		if ( ! empty( $s['_hide_scrolling_down'] ) ) {
+			$classes[] = 'uncoder-hide-scrolling-down';
+		}
+		$loop = self::scroll_loop( $s );
+		if ( '' !== $loop ) {
+			$classes[] = 'uncoder-scroll-loop';
+			$classes[] = 'uncoder-scroll-loop--' . $loop;
+			if ( ! empty( $s['_scroll_loop_fade'] ) ) {
+				$classes[] = 'uncoder-scroll-loop--fade';
+			}
+			$modules[] = 'scroll-loop';
 		}
 		$reveal = self::reveal( $s );
 		if ( '' !== $reveal ) {

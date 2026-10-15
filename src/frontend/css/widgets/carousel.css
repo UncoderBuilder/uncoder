@@ -67,7 +67,8 @@ html:not(.uncoder-js) .uncoder-carousel > .uncoder-carousel__viewport > .uncoder
 
 .uncoder-carousel > .uncoder-carousel__viewport > .uncoder-carousel__track > .uncoder-carousel__slide {
   position: relative;
-  flex: 0 0 calc((100% - (var(--uncoder-carousel-spv) - 1) * var(--uncoder-carousel-gap)) / var(--uncoder-carousel-spv));
+  /* a fixed slide width (Slide width) wins over slides per view */
+  flex: 0 0 var(--uncoder-carousel-slide-w, calc((100% - (var(--uncoder-carousel-spv) - 1) * var(--uncoder-carousel-gap)) / var(--uncoder-carousel-spv)));
   min-width: 0;
   scroll-snap-align: start;
 }
@@ -452,6 +453,41 @@ html:not(.uncoder-js) .uncoder-carousel > .uncoder-carousel__viewport > .uncoder
 .uncoder-carousel__dots > .uncoder-carousel__dot:focus-visible {
   outline: 2px solid var(--uncoder-carousel-dot-active);
   outline-offset: 3px;
+}
+
+/* Icon pagination: round buttons with each slide's icon; a slide's accent colours its button while it shows. */
+.uncoder-carousel__dots--icons > .uncoder-carousel__dot,
+.uncoder-carousel__dots--icons > .uncoder-carousel__dot.is-active {
+  display: grid;
+  place-items: center;
+  width: var(--uncoder-carousel-icon-dot, 44px);
+  height: var(--uncoder-carousel-icon-dot, 44px);
+  color: var(--uncoder-carousel-dot-icon, currentColor);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.uncoder-carousel__dots--icons > .uncoder-carousel__dot::after {
+  content: none;
+}
+
+.uncoder-carousel__dots--icons > .uncoder-carousel__dot:hover {
+  background: color-mix(in srgb, var(--uncoder-carousel-dot-accent, var(--uncoder-carousel-dot-active)) 22%, var(--uncoder-carousel-dot-color));
+}
+
+.uncoder-carousel__dots--icons > .uncoder-carousel__dot.is-active {
+  background: var(--uncoder-carousel-dot-accent, var(--uncoder-carousel-dot-active));
+  color: var(--uncoder-carousel-dot-icon-active, #fff);
+}
+
+.uncoder-carousel__dots--icons .uncoder-svg {
+  width: var(--uncoder-carousel-icon-size, 18px);
+  height: var(--uncoder-carousel-icon-size, 18px);
+}
+
+.uncoder-carousel__dot-num {
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1;
 }
 
 .uncoder-carousel__pagination > .uncoder-carousel__fraction {

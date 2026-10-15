@@ -1,7 +1,8 @@
 <?php
 /**
  * The private cloud library (Agency licence): sections, pages, templates and whole site kits saved to the agency's
- * licence on uncoderbuilder.com (Uncoder Cloud, private/*) and reused on every site activated on it.
+ * licence on the content server (cloud.uncoderbuilder.com, private/*) and reused on every site activated on it. Each
+ * call carries the site's signed licence token (Licence::content_params()); the key stays with uncoderbuilder.com.
  *
  *   GET    uncoder/v1/cloud                    the library (items, usage, whether it can be changed)
  *   POST   uncoder/v1/cloud/section            { title, elements }   an element and its children
@@ -221,12 +222,14 @@ final class Cloud_Library {
 			if ( '' === $bytes ) {
 				break;
 			}
-			$res = wp_remote_post(
-				add_query_arg( array( 'upload' => $start['upload'], 'n' => $n ), Licence::server() . 'private/upload/part' ),
+			// A file field of a multipart form: web firewalls refuse raw binary bodies.
+			$boundary = 'uncoder' . wp_generate_password( 24, false );
+			$res      = wp_remote_post(
+				add_query_arg( array( 'upload' => $start['upload'], 'n' => $n ), Licence::content_server() . 'private/upload/part' ),
 				array(
 					'timeout' => 120,
-					'headers' => array( 'Content-Type' => 'application/octet-stream', 'Accept' => 'application/json' ),
-					'body'    => $bytes,
+					'headers' => array( 'Content-Type' => 'multipart/form-data; boundary=' . $boundary, 'Accept' => 'application/json' ),
+					'body'    => "--{$boundary}\r\nContent-Disposition: form-data; name=\"part\"; filename=\"part-{$n}.zip\"\r\nContent-Type: application/zip\r\n\r\n" . $bytes . "\r\n--{$boundary}--\r\n",
 				)
 			);
 			if ( is_wp_error( $res ) || 200 !== (int) wp_remote_retrieve_response_code( $res ) ) {
@@ -353,8 +356,9 @@ final class Cloud_Library {
 			array(
 				'kind'    => $kind,
 				'title'   => '' !== $title ? $title : __( 'Untitled', 'uncoder' ),
-				'content' => $content,
-				'meta'    => array_merge( $meta, array( 'plugin' => UNCODER_WB_VERSION ) ),
+				// Base64-wrapped: web firewalls refuse request bodies full of style code.
+				'content_b64' => base64_encode( (string) wp_json_encode( $content ) ),
+				'meta'        => array_merge( $meta, array( 'plugin' => UNCODER_WB_VERSION ) ),
 			)
 		);
 		return is_wp_error( $res ) ? $res : new WP_REST_Response( $res );
@@ -429,34 +433,23 @@ final class Cloud_Library {
 	}
 
 	/**
-	 * One call to the library on the licence server, with this site's key.
+	 * One call to the library on the content server, with this site's licence token.
 	 *
 	 * @param array<string,mixed> $body Extra fields.
 	 * @return array<string,mixed>|WP_Error
 	 */
 	private static function call( string $action, array $body = array() ) {
-		$key = (string) ( Licence::data()['key'] ?? '' );
-		if ( '' === $key ) {
+		if ( empty( Licence::data()['key'] ) ) {
 			return self::locked();
 		}
-		$res = wp_remote_post(
-			Licence::server() . 'private/' . $action,
-			array(
-				'timeout' => 60,
-				'headers' => array( 'Content-Type' => 'application/json', 'Accept' => 'application/json' ),
-				'body'    => (string) wp_json_encode(
-					array_merge(
-						$body,
-						array(
-							'key'      => $key,
-							'site_url' => home_url( '/' ),
-							'env'      => function_exists( 'wp_get_environment_type' ) ? wp_get_environment_type() : 'production',
-							'version'  => UNCODER_WB_VERSION,
-						)
-					)
-				),
-			)
-		);
+		$read = in_array( $action, array( 'list', 'get' ), true );
+		$ask  = static fn() => Licence::content_post( 'private/' . $action, array_merge( $body, Licence::content_params( $read ) ), 60 );
+		$res = $ask();
+		// The token was older than the content server takes: check the licence now and ask once more.
+		if ( ! is_wp_error( $res ) && 'stale_token' === ( json_decode( (string) wp_remote_retrieve_body( $res ), true )['code'] ?? '' ) ) {
+			Licence::refresh();
+			$res = $ask();
+		}
 		if ( is_wp_error( $res ) || (int) wp_remote_retrieve_response_code( $res ) >= 300 ) {
 			return self::failure( $res, __( 'The cloud library could not be reached. Try again in a moment.', 'uncoder' ) );
 		}
@@ -484,6 +477,8 @@ final class Cloud_Library {
 			'library_full'  => is_array( $body ) ? (string) ( $body['message'] ?? '' ) : '',
 			'too_large'     => is_array( $body ) ? (string) ( $body['message'] ?? '' ) : '',
 			'rate_limited'  => __( 'Too many requests. Wait a few minutes and try again.', 'uncoder' ),
+			'stale_token'   => __( 'Your licence could not be checked just now. Try again in a moment.', 'uncoder' ),
+			'needs_licence' => __( 'The cloud library comes with the Agency licence.', 'uncoder' ),
 		);
 		$message = $map[ $code ] ?? '';
 		if ( '' === $message ) {

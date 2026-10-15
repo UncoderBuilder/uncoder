@@ -41,6 +41,9 @@ window.UncoderWB.register('nav-menu', (el, api) => {
     const sub = placeable(li);
     if (!sub || !main) return;
     const item = li.getBoundingClientRect();
+    // A menu that isn't shown at this width (the hidden copy for phones or desktops) has nothing to measure: it is
+    // placed when it shows (on resize) or opens.
+    if (!item.width) return;
     const width = sub.offsetWidth; // The layout width: the opening animation's transform does not change it.
     let left = item.left;
     if (align === 'center') left = item.left + (item.width - width) / 2;
@@ -247,6 +250,20 @@ window.UncoderWB.register('nav-menu', (el, api) => {
   // "Panel under the header" hangs from the bottom edge of the header template (not from the toggle).
   const header = s.attach === 'header' ? root.closest<HTMLElement>('.uncoder-location--header, header') : null;
 
+  // The row a "Match the header row" dropdown lines up under: the menu often shares a transparent group with a
+  // button or an icon inside the bar, so the nearest container that shows a surface (a background, a border or
+  // rounded corners) wins; without one, the container the menu sits in.
+  const barOf = (): HTMLElement | null => {
+    const first = root.parentElement?.closest<HTMLElement>('.uncoder-container') ?? null;
+    const top = root.closest<HTMLElement>('.uncoder-location--header, header');
+    for (let el = first; el && top?.contains(el) && el !== top; el = el.parentElement?.closest<HTMLElement>('.uncoder-container') ?? null) {
+      const cs = getComputedStyle(el);
+      const surface = cs.backgroundColor !== 'rgba(0, 0, 0, 0)' && cs.backgroundColor !== 'transparent';
+      if (surface || cs.backgroundImage !== 'none' || parseFloat(cs.borderTopWidth) > 0 || parseFloat(cs.borderTopLeftRadius) > 0) return el;
+    }
+    return first;
+  };
+
   const position = () => {
     if (!panel || dialog) return;
     const rect = root.getBoundingClientRect();
@@ -255,7 +272,7 @@ window.UncoderWB.register('nav-menu', (el, api) => {
       root.style.setProperty('--uncoder-nav-panel-w', `${html.clientWidth}px`);
     } else if (s.row) {
       // "Match the header row": the dropdown lines up under the container the menu sits in (a floating bar).
-      const row = root.parentElement?.closest<HTMLElement>('.uncoder-container');
+      const row = barOf();
       if (row) {
         const r = row.getBoundingClientRect();
         root.style.setProperty('--uncoder-nav-panel-x', `${r.left - rect.left}px`);
@@ -334,7 +351,7 @@ window.UncoderWB.register('nav-menu', (el, api) => {
       setOpen(li, !li.classList.contains('is-open'));
       return;
     }
-    const link = target.closest<HTMLAnchorElement>('a.uncoder-menu__link');
+    const link = target.closest<HTMLAnchorElement>('a.uncoder-menu__link, a.uncoder-menu__caption');
     if (!link || !root.contains(link)) return;
     const li = link.parentElement as HTMLElement;
     const href = link.getAttribute('href');

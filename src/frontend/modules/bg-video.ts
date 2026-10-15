@@ -44,3 +44,35 @@ window.UncoderWB.register(
   },
   { lazy: true },
 );
+
+// The pause / play button of a self-hosted video background (Background → Pause button): it follows the video's own
+// state and label; with reduced motion the video starts paused.
+window.UncoderWB.register('bg-video-toggle', (el) => {
+  const video = el.parentElement?.querySelector<HTMLVideoElement>(':scope > .uncoder-bg-video video');
+  if (!video) {
+    el.hidden = true;
+    return;
+  }
+  const sync = () => {
+    const paused = video.paused;
+    el.classList.toggle('is-paused', paused);
+    el.setAttribute('aria-label', (paused ? el.dataset.labelPlay : el.dataset.labelPause) || '');
+  };
+  if (window.UncoderWB.reducedMotion()) {
+    video.removeAttribute('autoplay');
+    video.pause();
+  }
+  const toggle = () => {
+    if (video.paused) void video.play().catch(() => sync());
+    else video.pause();
+  };
+  el.addEventListener('click', toggle);
+  video.addEventListener('play', sync);
+  video.addEventListener('pause', sync);
+  sync();
+  return () => {
+    el.removeEventListener('click', toggle);
+    video.removeEventListener('play', sync);
+    video.removeEventListener('pause', sync);
+  };
+});

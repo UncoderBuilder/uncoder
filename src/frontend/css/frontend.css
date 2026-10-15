@@ -141,6 +141,25 @@ html:not([data-uncoder-scheme="dark"]) .uncoder-hide-in-light {
   transform: translateY(calc(-100% - var(--wp-admin--admin-bar--height, 0px)));
 }
 
+/* "Hide while scrolling down": that part of a sticky header slides up out of view (by its own bottom edge, measured
+   by modules/header.ts) while the page scrolls down; the rest of the header stays. */
+.uncoder-location--header .uncoder-hide-scrolling-down {
+  transition: transform 0.35s ease, visibility 0s linear 0s;
+}
+
+.uncoder-location--header.is-scrolling-down .uncoder-hide-scrolling-down {
+  transform: translateY(calc(var(--uncoder-hide-y, 100%) * -1));
+  visibility: hidden;
+  transition: transform 0.35s ease, visibility 0s linear 0.35s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uncoder-location--header .uncoder-hide-scrolling-down,
+  .uncoder-location--header.is-scrolling-down .uncoder-hide-scrolling-down {
+    transition: none;
+  }
+}
+
 /* Transparent: no background, light text, menu bar and toggle recoloured (dropdowns keep their colours). */
 .uncoder-location--header.uncoder-header--transparent.is-transparent > .uncoder-container {
   background-color: transparent;
@@ -344,6 +363,43 @@ figure.uncoder-container {
   object-fit: cover;
   transform: translate(-50%, -50%);
   border: 0;
+}
+
+/* The pause / play button of a video background (Background → Pause button; runtime module bg-video-toggle). */
+.uncoder-bg-video__toggle {
+  position: absolute;
+  right: var(--uncoder-bg-video-toggle-inset, 16px);
+  bottom: var(--uncoder-bg-video-toggle-inset, 16px);
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: var(--uncoder-bg-video-toggle-size, 40px);
+  height: var(--uncoder-bg-video-toggle-size, 40px);
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--uncoder-bg-video-toggle-bg, #fff);
+  color: var(--uncoder-bg-video-toggle-color, #000);
+  cursor: pointer;
+}
+
+.uncoder-bg-video__toggle svg {
+  width: 50%;
+  height: 50%;
+}
+
+.uncoder-bg-video__toggle .uncoder-bg-video__play,
+.uncoder-bg-video__toggle.is-paused .uncoder-bg-video__pause {
+  display: none;
+}
+
+.uncoder-bg-video__toggle.is-paused .uncoder-bg-video__play {
+  display: block;
+}
+
+.uncoder-bg-video__toggle:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
 }
 
 /* Background layer: slideshows and moving images (runtime modules bg-slideshow / bg-motion). */
@@ -1020,7 +1076,8 @@ html:not(.uncoder-editing) .uncoder-ix-hidden {
 .uncoder-anim--in {
   animation: var(--uncoder-anim-name, uncoder-fade-in) var(--uncoder-anim-duration, 700ms) cubic-bezier(0.2, 0.8, 0.2, 1) var(--uncoder-anim-delay, 0ms) backwards;
 }
-/* Keyframes only set where an element starts: it ends on its own transform, opacity and filters. */
+/* Keyframes only set where an element starts: it ends on its own transform, opacity and filters. The fades and
+   slides travel --uncoder-anim-distance (the Distance control) when it is set. */
 [data-uncoder-anim="fade-in"] { --uncoder-anim-name: uncoder-fade-in; }
 [data-uncoder-anim="fade-up"] { --uncoder-anim-name: uncoder-fade-up; }
 [data-uncoder-anim="fade-down"] { --uncoder-anim-name: uncoder-fade-down; }
@@ -1039,16 +1096,16 @@ html:not(.uncoder-editing) .uncoder-ix-hidden {
 [data-uncoder-anim="drop-in"] { --uncoder-anim-name: uncoder-drop-in; --uncoder-anim-duration: 1300ms; }
 
 @keyframes uncoder-fade-in { from { opacity: 0; } }
-@keyframes uncoder-fade-up { from { opacity: 0; transform: translateY(28px); } }
-@keyframes uncoder-fade-down { from { opacity: 0; transform: translateY(-28px); } }
-@keyframes uncoder-fade-left { from { opacity: 0; transform: translateX(-36px); } }
-@keyframes uncoder-fade-right { from { opacity: 0; transform: translateX(36px); } }
+@keyframes uncoder-fade-up { from { opacity: 0; transform: translateY(var(--uncoder-anim-distance, 28px)); } }
+@keyframes uncoder-fade-down { from { opacity: 0; transform: translateY(calc(var(--uncoder-anim-distance, 28px) * -1)); } }
+@keyframes uncoder-fade-left { from { opacity: 0; transform: translateX(calc(var(--uncoder-anim-distance, 36px) * -1)); } }
+@keyframes uncoder-fade-right { from { opacity: 0; transform: translateX(var(--uncoder-anim-distance, 36px)); } }
 @keyframes uncoder-zoom-in { from { opacity: 0; transform: scale(0.92); } }
 @keyframes uncoder-zoom-out { from { opacity: 0; transform: scale(1.08); } }
-@keyframes uncoder-slide-up { from { transform: translateY(80px); } }
-@keyframes uncoder-slide-down { from { transform: translateY(-80px); } }
-@keyframes uncoder-slide-left { from { transform: translateX(-100px); } }
-@keyframes uncoder-slide-right { from { transform: translateX(100px); } }
+@keyframes uncoder-slide-up { from { transform: translateY(var(--uncoder-anim-distance, 80px)); } }
+@keyframes uncoder-slide-down { from { transform: translateY(calc(var(--uncoder-anim-distance, 80px) * -1)); } }
+@keyframes uncoder-slide-left { from { transform: translateX(calc(var(--uncoder-anim-distance, 100px) * -1)); } }
+@keyframes uncoder-slide-right { from { transform: translateX(var(--uncoder-anim-distance, 100px)); } }
 @keyframes uncoder-flip-up { from { opacity: 0; transform: perspective(800px) rotateX(35deg); } }
 @keyframes uncoder-blur-in { from { opacity: 0; filter: blur(12px); } }
 @keyframes uncoder-drop-in {
@@ -1138,11 +1195,12 @@ html:not(.uncoder-editing) .uncoder-ix-hidden {
 }
 
 .uncoder-reveal--fade-up .uncoder-r {
-  transform: translateY(0.45em);
+  transform: translateY(var(--uncoder-reveal-rise, 0.45em));
 }
 
 .uncoder-reveal--blur .uncoder-r {
   filter: blur(var(--uncoder-reveal-blur, 10px));
+  transform: translateY(var(--uncoder-reveal-rise, 0));
 }
 
 /* Follow the scroll: faint until lit; the scroll position is the stagger. */
@@ -1182,6 +1240,96 @@ html:not(.uncoder-editing) .uncoder-ix-hidden {
   opacity: 1;
   transform: none;
   filter: none;
+}
+
+/* Endless scroll (containers, Common_Controls "_scroll_loop"): the loop module moves the children into a track with an
+   inert copy, and the track travels by one copy. Pauses while hovered or focused; still for reduced motion. */
+.uncoder-scroll-loop {
+  overflow: hidden;
+}
+
+.uncoder-scroll-loop .uncoder-scroll-loop__track {
+  display: flex;
+  flex: none;
+  animation: uncoder-scroll-loop-x var(--uncoder-scroll-loop-duration, 40s) linear infinite;
+  will-change: transform;
+}
+
+/* Two copies side by side; containers cap their children at 100%, which would cut the round short (a jump). */
+.uncoder-scroll-loop:is(.uncoder-scroll-loop--left, .uncoder-scroll-loop--right) .uncoder-scroll-loop__track {
+  width: max-content;
+  max-width: none;
+}
+
+.uncoder-scroll-loop:is(.uncoder-scroll-loop--up, .uncoder-scroll-loop--down) .uncoder-scroll-loop__track {
+  flex-direction: column;
+  width: 100%;
+  animation-name: uncoder-scroll-loop-y;
+}
+
+.uncoder-scroll-loop:is(.uncoder-scroll-loop--right, .uncoder-scroll-loop--down) .uncoder-scroll-loop__track {
+  animation-direction: reverse;
+}
+
+.uncoder-scroll-loop .uncoder-scroll-loop__group {
+  display: flex;
+  flex: none;
+  flex-direction: inherit;
+  align-items: inherit;
+  gap: var(--uncoder-scroll-loop-gap, 0px);
+}
+
+.uncoder-scroll-loop:is(.uncoder-scroll-loop--left, .uncoder-scroll-loop--right) .uncoder-scroll-loop__group {
+  flex-direction: row;
+  padding-inline-end: var(--uncoder-scroll-loop-gap, 0px);
+}
+
+.uncoder-scroll-loop:is(.uncoder-scroll-loop--up, .uncoder-scroll-loop--down) .uncoder-scroll-loop__group {
+  flex-direction: column;
+  padding-block-end: var(--uncoder-scroll-loop-gap, 0px);
+}
+
+.uncoder-scroll-loop:is(:hover, :focus-within) .uncoder-scroll-loop__track {
+  animation-play-state: paused;
+}
+
+.uncoder-scroll-loop--fade:is(.uncoder-scroll-loop--left, .uncoder-scroll-loop--right) {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+}
+
+.uncoder-scroll-loop--fade:is(.uncoder-scroll-loop--up, .uncoder-scroll-loop--down) {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 12%, #000 88%, transparent);
+}
+
+@keyframes uncoder-scroll-loop-x {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes uncoder-scroll-loop-y {
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uncoder-scroll-loop .uncoder-scroll-loop__track,
+  .uncoder-scroll-loop:is(.uncoder-scroll-loop--up, .uncoder-scroll-loop--down) .uncoder-scroll-loop__track {
+    animation: none;
+  }
+  .uncoder-scroll-loop .uncoder-scroll-loop__group[aria-hidden="true"] {
+    display: none;
+  }
+  /* Still content may be taller than its column: let it scroll instead of cutting it off. */
+  .uncoder-scroll-loop:is(.uncoder-scroll-loop--up, .uncoder-scroll-loop--down) {
+    overflow-y: auto;
+  }
+  .uncoder-scroll-loop:is(.uncoder-scroll-loop--left, .uncoder-scroll-loop--right) {
+    overflow-x: auto;
+  }
 }
 
 .uncoder-sr-only {

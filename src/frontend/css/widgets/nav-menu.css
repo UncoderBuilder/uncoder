@@ -671,6 +671,16 @@
   display: none;
 }
 
+/* "Label while open": the second label replaces the first while the menu is open. */
+.uncoder-nav-menu__toggle-text--open,
+.uncoder-nav-menu__toggle[aria-expanded="true"] .uncoder-nav-menu__toggle-text:has(+ .uncoder-nav-menu__toggle-text--open) {
+  display: none;
+}
+
+.uncoder-nav-menu__toggle[aria-expanded="true"] .uncoder-nav-menu__toggle-text--open {
+  display: inline;
+}
+
 .uncoder-nav-menu__toggle[aria-expanded="true"] .uncoder-nav-menu__toggle-icon--close {
   display: inline-flex;
 }
@@ -899,6 +909,54 @@
   }
 }
 
+/* Submenus listed open: the parent is a small heading over its items (no toggle). */
+.uncoder-menu--mobile .uncoder-menu__caption {
+  display: block;
+  flex: 1 0 100%;
+  padding: 18px var(--uncoder-nav-m-pr, 20px) 2px var(--uncoder-nav-m-pl, 20px);
+  color: var(--uncoder-nav-m-caption, color-mix(in srgb, var(--uncoder-nav-m-color) 60%, transparent));
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.uncoder-nav-menu__panel--header .uncoder-menu--mobile .uncoder-menu__caption {
+  padding-inline: var(--uncoder-nav-m-pl, 0px) var(--uncoder-nav-m-pr, 0px);
+}
+
+.uncoder-menu--mobile a.uncoder-menu__caption:hover {
+  color: var(--uncoder-nav-m-color-hover);
+}
+
+.uncoder-menu--mobile .uncoder-menu__item--group > .uncoder-menu__sub {
+  display: block;
+  padding-inline-start: 0;
+  border-top: 0;
+}
+
+.uncoder-menu--mobile .uncoder-menu__item--group > .uncoder-menu__sub > .uncoder-menu__item:first-child {
+  border-top: 0;
+}
+
+.uncoder-nav-menu__panel--header .uncoder-menu--mobile .uncoder-menu__item--group > .uncoder-menu__sub .uncoder-menu__link {
+  padding-block: var(--uncoder-nav-m-pt, 12px) var(--uncoder-nav-m-pb, 12px);
+}
+
+/* :where() keeps hover and current-page colours in charge. */
+.uncoder-nav-menu__panel--header :where(.uncoder-menu--mobile .uncoder-menu__item--group > .uncoder-menu__sub) .uncoder-menu__link {
+  color: inherit;
+}
+
+/* Button position "At the bottom": the button sits at the bottom of a menu that fills the screen. */
+.uncoder-nav-menu__panel--cta-end .uncoder-nav-menu__inner {
+  display: flex;
+  flex-direction: column;
+}
+
+.uncoder-nav-menu__panel--cta-end .uncoder-nav-menu__cta {
+  margin-top: auto;
+}
+
 /* Button at the end of the mobile menu */
 .uncoder-nav-menu__cta {
   display: flex;
@@ -907,6 +965,13 @@
 
 .uncoder-nav-menu__cta .uncoder-btn {
   --uncoder-btn-width: var(--uncoder-nav-m-btn-w, 100%);
+}
+
+/* Two buttons: one under the other, as wide as each other (the wider one's width when they fit the text). */
+.uncoder-nav-menu__cta--two {
+  display: grid;
+  justify-content: var(--uncoder-nav-m-btn-justify, stretch);
+  gap: var(--uncoder-nav-m-btn-gap, 10px);
 }
 
 .uncoder-nav-menu__panel--header .uncoder-nav-menu__cta {

@@ -47,7 +47,7 @@ export function MediaControl({ control, value, placeholder, onChange }: ControlP
   // Non-image files (e.g. Lottie JSON) show their file name instead of a thumbnail.
   const kind = control.types?.[0] ?? 'image';
   const isFile = hasImage && !isVideo && kind !== 'image' && kind !== 'video';
-  const noun = kind === 'image' ? 'image' : kind === 'video' ? 'video' : 'file';
+  const noun = kind === 'image' ? 'image' : kind === 'video' ? 'video' : kind === 'audio' ? 'audio file' : 'file';
 
   const choose = async () => {
     const [att] = await openMedia({ title: control.label, type: kind, selected: v?.id ? [v.id] : [] });
@@ -60,7 +60,7 @@ export function MediaControl({ control, value, placeholder, onChange }: ControlP
         {hasImage ? (
           isFile ? (
             <span className="uncoder-ui-media__empty">
-              <Icon name="file-json" size={20} stroke={1.6} />
+              <Icon name={kind === 'audio' ? 'file-music' : 'file-json'} size={20} stroke={1.6} />
               {decodeURIComponent(v!.url.split('/').pop() ?? '')}
             </span>
           ) : isVideo ? (
@@ -70,7 +70,7 @@ export function MediaControl({ control, value, placeholder, onChange }: ControlP
           )
         ) : (
           <span className="uncoder-ui-media__empty">
-            <Icon name={noun === 'image' ? 'image-plus' : noun === 'video' ? 'file-video' : 'file-plus'} size={16} stroke={1.7} />
+            <Icon name={noun === 'image' ? 'image-plus' : noun === 'video' ? 'file-video' : kind === 'audio' ? 'file-music' : 'file-plus'} size={16} stroke={1.7} />
             Choose {noun}
           </span>
         )}

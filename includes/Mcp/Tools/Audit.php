@@ -7,6 +7,7 @@
 
 namespace Uncoder\Builder\Mcp\Tools;
 
+use Uncoder\Builder\Core\Post_Types;
 use Uncoder\Builder\Core\Utils;
 use Uncoder\Builder\Plugin;
 use WP_Error;
@@ -68,11 +69,25 @@ final class Audit {
 		// sets it once in its theme), else white.
 		$theme = (array) Plugin::instance()->kit()->get( 'theme', array() );
 		$page  = ! empty( $theme['enabled'] ) ? $this->resolve_color( (string) ( $theme['background'] ?? '' ) ) : '';
-		$this->walk( $elements, 0, null, '' !== $page && self::alpha( $page ) >= 1.0 ? $page : '#ffffff', $state );
+		$start = '' !== $page && self::alpha( $page ) >= 1.0 ? $page : '#ffffff';
+		// A see-through header lies over the top of the pages (usually a hero photo): what its words sit on is
+		// unknown, unless a box of the header has its own background.
+		if ( 'header' === (string) get_post_meta( $post->ID, Utils::META_TYPE, true ) ) {
+			$over = (string) ( Plugin::instance()->documents()->get( $post->ID )->page_settings()['header_transparent'] ?? '' );
+			$start = in_array( $over, array( 'all', 'front' ), true ) ? '' : $start;
+		}
+		$this->walk( $elements, 0, null, $start, $state );
 
 		// Rendered HTML: icon-only links and buttons, form labels, images in any widget, frames, ids.
 		try {
-			$html = Plugin::instance()->documents()->get( $post->ID )->render( array( 'post_id' => $post->ID ) );
+			// A loop item or single-post layout shows a post's title, image and fields: render it for the latest
+			// published post, as the site will (rendered for the template itself, every dynamic text is empty).
+			$context = $post->ID;
+			if ( Post_Types::TEMPLATE === $post->post_type && in_array( (string) get_post_meta( $post->ID, Utils::META_TYPE, true ), array( 'loop-item', 'single-post', 'single' ), true ) ) {
+				$latest  = get_posts( array( 'post_type' => 'post', 'post_status' => 'publish', 'numberposts' => 1, 'fields' => 'ids' ) );
+				$context = $latest ? (int) $latest[0] : $post->ID;
+			}
+			$html = Plugin::instance()->documents()->get( $post->ID )->render( array( 'post_id' => $context ) );
 			foreach ( Html_A11y::check( $html ) as $issue ) {
 				$this->add( $issue['severity'], 'accessibility', $issue['id'], $issue['message'], $issue['fix'], (string) ( $issue['rule'] ?? '' ) );
 			}
@@ -140,7 +155,9 @@ final class Audit {
 			$my_bg   = $bg;
 			$my_text = $text;
 			if ( 'container' === $type ) {
-				$my_bg = $this->surface_color( $s, $bg );
+				// A box filled by a picture (an image laid over the whole box, the words on top) is a photo surface:
+				// its contrast cannot be judged from settings, as with a background photo.
+				$my_bg = self::photo_box( $node ) ? '' : $this->surface_color( $s, $bg );
 				if ( ! empty( $s['text_color'] ) ) {
 					$my_text = (string) $s['text_color'];
 				}
@@ -148,7 +165,8 @@ final class Audit {
 				if ( empty( $node['children'] ) && ! self::is_shape( $s ) ) {
 					$this->add( 'warning', 'structure', $id, 'Empty container.', 'Add content or delete it.', 'empty-container' );
 				}
-				if ( ! $this->hidden_mobile && empty( $s['_hide_mobile'] ) ) {
+				// Decorations hidden from screen readers (a colour stripe, a row of bars) are drawings, not layouts.
+				if ( ! $this->hidden_mobile && empty( $s['_hide_mobile'] ) && ! $this->decorative && ! self::aria_hidden( $s ) ) {
 					$this->check_responsive_container( $id, $s, (array) ( $node['children'] ?? array() ) );
 				}
 			}
@@ -203,8 +221,9 @@ final class Audit {
 			if ( 'heading' === $type && ! isset( $dynamic['title'] ) ) {
 				if ( '' === trim( $title ) ) {
 					$this->add( 'error', 'content', $id, 'Empty heading.', 'Write a heading or delete the widget.', 'empty-heading' );
-				} elseif ( mb_strlen( $title ) > 110 ) {
-					$this->add( 'warning', 'content', $id, 'Very long heading (' . mb_strlen( $title ) . ' characters).', 'Shorten it; move detail into a paragraph.', 'long-heading' );
+				} elseif ( mb_strlen( $title ) > 110 && isset( $m[1] ) ) {
+					// Only a real heading (h1–h6): a Heading set to p, div or span is a styled statement, read as text.
+					$this->add( 'warning', 'content', $id, 'Very long heading (' . mb_strlen( $title ) . ' characters).', 'Shorten it, move detail into a paragraph, or set the tag to p if it is a statement rather than a heading.', 'long-heading' );
 				}
 			}
 			$this->check_contrast( $id, (string) ( $s['color'] ?? '' ), $bg, '' !== $text ? $text : 'var(--uncoder-c-heading)', $this->large_text( $eff ) ?? true );
@@ -297,6 +316,24 @@ final class Audit {
 	}
 
 	/**
+	 * How many columns a grid has on phones. A custom column template (grid_template "1fr 1fr") and the column count
+	 * write the same CSS variable, so the value set for the narrowest width wins; at one width the template wins. A
+	 * desktop template with grid_columns_mobile: 1 is one column on phones.
+	 */
+	private static function mobile_columns( array $s ): int {
+		foreach ( array( '_mobile', '_mobile_extra', '_tablet', '_tablet_extra', '' ) as $suffix ) {
+			$template = trim( (string) ( $s[ 'grid_template' . $suffix ] ?? '' ) );
+			if ( '' !== $template ) {
+				return self::template_tracks( $template );
+			}
+			if ( isset( $s[ 'grid_columns' . $suffix ] ) && '' !== $s[ 'grid_columns' . $suffix ] ) {
+				return (int) $s[ 'grid_columns' . $suffix ];
+			}
+		}
+		return 3;
+	}
+
+	/**
 	 * How many columns a grid-template-columns value makes: "1fr 1fr" = 2, "minmax(0, 1fr) 106px" = 2,
 	 * "repeat(3, 1fr)" = 3. repeat(auto-fit / auto-fill, …) adapts to the width and counts as one.
 	 */
@@ -374,6 +411,12 @@ final class Audit {
 					if ( in_array( $type, array( 'icon', 'button', 'heading', 'site-logo', 'social-icons', 'star-rating', 'divider', 'spacer' ), true ) ) {
 						return false;
 					}
+					// A layer laid over the box (a background photo, a shade) is not a column.
+					$cs  = (array) ( $c['settings'] ?? array() );
+					$css = is_string( $cs['_custom_css'] ?? null ) ? $cs['_custom_css'] : '';
+					if ( in_array( $cs['_position'] ?? '', array( 'absolute', 'fixed' ), true ) || preg_match( '/^\s*selector\s*\{[^}]*\bposition\s*:\s*(?:absolute|fixed)/i', $css ) ) {
+						return false;
+					}
 					return ! $small( (array) $c );
 				}
 			)
@@ -398,16 +441,19 @@ final class Audit {
 		// is a row on purpose: cards in a carousel-like band, a pinned horizontal scroll.
 		$css       = is_string( $s['_custom_css'] ?? null ) ? $s['_custom_css'] : '';
 		$strip     = '' !== $css && preg_match( '/\bselector\s*\{[^}]*(?:width\s*:\s*max-content|overflow-x\s*:\s*(?:auto|scroll)|scroll-snap-type\s*:)/i', $css );
-		$is_layout = $columns >= 2 && ! $has_menu && ! $strip;
+		// A row of a table built from containers (attribute role|row): its cells line up with the columns above
+		// and below, so it stays a row (the table scrolls sideways on phones, or is short enough to fit).
+		$table_row = (bool) preg_match( '/(?:^|,)\s*role\s*\|\s*row\s*(?:,|$)/i', (string) ( $s['_attributes'] ?? '' ) );
+		// Photos side by side (picture widgets, or boxes a picture fills) may stay side by side on phones.
+		$photos    = count( $children ) >= 2 && ! array_filter( $children, static fn( $c ) => ! ( in_array( (string) ( $c['type'] ?? '' ), array( 'image', 'video' ), true ) || self::photo_box( (array) $c ) ) );
+		$is_layout = $columns >= 2 && ! $has_menu && ! $strip && ! $table_row && ! $photos;
 		if ( 'grid' !== ( $s['layout'] ?? '' ) && in_array( self::on_mobile( $s, 'direction', 'column' ), array( 'row', 'row-reverse' ), true ) && $is_layout && 'wrap' !== self::on_mobile( $s, 'wrap', '' ) ) {
 			$this->add( 'warning', 'responsive', $id, sprintf( 'Row with %d columns keeps the row layout on phones.', count( $children ) ), 'Add "direction_mobile": "column" (and a smaller gap_mobile).', 'row-mobile' );
 		}
-		// A custom column template (grid_template "1fr 1fr") decides the columns; grid_columns is ignored then.
-		$template    = trim( (string) self::on_mobile( $s, 'grid_template', '' ) );
-		$mobile_cols = '' !== $template ? self::template_tracks( $template ) : (int) self::on_mobile( $s, 'grid_columns', 3 );
+		$mobile_cols = self::mobile_columns( $s );
 		// A grid of pictures only (a photo strip, a logo wall, a gallery) may keep three or four small columns.
 		$pictures = $children && ! array_filter( $children, static fn( $c ) => ! in_array( (string) ( $c['type'] ?? '' ), array( 'image', 'icon', 'site-logo' ), true ) );
-		if ( 'grid' === ( $s['layout'] ?? '' ) && $mobile_cols >= 3 && ! isset( $s['grid_template_mobile'] ) && ! ( $pictures && $mobile_cols <= 4 ) ) {
+		if ( 'grid' === ( $s['layout'] ?? '' ) && $mobile_cols >= 3 && ! isset( $s['grid_template_mobile'] ) && ! ( $pictures && $mobile_cols <= 4 ) && ! $table_row ) {
 			$this->add( 'warning', 'responsive', $id, 'Grid keeps ' . $mobile_cols . ' columns on phones.', 'Add "grid_columns_mobile": 1 (and grid_columns_tablet: 2).', 'grid-mobile' );
 		}
 	}
@@ -478,6 +524,28 @@ final class Audit {
 	 *
 	 * @param array<string,mixed> $s Element settings.
 	 */
+	/**
+	 * A container a picture fills: one of its children is an image (or featured image / video) placed absolutely over
+	 * the box (Position absolute, or custom CSS "position: absolute"), and nothing but more absolutely placed layers
+	 * or the words on top.
+	 *
+	 * @param array<string,mixed> $node Element node.
+	 */
+	private static function photo_box( array $node ): bool {
+		if ( 'container' !== ( $node['type'] ?? '' ) ) {
+			return false;
+		}
+		foreach ( (array) ( $node['children'] ?? array() ) as $c ) {
+			$cs  = (array) ( $c['settings'] ?? array() );
+			$css = is_string( $cs['_custom_css'] ?? null ) ? $cs['_custom_css'] : '';
+			$abs = 'absolute' === ( $cs['_position'] ?? '' ) || preg_match( '/^\s*selector\s*\{[^}]*\bposition\s*:\s*absolute[^}]*\binset\s*:\s*0/i', $css );
+			if ( $abs && in_array( (string) ( $c['type'] ?? '' ), array( 'image', 'featured-image', 'video' ), true ) ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	private static function aria_hidden( array $s ): bool {
 		return (bool) preg_match( '/(^|[,\n])\s*aria-hidden\s*\|\s*true\s*([,\n]|$)/i', (string) ( $s['_attributes'] ?? '' ) );
 	}
@@ -590,7 +658,11 @@ final class Audit {
 		if ( $this->decorative > 0 || '' === trim( $color ) || '' === trim( $ground ) ) {
 			return;
 		}
-		$under  = self::over( $this->resolve_color( $ground ), $section_bg );
+		$ground = $this->resolve_color( $ground );
+		if ( '' === $section_bg && self::alpha( $ground ) < 0.6 ) {
+			return; // A see-through field or button over a photo: what shows through cannot be judged from settings.
+		}
+		$under  = self::over( $ground, $section_bg );
 		$fg     = self::over( $this->resolve_color( $color ), $under );
 		$fg_rgb = self::rgb( $fg );
 		$bg_rgb = self::rgb( $under );

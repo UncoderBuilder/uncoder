@@ -40,6 +40,9 @@ class Nav_Menu_Walker extends \Walker_Nav_Menu {
 	/** Id of the submenu opened by the next start_lvl() call. */
 	private string $pending_sub = '';
 
+	/** Id of the heading that names the submenu opened by the next start_lvl() call (submenus listed open). */
+	private string $pending_label = '';
+
 	/** Number of items in the submenu opened by the next start_lvl() call. */
 	private int $pending_count = 0;
 
@@ -140,10 +143,12 @@ class Nav_Menu_Walker extends \Walker_Nav_Menu {
 	public function start_lvl( &$output, $depth = 0, $args = null ) {
 		$attrs = array(
 			'class' => 'uncoder-menu__sub uncoder-menu__sub--depth-' . ( (int) $depth + 1 ),
-			'id'    => '' !== $this->pending_sub ? $this->pending_sub : null,
-			'style' => $this->column_rows( (int) $depth ),
+			'id'              => '' !== $this->pending_sub ? $this->pending_sub : null,
+			'aria-labelledby' => '' !== $this->pending_label ? $this->pending_label : null,
+			'style'           => $this->column_rows( (int) $depth ),
 		);
-		$this->pending_sub = '';
+		$this->pending_sub   = '';
+		$this->pending_label = '';
 		$output           .= '<ul' . Utils::attrs( $attrs ) . '>';
 	}
 
@@ -206,8 +211,13 @@ class Nav_Menu_Walker extends \Walker_Nav_Menu {
 		if ( $ancestor ) {
 			$classes[] = 'uncoder-menu__item--ancestor';
 		}
+		// Submenus listed open (mobile "Submenus" setting): the parent is a small heading over its items, no toggle.
+		$group = $this->mobile && $sub && '' === $extra && 'open' === ( $this->settings['m_submenus'] ?? '' );
+		if ( $group ) {
+			$classes[] = 'uncoder-menu__item--group';
+		}
 		// A mobile branch that contains the current page starts expanded.
-		$open = $this->mobile && $sub && $ancestor && '' === $extra;
+		$open = $this->mobile && $sub && $ancestor && '' === $extra && ! $group;
 		if ( $open ) {
 			$classes[] = 'is-open';
 		}
@@ -258,6 +268,22 @@ class Nav_Menu_Walker extends \Walker_Nav_Menu {
 		if ( '' !== $desc ) {
 			$atts['class'] .= ' uncoder-menu__link--rich';
 			$text           = '<span class="uncoder-menu__label">' . $text . '<span class="uncoder-menu__desc">' . esc_html( $desc ) . '</span></span>';
+		}
+
+		if ( $group ) {
+			// A parent without a page of its own ("#") is a plain heading, not a link that goes nowhere.
+			$sub_id              = $this->prefix . '-sub-' . $id;
+			$this->pending_sub   = $sub_id;
+			$this->pending_label = $sub_id . '-label';
+			$href                = (string) ( $atts['href'] ?? '' );
+			$atts['class']       = 'uncoder-menu__caption';
+			$atts['id']          = $this->pending_label;
+			$tag                 = '' === $href || '#' === $href ? 'span' : 'a';
+			if ( 'span' === $tag ) {
+				$atts = array_intersect_key( $atts, array_flip( array( 'class', 'id' ) ) );
+			}
+			$output .= '<' . $tag . Utils::attrs( $atts ) . '>' . $icon . '<span class="uncoder-menu__text">' . $title . '</span></' . $tag . '>';
+			return;
 		}
 
 		$output .= $args->before ?? '';
