@@ -4,7 +4,7 @@ Tags: page builder, website builder, theme builder, drag and drop, mcp
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 0.1.3
+Stable tag: 0.1.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -185,6 +185,15 @@ Yes, with WPML or Polylang. Pages are translated like any other page. Theme Buil
 
 This plugin connects to the following third-party services only in the situations described.
 
+= Uncoder Cloud (licences, starter sites, premium sections, cloud library) =
+
+Uncoder's own servers. Nothing is sent until an administrator uses one of these features.
+
+* **Licences (uncoderbuilder.com):** when an administrator activates, checks or removes a licence under **Settings → Licence**, and once a day while a key is stored, the site sends the licence key, its address, its WordPress environment type and the Uncoder version. The server answers with a signed token that names the site, the plan and its features.
+* **Starter sites, premium sections and the cloud library (cloud.uncoderbuilder.com):** when an administrator opens **Library → Starter sites** or **Premium sections**, inserts a premium section, imports a starter site, or uses the Agency cloud library, the site asks for the catalogue and the chosen files. Paid content is requested with the site's address, environment type, Uncoder version and its signed licence token (never the key). Items an agency saves to its cloud library are stored there under its licence.
+
+Uncoder Cloud: https://uncoderbuilder.com/ — Privacy policy: https://uncoderbuilder.com/privacy-policy/ — Terms: https://uncoderbuilder.com/terms/
+
 = Google Fonts =
 
 This applies when a page uses a Google Font and **Font delivery** is set to "Google Fonts CDN" (the default).
@@ -313,6 +322,17 @@ Bundled assets:
 
 == Changelog ==
 
+= 0.1.4 =
+* Starter sites, premium sections and the cloud library now come from cloud.uncoderbuilder.com, Uncoder's content server. Licences stay on uncoderbuilder.com; paid content is unlocked with the site's signed licence token, and the key only goes to uncoderbuilder.com.
+* An expired Agency licence can still open and insert what it saved in the cloud library.
+* New widgets: Audio (a sound file with the site's own player), Opening Hours (a list of your hours and a live "Open now" badge) and Score Wheel (a wheel-of-life check-in or chart).
+* Form: section titles between fields (with a help line and a heading tag), and a note above, beside or below the button.
+* Nav Menu: submenus listed open in the phone menu, a second phone-menu button, the toggle's label while open, and Match the header row.
+* Flip Box: a round button to turn the card, a Circle reveal effect, Fit the taller side, a hint and a checklist. Carousels: icon pagination, Start at slide, and a Slide width for slide-by-slide carousels.
+* Loop Filter and Loop Grid by custom field, a Site Logo tagline, tab descriptions, and Cookie consent "Notice only".
+* Endless scroll for containers, Sprite frames, Hide while scrolling down for header parts, an entrance Distance, Rise for text reveals, and a Pause button for background videos.
+* Fixes: Timeline fades on iPhone and iPad, four-side slider values, dropdowns of a hidden menu copy, Site Kit media, cookie policy links and term conditions, and fewer false Page Checks reports.
+
 = 0.1.3 =
 * Heading: a reflection under the title (mirror or water).
 * Button: open a picture or a video (YouTube, Vimeo or a video file) in a lightbox, a label for screen readers, and rounded icon corners.
@@ -349,6 +369,9 @@ Bundled assets:
 * First release.
 
 == Upgrade Notice ==
+
+= 0.1.4 =
+Starter sites, premium sections and the cloud library now come from cloud.uncoderbuilder.com. New Audio, Opening Hours and Score Wheel widgets, richer forms and menus. If your host limits outgoing connections, allow cloud.uncoderbuilder.com too.
 
 = 0.1.3 =
 New widget options (reflections, lightbox buttons, pictures on tabs, a filling timeline), side headers, Hide on laptop and editor fixes. Nothing to migrate.

@@ -120,7 +120,7 @@ Every element (containers and widgets) also has the Advanced settings: `_margin`
 
 ## Motion & effects (any element)
 - Animations (the richest option; read topic "animations"): `_animations` takes preset names — `"fade-up"`, `["words-rise","hover-lift"]` — or full timelines with triggers (scroll into view, load, scroll scrub, hover, click, loop), stagger and text splits. Prefer it for new work.
-- Simple entrance: `_animation` ("fade-up", "zoom-in"…; `_animation_duration`, `_animation_delay` in ms) plays once when the element scrolls into view.
+- Simple entrance: `_animation` ("fade-up", "zoom-in"…; `_animation_duration`, `_animation_delay` in ms; `_animation_distance` in px for the fades and slides) plays once when the element scrolls into view.
 - While scrolling (speeds −10…10): `_motion_y` (positive rises faster than the page, negative lags = parallax), `_motion_x`, `_motion_rotate`; `_motion_scale` "in" (grow into place) \| "out" \| "in-out" \| "grow" \| "shrink" with `_motion_scale_amount` (%); `_motion_fade` / `_motion_blur` "in" \| "out" \| "in-out". `_motion_start` / `_motion_end` (0–100) narrow the part of the trip across the screen that drives them.
 - Pointer: `_motion_mouse` "track" (follows the cursor) or "tilt" (3D tilt on hover) with `_motion_mouse_speed` (−10…10). Desktop pointers only.
 - `_motion_devices` ["desktop","tablet"] limits effects to some devices. Effects add to `_transform`, never run in the editor or for visitors who prefer reduced motion.

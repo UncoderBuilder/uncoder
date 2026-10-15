@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * { type: classic|gradient|video|slideshow, color, image*, position*, attachment, repeat*, size*,
- *   color_stop, color_b, color_b_stop, gradient_type, gradient_angle, gradient_position, video_url, video_fallback,
+ *   color_stop, color_b, color_b_stop, gradient_type, gradient_angle, gradient_position, video_url, video_fallback, video_pause,
  *   slides, slide_duration, slide_transition, slide_speed, ken_burns, slide_size, slide_position }.
  */
 class Background extends Group_Type {
@@ -63,6 +63,11 @@ class Background extends Group_Type {
 				'placeholder' => __( 'Upload, or paste a YouTube / Vimeo / MP4 link', 'uncoder' ),
 			),
 			'video_fallback'    => array( 'type' => 'media', 'label' => __( 'Fallback image', 'uncoder' ) ),
+			'video_pause'       => array(
+				'type'        => 'switch',
+				'label'       => __( 'Pause button', 'uncoder' ),
+				'description' => __( 'A button in the bottom corner that pauses and plays the video. Moving backgrounds that run longer than five seconds need one (WCAG 2.2.2); with reduced motion the video starts paused.', 'uncoder' ),
+			),
 			'slides'            => array( 'type' => 'gallery', 'label' => __( 'Images', 'uncoder' ) ),
 			'slide_duration'    => array( 'type' => 'number', 'label' => __( 'Duration', 'uncoder' ), 'description' => __( 'Milliseconds each image shows.', 'uncoder' ), 'min' => 1000, 'max' => 30000, 'step' => 500 ),
 			'slide_transition'  => array( 'type' => 'select', 'label' => __( 'Transition', 'uncoder' ), 'options' => array( '' => 'Fade', 'slide' => 'Slide' ) ),

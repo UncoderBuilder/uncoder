@@ -1,7 +1,7 @@
 <?php
 /**
  * Premium section packs (Pro and Agency licences, feature "sections"): every section of the starter sites, from
- * uncoderbuilder.com (Uncoder Cloud, library/sections), inserted from the editor's Insert → Sections.
+ * the content server (cloud.uncoderbuilder.com, library/sections), inserted from the editor's Insert → Sections.
  *
  *   GET uncoder/v1/sections                  the catalogue (cached for an hour; ?refresh=1), locked ones marked
  *   GET uncoder/v1/sections/{id}?match=1     a section, ready to insert
@@ -56,7 +56,7 @@ final class Section_Library {
 	public function catalog( WP_REST_Request $request ) {
 		$data = $request->get_param( 'refresh' ) ? false : get_transient( self::CACHE );
 		if ( ! is_array( $data ) ) {
-			$res = wp_remote_get( Licence::server() . 'library/sections', array( 'timeout' => 15, 'headers' => array( 'Accept' => 'application/json' ) ) );
+			$res = wp_remote_get( Licence::content_server() . 'library/sections', array( 'timeout' => 15, 'headers' => array( 'Accept' => 'application/json' ) ) );
 			if ( is_wp_error( $res ) || 200 !== (int) wp_remote_retrieve_response_code( $res ) ) {
 				return new WP_Error( 'uncoder_sections_offline', __( 'The section library could not be reached. Check your connection and try again.', 'uncoder' ), array( 'status' => 502 ) );
 			}
@@ -142,26 +142,18 @@ final class Section_Library {
 	 * @return array<string,mixed>|WP_Error
 	 */
 	private static function fetch( string $id ) {
-		$res = wp_remote_post(
-			Licence::server() . 'library/section',
-			array(
-				'timeout' => 20,
-				'headers' => array( 'Content-Type' => 'application/json', 'Accept' => 'application/json' ),
-				'body'    => (string) wp_json_encode(
-					array(
-						'id'       => $id,
-						'site_url' => home_url( '/' ),
-						'key'      => (string) ( Licence::data()['key'] ?? '' ),
-						'env'      => function_exists( 'wp_get_environment_type' ) ? wp_get_environment_type() : 'production',
-						'version'  => UNCODER_WB_VERSION,
-					)
-				),
-			)
-		);
+		$ask  = static fn() => Licence::content_post( 'library/section', array_merge( array( 'id' => $id ), Licence::content_params() ) );
+		$res  = $ask();
+		$body = is_wp_error( $res ) ? null : json_decode( (string) wp_remote_retrieve_body( $res ), true );
+		// The token was older than the content server takes: check the licence now and ask once more.
+		if ( is_array( $body ) && 'stale_token' === ( $body['code'] ?? '' ) ) {
+			Licence::refresh();
+			$res  = $ask();
+			$body = is_wp_error( $res ) ? null : json_decode( (string) wp_remote_retrieve_body( $res ), true );
+		}
 		if ( is_wp_error( $res ) ) {
 			return new WP_Error( 'uncoder_sections_offline', __( 'The section library could not be reached. Check your connection and try again.', 'uncoder' ), array( 'status' => 502 ) );
 		}
-		$body = json_decode( (string) wp_remote_retrieve_body( $res ), true );
 		if ( 200 !== (int) wp_remote_retrieve_response_code( $res ) || ! is_array( $body['section'] ?? null ) ) {
 			$code = is_array( $body ) ? (string) ( $body['code'] ?? '' ) : '';
 			$map  = array(
@@ -169,6 +161,7 @@ final class Section_Library {
 				'expired'       => __( 'Your licence has expired. Renew it to insert premium sections; the ones you inserted stay.', 'uncoder' ),
 				'disabled'      => __( 'Your licence is no longer active.', 'uncoder' ),
 				'not_activated' => __( 'This site is not activated on your licence. Activate it again under Settings → Licence.', 'uncoder' ),
+				'stale_token'   => __( 'Your licence could not be checked just now. Try again in a moment.', 'uncoder' ),
 			);
 			return new WP_Error( 'uncoder_sections_' . ( '' !== $code ? $code : 'failed' ), $map[ $code ] ?? __( 'The section could not be loaded. Try again in a moment.', 'uncoder' ), array( 'status' => 403 ) );
 		}

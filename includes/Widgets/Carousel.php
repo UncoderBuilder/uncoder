@@ -8,6 +8,7 @@
 namespace Uncoder\Builder\Widgets;
 
 use Uncoder\Builder\Core\Render_Context;
+use Uncoder\Builder\Core\Utils;
 use Uncoder\Builder\Core\Widget_Base;
 use Uncoder\Builder\Widgets\Support\Carousel_Engine;
 use Uncoder\Builder\Widgets\Support\Repeater_Rows;
@@ -55,6 +56,10 @@ class Carousel extends Widget_Base {
 		return true;
 	}
 
+	protected function slide_icons(): bool {
+		return true;
+	}
+
 	public function frontend_scripts(): array {
 		return array( 'carousel' );
 	}
@@ -89,8 +94,18 @@ class Carousel extends Widget_Base {
 					'label' => array(
 						'type'        => 'text',
 						'label'       => __( 'Label', 'uncoder' ),
-						'description' => __( 'Shown in the navigator; each slide is edited as a container on the canvas.', 'uncoder' ),
+						'description' => __( 'Shown in the navigator; each slide is edited as a container on the canvas. With icon pagination it names the slide\'s button.', 'uncoder' ),
 						'default'     => __( 'Slide', 'uncoder' ),
+					),
+					'icon'   => array(
+						'type'        => 'icon',
+						'label'       => __( 'Icon', 'uncoder' ),
+						'description' => __( 'The slide\'s button when Pagination is Icons.', 'uncoder' ),
+					),
+					'accent' => array(
+						'type'        => 'color',
+						'label'       => __( 'Accent', 'uncoder' ),
+						'description' => __( 'Icon pagination: the button\'s color while this slide shows.', 'uncoder' ),
 					),
 				),
 				'default'     => $this->default_slides(),
@@ -158,6 +173,18 @@ class Carousel extends Widget_Base {
 				echo '</div>';
 			}
 		}
-		echo $this->carousel_end( $s, $ctx, $total ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped parts.
+		$icons = array();
+		if ( 'icons' === ( $s['pagination'] ?? '' ) ) {
+			foreach ( $rows as $i => $row ) {
+				$name    = trim( (string) ( $row['label'] ?? '' ) );
+				$icons[] = array(
+					/* translators: %d: slide number. */
+					'label'  => '' !== $name ? $name : sprintf( __( 'Slide %d', 'uncoder' ), $i + 1 ),
+					'icon'   => $this->has_icon( $row['icon'] ?? null ) ? $this->render_icon( $row['icon'], array( 'class' => 'uncoder-carousel__dot-icon' ) ) : '<span class="uncoder-carousel__dot-num">' . ( $i + 1 ) . '</span>',
+					'accent' => Utils::sanitize_color( (string) ( $row['accent'] ?? '' ) ),
+				);
+			}
+		}
+		echo $this->carousel_end( $s, $ctx, $total, $icons ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped parts.
 	}
 }

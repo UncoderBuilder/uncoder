@@ -81,6 +81,7 @@ final class Fields {
 		$used        = array();
 		$file_count  = 0;
 		$step        = 0;
+		$sections    = array();
 
 		foreach ( $rows as $row ) {
 			if ( count( $fields ) >= self::MAX_FIELDS ) {
@@ -92,6 +93,18 @@ final class Fields {
 			// A "Step break" row starts the next step of a multi-step form; it is not a field.
 			if ( 'step' === ( $row['type'] ?? '' ) ) {
 				++$step;
+				continue;
+			}
+			// A "Section title" row is a heading shown before the next field; it is not a field either. Its Help text is
+			// a short description under the title.
+			if ( 'heading' === ( $row['type'] ?? '' ) ) {
+				$title = sanitize_text_field( (string) ( $row['label'] ?? '' ) );
+				if ( '' !== $title ) {
+					$sections[] = array(
+						'title' => $title,
+						'note'  => sanitize_text_field( (string) ( $row['help'] ?? '' ) ),
+					);
+				}
 				continue;
 			}
 			$type = in_array( $row['type'] ?? 'text', self::TYPES, true ) ? (string) $row['type'] : 'text';
@@ -144,7 +157,9 @@ final class Fields {
 				'mobile_width' => isset( $row['width_mobile'] ) && '' !== $row['width_mobile'],
 				'step'         => $step,
 				'show_if'      => self::show_if( $row ),
+				'before'       => $sections,
 			);
+			$sections = array();
 		}
 		return $fields;
 	}

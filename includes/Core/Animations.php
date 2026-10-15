@@ -45,6 +45,7 @@ final class Animations {
 		'skewX'   => array( 0, -80, 80 ),
 		'skewY'   => array( 0, -80, 80 ),
 		'blur'    => array( 0, 0, 100 ),
+		'frame'   => array( 0, -999, 999 ), // a sprite frame (whole numbers; Common_Controls "_sprite_frames").
 	);
 
 	private const MAX_DEFS  = 8;

@@ -59,6 +59,15 @@ class Slider extends Control_Type {
 	public function normalize( $value, array $control ) {
 		$units   = self::units( $control );
 		$default = $units[0] ?? 'px';
+		if ( is_array( $value ) && ! isset( $value['size'] ) && self::sides( $value ) ) {
+			// A four-side (dimensions) value where one size belongs: the same size on every side is that size;
+			// different sides cannot be one number.
+			$sides = self::sides( $value );
+			if ( count( array_unique( array_map( 'strval', $sides ) ) ) !== 1 || count( $sides ) !== 4 ) {
+				return null;
+			}
+			$value = array( 'size' => reset( $sides ), 'unit' => $value['unit'] ?? $default );
+		}
 		if ( is_array( $value ) ) {
 			if ( isset( $value['size'] ) && is_string( $value['size'] ) && ! is_numeric( $value['size'] ) && ! isset( $value['unit'] ) ) {
 				$value = $value['size'];
@@ -80,6 +89,26 @@ class Slider extends Control_Type {
 			}
 		}
 		return null;
+	}
+
+	public function validate( $value, array $control ): array {
+		if ( is_array( $value ) && ! isset( $value['size'] ) && self::sides( $value ) && null === $this->normalize( $value, $control ) ) {
+			return array( 'This control takes one size, not top/right/bottom/left values.' );
+		}
+		return parent::validate( $value, $control );
+	}
+
+	/**
+	 * The top/right/bottom/left entries of a value that looks like a dimensions value.
+	 *
+	 * @param array<string,mixed> $value Value.
+	 * @return array<string,mixed>
+	 */
+	private static function sides( array $value ): array {
+		return array_filter(
+			array_intersect_key( $value, array_flip( array( 'top', 'right', 'bottom', 'left' ) ) ),
+			static fn( $v ) => '' !== $v && null !== $v
+		);
 	}
 
 	public function placeholders( $value, array $control ): ?array {

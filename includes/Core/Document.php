@@ -354,6 +354,9 @@ final class Document {
 				if ( ! empty( $s['_sticky'] ) ) {
 					$scripts[] = 'sticky';
 				}
+				if ( is_array( $s ) && '' !== Common_Controls::scroll_loop( $s ) ) {
+					$scripts[] = 'scroll-loop';
+				}
 				if ( is_array( $s ) && '' !== Common_Controls::reveal( $s ) ) {
 					$scripts[] = 'text-reveal';
 				}

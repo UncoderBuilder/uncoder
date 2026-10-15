@@ -1,6 +1,49 @@
 {
   "changelog": [
     {
+      "version": "0.1.4",
+      "date": "2026-10-15",
+      "title": "A content server, new widgets and richer forms",
+      "groups": [
+        {
+          "label": "Uncoder Cloud",
+          "items": [
+            "Starter sites, premium sections and the cloud library now come from cloud.uncoderbuilder.com. Licences stay on uncoderbuilder.com, and the key only goes there.",
+            "An expired Agency licence can still open and insert what it saved in the cloud library."
+          ]
+        },
+        {
+          "label": "New widgets",
+          "items": [
+            "Audio: a sound file with the site’s own player, and players that pause each other.",
+            "Opening Hours: your hours as a list and a live “Open now” badge in the site’s time zone.",
+            "Score Wheel: a wheel-of-life check-in visitors fill in, or a before-and-after chart."
+          ]
+        },
+        {
+          "label": "Widgets",
+          "items": [
+            "Form: section titles between fields, with a help line and a heading tag, and a note above, beside or below the button.",
+            "Nav Menu: submenus listed open in the phone menu, a second phone-menu button, the toggle’s label while open, and Match the header row.",
+            "Flip Box: a round button, Circle reveal, Fit the taller side, a hint and a checklist. Carousels: icon pagination, Start at slide and Slide width.",
+            "Loop Filter and Loop Grid by custom field, a Site Logo tagline, tab descriptions, and Cookie consent “Notice only”."
+          ]
+        },
+        {
+          "label": "Motion and layout",
+          "items": [
+            "Endless scroll for containers, Sprite frames, Hide while scrolling down, an entrance Distance, Rise for text reveals, and a Pause button for background videos."
+          ]
+        },
+        {
+          "label": "Fixes",
+          "items": [
+            "Timeline fades on iPhone and iPad, four-side slider values, dropdowns of a hidden menu copy, Site Kit media and conditions, and fewer false Page Checks reports."
+          ]
+        }
+      ]
+    },
+    {
       "version": "0.1.3",
       "date": "2026-10-12",
       "title": "Side headers, reflections and pictures on tabs",
@@ -171,6 +214,17 @@
     }
   ],
   "news": [
+    {
+      "id": "2026-10-release-0-1-4",
+      "date": "2026-10-15",
+      "tag": "release",
+      "title": "Uncoder 0.1.4: new widgets and a content server",
+      "body": "Audio, Opening Hours and Score Wheel widgets, richer forms and menus, and starter sites served from cloud.uncoderbuilder.com.",
+      "link": {
+        "label": "See what’s new",
+        "docs": "changelog/"
+      }
+    },
     {
       "id": "2026-10-release-0-1-3",
       "date": "2026-10-12",
