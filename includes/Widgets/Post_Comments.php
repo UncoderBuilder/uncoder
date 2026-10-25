@@ -59,6 +59,15 @@ class Post_Comments extends Widget_Base {
 				'label' => __( 'Shows the comments and reply form of the post being viewed, where comments are open or already exist. Manage discussion in Settings → Discussion.', 'uncoder' ),
 			)
 		);
+		$this->add_control(
+			'theme_styles',
+			array(
+				'type'        => 'switch',
+				'label'       => __( 'Theme styling', 'uncoder' ),
+				'description' => __( 'Leave the look of the comment list and form to your theme and site CSS. The styles set here still apply.', 'uncoder' ),
+				'ai'          => 'On for comments styled by the theme or site CSS (sites moved from another builder); off uses Uncoder\'s comment and form styling.',
+			)
+		);
 		$this->end_section();
 
 		$this->start_section( 'style_text', array( 'label' => __( 'Text', 'uncoder' ), 'tab' => 'style' ) );
@@ -283,6 +292,6 @@ class Post_Comments extends Widget_Base {
 		if ( '' === trim( $html ) ) {
 			return;
 		}
-		echo '<div class="uncoder-post-comments">' . $html . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- theme comments template output.
+		echo '<div class="uncoder-post-comments' . ( ! empty( $s['theme_styles'] ) ? ' uncoder-post-comments--theme' : '' ) . '">' . $html . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- theme comments template output.
 	}
 }

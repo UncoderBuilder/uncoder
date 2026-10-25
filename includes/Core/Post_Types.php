@@ -25,11 +25,25 @@ final class Post_Types {
 		'archive'        => 'Archive',
 		'search-results' => 'Search results',
 		'error-404'      => '404 page',
+		'single-product' => 'Single product',
+		'product-archive' => 'Product archive',
 		'popup'          => 'Popup',
 		'mega-menu'      => 'Mega menu',
 		'loop-item'      => 'Loop item',
 		'section'        => 'Section',
 	);
+
+	/** Template types that need WooCommerce. They stay in TEMPLATE_TYPES, so their templates survive without it. */
+	public const WOO_TYPES = array( 'single-product', 'product-archive' );
+
+	/**
+	 * Template types offered for new templates: all, less the WooCommerce ones while WooCommerce is inactive.
+	 *
+	 * @return array<string,string>
+	 */
+	public static function available_types(): array {
+		return class_exists( 'WooCommerce' ) ? self::TEMPLATE_TYPES : array_diff_key( self::TEMPLATE_TYPES, array_flip( self::WOO_TYPES ) );
+	}
 
 	public function register(): void {
 		add_action( 'init', array( $this, 'register_post_type' ) );

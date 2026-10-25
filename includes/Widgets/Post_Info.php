@@ -442,10 +442,12 @@ class Post_Info extends Widget_Base {
 					$html = $this->term_html( $name, $link ? '#' : '' );
 					return $this->pills ? '<span class="uncoder-post-info__terms">' . $html . '</span>' : $html;
 				}
-				if ( '' === $taxonomy || ! taxonomy_exists( $taxonomy ) || ! is_taxonomy_viewable( $taxonomy ) ) {
+				$tax = '' !== $taxonomy ? get_taxonomy( $taxonomy ) : false;
+				// A public taxonomy without archive pages (not publicly queryable) still shows its terms, unlinked.
+				if ( ! $tax || ! ( $tax->public || is_taxonomy_viewable( $taxonomy ) ) ) {
 					return '';
 				}
-				return $this->terms( $post, $taxonomy, $link, $term_sep );
+				return $this->terms( $post, $taxonomy, $link && is_taxonomy_viewable( $taxonomy ), $term_sep );
 
 			case 'comments':
 				if ( $sample ) {

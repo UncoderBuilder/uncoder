@@ -62,6 +62,12 @@ final class Icons {
 		return self::$index;
 	}
 
+	/** Forgets the cached library list and sets (a custom set was added, changed or removed in this request). */
+	public static function reset(): void {
+		self::$index = null;
+		self::$sets  = array();
+	}
+
 	public static function is_library( string $id ): bool {
 		foreach ( self::libraries() as $lib ) {
 			if ( ( $lib['id'] ?? '' ) === $id ) {

@@ -51,6 +51,43 @@ final class Lookup_Controller {
 			}
 		}
 
+		// Product categories / tags (values: term ids), for the Products widget.
+		if ( in_array( $source, array( 'product-categories', 'product-tags' ), true ) ) {
+			$taxonomy = 'product-categories' === $source ? 'product_cat' : 'product_tag';
+			if ( ! taxonomy_exists( $taxonomy ) ) {
+				return new WP_REST_Response( array() );
+			}
+			$args = array(
+				'taxonomy'   => $taxonomy,
+				'hide_empty' => false,
+				'number'     => 30,
+				'search'     => $search,
+				'orderby'    => 'name',
+			);
+			if ( $ids ) {
+				$args['include'] = $ids;
+				$args['number']  = count( $ids );
+				unset( $args['search'] );
+			}
+			$terms = get_terms( $args );
+			foreach ( is_array( $terms ) ? $terms : array() as $term ) {
+				$out[] = array(
+					'value' => (string) $term->term_id,
+					'label' => html_entity_decode( $term->name, ENT_QUOTES, 'UTF-8' ),
+				);
+			}
+			return new WP_REST_Response( $out );
+		}
+
+		// "products" = WooCommerce products (the product pickers of the WooCommerce widgets).
+		if ( 'products' === $source ) {
+			if ( ! post_type_exists( 'product' ) ) {
+				return new WP_REST_Response( array() );
+			}
+			$source = 'posts';
+			$type   = 'product';
+		}
+
 		switch ( $source ) {
 			case 'posts':
 			case 'popups':

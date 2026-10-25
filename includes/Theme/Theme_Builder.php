@@ -22,9 +22,6 @@ final class Theme_Builder {
 
 	public const INDEX_OPTION = 'uncoder_wb_templates_index';
 
-	/** Body template types tried for each request context, in order. */
-	private const BODY_TYPES = array( 'single-post', 'single-page', 'single', 'archive', 'search-results', 'error-404' );
-
 	/** @var array<string, int> type => template id (0 = none) for this request */
 	private array $resolved = array();
 
@@ -168,15 +165,21 @@ final class Theme_Builder {
 			return array( 0, '' );
 		}
 		$candidates = array();
+		$woo = function_exists( 'is_shop' );
 		if ( is_404() ) {
 			$candidates = array( 'error-404' );
 		} elseif ( is_search() ) {
-			$candidates = array( 'search-results', 'archive' );
+			// WooCommerce's product search shows as the shop.
+			$candidates = $woo && 'product' === get_query_var( 'post_type' ) ? array( 'product-archive', 'search-results', 'archive' ) : array( 'search-results', 'archive' );
 		} elseif ( is_singular() ) {
 			$pt         = get_post_type( (int) get_queried_object_id() );
-			$candidates = 'post' === $pt ? array( 'single-post', 'single' ) : ( 'page' === $pt ? array( 'single-page', 'single' ) : array( 'single' ) );
+			$candidates = array(
+				'post'    => array( 'single-post', 'single' ),
+				'page'    => array( 'single-page', 'single' ),
+				'product' => $woo ? array( 'single-product', 'single' ) : array( 'single' ),
+			)[ $pt ] ?? array( 'single' );
 		} elseif ( is_archive() || is_home() ) {
-			$candidates = array( 'archive' );
+			$candidates = $woo && ( is_shop() || is_product_taxonomy() ) ? array( 'product-archive', 'archive' ) : array( 'archive' );
 		}
 		foreach ( $candidates as $type ) {
 			$id = $this->resolve( $type );
@@ -227,7 +230,27 @@ final class Theme_Builder {
 			the_post();
 			$post_id = (int) get_the_ID();
 		}
-		echo $this->render_template( $id, array( 'post_id' => $post_id, 'class' => 'uncoder-location uncoder-location--' . $type, 'tag' => 'div' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- rendered by the escaping renderer.
+		/**
+		 * Whether the body template prints. False prints nothing more: the callback printed what replaces it (the
+		 * password form of a protected product).
+		 *
+		 * @param bool   $render  Print the template.
+		 * @param string $type    Template type.
+		 * @param int    $post_id Post being shown (0 on archives).
+		 */
+		if ( apply_filters( 'uncoder_wb/theme/render_body', true, $type, $post_id ) ) {
+			/**
+			 * Fires around the body template, inside the page's main element (WooCommerce's product lifecycle).
+			 *
+			 * @param string $type        Template type.
+			 * @param int    $post_id     Post being shown (0 on archives).
+			 * @param int    $template_id The body template.
+			 */
+			do_action( 'uncoder_wb/theme/before_body', $type, $post_id, (int) $id );
+			echo $this->render_template( $id, array( 'post_id' => $post_id, 'class' => 'uncoder-location uncoder-location--' . $type, 'tag' => 'div' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- rendered by the escaping renderer.
+			/** This action is documented above. */
+			do_action( 'uncoder_wb/theme/after_body', $type, $post_id, (int) $id );
+		}
 		if ( $post_id ) {
 			rewind_posts();
 		}

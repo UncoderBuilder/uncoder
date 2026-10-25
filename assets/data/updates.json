@@ -1,6 +1,49 @@
 {
   "changelog": [
     {
+      "version": "0.1.5",
+      "date": "2026-10-25",
+      "title": "WooCommerce support and better Elementor imports",
+      "groups": [
+        {
+          "label": "WooCommerce",
+          "items": [
+            "Design every shop page with Uncoder: Single product and Product archive templates, product page widgets, product grids, Cart, Checkout and My Account. WooCommerce still runs the store.",
+            "Mini Cart: the cart icon for your header, with the item count, the subtotal and a cart drawer.",
+            "Design System → Shop for price, sale badge, star and message colors, WooCommerce dynamic tags, and product queries in Loop Grid and Loop Carousel.",
+            "Settings → Performance: Load WooCommerce files only on store pages."
+          ]
+        },
+        {
+          "label": "Importing from Elementor",
+          "items": [
+            "Elementor Pro’s WooCommerce widgets and product templates, UiCore Framework themes, and widgets from UiCore Elements, Element Pack and Uncoder Elements.",
+            "WPForms forms become Uncoder forms, and Elementor Pro’s custom fonts and site CSS come along.",
+            "Sites built with another page builder keep their look when Uncoder is first activated."
+          ]
+        },
+        {
+          "label": "Widgets",
+          "items": [
+            "Theme styling for Post Content and Post Comments, Blog / shop page in Breadcrumbs, and dynamic tags on single list items.",
+            "Tabs open from links elsewhere on the page, shortcodes run in the Text widget, and animated backgrounds get an Opacity."
+          ]
+        },
+        {
+          "label": "Faster pages",
+          "items": [
+            "Lazy images in Featured Image and the Shortcode widget, preloaded self-hosted fonts, and widget styles inlined with Inline small stylesheets."
+          ]
+        },
+        {
+          "label": "Fixes",
+          "items": [
+            "Block themes, saving emoji on older databases, wide dropdowns near the screen edge, menu hover colors, blurry cropped images, SVG shapes and videos in wrapping containers."
+          ]
+        }
+      ]
+    },
+    {
       "version": "0.1.4",
       "date": "2026-10-15",
       "title": "A content server, new widgets and richer forms",
@@ -214,6 +257,17 @@
     }
   ],
   "news": [
+    {
+      "id": "2026-10-release-0-1-5",
+      "date": "2026-10-25",
+      "tag": "release",
+      "title": "Uncoder 0.1.5: WooCommerce support",
+      "body": "Design product pages, the shop, cart, checkout and account with the new WooCommerce widgets, plus better Elementor imports and lighter pages.",
+      "link": {
+        "label": "See what’s new",
+        "docs": "changelog/"
+      }
+    },
     {
       "id": "2026-10-release-0-1-4",
       "date": "2026-10-15",

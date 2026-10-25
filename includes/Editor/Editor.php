@@ -348,9 +348,10 @@ final class Editor {
 				'categories'  => $plugin->elements()->categories(),
 				'dynamicTags' => $plugin->tags()->schema(),
 				'tagGroups'   => \Uncoder\Builder\Dynamic\Tags::GROUPS,
-				'templateTypes' => Post_Types::TEMPLATE_TYPES,
-				// Turned off in Settings → Elements: left out of the Insert panel (existing uses still render).
-				'disabled'    => \Uncoder\Builder\Rest\Prefs_Controller::disabled_widgets(),
+				'templateTypes' => Post_Types::available_types(),
+				// Turned off in Settings → Elements, or WooCommerce widgets without WooCommerce: left out of the Insert
+				// panel (existing uses still render).
+				'disabled'    => array_values( array_unique( array_merge( \Uncoder\Builder\Rest\Prefs_Controller::disabled_widgets(), \Uncoder\Builder\Woo\Woo::unavailable_widgets() ) ) ),
 			),
 			'prefs'       => \Uncoder\Builder\Rest\Prefs_Controller::get(),
 			'kit'         => $plugin->kit()->export(),

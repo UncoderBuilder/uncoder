@@ -188,8 +188,10 @@ final class Guide_Tools {
 		$category = sanitize_key( (string) ( $a['category'] ?? '' ) );
 		$search   = strtolower( trim( (string) ( $a['search'] ?? '' ) ) );
 		$out      = array();
+		// WooCommerce widgets only while WooCommerce runs (their elements still render and save without it).
+		$skip = \Uncoder\Builder\Woo\Woo::unavailable_widgets();
 		foreach ( Plugin::instance()->elements()->all() as $name => $el ) {
-			if ( '' !== $category && $el->category() !== $category ) {
+			if ( ( '' !== $category && $el->category() !== $category ) || in_array( $name, $skip, true ) ) {
 				continue;
 			}
 			if ( '' !== $search && false === strpos( $name, $search ) && false === stripos( $el->title(), $search ) && ! array_filter( $el->keywords(), static fn( $k ) => false !== stripos( $k, $search ) ) ) {

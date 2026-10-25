@@ -75,6 +75,7 @@ final class Plugin {
 			'transfer'   => Site\Transfer::class,
 			'site_kit'   => Site\Site_Kit::class,
 			'elementor_import' => Site\Elementor_Import::class,
+			'woo'        => Woo\Woo::class,
 			'live_search' => Site\Live_Search::class,
 			'style_book'  => Site\Style_Book::class,
 			'multilingual' => Site\Multilingual::class,

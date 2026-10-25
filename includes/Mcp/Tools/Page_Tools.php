@@ -131,7 +131,7 @@ final class Page_Tools {
 			array(
 				'name'        => 'edit_elements',
 				'title'       => 'Edit elements',
-				'description' => 'Precise, atomic edits by element id. Operations run in order; if one fails nothing is saved. ops: update {id, settings (merged; null deletes), replace?, label?}, insert {parent_id|null, position:"start"|"end"|index, or before/after:id, element|elements}, delete {id}, move {id, parent_id, position|before|after}, duplicate {id}, replace {id, element}, wrap {ids, settings?}, set_dynamic {id, key, tag, options?}, unset_dynamic {id, key}. See get_build_guide("editing").',
+				'description' => 'Precise, atomic edits by element id. Operations run in order; if one fails nothing is saved. ops: update {id, settings (merged; null deletes), replace?, label?}, insert {parent_id|null, position:"start"|"end"|index, or before/after:id, element|elements}, delete {id}, move {id, parent_id, position|before|after}, duplicate {id}, replace {id, element}, wrap {ids, settings?}, set_dynamic {id, key (a setting, or "<repeater>.<item _id>.<field>" for one list item), tag, options?}, unset_dynamic {id, key}. See get_build_guide("editing").',
 				'scope'       => 'content',
 				'annotations' => array( 'readOnlyHint' => false, 'destructiveHint' => true, 'idempotentHint' => false, 'openWorldHint' => false ),
 				'input'       => array(
@@ -744,9 +744,14 @@ final class Page_Tools {
 				}
 				$key     = (string) ( $op['key'] ?? '' );
 				$el      = Plugin::instance()->elements()->get( (string) $map->nodes[ $id ]['type'] );
-				$control = $el ? $el->get_control( $key ) : null;
+				$control = $el ? \Uncoder\Builder\Dynamic\Tags::control_for_key( $el, $key, (array) ( $map->nodes[ $id ]['settings'] ?? array() ) ) : null;
 				if ( ! $control || empty( $control['dynamic'] ) ) {
-					return new WP_Error( 'invalid', sprintf( 'Setting "%s" does not accept dynamic data.', $key ) );
+					return new WP_Error(
+						'invalid',
+						false !== strpos( $key, '.' )
+							? sprintf( '"%s" is not a field of an existing repeater item that accepts dynamic data: use "<repeater>.<item _id>.<field>" with the _id get_page shows for the item.', $key )
+							: sprintf( 'Setting "%s" does not accept dynamic data.', $key )
+					);
 				}
 				$def = Plugin::instance()->tags()->sanitize(
 					array(

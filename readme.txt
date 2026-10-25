@@ -4,7 +4,7 @@ Tags: page builder, website builder, theme builder, drag and drop, mcp
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 0.1.4
+Stable tag: 0.1.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,7 +12,7 @@ Visual drag-and-drop page and theme builder with a built-in MCP server, so Claud
 
 == Description ==
 
-Uncoder is a visual website builder for WordPress. Design pages with flexbox and grid containers and 80 widgets. Build headers, footers, single and archive layouts, 404 and search pages, popups, mega menus and loop items in the Theme Builder. Keep everything consistent with a global Design System of colors, fonts, text styles, buttons and spacing.
+Uncoder is a visual website builder for WordPress. Design pages with flexbox and grid containers and over 100 widgets, including a full set for WooCommerce shops. Build headers, footers, single and archive layouts, product and shop pages, 404 and search pages, popups, mega menus and loop items in the Theme Builder. Keep everything consistent with a global Design System of colors, fonts, text styles, buttons and spacing.
 
 Its main feature is a built-in **Model Context Protocol (MCP) server**. Connect Claude, ChatGPT, Cursor, VS Code, Windsurf or any MCP client and ask it to build or change the site. The AI works with the same elements you edit by hand, so everything it makes stays fully editable in the visual editor.
 
@@ -102,12 +102,22 @@ Build all of these, each with display conditions:
 * headers, footers, sticky and transparent headers
 * single posts, pages and custom post types
 * archives and search results
+* WooCommerce product pages, the shop and product categories
 * 404 pages
 * popups
 * mega menus
 * loop items and reusable sections
 
 Templates show live thumbnails and a preview. The Theme Builder works with classic and block themes.
+
+= WooCommerce =
+
+Build every shop page with Uncoder, while WooCommerce stays in charge of prices, stock, cart, checkout and payments, so its extensions keep working:
+
+* product page widgets: images and gallery, title, price, add to cart for every product type (with − / + quantity and adding without reloading), rating, stock, meta, descriptions, tabs with reviews, additional information, sale badge, notices
+* product grids: the shop listing, latest, featured, on sale, best selling, top rated, chosen, related products, upsells and cross-sells, with pages and sorting; product categories; custom product cards with loop items
+* cart, checkout and account pages, and a header mini cart with a slide-out cart
+* a Shop section in the Design System, WooCommerce dynamic tags, and conversion of Elementor's WooCommerce widgets
 
 = Popups and forms =
 
@@ -322,6 +332,17 @@ Bundled assets:
 
 == Changelog ==
 
+= 0.1.5 =
+* WooCommerce support: Single product and Product archive templates, product page widgets (images and gallery, title, price, add to cart for every product type, rating, stock, meta, descriptions, tabs with reviews, additional information, sale badge, notices), product grids and categories, the cart, checkout and account pages, and a header Mini Cart with a cart drawer. WooCommerce stays in charge of prices, stock, cart, checkout and payments.
+* Design System → Shop (price, sale badge, star and message colors, and WooCommerce's own buttons and fields), WooCommerce dynamic tags, product queries for Loop Grid and Loop Carousel, and Load WooCommerce files only on store pages.
+* Marked compatible with WooCommerce's High-performance order storage and the cart and checkout blocks.
+* Elementor importer: Elementor Pro's WooCommerce widgets and product templates, UiCore Framework themes (templates, display rules, Theme Options, mega menus), widgets from UiCore Elements, Element Pack and Uncoder Elements, WPForms forms as Uncoder forms, Elementor Pro's custom fonts, and site CSS written for Elementor.
+* A closer Elementor match (Elementor's defaults, dynamic tags on list items, Search widget, full-width pages, display conditions), and sites built with another page builder keep their look when Uncoder is first activated (Apply to the whole site starts off).
+* Post Content and Post Comments: Theme styling. Breadcrumbs: Blog / shop page. Dynamic tags on single list items, Remove prefix on the Archive title tag, and a dynamic Search Form placeholder.
+* Tabs with Deep linking open from links elsewhere on the page, shortcodes run in the Text widget, an Opacity for animated backgrounds, and per-device accordion icon sizes.
+* Faster pages: lazy images in Featured Image (Automatic) and the Shortcode widget below the first section, preloaded self-hosted Design System fonts, no repeated font requests, and widget styles in Inline small stylesheets.
+* Fixes: block themes, old WordPress content no longer running on Uncoder pages, saving emoji on utf8mb3 databases, wide dropdowns near the screen edge, menu link hover colors, blurry cropped images, SVG shapes, videos in wrapping containers, empty site widgets, terms of taxonomies without archives.
+
 = 0.1.4 =
 * Starter sites, premium sections and the cloud library now come from cloud.uncoderbuilder.com, Uncoder's content server. Licences stay on uncoderbuilder.com; paid content is unlocked with the site's signed licence token, and the key only goes to uncoderbuilder.com.
 * An expired Agency licence can still open and insert what it saved in the cloud library.
@@ -369,6 +390,9 @@ Bundled assets:
 * First release.
 
 == Upgrade Notice ==
+
+= 0.1.5 =
+WooCommerce support: design product pages, the shop, cart, checkout and account with Uncoder. Better Elementor imports (UiCore themes, Element Pack, WPForms) and lighter pages. Nothing to migrate.
 
 = 0.1.4 =
 Starter sites, premium sections and the cloud library now come from cloud.uncoderbuilder.com. New Audio, Opening Hours and Score Wheel widgets, richer forms and menus. If your host limits outgoing connections, allow cloud.uncoderbuilder.com too.

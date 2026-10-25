@@ -24,6 +24,39 @@ final class Install {
 		if ( ! get_option( 'uncoder_wb_installed_at' ) ) {
 			update_option( 'uncoder_wb_installed_at', time(), false );
 		}
+		// A site built with another page builder keeps its look: the Design System's "Apply to the whole site"
+		// starts off there (Uncoder styles only its own pages), on the first activation only.
+		if ( null === get_option( Core\Kit::OPTION, null ) && self::has_other_builder_content() ) {
+			add_option( Core\Kit::OPTION, array( 'theme' => array( 'enabled' => false ) ) );
+		}
+	}
+
+	/** Post meta that page builders set on the content they build: meta key => value ('' = any value). */
+	private const BUILDER_META = array(
+		'_elementor_edit_mode'   => 'builder',
+		'_et_pb_use_builder'     => 'on',
+		'_fl_builder_enabled'    => '1',
+		'_bricks_editor_mode'    => 'bricks',
+		'ct_builder_shortcodes'  => '',
+		'_wpb_vc_js_status'      => 'true',
+		'_breakdance_data'       => '',
+		'brizy_post_uid'         => '',
+	);
+
+	/**
+	 * Whether the site has published content built with another page builder (Elementor, Divi, Beaver Builder,
+	 * Bricks, Oxygen, WPBakery, Breakdance, Brizy).
+	 */
+	public static function has_other_builder_content(): bool {
+		global $wpdb;
+		$where = array();
+		foreach ( self::BUILDER_META as $key => $value ) {
+			$where[] = '' === $value
+				? $wpdb->prepare( '( m.meta_key = %s AND m.meta_value <> %s )', $key, '' )
+				: $wpdb->prepare( '( m.meta_key = %s AND m.meta_value = %s )', $key, $value );
+		}
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- one-off check on activation; the conditions are prepared above.
+		return (bool) $wpdb->get_var( "SELECT 1 FROM {$wpdb->postmeta} m INNER JOIN {$wpdb->posts} p ON p.ID = m.post_id WHERE p.post_status = 'publish' AND ( " . implode( ' OR ', $where ) . ' ) LIMIT 1' );
 	}
 
 	public static function deactivate(): void {

@@ -202,7 +202,7 @@ class Nav_Menu extends Widget_Base {
 					'end'    => __( 'Ending at the item', 'uncoder' ),
 				),
 				'condition'   => array( 'layout' => 'horizontal' ),
-				'ai'          => 'Top-level dropdowns and mega menus (width "auto"): "start" opens at the item\'s left edge (flipping at the screen edge), "center" centres the panel under the item, "menu" centres it under the whole menu bar (wide multi-column dropdowns and mega menus), "end" ends it at the item\'s right edge. Every position is kept inside the screen.',
+				'ai'          => 'Top-level dropdowns and mega menus (width "auto"): "start" opens at the item\'s left edge, "center" centres the panel under the item, "menu" centres it under the whole menu bar (wide multi-column dropdowns and mega menus), "end" ends it at the item\'s right edge. Every position is kept inside the screen.',
 			)
 		);
 		$this->add_control(

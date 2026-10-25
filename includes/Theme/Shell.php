@@ -46,6 +46,32 @@ final class Shell {
 		wp_body_open();
 	}
 
+	/**
+	 * A whole page: header, the main content $main prints, footer. Block themes render all three before wp_head(), in
+	 * page order, as core's block template canvas does: blocks and widgets enqueue styles, scripts and script modules
+	 * while rendering, and a block theme prints the import map and the module scripts in the head only (WooCommerce's
+	 * product buttons, the navigation block…).
+	 *
+	 * @param callable():void $main Prints the main content.
+	 */
+	public static function page( callable $main ): void {
+		if ( ! wp_is_block_theme() ) {
+			self::header();
+			$main();
+			self::footer();
+			return;
+		}
+		$header = self::capture( 'header' );
+		ob_start();
+		$main();
+		$body              = (string) ob_get_clean();
+		self::$footer_html = self::capture( 'footer' );
+		self::open_document();
+		echo '<div class="wp-site-blocks">';
+		echo $header . $body; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- template part / Uncoder template markup and the page content.
+		self::footer();
+	}
+
 	/** Footer markup rendered ahead of wp_head() (block themes), printed by footer(). */
 	private static ?string $footer_html = null;
 

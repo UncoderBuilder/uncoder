@@ -173,6 +173,11 @@ class Text_Editor extends Widget_Base {
 
 	protected function render( array $s, Render_Context $ctx ): void {
 		$content = wp_kses( (string) ( $s['content'] ?? '' ), Utils::kses_rich() );
+		// Shortcodes in the text run on the live page, like in post content (the editor keeps them as typed, so
+		// inline editing shows "[year]" rather than its output).
+		if ( ! $ctx->editor && false !== strpos( $content, '[' ) ) {
+			$content = do_shortcode( $content );
+		}
 		$class   = 'uncoder-text' . ( ! empty( $s['drop_cap'] ) ? ' uncoder-text--dropcap' : '' );
 		$center  = in_array( $s['align'] ?? '', array( 'center' ), true ) && ! empty( $s['max_width']['size'] ) ? ' uncoder-text--centered' : '';
 		echo '<div class="' . esc_attr( $class . $center ) . '"' . $ctx->inline( 'content' ) . '>' . $content . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- kses'd.

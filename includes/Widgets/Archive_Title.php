@@ -140,6 +140,10 @@ class Archive_Title extends Widget_Base {
 		if ( is_home() && ! is_front_page() ) {
 			return esc_html( get_the_title( (int) get_option( 'page_for_posts' ) ) );
 		}
+		// WooCommerce's shop: the shop page's title ("Shop"), as WooCommerce shows it.
+		if ( function_exists( 'is_shop' ) && is_shop() && function_exists( 'woocommerce_page_title' ) ) {
+			return esc_html( (string) woocommerce_page_title( false ) );
+		}
 		if ( ! is_archive() ) {
 			return '';
 		}
@@ -165,6 +169,9 @@ class Archive_Title extends Widget_Base {
 				$words = '<span>' . esc_html__( 'roof', 'uncoder' ) . '</span>';
 				/* translators: %s: search query. */
 				$title = $remove ? $words : sprintf( esc_html__( 'Search results for “%s”', 'uncoder' ), $words );
+			} elseif ( 'product-archive' === $ctx->doc_type && function_exists( 'wc_get_page_id' ) && wc_get_page_id( 'shop' ) > 0 ) {
+				// A shop template previews the shop.
+				$title = esc_html( get_the_title( wc_get_page_id( 'shop' ) ) );
 			} else {
 				$name  = '<span>' . esc_html( Theme_Context::sample()['category'] ) . '</span>';
 				/* translators: %s: category name. */

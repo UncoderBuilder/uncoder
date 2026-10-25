@@ -22,11 +22,13 @@ defined( 'ABSPATH' ) || exit;
  *   Paint. Found when the page is saved (Document assets "lcp"): a background image is preloaded
  *   from <head> with high priority (per device when they differ), an Image widget loads eagerly
  *   with fetchpriority="high" instead of lazily.
- * - inline_css (default off): stylesheets under 16 KB (the Design System and each page's CSS) are printed
- *   inline, saving render-blocking requests; bigger files stay cacheable links.
+ * - inline_css (default off): stylesheets under 16 KB (the Design System, each page's CSS, widget styles) are
+ *   printed inline, saving render-blocking requests; bigger files stay cacheable links.
  * - lazy_bg (default on): background images of sections below the first one load when they come near the
  *   screen (class uncoder-lazy-bg; a one-line head script turns the rule on, so without JavaScript every
  *   background shows as usual).
+ * - woo_store_only (default off): WooCommerce's stylesheets and cart scripts only on pages with something from the
+ *   store (Woo\Woo::store_assets_only()).
  */
 final class Performance {
 
@@ -34,10 +36,12 @@ final class Performance {
 
 	public function register(): void {
 		add_action( 'wp_head', array( $this, 'preload' ), 1 );
+		// Self-hosted Design System fonts: preloaded just before the stylesheets print (wp_print_styles, 8).
+		add_action( 'wp_head', array( \Uncoder\Builder\Core\Fonts::class, 'preload_local' ), 7 );
 	}
 
 	/**
-	 * @return array{lcp:bool, inline_css:bool, lazy_bg:bool}
+	 * @return array{lcp:bool, inline_css:bool, lazy_bg:bool, woo_store_only:bool}
 	 */
 	public static function get(): array {
 		$stored = get_option( Settings_Controller::OPTION, array() );
@@ -47,13 +51,14 @@ final class Performance {
 
 	/**
 	 * @param array<string,mixed> $raw Raw values.
-	 * @return array{lcp:bool, inline_css:bool, lazy_bg:bool}
+	 * @return array{lcp:bool, inline_css:bool, lazy_bg:bool, woo_store_only:bool}
 	 */
 	public static function sanitize( array $raw ): array {
 		return array(
-			'lcp'        => ! array_key_exists( 'lcp', $raw ) || ! empty( $raw['lcp'] ),
-			'inline_css' => ! empty( $raw['inline_css'] ),
-			'lazy_bg'    => ! array_key_exists( 'lazy_bg', $raw ) || ! empty( $raw['lazy_bg'] ),
+			'lcp'            => ! array_key_exists( 'lcp', $raw ) || ! empty( $raw['lcp'] ),
+			'inline_css'     => ! empty( $raw['inline_css'] ),
+			'lazy_bg'        => ! array_key_exists( 'lazy_bg', $raw ) || ! empty( $raw['lazy_bg'] ),
+			'woo_store_only' => ! empty( $raw['woo_store_only'] ),
 		);
 	}
 
@@ -116,7 +121,7 @@ final class Performance {
 	 * Whether the element being rendered is its page's LCP image (Image widget).
 	 */
 	public static function is_lcp( Render_Context $ctx ): bool {
-		if ( $ctx->editor || ! $ctx->doc_id || '' === $ctx->element_id || ! self::get()['lcp'] ) {
+		if ( $ctx->editor || ! $ctx->eager || ! $ctx->doc_id || '' === $ctx->element_id || ! self::get()['lcp'] ) {
 			return false;
 		}
 		$lcp = self::lcp_of( $ctx->doc_id );
@@ -219,7 +224,7 @@ final class Performance {
 		// phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- generated CSS file.
 		$css = (string) file_get_contents( $path );
 		// Relative url() references would break once the CSS moves into the page.
-		if ( preg_match( '/url\(\s*[\'"]?(?!data:|https?:|\/)/i', $css ) ) {
+		if ( preg_match( '/url\(\s*(?![\'"]?(?:data:|https?:|\/))/i', $css ) ) {
 			return null;
 		}
 		return $css;

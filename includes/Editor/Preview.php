@@ -78,6 +78,8 @@ final class Preview {
 		remove_action( 'wp_head', '_admin_bar_bump_cb' );
 		remove_action( 'wp_enqueue_scripts', 'wp_enqueue_admin_bar_bump_styles' );
 		remove_action( 'wp_enqueue_scripts', 'wp_enqueue_admin_bar_header_styles' );
+		// That function also unhooks the deprecated wp_admin_bar_header(), which would otherwise run (and log a notice).
+		remove_action( 'wp_head', 'wp_admin_bar_header' );
 		remove_action( 'wp_footer', 'wp_admin_bar_render', 1000 );
 		// Its stylesheet also sets --wp-admin--admin-bar--height (32px), which sticky headers keep free above them.
 		add_action(

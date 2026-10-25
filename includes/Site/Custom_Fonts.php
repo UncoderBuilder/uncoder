@@ -317,7 +317,23 @@ final class Custom_Fonts {
 		if ( (int) $file['size'] > self::MAX_BYTES ) {
 			return new WP_Error( 'uncoder_invalid', __( 'Font files can be 10 MB at most.', 'uncoder' ), array( 'status' => 400 ) );
 		}
-		$sniffed = self::sniff( (string) $file['tmp_name'] );
+		// replace=0 only adds the file (the font dialog then commits the final set with save()).
+		$added = self::add_face( $family, $category, $weight, $style, (string) $file['tmp_name'], true, '0' !== (string) $request->get_param( 'replace' ) );
+		if ( is_wp_error( $added ) ) {
+			return $added;
+		}
+		return new WP_REST_Response( self::present() );
+	}
+
+	/**
+	 * Stores one font file as a face (weight + style + format) of a family; the family is created when new.
+	 * $uploaded: the file is this request's upload (moved into place), else it is copied (an import, e.g. Elementor's
+	 * custom fonts). $replace: the same variation in the same format is replaced; other formats of it stay as fallbacks.
+	 *
+	 * @return true|WP_Error
+	 */
+	public static function add_face( string $family, string $category, string $weight, string $style, string $path, bool $uploaded = false, bool $replace = true ) {
+		$sniffed = self::sniff( $path );
 		if ( null === $sniffed ) {
 			return new WP_Error( 'uncoder_invalid', __( 'This is not a font file. Upload WOFF2 (best), WOFF, TTF or OTF.', 'uncoder' ), array( 'status' => 400 ) );
 		}
@@ -327,8 +343,9 @@ final class Custom_Fonts {
 		if ( ! $base || ! wp_mkdir_p( $base['dir'] ) ) {
 			return new WP_Error( 'uncoder_fs', __( 'The uploads folder is not writable.', 'uncoder' ), array( 'status' => 500 ) );
 		}
-		$name = trim( sanitize_key( remove_accents( str_replace( ' ', '-', $family ) ) ), '-_' ) . '-' . str_replace( ' ', '-', $weight ) . ( 'italic' === $style ? '-italic' : '' ) . '-' . substr( (string) md5_file( (string) $file['tmp_name'] ), 0, 8 ) . '.' . $ext;
-		if ( ! move_uploaded_file( (string) $file['tmp_name'], $base['dir'] . '/' . $name ) ) { // phpcs:ignore Generic.PHP.ForbiddenFunctions.Found
+		$name   = trim( sanitize_key( remove_accents( str_replace( ' ', '-', $family ) ) ), '-_' ) . '-' . str_replace( ' ', '-', $weight ) . ( 'italic' === $style ? '-italic' : '' ) . '-' . substr( (string) md5_file( $path ), 0, 8 ) . '.' . $ext;
+		$stored = $uploaded ? move_uploaded_file( $path, $base['dir'] . '/' . $name ) : copy( $path, $base['dir'] . '/' . $name ); // phpcs:ignore Generic.PHP.ForbiddenFunctions.Found, WordPress.WP.AlternativeFunctions.file_system_operations_copy
+		if ( ! $stored ) {
 			return new WP_Error( 'uncoder_fs', __( 'Could not store the font file.', 'uncoder' ), array( 'status' => 500 ) );
 		}
 
@@ -337,9 +354,7 @@ final class Custom_Fonts {
 			'c'     => $category,
 			'faces' => array(),
 		);
-		// Replace the same variation in the same format; other formats of it stay as fallbacks.
-		// replace=0 only adds the file (the font dialog then commits the final set with save()).
-		if ( '0' !== (string) $request->get_param( 'replace' ) ) {
+		if ( $replace ) {
 			foreach ( $font['faces'] as $i => $face ) {
 				if ( $face['weight'] === $weight && $face['style'] === $style && $face['format'] === $format ) {
 					self::remove_file( $face['file'] );
@@ -358,7 +373,7 @@ final class Custom_Fonts {
 		$fonts[ $family ] = $font;
 		self::save_all( $fonts );
 		self::changed();
-		return new WP_REST_Response( self::present() );
+		return true;
 	}
 
 	/**

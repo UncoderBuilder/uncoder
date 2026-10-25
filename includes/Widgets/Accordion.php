@@ -388,7 +388,7 @@ class Accordion extends Widget_Base {
 				'selectors' => array( self::ROOT => '--uncoder-acc-icon-color-active: {{VALUE}}' ),
 			)
 		);
-		$this->add_control(
+		$this->add_responsive_control(
 			'icon_box',
 			array(
 				'type'        => 'slider',
@@ -431,7 +431,7 @@ class Accordion extends Widget_Base {
 				'label' => __( 'Item icons', 'uncoder' ),
 			)
 		);
-		$this->add_control(
+		$this->add_responsive_control(
 			'item_icon_size',
 			array(
 				'type'       => 'slider',
@@ -567,8 +567,9 @@ class Accordion extends Widget_Base {
 		}
 		// One FAQPage per page: the questions of every FAQ accordion (tabs of FAQs, a page FAQ plus the shared one)
 		// are gathered and printed once in the footer, where search engines expect a single FAQPage. Outside a page
-		// view (previews, REST renders) or after the footer, the accordion prints its own.
-		if ( did_action( 'wp_footer' ) || ! did_action( 'wp_head' ) ) {
+		// view (previews, REST renders) or after the footer, the accordion prints its own. (Block themes render the
+		// page before wp_head(), so a page view is told by template_redirect.)
+		if ( did_action( 'wp_footer' ) || ! did_action( 'template_redirect' ) ) {
 			self::print_schema( $faq );
 			return;
 		}

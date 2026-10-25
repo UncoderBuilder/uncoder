@@ -21,6 +21,9 @@ class Breadcrumbs extends Widget_Base {
 	/** Structured data is printed once per page. */
 	private static bool $schema_queued = false;
 
+	/** Whether trails include the blog page / post type archive (setting "show_archive", for the render running). */
+	private bool $archive_crumb = true;
+
 	public function name(): string {
 		return 'breadcrumbs';
 	}
@@ -121,6 +124,15 @@ class Breadcrumbs extends Widget_Base {
 				'type'    => 'switch',
 				'label'   => __( 'Current page', 'uncoder' ),
 				'default' => true,
+			)
+		);
+		$this->add_control(
+			'show_archive',
+			array(
+				'type'        => 'switch',
+				'label'       => __( 'Blog / shop page', 'uncoder' ),
+				'default'     => true,
+				'description' => __( 'The posts page or the archive of the post type ("Blog", "Shop") between Home and the categories. Off: "Home / Category / Product", as WooCommerce\'s own breadcrumb.', 'uncoder' ),
 			)
 		);
 		$this->add_control(
@@ -289,6 +301,9 @@ class Breadcrumbs extends Widget_Base {
 	 * @return array<int, array{label:string,url:string}>
 	 */
 	private function blog_crumb(): array {
+		if ( ! $this->archive_crumb ) {
+			return array();
+		}
 		$blog = (int) get_option( 'page_for_posts' );
 		if ( $blog && 'page' === get_option( 'show_on_front' ) ) {
 			return array(
@@ -328,11 +343,11 @@ class Breadcrumbs extends Widget_Base {
 			return $out;
 		}
 		$type = get_post_type_object( $post->post_type );
-		if ( $type && 'page' !== $post->post_type && $type->has_archive ) {
+		if ( $type && 'page' !== $post->post_type && $type->has_archive && $this->archive_crumb ) {
 			$url = get_post_type_archive_link( $post->post_type );
 			if ( $url ) {
 				$out[] = array(
-					'label' => (string) $type->labels->name,
+					'label' => $this->archive_label( $post->post_type, (string) $type->labels->name ),
 					'url'   => $url,
 				);
 			}
@@ -350,16 +365,30 @@ class Breadcrumbs extends Widget_Base {
 			}
 			return $out;
 		}
+		// The first category-like taxonomy the post has a term in (products: product categories, not brands).
 		foreach ( get_object_taxonomies( $post->post_type, 'objects' ) as $tax ) {
 			if ( $tax->hierarchical && $tax->public ) {
 				$term = $this->primary_term( $post, $tax->name );
 				if ( $term ) {
 					$out = array_merge( $out, $this->term_crumbs( $term ) );
+					break;
 				}
-				break;
 			}
 		}
 		return $out;
+	}
+
+	/**
+	 * Name of a post type's archive: WooCommerce's products use the shop page's title ("Shop").
+	 */
+	private function archive_label( string $post_type, string $default ): string {
+		if ( 'product' === $post_type && function_exists( 'wc_get_page_id' ) && wc_get_page_id( 'shop' ) > 0 ) {
+			$title = wp_strip_all_tags( get_the_title( wc_get_page_id( 'shop' ) ) );
+			if ( '' !== $title ) {
+				return $title;
+			}
+		}
+		return $default;
 	}
 
 	/**
@@ -404,10 +433,10 @@ class Breadcrumbs extends Widget_Base {
 						$trail = array_merge( $trail, $this->blog_crumb() );
 					} else {
 						$object = get_post_type_object( $type );
-						$url    = $object && $object->has_archive ? get_post_type_archive_link( $type ) : '';
+						$url    = $object && $object->has_archive && $this->archive_crumb ? get_post_type_archive_link( $type ) : '';
 						if ( $url ) {
 							$trail[] = array(
-								'label' => (string) $object->labels->name,
+								'label' => $this->archive_label( $type, (string) $object->labels->name ),
 								'url'   => $url,
 							);
 						}
@@ -417,7 +446,7 @@ class Breadcrumbs extends Widget_Base {
 			}
 		} elseif ( is_post_type_archive() ) {
 			$trail[] = array(
-				'label' => (string) post_type_archive_title( '', false ),
+				'label' => $this->archive_label( (string) get_query_var( 'post_type' ), (string) post_type_archive_title( '', false ) ),
 				'url'   => '',
 			);
 		} elseif ( is_author() ) {
@@ -564,7 +593,8 @@ class Breadcrumbs extends Widget_Base {
 	protected function render( array $s, Render_Context $ctx ): void {
 		$home_label = trim( (string) ( $s['home_label'] ?? '' ) );
 		$home_label = '' !== $home_label ? $home_label : __( 'Home', 'uncoder' );
-		$full       = $ctx->editor ? $this->editor_trail( $home_label, $ctx ) : $this->trail( $home_label );
+		$this->archive_crumb = ! isset( $s['show_archive'] ) || ! empty( $s['show_archive'] );
+		$full                = $ctx->editor ? $this->editor_trail( $home_label, $ctx ) : $this->trail( $home_label );
 
 		if ( ! $ctx->editor && ! empty( $s['schema'] ) ) {
 			$this->queue_schema( $full );

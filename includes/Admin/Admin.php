@@ -192,6 +192,8 @@ final class Admin {
 			'brand'     => \Uncoder\Builder\Site\White_Label::brand(),
 			'handoff'   => \Uncoder\Builder\Site\Handoff::notice(),
 			'cloud'     => \Uncoder\Builder\Site\Cloud_Library::client_config(),
+			// Settings → Performance offers "Load WooCommerce files only on store pages".
+			'woocommerce' => class_exists( 'WooCommerce' ),
 			'rest'    => array(
 				'root'  => esc_url_raw( rest_url( 'uncoder/v1/' ) ),
 				'wp'    => esc_url_raw( rest_url( 'wp/v2/' ) ),
@@ -219,7 +221,7 @@ final class Admin {
 					'use_mcp'            => current_user_can( Install::MCP_CAP ),
 				),
 			),
-			'templateTypes' => Post_Types::TEMPLATE_TYPES,
+			'templateTypes' => Post_Types::available_types(),
 			'site'    => array(
 				'name'  => get_bloginfo( 'name' ),
 				'theme' => wp_get_theme()->get( 'Name' ),

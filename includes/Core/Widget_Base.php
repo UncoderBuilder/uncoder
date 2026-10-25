@@ -33,9 +33,17 @@ abstract class Widget_Base extends Element_Base {
 	 * @param array<string,mixed> $s Effective settings.
 	 */
 	final public function render_html( array $s, Render_Context $ctx ): string {
+		$level = ob_get_level();
 		ob_start();
-		$this->render( $s, $ctx );
-		return (string) ob_get_clean();
+		try {
+			$this->render( $s, $ctx );
+			return (string) ob_get_clean();
+		} finally {
+			// A widget that threw leaves no output buffer open (it would end up in front of a REST answer).
+			while ( ob_get_level() > $level ) {
+				ob_end_clean();
+			}
+		}
 	}
 
 	/**
@@ -66,6 +74,10 @@ abstract class Widget_Base extends Element_Base {
 	 * @return array<string,mixed>
 	 */
 	protected function link_attrs( $link ): array {
+		// A plain URL (a link setting given as a string, or a dynamic tag's value where no link object was saved).
+		if ( is_string( $link ) ) {
+			$link = array( 'url' => trim( $link ) );
+		}
 		if ( ! is_array( $link ) || empty( $link['url'] ) ) {
 			return array();
 		}
@@ -135,6 +147,12 @@ abstract class Widget_Base extends Element_Base {
 			}
 			$attrs = array_merge( array( 'loading' => 'lazy', 'decoding' => 'async' ), $attrs );
 			$html  = wp_get_attachment_image( (int) $media['id'], $size, false, $attrs );
+			// An SVG is one file for every size: no srcset (WordPress lists the same file under made-up widths), and
+			// no sizes, whose "auto" has the browser keep the width and height attributes' shape (SVG metadata is
+			// often a made-up square) instead of the drawing's own.
+			if ( '' !== $html && 'image/svg+xml' === get_post_mime_type( (int) $media['id'] ) ) {
+				$html = (string) preg_replace( '/\s(?:srcset|sizes)="[^"]*"/', '', $html );
+			}
 			if ( '' !== $html ) {
 				return $html;
 			}
@@ -149,6 +167,52 @@ abstract class Widget_Base extends Element_Base {
 			'decoding' => 'async',
 		);
 		return '<img' . Utils::attrs( array_merge( $base, $attrs ) ) . '>';
+	}
+
+	/**
+	 * An image the widget crops (object-fit: cover or contain in a box of another shape) without the "auto" WordPress
+	 * puts first in the sizes of lazy images: "auto" has the browser pick a file as wide as the box, and a landscape
+	 * photo covering a tall box shows that file enlarged (blurry). The rest of sizes is WordPress's own. A box of the
+	 * image's own shape (an aspect ratio equal to the file's, no height) crops nothing, so it keeps "auto" (a small
+	 * box then gets a small file).
+	 *
+	 * @param array<string,mixed> $s Settings (object_fit, aspect_ratio and height per device).
+	 */
+	protected static function sizes_for_fit( string $img, array $s ): string {
+		$fits = array( $s['object_fit'] ?? '', $s['object_fit_tablet'] ?? '', $s['object_fit_mobile'] ?? '' );
+		if ( ! array_intersect( array( 'cover', 'contain' ), $fits ) || self::box_has_image_shape( $img, $s ) ) {
+			return $img;
+		}
+		return (string) preg_replace( array( '/\ssizes="auto,\s*/', '/\ssizes="auto"/' ), array( ' sizes="', '' ), $img, 1 );
+	}
+
+	/**
+	 * Whether the image's box has the file's own shape on every device: an aspect ratio set (e.g. "4/3") and equal to
+	 * the width and height of the <img> (within 2%) wherever one is set, and no height.
+	 *
+	 * @param array<string,mixed> $s Settings.
+	 */
+	private static function box_has_image_shape( string $img, array $s ): bool {
+		if ( empty( $s['aspect_ratio'] ) || ! preg_match( '/\swidth="(\d+)"/', $img, $w ) || ! preg_match( '/\sheight="(\d+)"/', $img, $h ) || ! (int) $h[1] ) {
+			return false;
+		}
+		foreach ( array( '', '_tablet', '_mobile' ) as $suffix ) {
+			if ( ! empty( $s[ 'height' . $suffix ]['size'] ) ) {
+				return false;
+			}
+		}
+		$own = (int) $w[1] / (int) $h[1];
+		foreach ( array( $s['aspect_ratio'], $s['aspect_ratio_tablet'] ?? '', $s['aspect_ratio_mobile'] ?? '' ) as $ratio ) {
+			if ( '' === (string) $ratio ) {
+				continue;
+			}
+			$parts = array_map( 'floatval', explode( '/', (string) $ratio ) );
+			$value = isset( $parts[1] ) && $parts[1] > 0 ? $parts[0] / $parts[1] : $parts[0];
+			if ( $value <= 0 || abs( $value - $own ) / $own > 0.02 ) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**

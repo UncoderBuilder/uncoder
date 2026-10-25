@@ -32,6 +32,14 @@ final class Fonts {
 	private static ?array $fontshare = null;
 
 	/**
+	 * Google families this page already requests (weights, or the variable axis range as "min..max"): enqueue() runs
+	 * for the Design System and again for each document, and a later call skips what an earlier one covers.
+	 *
+	 * @var array<string, string|string[]>
+	 */
+	private static array $requested = array();
+
+	/**
 	 * @return array<string, array{c:string,w:string[]}> family => [category, weights]
 	 */
 	public static function catalog(): array {
@@ -211,14 +219,19 @@ final class Fonts {
 			$axis      = self::catalog()[ $family ]['v'] ?? null;
 			// Variable fonts: in-between weights (e.g. 650, 750) need the axis range, not static instances.
 			if ( is_array( $axis ) && array_diff( $requested, $available ) ) {
-				$families[ $family ] = (int) $axis[0] . '..' . (int) $axis[1];
+				$wanted = (int) $axis[0] . '..' . (int) $axis[1];
+			} else {
+				$wanted = array_values( array_intersect( $requested, $available ) );
+				if ( ! $wanted ) {
+					$wanted = in_array( '400', $available, true ) ? array( '400' ) : array( $available[0] );
+				}
+				sort( $wanted );
+			}
+			// Already on the page: the whole axis range, or every weight wanted here.
+			$had = self::$requested[ $family ] ?? null;
+			if ( is_string( $had ) || ( is_array( $had ) && is_array( $wanted ) && ! array_diff( $wanted, $had ) ) ) {
 				continue;
 			}
-			$wanted = array_values( array_intersect( $requested, $available ) );
-			if ( ! $wanted ) {
-				$wanted = in_array( '400', $available, true ) ? array( '400' ) : array( $available[0] );
-			}
-			sort( $wanted );
 			$families[ $family ] = $wanted;
 		}
 		if ( $fontshare ) {
@@ -237,7 +250,8 @@ final class Fonts {
 		$theme = (array) Plugin::instance()->kit()->get( 'theme', array() );
 		$optical = ! ( ! empty( $theme['enabled'] ) && 'none' === ( $theme['optical_sizing'] ?? '' ) );
 		foreach ( $families as $family => $weights ) {
-			$parts[] = self::family_param( $family, $weights, $optical );
+			$parts[]                    = self::family_param( $family, $weights, $optical );
+			self::$requested[ $family ] = is_array( $weights ) && is_array( self::$requested[ $family ] ?? null ) ? array_values( array_unique( array_merge( self::$requested[ $family ], $weights ) ) ) : $weights;
 		}
 		self::enqueue_url( 'https://fonts.googleapis.com/css2?' . implode( '&', $parts ) . '&display=swap', $delivery );
 	}
@@ -252,10 +266,78 @@ final class Fonts {
 			$local = self::local_css( $url );
 			if ( $local ) {
 				wp_enqueue_style( $handle, $local, array(), null ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion -- the file name is a content hash.
+				self::$local_sheets[] = $local;
 			}
 			return;
 		}
 		wp_enqueue_style( $handle, $url, array(), null ); // phpcs:ignore WordPress.WP.EnqueuedResourceParameters.MissingVersion
+	}
+
+	/**
+	 * Self-hosted stylesheets enqueued so far on this page (URLs), for preload_local().
+	 *
+	 * @var string[]
+	 */
+	private static array $local_sheets = array();
+
+	/**
+	 * <link rel="preload"> for the Design System's body and heading fonts when they are self-hosted: the upright
+	 * Latin file of each (the regular 400 weight for the body font, the H1 weight for the heading font), so text shows in its own font at the first paint
+	 * instead of swapping in later and moving the layout. Runs in <head> just before the stylesheets print.
+	 */
+	public static function preload_local(): void {
+		if ( ! self::$local_sheets || is_admin() ) {
+			return;
+		}
+		$kit     = Plugin::instance()->kit();
+		$targets = array();
+		foreach ( (array) $kit->get( 'fonts', array() ) as $font ) {
+			if ( in_array( $font['id'] ?? '', array( 'body', 'heading' ), true ) && ! empty( $font['family'] ) ) {
+				$targets[ (string) $font['id'] ] = (string) $font['family'];
+			}
+		}
+		$h1 = 700;
+		foreach ( (array) $kit->get( 'typography', array() ) as $preset ) {
+			if ( 'h1' === ( $preset['id'] ?? '' ) && ! empty( $preset['value']['weight'] ) ) {
+				$h1 = (int) $preset['value']['weight'];
+			}
+		}
+		$uploads = Utils::uploads();
+		$done    = array();
+		foreach ( $targets as $role => $family ) {
+			$weight = 'heading' === $role ? $h1 : 400;
+			foreach ( self::$local_sheets as $sheet ) {
+				$file = $uploads && 0 === strpos( $sheet, $uploads['url'] ) ? $uploads['dir'] . substr( $sheet, strlen( $uploads['url'] ) ) : '';
+				$src  = '' !== $file && is_readable( $file ) ? self::latin_face( (string) file_get_contents( $file ), $family, $weight ) : ''; // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- a local file.
+				if ( '' === $src ) {
+					continue;
+				}
+				$href = dirname( $sheet ) . '/' . $src;
+				if ( ! isset( $done[ $href ] ) ) {
+					$done[ $href ] = true;
+					printf( '<link rel="preload" href="%s" as="font" type="font/woff2" crossorigin>' . "\n", esc_url( $href ) );
+				}
+				break;
+			}
+		}
+	}
+
+	/**
+	 * The file (relative URL) of a family's upright Latin face from a Google Fonts stylesheet: the face whose weight
+	 * (or variable range) covers the given weight, else the family's first upright Latin face.
+	 */
+	private static function latin_face( string $css, string $family, int $weight ): string {
+		$first = '';
+		foreach ( explode( '@font-face', $css ) as $block ) {
+			if ( ! preg_match( '/font-family:\s*[\'"]?' . preg_quote( $family, '/' ) . '[\'"]?\s*;/i', $block ) || ! preg_match( '/font-style:\s*normal/i', $block ) || false === stripos( $block, 'U+0000-00FF' ) || ! preg_match( '/src:\s*url\(([^)\s]+\.woff2)\)/i', $block, $src ) ) {
+				continue;
+			}
+			$first = '' !== $first ? $first : $src[1];
+			if ( preg_match( '/font-weight:\s*(\d+)(?:\s+(\d+))?/i', $block, $w ) && $weight >= (int) $w[1] && $weight <= (int) ( $w[2] ?? $w[1] ) ) {
+				return $src[1];
+			}
+		}
+		return $first;
 	}
 
 	/**

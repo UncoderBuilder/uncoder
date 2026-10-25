@@ -133,8 +133,13 @@ final class Components {
 					$clean  = $registry->process_settings( array( $setting => $value ), array( $setting => $control ), 'sanitize', $errors, '' );
 					if ( array_key_exists( $setting, $clean ) ) {
 						$nodes[ $i ]['settings'][ $setting ] = $clean[ $setting ];
-						// A dynamic tag on the same setting would win over the override: drop it.
+						// A dynamic tag on the same setting (or on its list items' fields) would win over the override: drop it.
 						unset( $nodes[ $i ]['dynamic'][ $setting ] );
+						foreach ( array_keys( (array) ( $nodes[ $i ]['dynamic'] ?? array() ) ) as $key ) {
+							if ( 0 === strpos( (string) $key, $setting . '.' ) ) {
+								unset( $nodes[ $i ]['dynamic'][ $key ] );
+							}
+						}
 					}
 				}
 			}

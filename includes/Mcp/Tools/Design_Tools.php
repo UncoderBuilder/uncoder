@@ -46,7 +46,7 @@ final class Design_Tools {
 			array(
 				'name'        => 'update_design_system',
 				'title'       => 'Update design system',
-				'description' => 'Merges changes into the Design System; every page updates at once. Lists (colors, fonts, typography) merge by id, sections (buttons, layout, forms, theme) merge by key. Set the brand here BEFORE building pages. Returns warnings for invalid values and a contrast report. Undo with revert_design_system. See get_build_guide("design-system").',
+				'description' => 'Merges changes into the Design System; every page updates at once. Lists (colors, fonts, typography) merge by id, sections (buttons, layout, forms, woo, theme) merge by key. Set the brand here BEFORE building pages. Returns warnings for invalid values and a contrast report. Undo with revert_design_system. See get_build_guide("design-system").',
 				'scope'       => 'design',
 				'annotations' => array( 'readOnlyHint' => false, 'destructiveHint' => false, 'idempotentHint' => true, 'openWorldHint' => false ),
 				'input'       => array(
@@ -81,7 +81,7 @@ final class Design_Tools {
 						),
 						'buttons'    => array(
 							'type'        => 'object',
-							'description' => 'Default button style: color, background, hover_color, hover_background, padding ("14px 28px"), radius ("999px"), border, hover_border_color, shadow, typography ({"preset":"button"}), hover_effect (site-wide hover animation for buttons without their own: "" | "lift" | "grow" | "shrink" | "pulse" | "shine" | "arrow" | "fill" | "fill-up" | "underline" | "flip" = text roll), hover_fill (colour of the fill effects).',
+							'description' => 'Default button style: color, background, hover_color, hover_background, padding ("14px 28px"), radius ("999px"), border, hover_border_color, shadow, typography ({"preset":"button"}), hover_effect (site-wide hover animation for buttons without their own: "" | "lift" | "grow" | "shrink" | "pulse" | "shine" | "arrow" | "fill" | "fill-up" | "underline" | "flip" = text roll), hover_fill (colour of the fill effects), woocommerce (bool: WooCommerce\'s buttons outside the WooCommerce widgets take this style too).',
 						),
 						'layout'     => array(
 							'type'        => 'object',
@@ -89,7 +89,11 @@ final class Design_Tools {
 						),
 						'forms'      => array(
 							'type'        => 'object',
-							'description' => 'Form field style: label_color, field_color, field_background, field_border_color, focus_border_color, field_radius, field_padding, label_typography, field_typography.',
+							'description' => 'Form field style: label_color, field_color, field_background, field_border_color, focus_border_color, field_radius, field_padding, label_typography, field_typography, woocommerce (bool: WooCommerce\'s checkout / account fields outside the WooCommerce widgets too).',
+						),
+						'woo'        => array(
+							'type'        => 'object',
+							'description' => 'WooCommerce (Design System → Shop), colours the WooCommerce widgets share: price_color, sale_price_color, badge_background, badge_color, star_color, notice_background, success_color, info_color, error_color. Empty = widget defaults. See get_build_guide("woocommerce").',
 						),
 						'theme'      => array(
 							'type'        => 'object',

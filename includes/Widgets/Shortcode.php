@@ -76,6 +76,21 @@ class Shortcode extends Widget_Base {
 			echo '<div class="uncoder-shortcode__placeholder">' . $this->render_icon( 'brackets' ) . '<span>' . esc_html( $code ) . '</span></div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- icon markup, escaped text.
 			return;
 		}
+		if ( ! $ctx->eager && ! $ctx->editor ) {
+			$output = self::lazy_images( $output );
+		}
 		echo '<div class="uncoder-shortcode">' . $output . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- shortcode output is the responsibility of its plugin, as in post content.
+	}
+
+	/**
+	 * Below a page's first section, images in the output load when they come near the screen. WordPress leaves the
+	 * images a shortcode prints outside the post content eager (a product grid then loads every picture at once);
+	 * an image that says how to load (loading, or fetchpriority="high") keeps its choice.
+	 */
+	public static function lazy_images( string $html ): string {
+		if ( false === stripos( $html, '<img' ) ) {
+			return $html;
+		}
+		return (string) preg_replace( '/<img\b(?![^>]*\sloading\s*=)(?![^>]*\sfetchpriority\s*=\s*["\']?high)/i', '<img loading="lazy"', $html );
 	}
 }

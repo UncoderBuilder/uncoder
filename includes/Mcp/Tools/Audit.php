@@ -83,8 +83,11 @@ final class Audit {
 			// A loop item or single-post layout shows a post's title, image and fields: render it for the latest
 			// published post, as the site will (rendered for the template itself, every dynamic text is empty).
 			$context = $post->ID;
-			if ( Post_Types::TEMPLATE === $post->post_type && in_array( (string) get_post_meta( $post->ID, Utils::META_TYPE, true ), array( 'loop-item', 'single-post', 'single' ), true ) ) {
-				$latest  = get_posts( array( 'post_type' => 'post', 'post_status' => 'publish', 'numberposts' => 1, 'fields' => 'ids' ) );
+			$kind = Post_Types::TEMPLATE === $post->post_type ? (string) get_post_meta( $post->ID, Utils::META_TYPE, true ) : '';
+			if ( in_array( $kind, array( 'loop-item', 'single-post', 'single', 'single-product' ), true ) ) {
+				// A product layout renders for the latest product.
+				$type    = 'single-product' === $kind && post_type_exists( 'product' ) ? 'product' : 'post';
+				$latest  = get_posts( array( 'post_type' => $type, 'post_status' => 'publish', 'numberposts' => 1, 'fields' => 'ids' ) );
 				$context = $latest ? (int) $latest[0] : $post->ID;
 			}
 			$html = Plugin::instance()->documents()->get( $post->ID )->render( array( 'post_id' => $context ) );

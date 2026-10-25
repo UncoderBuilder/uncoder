@@ -112,7 +112,7 @@ class Featured_Image extends Widget_Base {
 				'type'    => 'select',
 				'label'   => __( 'Loading', 'uncoder' ),
 				'options' => array(
-					''      => __( 'Automatic (WordPress decides)', 'uncoder' ),
+					''      => __( 'Automatic (lazy below the first section)', 'uncoder' ),
 					'lazy'  => __( 'Lazy', 'uncoder' ),
 					'eager' => __( 'Eager, high priority (hero image)', 'uncoder' ),
 				),
@@ -279,8 +279,10 @@ class Featured_Image extends Widget_Base {
 		$title    = $post ? wp_strip_all_tags( get_the_title( $post ) ) : '';
 
 		$attrs = array( 'class' => 'uncoder-featured-image__img' );
-		if ( 'lazy' === $loading ) {
-			$attrs['loading'] = 'lazy';
+		// Automatic: lazy below the page's first section (cards in a loop grid too); WordPress cannot tell there.
+		if ( 'lazy' === $loading || ( '' === $loading && ! $ctx->eager && ! $ctx->editor ) ) {
+			$attrs['loading']  = 'lazy';
+			$attrs['decoding'] = 'async';
 		} elseif ( 'eager' === $loading ) {
 			$attrs['loading']       = 'eager';
 			$attrs['fetchpriority'] = 'high';
@@ -304,6 +306,7 @@ class Featured_Image extends Widget_Base {
 			}
 			$img = $this->image( $fallback, $size, $attrs );
 		}
+		$img = self::sizes_for_fit( $img, $s );
 		if ( '' === $img ) {
 			if ( ! $ctx->editor ) {
 				return;

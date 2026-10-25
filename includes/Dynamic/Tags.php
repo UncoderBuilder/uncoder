@@ -7,6 +7,7 @@
 
 namespace Uncoder\Builder\Dynamic;
 
+use Uncoder\Builder\Core\Element_Base;
 use Uncoder\Builder\Core\Render_Context;
 
 defined( 'ABSPATH' ) || exit;
@@ -15,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
  * A dynamic tag replaces a control value with live data (post title, featured image, custom field…).
  *
  * Stored on the element as: "dynamic": { "title": { "tag": "post-title", "options": {}, "before": "", "after": "", "fallback": "" } }
+ * A field of one repeater item is keyed "<repeater>.<item _id>.<field>", e.g. "items.a1b2c3.text".
  */
 final class Tags {
 
@@ -171,6 +173,113 @@ final class Tags {
 			}
 		}
 		return $out;
+	}
+
+	/**
+	 * Splits a dynamic key: a setting ("title") or one field of one repeater item ("items.<item _id>.text"; the item
+	 * is named by its _id, which stays the same when items are moved).
+	 *
+	 * @return array{0:string,1:string,2:string} Setting, item id and field ('' and '' for a setting).
+	 */
+	public static function split_key( string $key ): array {
+		$parts = explode( '.', $key );
+		if ( 3 === count( $parts ) && '' !== $parts[0] && '' !== $parts[1] && '' !== $parts[2] ) {
+			return array( $parts[0], $parts[1], $parts[2] );
+		}
+		return array( $key, '', '' );
+	}
+
+	/**
+	 * The control a dynamic key points at on an element: a setting's control, or a field of a repeater. With the
+	 * element's settings given, an item key also needs that item to exist.
+	 *
+	 * @param array<string,mixed>|null $settings The element's settings.
+	 * @return array<string,mixed>|null
+	 */
+	public static function control_for_key( Element_Base $element, string $key, ?array $settings = null ): ?array {
+		list( $setting, $item, $field ) = self::split_key( $key );
+		$control = $element->get_control( $setting );
+		if ( '' === $item ) {
+			return $control;
+		}
+		if ( ! $control || 'repeater' !== ( $control['type'] ?? '' ) || ! isset( $control['fields'][ $field ] ) ) {
+			return null;
+		}
+		if ( null !== $settings && null === self::item_index( $settings[ $setting ] ?? null, $item ) ) {
+			return null;
+		}
+		return $control['fields'][ $field ];
+	}
+
+	/**
+	 * Position of the repeater item with this _id.
+	 *
+	 * @param mixed $rows Repeater value.
+	 */
+	public static function item_index( $rows, string $item ): ?int {
+		if ( ! is_array( $rows ) ) {
+			return null;
+		}
+		foreach ( array_values( $rows ) as $i => $row ) {
+			if ( is_array( $row ) && (string) ( $row['_id'] ?? '' ) === $item ) {
+				return $i;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * An element's settings with its dynamic tags resolved: settings, and fields of repeater items.
+	 *
+	 * @param array<string,mixed> $dynamic  The element's "dynamic" map.
+	 * @param array<string,mixed> $settings Its (effective) settings.
+	 * @return array<string,mixed>
+	 */
+	public function apply( array $dynamic, array $settings, Render_Context $ctx, ?Element_Base $element = null ): array {
+		foreach ( $dynamic as $key => $def ) {
+			if ( ! is_array( $def ) || empty( $def['tag'] ) ) {
+				continue;
+			}
+			list( $setting, $item, $field ) = self::split_key( (string) $key );
+			if ( '' === $item ) {
+				$value = $this->resolve( $def, $settings[ $setting ] ?? null, $ctx );
+				if ( null !== $value ) {
+					$settings[ $setting ] = $value;
+				}
+				continue;
+			}
+			$i = self::item_index( $settings[ $setting ] ?? null, $item );
+			if ( null === $i ) {
+				continue;
+			}
+			$rows    = array_values( $settings[ $setting ] );
+			$control = $element ? self::control_for_key( $element, (string) $key ) : null;
+			// An item without a value of its own for the field still gets the value shape of that field (a link object).
+			$current = $rows[ $i ][ $field ] ?? ( $control['default'] ?? self::empty_value( $control ) );
+			$value   = $this->resolve( $def, $current, $ctx );
+			if ( null !== $value ) {
+				$rows[ $i ][ $field ] = $value;
+				$settings[ $setting ] = $rows;
+			}
+		}
+		return $settings;
+	}
+
+	/**
+	 * The empty value of a control whose value is an object (links, media), so a resolved value takes its shape.
+	 *
+	 * @param array<string,mixed>|null $control Control.
+	 * @return mixed
+	 */
+	private static function empty_value( ?array $control ) {
+		switch ( $control['type'] ?? '' ) {
+			case 'url':
+			case 'link':
+				return array( 'url' => '' );
+			case 'media':
+				return array( 'id' => 0, 'url' => '' );
+		}
+		return null;
 	}
 
 	/**

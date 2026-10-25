@@ -27,6 +27,7 @@ final class Frontend {
 	private array $rendering = array();
 
 	public function register(): void {
+		add_filter( 'the_content', array( $this, 'skip_stored_content' ), 0 );
 		add_filter( 'the_content', array( $this, 'the_content' ), 9999 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue' ), 20 );
 		add_filter( 'body_class', array( $this, 'body_class' ) );
@@ -136,20 +137,36 @@ final class Frontend {
 	}
 
 	/**
+	 * Whether the_content() puts the post's Uncoder layout in place of its post_content: a builder post, not
+	 * password-protected, outside an excerpt (search results and archives take the plain HTML copy in post_content:
+	 * its blocks sit on lines of their own, so the texts of neighbouring elements do not run together).
+	 */
+	private function takes_over( int $post_id ): bool {
+		return $post_id && Utils::is_builder_post( $post_id ) && ! post_password_required( $post_id ) && ! doing_filter( 'get_the_excerpt' );
+	}
+
+	/**
+	 * The stored post_content of a post whose layout replaces it (the plain copy, or the blocks and shortcodes it
+	 * held before it was built with Uncoder) does not go through WordPress's block and shortcode filters on the
+	 * way: its output would be thrown away, but not what running it does (block scripts and styles queued,
+	 * WooCommerce's checkout block taking the classic checkout's script off, a shortcode doing its work twice).
+	 *
+	 * @param string $content Content.
+	 */
+	public function skip_stored_content( $content ): string {
+		return $this->takes_over( (int) get_the_ID() ) ? '' : (string) $content;
+	}
+
+	/**
 	 * @param string $content Content.
 	 */
 	public function the_content( $content ): string {
 		$post_id = (int) get_the_ID();
-		if ( ! $post_id || ! Utils::is_builder_post( $post_id ) || post_password_required( $post_id ) ) {
+		if ( ! $this->takes_over( $post_id ) ) {
 			return (string) $content;
 		}
 		if ( isset( $this->rendering[ $post_id ] ) ) {
 			return '';
-		}
-		// An excerpt (search results, archives) comes from the plain HTML copy in post_content: its blocks sit on
-		// lines of their own, so the texts of neighbouring elements do not run together, and no layout is rendered.
-		if ( doing_filter( 'get_the_excerpt' ) ) {
-			return (string) $content;
 		}
 		if ( $this->is_preview() && (int) get_queried_object_id() === $post_id ) {
 			return (string) apply_filters( 'uncoder_wb/preview/mount', '', $post_id );
@@ -201,6 +218,14 @@ final class Frontend {
 		}
 		if ( Plugin::instance()->kit()->setting( 'smooth_scroll', true ) ) {
 			$classes[] = 'uncoder-smooth-scroll';
+		}
+		if ( class_exists( 'WooCommerce' ) ) {
+			if ( ! empty( Plugin::instance()->kit()->get( 'buttons' )['woocommerce'] ) ) {
+				$classes[] = 'uncoder-woo-buttons';
+			}
+			if ( ! empty( Plugin::instance()->kit()->get( 'forms' )['woocommerce'] ) ) {
+				$classes[] = 'uncoder-woo-fields';
+			}
 		}
 		if ( is_singular() && Utils::is_builder_post( (int) get_queried_object_id() ) ) {
 			$classes[] = 'uncoder-page';

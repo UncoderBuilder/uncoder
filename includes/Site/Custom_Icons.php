@@ -196,12 +196,35 @@ final class Custom_Icons {
 		}
 		unset( $entry );
 		update_option( self::OPTION, array_values( $list ), false );
+		\Uncoder\Builder\Core\Icons::reset();
 		foreach ( self::index() as $entry ) {
 			if ( $entry['id'] === $id ) {
 				return $entry;
 			}
 		}
 		return array( 'id' => $id );
+	}
+
+	/**
+	 * A set from an SVG font file on this server (an icon font another plugin ships, read while importing a site),
+	 * only the glyphs named in $only when given. A set with the same title gets the glyphs added.
+	 *
+	 * @param string[] $only Glyph names to keep (empty = all, up to the set limit).
+	 * @return string The set id, or '' when the font cannot be read or has none of the glyphs.
+	 */
+	public static function import_svg_font( string $title, string $file, array $only = array() ): string {
+		$dir = self::dir();
+		$svg = is_readable( $file ) ? (string) file_get_contents( $file ) : ''; // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+		$set = '' !== $svg && $dir && wp_mkdir_p( $dir['dir'] ) ? self::from_svg_font( $svg, array(), basename( $file ), $only ) : null;
+		if ( ! is_array( $set ) || ! $set['icons'] ) {
+			return '';
+		}
+		foreach ( (array) get_option( self::OPTION, array() ) as $entry ) {
+			if ( is_array( $entry ) && ( $entry['title'] ?? '' ) === $title && '' !== self::path( (string) $entry['id'] ) ) {
+				return (string) ( self::merge( (string) $entry['id'], $set )['id'] ?? '' );
+			}
+		}
+		return (string) ( self::save( $title, $set )['id'] ?? '' );
 	}
 
 	/**
@@ -226,6 +249,7 @@ final class Custom_Icons {
 			'source'  => $set['source'],
 		);
 		update_option( self::OPTION, array_values( $list ), false );
+		\Uncoder\Builder\Core\Icons::reset();
 		foreach ( self::index() as $entry ) {
 			if ( $entry['id'] === $id ) {
 				return $entry;
@@ -242,6 +266,7 @@ final class Custom_Icons {
 		}
 		$list = array_values( array_filter( (array) get_option( self::OPTION, array() ), static fn( $e ) => is_array( $e ) && ( $e['id'] ?? '' ) !== $id ) );
 		update_option( self::OPTION, $list, false );
+		\Uncoder\Builder\Core\Icons::reset();
 		return new WP_REST_Response( array( 'deleted' => true ) );
 	}
 
@@ -361,9 +386,10 @@ final class Custom_Icons {
 	 * flipped back inside a viewBox of its advance width × the em square.
 	 *
 	 * @param array<int,string> $names Glyph names by code point (Fontello config.json).
+	 * @param string[]          $only  Glyph names to keep (empty = all, up to the set limit).
 	 * @return array{viewBox:string, icons:array<string,mixed>, source:string}|WP_Error
 	 */
-	private static function from_svg_font( string $svg, array $names, string $source ) {
+	private static function from_svg_font( string $svg, array $names, string $source, array $only = array() ) {
 		$xml = self::xml( $svg );
 		if ( ! $xml ) {
 			return new WP_Error( 'uncoder_icons', __( 'The SVG font could not be read.', 'uncoder' ), array( 'status' => 400 ) );
@@ -375,14 +401,18 @@ final class Custom_Icons {
 		$ascent = (float) ( $face && '' !== (string) $face[0]['ascent'] ? (string) $face[0]['ascent'] : $em * 0.85 );
 		$adv    = (float) ( $font ? (string) $font[0]['horiz-adv-x'] : $em ) ?: $em;
 		$icons  = array();
-		foreach ( array_slice( (array) $xml->xpath( '//s:glyph | //glyph' ), 0, self::MAX ) as $glyph ) {
+		$glyphs = (array) $xml->xpath( '//s:glyph | //glyph' );
+		foreach ( $only ? $glyphs : array_slice( $glyphs, 0, self::MAX ) as $glyph ) {
 			$d = (string) $glyph['d'];
-			if ( ! self::path_ok( $d ) ) {
+			if ( ! self::path_ok( $d ) || count( $icons ) >= self::MAX ) {
 				continue;
 			}
 			$unicode = (string) $glyph['unicode'];
 			$code    = '' !== $unicode ? mb_ord( html_entity_decode( $unicode, ENT_QUOTES | ENT_XML1, 'UTF-8' ), 'UTF-8' ) : 0;
 			$raw     = $names[ $code ] ?? ( (string) $glyph['glyph-name'] ?: ( $code ? 'u' . dechex( (int) $code ) : 'icon' ) );
+			if ( $only && ! in_array( $raw, $only, true ) ) {
+				continue;
+			}
 			$name    = self::name( $raw, $icons );
 			$w       = (float) ( '' !== (string) $glyph['horiz-adv-x'] ? (string) $glyph['horiz-adv-x'] : $adv ) ?: $em;
 			$body    = '<path transform="matrix(1 0 0 -1 0 ' . self::num( $ascent ) . ')" d="' . esc_attr( $d ) . '"/>';

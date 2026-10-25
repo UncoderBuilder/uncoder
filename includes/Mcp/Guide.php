@@ -41,6 +41,7 @@ final class Guide {
 			'editing'       => 'edit_elements operations, ids and undo',
 			'animations'    => 'Timeline animations: presets, triggers, stagger, text splits, scroll scrubbing, easing',
 			'theme-builder' => 'Headers, footers, single/archive/404 templates, conditions, popups, mega menus, loop items',
+			'woocommerce'   => 'WooCommerce: product pages, shop, product grids, cart, checkout, account, header cart',
 			'content'       => 'Posts, media, stock images, menus, SEO',
 			'quality'       => 'Accessibility, performance and copy checklist',
 			'recipes'       => 'Complete JSON examples: hero, features, testimonials, FAQ, CTA, footer',
@@ -280,7 +281,7 @@ MD;
 - `{"op":"move","id":"…","parent_id":"…","position":0}` (or before/after).
 - `{"op":"delete","id":"…"}`, `{"op":"duplicate","id":"…"}`, `{"op":"replace","id":"…","element":{…}}`,
 - `{"op":"wrap","ids":["a","b"],"settings":{…}}` wraps siblings in a new container.
-- `{"op":"set_dynamic","id":"…","key":"title","tag":"post-title"}` / `{"op":"unset_dynamic","id":"…","key":"title"}`.
+- `{"op":"set_dynamic","id":"…","key":"title","tag":"post-title"}` / `{"op":"unset_dynamic","id":"…","key":"title"}`. A field of one list item takes `"key":"<repeater>.<item _id>.<field>"` (the item's `_id` from get_page "tree"), e.g. `"items.a1b2c3d.text"` for the last breadcrumb item of an icon list; only fields marked dynamic accept it.
 Use `"dry_run": true` to validate without saving. `find_elements` searches by type/text. Every write returns an undo snapshot; `undo_last_change` reverts it.
 MD;
 	}
@@ -323,7 +324,7 @@ MD;
 		return <<<'MD'
 # Theme builder
 
-Template types: header, footer, single-post, single-page, single (custom post types), archive, search-results, error-404, section (reusable block), popup, mega-menu, loop-item.
+Template types: header, footer, single-post, single-page, single (custom post types), archive, search-results, error-404, section (reusable block), popup, mega-menu, loop-item; with WooCommerce also single-product and product-archive (shop, product categories and tags) — see get_build_guide("woocommerce").
 `create_template({ "type":"header", "title":"Main header", "elements":[…], "conditions":[…] })`. Templates are published (live) by default; pass `"status":"draft"` to stage one and publish it later with `update_template`. Conditions default per type (header/footer: entire site; single-post: all posts; error-404: 404 page…). `get_conditions_map` shows what applies where.
 
 ## Conditions
@@ -367,6 +368,38 @@ Exclude with `"type":"exclude"`. The most specific matching template wins; exclu
 - Mega menu: `create_template` type mega-menu (a grid of icon-box/icon-list links, no section padding needed), then `set_mega_menu({"item_id": <top-level menu item id from list_menus {menu_id}>, "template_id": …, "width":"container"|"full"|"auto"})`.
 - Reusable section: type section; place it with `{"type":"template","settings":{"template_id":…}}` so edits to it update every page.
 - Loop item: a card template using dynamic tags (featured-image, post-title, post-excerpt, post-url) → used by `loop-grid` `loop_template`.
+MD;
+	}
+
+	private static function topic_woocommerce(): string {
+		return <<<'MD'
+# WooCommerce
+
+The WooCommerce widgets (category "woo") render WooCommerce's own templates and functions: prices, stock, variations, cart, checkout, payments, notices and Product structured data stay WooCommerce's, and extensions keep working. They need WooCommerce active (list_widgets shows them then). Their buttons and fields follow the Design System (buttons, forms); prices, sale badge, stars and messages follow `woo` in update_design_system: `{"woo":{"price_color":"…","sale_price_color":"…","badge_background":"…","badge_color":"…","star_color":"…","notice_background":"…","success_color":"…","info_color":"…","error_color":"…"}}` (empty = widget defaults). `{"buttons":{"woocommerce":true}}` / `{"forms":{"woocommerce":true}}` also restyle WooCommerce markup outside the widgets (classic pages, blocks).
+
+## Product page (template type single-product)
+create_template `{"type":"single-product","title":"Product page"}` (default condition: all products). The template runs inside WooCommerce's product lifecycle (notices, product classes, structured data, password form). Product widgets show the product being viewed; their `product` setting (["<id>"]) shows a chosen product anywhere instead.
+Layout: section grid 2 columns (`grid_columns_mobile:1`, gap 56px):
+- left: `product-images` (`layout` "gallery" = WooCommerce slider + thumbnails + zoom + lightbox, `thumbs_position` "below"|"left"|"right"; or "grid"/"stack"; `sale_badge`)
+- right (column, gap 16px): `breadcrumbs`, `sale-badge`, `product-title` (h1), `product-rating`, `product-price`, `product-short-description`, `add-to-cart` (every product type: options of variable products, grouped and external products; `quantity_buttons`, `ajax` = add without reloading), `product-meta`
+- below: `product-tabs` (description, additional information, reviews and extension tabs; Tabs widget styling, `layout_mobile` "accordion"), then `product-related` (`source` "related" or "upsells", `heading`).
+Optional: `woo-notices` where messages should appear (otherwise WooCommerce prints them above the product), `product-stock`, `product-attributes`, `product-content` (the long description outside tabs).
+
+## Shop and categories (template type product-archive)
+create_template `{"type":"product-archive","title":"Shop"}` (default: the shop, product categories and tags). Content: `breadcrumbs`, `archive-title` (shop title, or "Category: Name" — `remove_prefix`), `archive-description`, `products` with `{"source":"current"}` (WooCommerce's products per page, sorting menu, pages, "no products" message; `columns`, `gap`, card parts `show_image|show_badge|show_title|show_rating|show_price|show_button`, `hover_image`, `image_ratio` "1/1"…). A `product-categories` grid suits the shop's top.
+
+## Product grids anywhere
+`products` sources: "latest", "featured", "sale", "best_selling", "top_rated", "terms" (+ `categories`/`tags` term ids), "manual" (+ `products` ids), "related", "upsells", "cross_sells"; `orderby` "date"|"popularity"|"rating"|"price"|"price-desc"|"title"|"menu_order"|"rand"; `limit`; `paginate`; `heading` (hidden with an empty list). WooCommerce's visibility and "hide out of stock" settings apply.
+Custom card designs: a loop-item template with `product-title` (h3, `link`), `product-images` or dynamic image `product-image`, `product-price`, `product-rating`, `sale-badge`, `add-to-cart` (shows WooCommerce's loop button inside loop items); then `loop-grid` / `loop-carousel` with query `{"source":"posts","post_type":"product","product_filter":"featured"|"sale"|"best_selling"|"top_rated"|"in_stock","orderby":"price"|"popularity"|"rating"|"date","order":"asc"|"desc"}`.
+
+## Cart, checkout, account
+Edit WooCommerce's Cart, Checkout and My account pages (list_pages) with update_page: one section holding `cart`, `checkout` or `my-account`. They render WooCommerce's classic pages (every payment and shipping extension works) with Uncoder layout: `cart` (totals beside the products on desktops, below on smaller screens; `layout` "stacked" = below everywhere), `cross_sells`; `checkout` (the same for the order summary; `layout` "stacked"), `sticky` summary; `my-account` (menu beside the content on desktops, above on phones; `layout` "top" = above everywhere). Leave `layout` out for those defaults: "side" holds on every screen size unless `layout_tablet` / `layout_mobile` say otherwise. The editor shows sample content (it has no cart).
+
+## Header cart
+`mini-cart` in the header row: icon with item count (`show_count`, `hide_empty`) and `show_subtotal`; `mode` "drawer" (slide-out cart, `open_on_add`) or "link". Count, subtotal and drawer update through WooCommerce's cart fragments (cached pages too). Put `woo-notices` on product pages when using add without reloading.
+
+## Dynamic tags (group "woo")
+product-price (`which` ""|"regular"|"sale"|"number"), product-sku, product-stock (`show` ""|"quantity"), product-rating (`show` ""|"count"), product-discount (`format` "-%s%"), product-categories, product-short-description, product-image (`index` 0 = main, 1… gallery; image), product-add-to-cart-url (url), cart-count, cart-total, woo-page-url (`page` "shop"|"cart"|"checkout"|"myaccount"). They read the product being rendered: product templates and product loop items.
 MD;
 	}
 

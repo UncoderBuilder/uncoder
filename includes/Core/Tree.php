@@ -187,8 +187,17 @@ final class Tree {
 		if ( ! empty( $node['dynamic'] ) && is_array( $node['dynamic'] ) ) {
 			$dynamic = array();
 			foreach ( $node['dynamic'] as $key => $def ) {
-				if ( ! isset( $controls[ $key ] ) || empty( $controls[ $key ]['dynamic'] ) ) {
-					$this->errors[] = sprintf( '%s.dynamic.%s: this setting does not accept dynamic tags.', $path, $key );
+				$key = (string) $key;
+				list( , $item ) = \Uncoder\Builder\Dynamic\Tags::split_key( $key );
+				if ( '' !== $item && null !== \Uncoder\Builder\Dynamic\Tags::control_for_key( $type, $key ) && null === \Uncoder\Builder\Dynamic\Tags::control_for_key( $type, $key, $clean ) ) {
+					// The repeater item was deleted: its dynamic fields go with it.
+					continue;
+				}
+				$control = \Uncoder\Builder\Dynamic\Tags::control_for_key( $type, $key );
+				if ( ! $control || empty( $control['dynamic'] ) ) {
+					$this->errors[] = '' !== $item
+						? sprintf( '%s.dynamic.%s: not a repeater item field that accepts dynamic tags (use "<repeater>.<item _id>.<field>").', $path, $key )
+						: sprintf( '%s.dynamic.%s: this setting does not accept dynamic tags.', $path, $key );
 					continue;
 				}
 				$clean_def = Plugin::instance()->tags()->sanitize( $def );
@@ -198,7 +207,7 @@ final class Tree {
 				}
 				// A tag must produce the kind of value the setting expects (e.g. only URL tags in links).
 				$tag_def  = Plugin::instance()->tags()->get( $clean_def['tag'] );
-				$accepted = \Uncoder\Builder\Dynamic\Tags::categories_for_control( $controls[ $key ] );
+				$accepted = \Uncoder\Builder\Dynamic\Tags::categories_for_control( $control );
 				if ( ! $tag_def || ! array_intersect( (array) $tag_def['categories'], $accepted ) ) {
 					$this->errors[] = sprintf( '%s.dynamic.%s: tag "%s" cannot be used here (this setting needs a %s tag).', $path, $key, $clean_def['tag'], implode( '/', $accepted ) );
 					continue;

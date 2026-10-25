@@ -100,7 +100,9 @@ class Archive_Description extends Widget_Base {
 
 	protected function render( array $s, Render_Context $ctx ): void {
 		$html = '';
-		if ( ! $ctx->editor && ( is_archive() || ( is_home() && ! is_front_page() ) ) ) {
+		if ( ! $ctx->editor && function_exists( 'is_shop' ) && is_shop() ) {
+			$html = self::shop_description();
+		} elseif ( ! $ctx->editor && ( is_archive() || ( is_home() && ! is_front_page() ) ) ) {
 			$html = (string) get_the_archive_description();
 		}
 		if ( '' === trim( wp_strip_all_tags( $html ) ) ) {
@@ -114,5 +116,21 @@ class Archive_Description extends Widget_Base {
 		}
 		$class = 'uncoder-archive-description' . ( 'center' === ( $s['align'] ?? '' ) ? ' uncoder-archive-description--centered' : '' );
 		echo '<div class="' . esc_attr( $class ) . '">' . wp_kses_post( $html ) . '</div>';
+	}
+
+	/**
+	 * WooCommerce's shop: the shop page's content on its first page, as WooCommerce shows it (not the product post
+	 * type's description).
+	 */
+	public static function shop_description(): string {
+		if ( ! function_exists( 'wc_get_page_id' ) || (int) get_query_var( 'paged' ) > 1 ) {
+			return '';
+		}
+		$page = get_post( wc_get_page_id( 'shop' ) );
+		if ( ! $page instanceof \WP_Post ) {
+			return '';
+		}
+		$content = wp_kses_post( $page->post_content );
+		return function_exists( 'wc_format_content' ) ? (string) wc_format_content( $content ) : wpautop( $content );
 	}
 }

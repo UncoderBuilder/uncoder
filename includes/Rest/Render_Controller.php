@@ -81,13 +81,8 @@ final class Render_Controller {
 				continue;
 			}
 			$settings = $widget->effective_settings( $node['settings'] );
-			if ( ! empty( $node['dynamic'] ) ) {
-				foreach ( $node['dynamic'] as $key => $def ) {
-					$value = Plugin::instance()->tags()->resolve( $def, $settings[ $key ] ?? null, $renderer->context() );
-					if ( null !== $value ) {
-						$settings[ $key ] = $value;
-					}
-				}
+			if ( ! empty( $node['dynamic'] ) && is_array( $node['dynamic'] ) ) {
+				$settings = Plugin::instance()->tags()->apply( $node['dynamic'], $settings, $renderer->context(), $widget );
 			}
 			try {
 				$parts            = $renderer->widget_parts( $widget, $node, $settings );

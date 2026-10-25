@@ -245,11 +245,11 @@ final class Converter {
 		$type = (string) ( $el['elType'] ?? '' );
 		switch ( $type ) {
 			case 'section':
-				return array( $this->section( $el, $depth ) );
+				return array( $this->section( $el, $depth, $ctx ) );
 			case 'column':
 				return array( $this->column( $el, $depth, $ctx ) );
 			case 'container':
-				return array( $this->container( $el, $depth ) );
+				return array( $this->container( $el, $depth, $ctx ) );
 			case 'widget':
 				return $this->widget( $el, $depth, $ctx );
 			default:
@@ -266,14 +266,16 @@ final class Converter {
 	/**
 	 * Flexbox / grid container.
 	 *
-	 * @param array<string,mixed> $el Element.
+	 * @param array<string,mixed> $el  Element.
+	 * @param array<string,mixed> $ctx Parent context ("boxed": an ancestor already keeps the content to the box).
 	 * @return array<string,mixed>
 	 */
-	private function container( array $el, int $depth ): array {
-		$s    = new Source( (array) ( $el['settings'] ?? array() ), 'container', $this );
-		$o    = array();
-		$cw   = $s->str( 'content_width', 'boxed' );
-		$grid = 'grid' === $s->str( 'container_type' );
+	private function container( array $el, int $depth, array $ctx = array() ): array {
+		$s           = new Source( (array) ( $el['settings'] ?? array() ), 'container', $this );
+		$o           = array();
+		$cw          = $s->str( 'content_width', 'boxed' );
+		$grid        = 'grid' === $s->str( 'container_type' );
+		$boxed_above = ! empty( $ctx['boxed'] );
 		if ( 0 === $depth ) {
 			if ( 'full' === $cw ) {
 				$o['content_width'] = 'full';
@@ -283,10 +285,20 @@ final class Converter {
 		} elseif ( 'boxed' === $cw && $s->has( 'boxed_width' ) ) {
 			$o['content_width'] = 'boxed';
 			$s->sl( $o, 'boxed_width', 'boxed_width' );
+		} elseif ( 'boxed' === $cw && ! $boxed_above && empty( $ctx['row'] ) && ! $s->has( 'width' ) ) {
+			// Elementor boxes every container that is not set to full width. Under a boxed ancestor that changes
+			// nothing, but a full-width band inside full-width sections (a hero card) keeps its content to the box.
+			$o['content_width'] = 'boxed';
 		} else {
 			$s->use( 'boxed_width' );
 		}
+		$boxed = $boxed_above || ( 0 === $depth ? 'full' !== $cw : 'boxed' === ( $o['content_width'] ?? '' ) );
 		$s->sl( $o, 'width', 'width' );
+		// Elementor's desktop and tablet widths stop at the mobile breakpoint: there every container is full width
+		// unless it has a mobile width of its own.
+		if ( ( isset( $o['width'] ) || isset( $o['width_tablet'] ) ) && ! isset( $o['width_mobile'] ) ) {
+			$o['width_mobile'] = array( 'size' => 100, 'unit' => '%' );
+		}
 		$s->sl( $o, 'min_height', 'min_height' );
 		if ( $grid ) {
 			$o['layout'] = 'grid';
@@ -305,6 +317,13 @@ final class Converter {
 					}
 				}
 			}
+			// Elementor's grid has 3 columns, and 1 on phones, unless set.
+			if ( ! isset( $o['grid_columns'] ) && ! isset( $o['grid_template'] ) ) {
+				$o['grid_columns'] = 3;
+			}
+			if ( ! isset( $o['grid_columns_mobile'] ) && ! isset( $o['grid_template_mobile'] ) ) {
+				$o['grid_columns_mobile'] = 1;
+			}
 			$this->gaps( $s, $o, 'grid_gaps' );
 			$flow = $s->str( 'grid_auto_flow' );
 			if ( 'column' === $flow ) {
@@ -319,6 +338,10 @@ final class Converter {
 			$s->opt( $o, 'justify', 'flex_justify_content', array( 'flex-start' => 'flex-start', 'center' => 'center', 'flex-end' => 'flex-end', 'space-between' => 'space-between', 'space-around' => 'space-around', 'space-evenly' => 'space-evenly' ), true );
 			$s->opt( $o, 'align', 'flex_align_items', array( 'flex-start' => 'flex-start', 'center' => 'center', 'flex-end' => 'flex-end', 'stretch' => 'stretch', 'baseline' => 'baseline' ), true );
 			$s->opt( $o, 'wrap', 'flex_wrap', array( 'nowrap' => 'nowrap', 'wrap' => 'wrap' ), true );
+			// On phones Elementor's containers wrap unless wrapping is set.
+			if ( ! isset( $o['wrap'] ) && ! isset( $o['wrap_tablet'] ) ) {
+				$o += array( 'wrap_mobile' => 'wrap' );
+			}
 			$this->gaps( $s, $o, 'flex_gap' );
 			if ( ! isset( $o['gap'] ) && ! isset( $o['row_gap'] ) ) {
 				$gc = $this->kit_gap( 'column' );
@@ -348,17 +371,25 @@ final class Converter {
 		$this->layout_common( $s, $o );
 		$s->use( 'isInner', 'presetTitle', 'presetIcon' );
 		$node = $this->node( $el, 'container', $o, $s );
-		$node['children'] = $this->children( (array) ( $el['elements'] ?? array() ), $depth + 1, array( 'row' => $grid || in_array( $o['direction'] ?? 'column', array( 'row', 'row-reverse' ), true ) ) );
+		$node['children'] = $this->children(
+			(array) ( $el['elements'] ?? array() ),
+			$depth + 1,
+			array(
+				'row'   => $grid || in_array( $o['direction'] ?? 'column', array( 'row', 'row-reverse' ), true ),
+				'boxed' => $boxed,
+			)
+		);
 		return $node;
 	}
 
 	/**
 	 * Legacy section (and inner section): a row of columns.
 	 *
-	 * @param array<string,mixed> $el Element.
+	 * @param array<string,mixed> $el     Element.
+	 * @param array<string,mixed> $parent Parent context.
 	 * @return array<string,mixed>
 	 */
-	private function section( array $el, int $depth ): array {
+	private function section( array $el, int $depth, array $parent = array() ): array {
 		$s     = new Source( (array) ( $el['settings'] ?? array() ), 'section', $this );
 		$o     = array();
 		$inner = $depth > 0 || ! empty( $el['isInner'] );
@@ -418,6 +449,7 @@ final class Converter {
 		$ctx = array(
 			'gap'              => $gap_px,
 			'content_position' => $s->str( 'content_position' ),
+			'boxed'            => ! empty( $parent['boxed'] ) || ( $inner ? 'boxed' === ( $o['content_width'] ?? '' ) : 'full_width' !== $layout ),
 		);
 
 		// One unstyled column: the section itself holds the widgets (a simpler tree, same look).
@@ -636,7 +668,7 @@ final class Converter {
 		$inline = $this->inline_flow( $s, $o, (array) ( $el['elements'] ?? array() ) );
 		$this->layout_common( $s, $o );
 		$node             = $this->node( $el, 'container', $o, $s );
-		$node['children'] = $this->children( (array) ( $el['elements'] ?? array() ), $depth + 1, array( 'inline_align' => $inline ? '' : $s->str( 'align' ), 'row' => $inline ) );
+		$node['children'] = $this->children( (array) ( $el['elements'] ?? array() ), $depth + 1, array( 'inline_align' => $inline ? '' : $s->str( 'align' ), 'row' => $inline, 'boxed' => ! empty( $ctx['boxed'] ) ) );
 		if ( $inline ) {
 			$node['children'] = self::full_width( $node['children'] );
 		}
@@ -682,7 +714,55 @@ final class Converter {
 	 *
 	 * @param array<string,mixed> $o Output.
 	 */
+	/**
+	 * Uncoder Elements' fluid background (WebGL shaders on a section / container) → Uncoder's animated background,
+	 * which has the same shaders, settings, defaults and opacity (only "Follow the pointer" defaults off in Uncoder).
+	 *
+	 * @param array<string,mixed> $o Uncoder settings (by reference).
+	 */
+	private function fluid_background( Source $s, array &$o ): void {
+		$keys = array( 'uncoder_section_fluid_on', 'uncoder_fluid_animation', 'uncoder_fluid_opacity', 'section_fluid_settings', 'section_fluid_interactive', 'section_fluid_static', 'section_fluid_texture', 'section_fluid_color_bg' );
+		if ( 'yes' !== $s->str( 'uncoder_section_fluid_on' ) ) {
+			return;
+		}
+		$anim = $s->str( 'uncoder_fluid_animation' );
+		if ( ! isset( \Uncoder\Builder\Core\Animated_Backgrounds::options()[ $anim ] ) ) {
+			$this->setting( 'fluid background', '' !== $anim ? $anim : '(no animation chosen)' );
+			$s->use( ...$keys );
+			return;
+		}
+		$o['bg_animation'] = $anim;
+		for ( $i = 1; $i <= 4; $i++ ) {
+			$s->col( $o, 'bg_anim_color_' . $i, 'uncoder_section_fluid_color_' . $i );
+		}
+		$s->col( $o, 'bg_anim_bg', 'section_fluid_color_bg' );
+		foreach ( array( 'speed', 'scale', 'intensity', 'noise', 'angle', 'offset_x', 'offset_y' ) as $k ) {
+			$v = $s->num( 'section_fluid_' . $k );
+			if ( null !== $v ) {
+				$o[ 'bg_anim_' . $k ] = $v;
+			}
+		}
+		$frame = $s->num( 'section_fluid_progress' );
+		if ( null !== $frame ) {
+			$o['bg_anim_frame'] = $frame;
+		}
+		$o['bg_anim_interactive'] = 'yes' === $s->str( 'section_fluid_interactive', 'yes' );
+		if ( 'yes' === $s->str( 'section_fluid_static' ) ) {
+			$o['bg_anim_freeze'] = true;
+		}
+		$image = $this->media( $s->raw( 'section_fluid_texture' ) );
+		if ( $image ) {
+			$o['bg_anim_image'] = $image;
+		}
+		$opacity = $s->num( 'uncoder_fluid_opacity' );
+		if ( null !== $opacity && $opacity < 1 ) {
+			$o['bg_anim_opacity'] = max( 0, $opacity );
+		}
+		$s->use( ...$keys );
+	}
+
 	private function layout_common( Source $s, array &$o ): void {
+		$this->fluid_background( $s, $o );
 		Source::put( $o, 'background', $s->bg( 'background', array( 'classic', 'gradient', 'video', 'slideshow' ) ) );
 		Source::put( $o, 'background_hover', $s->bg( 'background_hover' ) );
 		$s->use( 'background_hover_transition' );
@@ -772,6 +852,119 @@ final class Converter {
 	 * @param array<string,mixed> $o   Output.
 	 * @param string[]            $css Extra custom CSS rules.
 	 */
+	/** Elementor class names that custom CSS targets → the converted widget's Uncoder markup ("" = its root element). */
+	private const CSS_CLASSES = array(
+		'*'         => array( '.elementor-widget-container' => '' ),
+		'heading'   => array( '.elementor-heading-title' => '' ),
+		'button'    => array(
+			'.elementor-button-content-wrapper' => '.uncoder-btn',
+			'.elementor-button-text'            => '.uncoder-btn__text',
+			'.elementor-button-icon'            => '.uncoder-btn__icon',
+			'.elementor-button'                 => '.uncoder-btn',
+		),
+		'icon-box'  => array(
+			'.elementor-icon-box-wrapper'     => '',
+			'.elementor-icon-box-icon'        => '.uncoder-icon-box__media',
+			'.elementor-icon-box-content'     => '.uncoder-icon-box__content',
+			'.elementor-icon-box-title'       => '.uncoder-icon-box__title',
+			'.elementor-icon-box-description' => '.uncoder-icon-box__description',
+			'.elementor-icon'                 => '.uncoder-icon-box__icon',
+		),
+		'icon-list' => array(
+			'.elementor-icon-list-items' => '',
+			'.elementor-icon-list-item'  => '.uncoder-icon-list__item',
+			'.elementor-icon-list-icon'  => '.uncoder-icon-list__icon',
+			'.elementor-icon-list-text'  => '.uncoder-icon-list__text',
+		),
+		'image'     => array( '.elementor-image' => '' ),
+		'search'      => array(
+			'.e-search-input-wrapper' => '',
+			'.e-search-input'         => '.uncoder-search__box',
+			'.e-search-label'         => '.uncoder-search__button',
+		),
+		'nested-tabs' => array(
+			'.e-n-tabs'           => '',
+			'.e-n-tabs-heading'   => '.uncoder-tabs__list',
+			'.e-n-tab-title'      => '.uncoder-tabs__tab',
+			'.e-n-tab-title-text' => '.uncoder-tabs__title',
+			'.e-n-tabs-content'   => '.uncoder-tabs__panels',
+		),
+		// Elementor's item class sits on the text span of each item (prefix + values), not on the list item.
+		'post-info' => array(
+			'.elementor-icon-list-items'              => '',
+			'.elementor-icon-list-item'               => '.uncoder-post-info__item',
+			'.elementor-post-info__item-prefix'       => '.uncoder-post-info__before',
+			'.elementor-post-info__item'              => '.uncoder-post-info__text',
+			'.elementor-icon-list-text'               => '.uncoder-post-info__text',
+			'.elementor-post-info__terms-list-item'   => '.uncoder-post-info__term',
+			'.elementor-post-info__terms-list'        => '.uncoder-post-info__terms',
+		),
+	);
+
+	/**
+	 * Site, page and template CSS written for Elementor's theme builder: its header / footer location classes and
+	 * Uncoder Elements' sticky-header state (on the <header>) become Uncoder's (the location wrapper, "is-scrolled").
+	 */
+	public static function css_locations( string $css ): string {
+		if ( '' === $css || false === strpos( $css, 'elementor-location-' ) ) {
+			return $css;
+		}
+		$css = (string) preg_replace(
+			array( '/\.elementor-location-header\s+header:not\(\.uncoder-sticky-active\)/', '/\.elementor-location-header\s+header\.uncoder-sticky-active/' ),
+			array( '.uncoder-location--header:not(.is-scrolled) header', '.uncoder-location--header.is-scrolled header' ),
+			$css
+		);
+		return (string) preg_replace( '/\.elementor-location-(header|footer)(?![\w-])/', '.uncoder-location--$1', $css );
+	}
+
+	/**
+	 * Site-wide CSS written against Elementor's markup (Site Settings CSS, a theme's custom CSS): element ids become
+	 * the converted elements' classes (.elementor-element-1a2b3c → .uncoder-e1a2b3c) and the widgets' known inner
+	 * classes become Uncoder's (.elementor-icon-list-item → .uncoder-icon-list__item, .elementor-button → .uncoder-btn).
+	 * Classes that stand for a widget's own box (.elementor-widget-container…) have no single equivalent here and stay.
+	 */
+	public static function site_css( string $css ): string {
+		$css = self::css_locations( $css );
+		if ( '' === $css || false === strpos( $css, 'elementor-' ) ) {
+			return $css;
+		}
+		$css = (string) preg_replace( '/\.elementor-element-([0-9a-f]{6,8})(?![\w-])/', '.uncoder-e$1', $css );
+		$map = array();
+		foreach ( self::CSS_CLASSES as $classes ) {
+			foreach ( $classes as $from => $to ) {
+				// .elementor-icon is several widgets' icon: without the widget it cannot be told apart.
+				if ( '' !== $to && ! isset( $map[ $from ] ) && '.elementor-icon' !== $from ) {
+					$map[ $from ] = $to;
+				}
+			}
+		}
+		uksort( $map, static fn( $a, $b ) => strlen( $b ) <=> strlen( $a ) );
+		foreach ( $map as $from => $to ) {
+			$css = (string) preg_replace( '/' . preg_quote( $from, '/' ) . '(?![\w-])/', $to, $css );
+		}
+		return $css;
+	}
+
+	/**
+	 * Custom CSS written against Elementor's markup, rewritten for the converted widget: known inner classes become
+	 * Uncoder's, and "selector .<root class>" becomes "selector". Anything else is kept as written.
+	 */
+	private static function custom_css_classes( string $css, string $type ): string {
+		$css = self::css_locations( $css );
+		if ( '' === $css || ! preg_match( '/\.e(?:lementor)?-/', $css ) ) {
+			return $css;
+		}
+		$map = array_merge( self::CSS_CLASSES['*'], self::CSS_CLASSES[ $type ] ?? array() );
+		uksort( $map, static fn( $a, $b ) => strlen( $b ) <=> strlen( $a ) );
+		foreach ( $map as $from => $to ) {
+			$q   = preg_quote( $from, '/' );
+			$css = (string) ( '' === $to
+				? preg_replace( '/selector\s+' . $q . '(?![\w-])/', 'selector', $css )
+				: preg_replace( '/' . $q . '(?![\w-])/', $to, $css ) );
+		}
+		return $css;
+	}
+
 	private function identity( Source $s, array &$o, array $css = array() ): void {
 		$classes = trim( $s->str( '_css_classes' ) . ' ' . $s->str( 'css_classes' ) );
 		if ( '' !== $classes ) {
@@ -808,7 +1001,7 @@ final class Converter {
 				$o[ '_hide_' . $device ] = true;
 			}
 		}
-		$custom = $s->str( 'custom_css' );
+		$custom = self::custom_css_classes( $s->str( 'custom_css' ), $s->type );
 		if ( '' !== $custom ) {
 			$css[] = $custom;
 		}
@@ -1025,6 +1218,15 @@ final class Converter {
 				}
 			}
 		}
+		// A divider in a row fills the free space (Elementor grows it there). Uncoder's divider is 100% wide, so it
+		// grows from a zero basis instead of squeezing the widgets next to it.
+		if ( 'divider' === $type && ! empty( $ctx['row'] ) && '' === $s->str( '_flex_size' ) ) {
+			$o['_flex_grow']  = 1;
+			$o['_flex_basis'] = array(
+				'size' => 0,
+				'unit' => 'px',
+			);
+		}
 		$node = $this->node( $el, $type, $o, $s, Widgets::DYNAMIC[ $wtype ] ?? array() );
 		if ( isset( $res[2] ) && is_array( $res[2] ) ) {
 			$node['children'] = $res[2];
@@ -1168,6 +1370,9 @@ final class Converter {
 	 * @return array<string,mixed>
 	 */
 	public function node( array $el, string $type, array $o, Source $s, array $dynamic = array() ): array {
+		// Dynamic tags of repeater item fields, given by the widget mapper (item_dynamic()).
+		$items = is_array( $o['__dynamic'] ?? null ) ? $o['__dynamic'] : array();
+		unset( $o['__dynamic'] );
 		$node = array(
 			'id'       => self::id( (string) ( $el['id'] ?? '' ) ),
 			'type'     => $type,
@@ -1177,9 +1382,13 @@ final class Converter {
 		if ( '' !== $label ) {
 			$node['label'] = $label;
 		}
-		$dyn = $this->dynamic( $s, $type, $dynamic );
+		$links = array();
+		$dyn   = $this->dynamic( $s, $type, $dynamic, $links ) + $items;
 		if ( $dyn ) {
 			$node['dynamic'] = $dyn;
+		}
+		foreach ( $links as $key => $url ) {
+			$node['settings'][ $key ] = array( 'url' => esc_url_raw( $url ) ) + (array) ( $node['settings'][ $key ] ?? array() );
 		}
 		list( $keys, $bps ) = $s->leftovers();
 		foreach ( $keys as $k ) {
@@ -1225,82 +1434,186 @@ final class Converter {
 	 * @param array<string,string> $map Elementor key => Uncoder key.
 	 * @return array<string, array<string,mixed>>
 	 */
-	private function dynamic( Source $s, string $type, array $map ): array {
-		$out = array();
+	private function dynamic( Source $s, string $type, array $map, array &$links = array() ): array {
+		$out     = array();
+		$element = Plugin::instance()->elements()->get( $type );
 		foreach ( $s->dynamic() as $key => $shortcode ) {
-			if ( ! is_string( $shortcode ) || '' === $shortcode || ! preg_match( '/name="([a-z0-9_\-]+)"/i', $shortcode, $m ) ) {
-				continue;
-			}
 			if ( array_key_exists( $key, $map ) && '' === $map[ $key ] ) {
 				continue;
 			}
-			$settings = array();
-			if ( preg_match( '/settings="([^"]*)"/', $shortcode, $sm ) ) {
-				$decoded  = json_decode( urldecode( $sm[1] ), true );
-				$settings = is_array( $decoded ) ? $decoded : array();
-			}
-			$tag     = self::DYNAMIC_TAGS[ $m[1] ] ?? '';
 			$to      = $map[ $key ] ?? '';
-			$element = Plugin::instance()->elements()->get( $type );
 			$control = $element && '' !== $to ? $element->get_control( $to ) : null;
-			$def     = '' !== $tag ? Plugin::instance()->tags()->get( $tag ) : null;
-			if ( ! $control || empty( $control['dynamic'] ) || ! $def || ! array_intersect( (array) $def['categories'], \Uncoder\Builder\Dynamic\Tags::categories_for_control( $control ) ) ) {
-				$this->setting( $s->type, 'dynamic tag “' . $m[1] . '” on ' . $key );
+			$url     = $this->internal_url( $shortcode );
+			if ( null !== $url && in_array( $control['type'] ?? '', array( 'url', 'link' ), true ) ) {
+				// Elementor's "Internal URL" (a page of this site): its address, as a plain link.
+				$links[ $to ] = $url;
 				continue;
 			}
-			$options = array();
-			switch ( $tag ) {
-				case 'post-excerpt':
-					if ( is_numeric( $settings['max_length'] ?? null ) ) {
-						$options['length'] = (int) $settings['max_length'];
-					}
-					break;
-				case 'post-date':
-					$options['type'] = false !== strpos( (string) ( $settings['type'] ?? '' ), 'modified' ) ? 'modified' : 'published';
-					$format          = (string) ( $settings['format'] ?? 'default' );
-					$options['format'] = 'custom' === $format ? (string) ( $settings['custom_format'] ?? '' ) : ( 'default' === $format ? '' : $format );
-					break;
-				case 'custom-field':
-					$options['key'] = (string) ( $settings['custom_key'] ?? '' ) ?: (string) ( $settings['key'] ?? '' );
-					break;
-				case 'post-terms':
-					$options['taxonomy']  = (string) ( $settings['taxonomy'] ?? 'category' );
-					$options['separator'] = (string) ( $settings['separator'] ?? ', ' );
-					break;
-				case 'request-param':
-					$options['name'] = (string) ( $settings['query_var'] ?? '' );
-					break;
-				case 'shortcode':
-					$options['shortcode'] = (string) ( $settings['shortcode'] ?? '' );
-					break;
-				case 'popup':
-					$popup = (int) ( $settings['popup'] ?? 0 );
-					if ( ! isset( $this->opt['templates'][ $popup ] ) ) {
-						$this->setting( $s->type, 'popup link (convert the popup first)' );
-						continue 2;
-					}
-					$options['popup']  = (string) $this->opt['templates'][ $popup ];
-					$options['action'] = in_array( $settings['action'] ?? 'open', array( 'open', 'close', 'toggle' ), true ) ? $settings['action'] : 'open';
-					break;
+			$clean   = $this->dynamic_tag( $shortcode, $control, $s->type, (string) $key );
+			if ( null !== $clean ) {
+				$out[ $to ] = $clean;
 			}
-			$clean = Plugin::instance()->tags()->sanitize(
-				array_filter(
-					array(
-						'tag'      => $tag,
-						'options'  => $options,
-						'before'   => (string) ( $settings['before'] ?? '' ),
-						'after'    => (string) ( $settings['after'] ?? '' ),
-						'fallback' => (string) ( $settings['fallback'] ?? '' ),
-					)
-				)
-			);
-			if ( null === $clean ) {
-				$this->setting( $s->type, 'dynamic tag “' . $m[1] . '” on ' . $key );
-				continue;
-			}
-			$out[ $to ] = $clean;
 		}
 		return $out;
+	}
+
+	/**
+	 * Dynamic tags of repeater item fields (Elementor keeps them on each item, in its "__dynamic__"), keyed as Uncoder
+	 * stores them: "<repeater>.<item _id>.<field>". A widget mapper puts the result in its settings' "__dynamic"
+	 * (node() takes it out).
+	 *
+	 * @param array<int, mixed>    $rows Elementor items.
+	 * @param array<string,string> $map  Elementor field => Uncoder field.
+	 * @return array<string, array<string,mixed>>
+	 */
+	public function item_dynamic( string $wtype, string $type, string $repeater, array $rows, array $map ): array {
+		$element = Plugin::instance()->elements()->get( $type );
+		$out     = array();
+		foreach ( $rows as $row ) {
+			// The item _id as Widgets::row() keeps it.
+			$id = is_array( $row ) ? strtolower( (string) preg_replace( '/[^A-Za-z0-9]/', '', (string) ( $row['_id'] ?? '' ) ) ) : '';
+			if ( ! is_array( $row['__dynamic__'] ?? null ) || ! preg_match( '/^[a-z0-9]{3,32}$/', $id ) ) {
+				continue;
+			}
+			foreach ( $row['__dynamic__'] as $key => $shortcode ) {
+				// Internal URLs become the item's plain link (row_link()).
+				if ( ! isset( $map[ $key ] ) || null !== $this->internal_url( $shortcode ) ) {
+					continue;
+				}
+				$ukey    = $repeater . '.' . $id . '.' . $map[ $key ];
+				$control = $element ? \Uncoder\Builder\Dynamic\Tags::control_for_key( $element, $ukey ) : null;
+				$clean   = $this->dynamic_tag( $shortcode, $control, $wtype, $repeater . ' item ' . $key );
+				if ( null !== $clean ) {
+					$out[ $ukey ] = $clean;
+				}
+			}
+		}
+		return $out;
+	}
+
+	/**
+	 * The address Elementor's "Internal URL" tag points at (a post, term, attachment or author of this site), or null
+	 * (another tag, nothing found, or a template from another site).
+	 *
+	 * @param mixed $shortcode Elementor's stored tag.
+	 */
+	public function internal_url( $shortcode ): ?string {
+		if ( ! is_string( $shortcode ) || ! preg_match( '/name="internal-url"/', $shortcode ) || $this->opt['remote'] ) {
+			return null;
+		}
+		$settings = preg_match( '/settings="([^"]*)"/', $shortcode, $sm ) ? json_decode( urldecode( $sm[1] ), true ) : array();
+		$settings = is_array( $settings ) ? $settings : array();
+		switch ( (string) ( $settings['type'] ?? 'post' ) ) {
+			case 'taxonomy':
+				$term = get_term( (int) ( $settings['taxonomy_id'] ?? 0 ) );
+				$url  = $term instanceof \WP_Term ? get_term_link( $term ) : '';
+				break;
+			case 'attachment':
+				$url = wp_get_attachment_url( (int) ( $settings['attachment_id'] ?? 0 ) );
+				break;
+			case 'author':
+				$id  = (int) ( $settings['author_id'] ?? 0 );
+				$url = $id ? get_author_posts_url( $id ) : '';
+				break;
+			default:
+				$id  = (int) ( $settings['post_id'] ?? 0 );
+				$url = $id ? get_permalink( $id ) : '';
+		}
+		return is_string( $url ) && '' !== $url ? $url : null;
+	}
+
+	/**
+	 * A repeater item's link: its Internal URL tag's address when it has one, else its own link.
+	 *
+	 * @param array<string,mixed> $row Elementor item.
+	 * @return array<string,mixed>|null
+	 */
+	public function row_link( array $row, string $key = 'link' ): ?array {
+		$link = $this->link( $row[ $key ] ?? null );
+		$url  = $this->internal_url( $row['__dynamic__'][ $key ] ?? null );
+		return null !== $url ? array( 'url' => $url ) + (array) $link : $link;
+	}
+
+	/**
+	 * One Elementor dynamic tag ([elementor-tag … name="post-title" settings="…"]) as an Uncoder dynamic definition
+	 * for a control, or null (reported) when it has no twin or does not fit the control.
+	 *
+	 * @param mixed                    $shortcode Elementor's stored tag.
+	 * @param array<string,mixed>|null $control   The Uncoder control it goes to.
+	 * @return array<string,mixed>|null
+	 */
+	private function dynamic_tag( $shortcode, ?array $control, string $wtype, string $key ): ?array {
+		if ( ! is_string( $shortcode ) || '' === $shortcode || ! preg_match( '/name="([a-z0-9_\-]+)"/i', $shortcode, $m ) ) {
+			return null;
+		}
+		$settings = array();
+		if ( preg_match( '/settings="([^"]*)"/', $shortcode, $sm ) ) {
+			$decoded  = json_decode( urldecode( $sm[1] ), true );
+			$settings = is_array( $decoded ) ? $decoded : array();
+		}
+		$tag     = self::DYNAMIC_TAGS[ $m[1] ] ?? '';
+		$def     = '' !== $tag ? Plugin::instance()->tags()->get( $tag ) : null;
+		if ( ! $control || empty( $control['dynamic'] ) || ! $def || ! array_intersect( (array) $def['categories'], \Uncoder\Builder\Dynamic\Tags::categories_for_control( $control ) ) ) {
+			$this->setting( $wtype, 'dynamic tag “' . $m[1] . '” on ' . $key );
+			return null;
+		}
+		$options = array();
+		switch ( $tag ) {
+			case 'post-excerpt':
+				if ( is_numeric( $settings['max_length'] ?? null ) ) {
+					$options['length'] = (int) $settings['max_length'];
+				}
+				break;
+			case 'post-date':
+				$options['type'] = false !== strpos( (string) ( $settings['type'] ?? '' ), 'modified' ) ? 'modified' : 'published';
+				$format          = (string) ( $settings['format'] ?? 'default' );
+				$options['format'] = 'custom' === $format ? (string) ( $settings['custom_format'] ?? '' ) : ( 'default' === $format ? '' : $format );
+				break;
+			case 'custom-field':
+				$options['key'] = (string) ( $settings['custom_key'] ?? '' ) ?: (string) ( $settings['key'] ?? '' );
+				break;
+			case 'post-terms':
+				$options['taxonomy']  = (string) ( $settings['taxonomy'] ?? 'category' );
+				$options['separator'] = (string) ( $settings['separator'] ?? ', ' );
+				break;
+			case 'request-param':
+				$options['name'] = (string) ( $settings['query_var'] ?? '' );
+				break;
+			case 'archive-title':
+				// "Include Context" is on unless switched off.
+				if ( array_key_exists( 'include_context', $settings ) && 'yes' !== $settings['include_context'] ) {
+					$options['remove_prefix'] = true;
+				}
+				break;
+			case 'shortcode':
+				$options['shortcode'] = (string) ( $settings['shortcode'] ?? '' );
+				break;
+			case 'popup':
+				$popup = (int) ( $settings['popup'] ?? 0 );
+				if ( ! isset( $this->opt['templates'][ $popup ] ) ) {
+					$this->setting( $wtype, 'popup link (convert the popup first)' );
+					return null;
+				}
+				$options['popup']  = (string) $this->opt['templates'][ $popup ];
+				$options['action'] = in_array( $settings['action'] ?? 'open', array( 'open', 'close', 'toggle' ), true ) ? $settings['action'] : 'open';
+				break;
+		}
+		$clean = Plugin::instance()->tags()->sanitize(
+			array_filter(
+				array(
+					'tag'      => $tag,
+					'options'  => $options,
+					'before'   => (string) ( $settings['before'] ?? '' ),
+					'after'    => (string) ( $settings['after'] ?? '' ),
+					'fallback' => (string) ( $settings['fallback'] ?? '' ),
+				)
+			)
+		);
+		if ( null === $clean ) {
+			$this->setting( $wtype, 'dynamic tag “' . $m[1] . '” on ' . $key );
+			return null;
+		}
+		return $clean;
 	}
 
 	/* ------------------------------------------------------------------ Values shared by widgets */
@@ -1394,6 +1707,30 @@ final class Converter {
 		return $out;
 	}
 
+	/** Uncoder Elements' icon fonts that become custom icon sets: library => [set title, SVG font, class prefix]. */
+	private const FONT_ICONS = array(
+		'remix-icons'   => array( 'Remix Icon', 'assets/icons/remix/remixicon.svg', 'ri ri-|ri-' ),
+		'uncoder-icons' => array( 'Uncoder Icons', 'assets/icons/uncoder-icons/uncoder-icons.svg', 'uncoder-icon-' ),
+	);
+
+	/**
+	 * An icon from one of Uncoder Elements' fonts, copied into a custom icon set of the same name (once per name).
+	 *
+	 * @return array<string,string>|null
+	 */
+	private function font_icon( string $library, string $name ): ?array {
+		static $done = array();
+		list( $title, $file ) = self::FONT_ICONS[ $library ];
+		$font                 = defined( 'UNCODER_ELEMENTS_PATH' ) ? UNCODER_ELEMENTS_PATH . $file : '';
+		if ( '' === $name || $this->opt['remote'] || '' === $font || ! is_readable( $font ) ) {
+			return null;
+		}
+		if ( ! isset( $done[ $library ][ $name ] ) ) {
+			$done[ $library ][ $name ] = \Uncoder\Builder\Site\Custom_Icons::import_svg_font( $title, $font, array( $name ) );
+		}
+		return '' !== $done[ $library ][ $name ] ? array( 'library' => $done[ $library ][ $name ], 'value' => $name ) : null;
+	}
+
 	/**
 	 * Elementor icon ({value: "fas fa-star", library: "fa-solid"} or an SVG) → Uncoder icon.
 	 *
@@ -1438,6 +1775,37 @@ final class Converter {
 				'value'   => $name,
 			);
 		}
+		// Uncoder Elements' icon fonts: Feather ("fe fe-…") is bundled here; Remix Icon ("ri ri-…") and Uncoder Icons
+		// ("uncoder-icon-…") become custom icon sets made from that add-on's fonts, with only the icons the site uses.
+		$value = (string) preg_replace( '/^fe fe-/', 'fe-', $value );
+		if ( 'hero-icons' === $library || 0 === strpos( $value, 'he he-' ) ) {
+			$name = (string) preg_replace( '/^he he-|^he-/', '', $value );
+			if ( Icons::exists( $name, 'heroicons-outline' ) ) {
+				return array(
+					'library' => 'heroicons-outline',
+					'value'   => $name,
+				);
+			}
+		}
+		foreach ( self::FONT_ICONS as $font => $def ) {
+			if ( $font === $library || preg_match( '/^(?:' . $def[2] . ')/', $value ) ) {
+				$icon = $this->font_icon( $font, (string) preg_replace( '/^(?:' . $def[2] . ')/', '', $value ) );
+				if ( $icon ) {
+					return $icon;
+				}
+			}
+		}
+		// UiCore's icon font (Themify Icons, "ti ti-…"): the same pictures from Lucide.
+		if ( 'uicore-icons' === $library || 0 === strpos( $value, 'ti ti-' ) || 0 === strpos( $value, 'ti-' ) ) {
+			$name = (string) preg_replace( '/^ti ti-|^ti-/', '', $value );
+			$name = self::THEMIFY[ $name ] ?? $name;
+			if ( Icons::exists( $name, 'lucide' ) ) {
+				return array(
+					'library' => 'lucide',
+					'value'   => $name,
+				);
+			}
+		}
 		$parsed = Icons::parse( $value );
 		if ( ! $parsed ) {
 			$lib    = in_array( $library, array( 'fa-solid', 'fa-regular', 'fa-brands' ), true ) ? $library : 'fa-solid';
@@ -1461,6 +1829,36 @@ final class Converter {
 			'value'   => $name,
 		);
 	}
+
+	/** Themify Icons (UiCore's icon font) whose Lucide picture has another name; the others share theirs. */
+	private const THEMIFY = array(
+		'angle-down'         => 'chevron-down',
+		'angle-up'           => 'chevron-up',
+		'angle-left'         => 'chevron-left',
+		'angle-right'        => 'chevron-right',
+		'angle-double-down'  => 'chevrons-down',
+		'angle-double-up'    => 'chevrons-up',
+		'angle-double-left'  => 'chevrons-left',
+		'angle-double-right' => 'chevrons-right',
+		'close'              => 'x',
+		'bag'                => 'shopping-bag',
+		'email'              => 'mail',
+		'location-pin'       => 'map-pin',
+		'mobile'             => 'smartphone',
+		'world'              => 'globe',
+		'time'               => 'clock',
+		'share'              => 'share-2',
+		'quote-left'         => 'quote',
+		'quote-right'        => 'quote',
+		'comment'            => 'message-square',
+		'comments'           => 'messages-square',
+		'link'               => 'link-2',
+		'reload'             => 'rotate-cw',
+		'control-play'       => 'play',
+		'control-pause'      => 'pause',
+		'more'               => 'more-horizontal',
+		'more-alt'           => 'more-vertical',
+	);
 
 	/** Elementor's own icon font (eicons) → Lucide. */
 	private const EICONS = array(

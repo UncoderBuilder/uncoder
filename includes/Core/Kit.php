@@ -115,6 +115,8 @@ final class Kit {
 				'field_radius'       => array( 'top' => 8, 'right' => 8, 'bottom' => 8, 'left' => 8, 'unit' => 'px', 'linked' => true ),
 				'field_padding'      => array( 'top' => 12, 'right' => 14, 'bottom' => 12, 'left' => 14, 'unit' => 'px', 'linked' => false ),
 			),
+			// WooCommerce (Design System → Shop): empty values keep the widgets' own defaults.
+			'woo'         => array(),
 			'theme'       => array(
 				'enabled'          => true,
 				'body_color'       => 'var(--uncoder-c-text)',
@@ -150,6 +152,63 @@ final class Kit {
 	}
 
 	/**
+	 * Theme markup that the button and form field styles cover too: the comment form of a Post Comments widget that
+	 * leaves its look to the theme ("Theme styling"), as page builders style every button and field of a site.
+	 * :where() keeps it at the specificity of the theme's own rules, below the widget's style controls.
+	 */
+	private const THEME_BUTTON = ':where(.uncoder-post-comments--theme .form-submit) .submit, ' . self::WOO_BUTTON;
+
+	/** The same with the hover state on each selector. */
+	private const THEME_BUTTON_HOVER = ':where(.uncoder-post-comments--theme .form-submit) .submit:is(:hover, :focus-visible), ' . self::WOO_BUTTON_HOVER;
+
+	/**
+	 * WooCommerce's buttons, while "Also style WooCommerce buttons" is on (body class uncoder-woo-buttons): its own
+	 * selectors, so each ties with WooCommerce's rule and wins as the later stylesheet.
+	 */
+	private const WOO_BUTTON = '.woocommerce:where(.uncoder-woo-buttons, .uncoder-woo) :is(a.button, button.button, input.button), '
+		. '.woocommerce:where(.uncoder-woo-buttons, .uncoder-woo) :is(a.button.alt, button.button.alt, input.button.alt), '
+		. '.woocommerce:where(.uncoder-woo-buttons, .uncoder-woo) :is(#respond, .comment-respond) :is(input#submit, input.submit[id$="-submit"]), '
+		// Disabled ("choose product options first"), hovered or not: WooCommerce paints these in its own colour.
+		. '.woocommerce:where(.uncoder-woo-buttons, .uncoder-woo) :is(a.button.alt, button.button.alt, input.button.alt):is(.disabled, :disabled):is(*, :hover), '
+		. ':where(.uncoder-woo-buttons, .uncoder-woo) .woocommerce :is(a.button, button.button, input.button), '
+		. ':where(.uncoder-woo-buttons, .uncoder-woo) .woocommerce :is(a.button.alt, button.button.alt, input.button.alt), '
+		. ':where(.uncoder-woo-buttons, .uncoder-woo) :is(.wc-block-cart__submit-button, .wc-block-components-button:not(.is-link))';
+	private const WOO_BUTTON_HOVER = '.woocommerce:where(.uncoder-woo-buttons, .uncoder-woo) :is(a.button, button.button, input.button):is(:hover, :focus-visible), '
+		. '.woocommerce:where(.uncoder-woo-buttons, .uncoder-woo) :is(a.button.alt, button.button.alt, input.button.alt):is(:hover, :focus-visible), '
+		. '.woocommerce:where(.uncoder-woo-buttons, .uncoder-woo) :is(#respond, .comment-respond) :is(input#submit, input.submit[id$="-submit"]):is(:hover, :focus-visible), '
+		. ':where(.uncoder-woo-buttons, .uncoder-woo) .woocommerce :is(a.button, button.button, input.button):is(:hover, :focus-visible), '
+		. ':where(.uncoder-woo-buttons, .uncoder-woo) .woocommerce :is(a.button.alt, button.button.alt, input.button.alt):is(:hover, :focus-visible), '
+		. ':where(.uncoder-woo-buttons, .uncoder-woo) :is(.wc-block-cart__submit-button, .wc-block-components-button:not(.is-link)):is(:hover, :focus-visible)';
+	private const THEME_FIELD  = ':where(.uncoder-post-comments--theme .comment-form, .uncoder-product-tabs .comment-form) :is(input[type="text"], input[type="email"], input[type="url"], textarea), ' . self::WOO_FIELD . ', ' . self::WIDGET_WOO_FIELD;
+
+	/** The same in the focus state. */
+	private const THEME_FIELD_FOCUS = ':where(.uncoder-post-comments--theme .comment-form, .uncoder-product-tabs .comment-form) :is(input[type="text"], input[type="email"], input[type="url"], textarea):focus, '
+		. ':is(.uncoder-woo-fields, .uncoder-woo) .woocommerce form .form-row .input-text:focus, '
+		. ':is(.uncoder-woo-fields, .uncoder-woo) .woocommerce form .form-row :is(select, textarea):focus, '
+		. self::WIDGET_WOO_FIELD_FOCUS;
+
+	/**
+	 * WooCommerce's form fields (account, checkout, address forms), while "Also style WooCommerce fields" is on (body
+	 * class uncoder-woo-fields): WooCommerce's own selectors and one class more, above its rules whichever stylesheet
+	 * comes later (block themes print WooCommerce's after this one), below its invalid / valid field colours.
+	 */
+	private const WOO_FIELD = ':is(.uncoder-woo-fields, .uncoder-woo) .woocommerce form .form-row .input-text, '
+		. ':is(.uncoder-woo-fields, .uncoder-woo) .woocommerce form .form-row :is(select, textarea)';
+
+	/**
+	 * The option fields of variable products in Uncoder's Add to Cart widget and the sorting menu of its Products
+	 * widget: as specific as WooCommerce's ".woocommerce div.product form.cart .variations select", below the widgets'
+	 * own style controls.
+	 */
+	private const WIDGET_WOO_FIELD = '.woocommerce.uncoder-woo :is(table.variations td.value select, form.woocommerce-ordering select), '
+		. '.woocommerce.uncoder-woo table.cart td.actions .coupon input.input-text';
+
+	/** The same in the focus state. */
+	private const WIDGET_WOO_FIELD_FOCUS = '.woocommerce.uncoder-woo :is(table.variations td.value select, form.woocommerce-ordering select):focus, '
+		. '.woocommerce.uncoder-woo table.cart td.actions .coupon input.input-text:focus';
+	private const THEME_LABEL  = ':where(.uncoder-post-comments--theme .comment-form, .uncoder-product-tabs .comment-form) label';
+
+	/**
 	 * Control schemas for the structured kit sections (reused for sanitizing and CSS).
 	 *
 	 * @return array<string, array<string, array<string,mixed>>>
@@ -165,31 +224,47 @@ final class Kit {
 				'scroll_offset'   => array( 'type' => 'slider', 'size_units' => array( 'px' ), 'selectors' => array( ':root' => '--uncoder-scroll-offset: {{VALUE}}' ) ),
 			),
 			'buttons' => array(
-				'typography'       => array( 'type' => 'typography', 'selector' => '.uncoder-btn' ),
-				'color'            => array( 'type' => 'color', 'selectors' => array( '.uncoder-btn' => 'color: {{VALUE}}' ) ),
-				'background'       => array( 'type' => 'color', 'selectors' => array( '.uncoder-btn' => 'background-color: {{VALUE}}' ) ),
-				'hover_color'      => array( 'type' => 'color', 'selectors' => array( '.uncoder-btn:is(:hover, :focus-visible)' => 'color: {{VALUE}}' ) ),
-				'hover_background' => array( 'type' => 'color', 'selectors' => array( '.uncoder-btn:is(:hover, :focus-visible)' => 'background-color: {{VALUE}}' ) ),
-				'padding'          => array( 'type' => 'dimensions', 'responsive' => true, 'selectors' => array( '.uncoder-btn' => 'padding: {{VALUE}}' ) ),
-				'radius'           => array( 'type' => 'dimensions', 'selectors' => array( '.uncoder-btn' => 'border-radius: {{VALUE}}' ) ),
-				'border'           => array( 'type' => 'border', 'selector' => '.uncoder-btn' ),
-				'hover_border_color' => array( 'type' => 'color', 'selectors' => array( '.uncoder-btn:hover' => 'border-color: {{VALUE}}' ) ),
-				'shadow'           => array( 'type' => 'box_shadow', 'selector' => '.uncoder-btn' ),
+				'typography'       => array( 'type' => 'typography', 'selector' => '.uncoder-btn, ' . self::THEME_BUTTON ),
+				'color'            => array( 'type' => 'color', 'selectors' => array( '.uncoder-btn, ' . self::THEME_BUTTON => 'color: {{VALUE}}' ) ),
+				'background'       => array( 'type' => 'color', 'selectors' => array( '.uncoder-btn, ' . self::THEME_BUTTON => 'background-color: {{VALUE}}' ) ),
+				'hover_color'      => array( 'type' => 'color', 'selectors' => array( '.uncoder-btn:is(:hover, :focus-visible), ' . self::THEME_BUTTON_HOVER => 'color: {{VALUE}}' ) ),
+				'hover_background' => array( 'type' => 'color', 'selectors' => array( '.uncoder-btn:is(:hover, :focus-visible), ' . self::THEME_BUTTON_HOVER => 'background-color: {{VALUE}}' ) ),
+				'padding'          => array( 'type' => 'dimensions', 'responsive' => true, 'selectors' => array( '.uncoder-btn, ' . self::THEME_BUTTON => 'padding: {{VALUE}}' ) ),
+				'radius'           => array( 'type' => 'dimensions', 'selectors' => array( '.uncoder-btn, ' . self::THEME_BUTTON => 'border-radius: {{VALUE}}' ) ),
+				'border'           => array( 'type' => 'border', 'selector' => '.uncoder-btn, ' . self::THEME_BUTTON ),
+				'hover_border_color' => array( 'type' => 'color', 'selectors' => array( '.uncoder-btn:hover, ' . self::THEME_BUTTON_HOVER => 'border-color: {{VALUE}}' ) ),
+				'shadow'           => array( 'type' => 'box_shadow', 'selector' => '.uncoder-btn, ' . self::THEME_BUTTON ),
+				// WooCommerce's buttons take this style too (body class uncoder-woo-buttons, Frontend::body_class()).
+				'woocommerce'      => array( 'type' => 'switch' ),
 				// Default hover effect for every button without its own (button_fx_css()).
 				'hover_effect'     => array( 'type' => 'select', 'options' => array( '' => 'None', 'lift' => 'Lift', 'grow' => 'Grow', 'shrink' => 'Shrink', 'pulse' => 'Pulse', 'shine' => 'Shine', 'arrow' => 'Nudge icon', 'swap' => 'Slide icon through', 'side' => 'Move icon across', 'reveal' => 'Reveal icon', 'fill' => 'Fill from left', 'fill-up' => 'Fill from bottom', 'underline' => 'Underline', 'flip' => 'Text roll' ) ),
 				// Colour of the Fill hover effects.
 				'hover_fill'       => array( 'type' => 'color', 'selectors' => array( '.uncoder-btn' => '--uncoder-btn-fill: {{VALUE}}' ) ),
 			),
+			// WooCommerce widgets read these variables (with their own defaults when unset).
+			'woo'     => array(
+				'price_color'       => array( 'type' => 'color', 'selectors' => array( ':root' => '--uncoder-woo-price: {{VALUE}}' ) ),
+				'sale_price_color'  => array( 'type' => 'color', 'selectors' => array( ':root' => '--uncoder-woo-sale-price: {{VALUE}}' ) ),
+				'badge_background'  => array( 'type' => 'color', 'selectors' => array( ':root' => '--uncoder-woo-badge-bg: {{VALUE}}' ) ),
+				'badge_color'       => array( 'type' => 'color', 'selectors' => array( ':root' => '--uncoder-woo-badge-color: {{VALUE}}' ) ),
+				'star_color'        => array( 'type' => 'color', 'selectors' => array( ':root' => '--uncoder-woo-star: {{VALUE}}' ) ),
+				'notice_background' => array( 'type' => 'color', 'selectors' => array( ':root' => '--uncoder-woo-notice-bg: {{VALUE}}' ) ),
+				'success_color'     => array( 'type' => 'color', 'selectors' => array( ':root' => '--uncoder-woo-success: {{VALUE}}' ) ),
+				'info_color'        => array( 'type' => 'color', 'selectors' => array( ':root' => '--uncoder-woo-info: {{VALUE}}' ) ),
+				'error_color'       => array( 'type' => 'color', 'selectors' => array( ':root' => '--uncoder-woo-error: {{VALUE}}' ) ),
+			),
 			'forms'   => array(
-				'label_color'        => array( 'type' => 'color', 'selectors' => array( '.uncoder .uncoder-form__label' => 'color: {{VALUE}}' ) ),
-				'label_typography'   => array( 'type' => 'typography', 'selector' => '.uncoder .uncoder-form__label' ),
-				'field_typography'   => array( 'type' => 'typography', 'selector' => '.uncoder .uncoder-form__field' ),
-				'field_color'        => array( 'type' => 'color', 'selectors' => array( '.uncoder .uncoder-form__field' => 'color: {{VALUE}}' ) ),
-				'field_background'   => array( 'type' => 'color', 'selectors' => array( '.uncoder .uncoder-form__field' => 'background-color: {{VALUE}}' ) ),
-				'field_border_color' => array( 'type' => 'color', 'selectors' => array( '.uncoder .uncoder-form__field' => 'border-color: {{VALUE}}' ) ),
-				'focus_border_color' => array( 'type' => 'color', 'selectors' => array( '.uncoder .uncoder-form__field:focus' => 'border-color: {{VALUE}}; outline-color: {{VALUE}}' ) ),
-				'field_radius'       => array( 'type' => 'dimensions', 'selectors' => array( '.uncoder .uncoder-form__field' => 'border-radius: {{VALUE}}' ) ),
-				'field_padding'      => array( 'type' => 'dimensions', 'selectors' => array( '.uncoder .uncoder-form__field' => 'padding: {{VALUE}}' ) ),
+				'label_color'        => array( 'type' => 'color', 'selectors' => array( '.uncoder .uncoder-form__label, ' . self::THEME_LABEL => 'color: {{VALUE}}' ) ),
+				'label_typography'   => array( 'type' => 'typography', 'selector' => '.uncoder .uncoder-form__label, ' . self::THEME_LABEL ),
+				'field_typography'   => array( 'type' => 'typography', 'selector' => '.uncoder .uncoder-form__field, ' . self::THEME_FIELD ),
+				'field_color'        => array( 'type' => 'color', 'selectors' => array( '.uncoder .uncoder-form__field, ' . self::THEME_FIELD => 'color: {{VALUE}}' ) ),
+				'field_background'   => array( 'type' => 'color', 'selectors' => array( '.uncoder .uncoder-form__field, ' . self::THEME_FIELD => 'background-color: {{VALUE}}' ) ),
+				'field_border_color' => array( 'type' => 'color', 'selectors' => array( '.uncoder .uncoder-form__field, ' . self::THEME_FIELD => 'border-color: {{VALUE}}' ) ),
+				'focus_border_color' => array( 'type' => 'color', 'selectors' => array( '.uncoder .uncoder-form__field:focus, ' . self::THEME_FIELD_FOCUS => 'border-color: {{VALUE}}; outline-color: {{VALUE}}' ) ),
+				'field_radius'       => array( 'type' => 'dimensions', 'selectors' => array( '.uncoder .uncoder-form__field, ' . self::THEME_FIELD => 'border-radius: {{VALUE}}' ) ),
+				'field_padding'      => array( 'type' => 'dimensions', 'selectors' => array( '.uncoder .uncoder-form__field, ' . self::THEME_FIELD => 'padding: {{VALUE}}' ) ),
+				// WooCommerce's form fields take these styles too (body class uncoder-woo-fields, Frontend::body_class()).
+				'woocommerce'        => array( 'type' => 'switch' ),
 			),
 			'theme'   => array(
 				'enabled'          => array( 'type' => 'switch' ),
@@ -280,7 +355,7 @@ final class Kit {
 		foreach ( $defaults as $key => $value ) {
 			if ( ! array_key_exists( $key, $stored ) ) {
 				$stored[ $key ] = $value;
-			} elseif ( in_array( $key, array( 'layout', 'buttons', 'forms', 'theme', 'settings' ), true ) && is_array( $stored[ $key ] ) ) {
+			} elseif ( in_array( $key, array( 'layout', 'buttons', 'forms', 'woo', 'theme', 'settings' ), true ) && is_array( $stored[ $key ] ) ) {
 				$stored[ $key ] = array_merge( $value, $stored[ $key ] );
 			}
 		}
@@ -540,7 +615,7 @@ final class Kit {
 				}
 			}
 		}
-		foreach ( array( 'layout', 'buttons', 'forms', 'theme', 'settings' ) as $section ) {
+		foreach ( array( 'layout', 'buttons', 'forms', 'woo', 'theme', 'settings' ) as $section ) {
 			if ( isset( $partial[ $section ] ) ) {
 				$current[ $section ] = array_merge( (array) $current[ $section ], $partial[ $section ] );
 			}
@@ -689,7 +764,7 @@ final class Kit {
 		}
 
 		$generator = new Generator( 0 );
-		foreach ( array( 'layout', 'buttons', 'forms' ) as $section ) {
+		foreach ( array( 'layout', 'buttons', 'forms', 'woo' ) as $section ) {
 			$generator->settings_css( (array) $kit[ $section ], self::schemas()[ $section ], '', $rules );
 		}
 

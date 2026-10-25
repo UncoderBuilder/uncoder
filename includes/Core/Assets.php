@@ -174,8 +174,12 @@ final class Assets {
 		}
 		$handle = 'uncoder-w-' . $name;
 		if ( ! wp_style_is( $handle, 'registered' ) ) {
-			list( $url, $ver ) = self::widget_style_src( $name );
-			wp_register_style( $handle, $url, array( 'uncoder-frontend', 'uncoder-kit' ), $ver );
+			list( $url, $ver, $path ) = self::widget_style_src( $name );
+			$inline                   = is_admin() ? null : \Uncoder\Builder\Site\Performance::inline_contents( $path );
+			wp_register_style( $handle, null !== $inline ? false : $url, array( 'uncoder-frontend', 'uncoder-kit' ), $ver );
+			if ( null !== $inline ) {
+				wp_add_inline_style( $handle, $inline );
+			}
 		}
 		wp_enqueue_style( $handle );
 		return true;
@@ -186,11 +190,11 @@ final class Assets {
 	 * (tablet 1024px, mobile 767px); on a site that moves them, a copy with the site's widths in its media queries
 	 * is written to uploads once per file version and served instead, so a widget changes with the rest of the page.
 	 *
-	 * @return array{0:string,1:string}
+	 * @return array{0:string,1:string,2:string} URL, version, file path.
 	 */
 	private static function widget_style_src( string $name ): array {
 		$relative = 'frontend/widgets/' . $name . '.css';
-		$plain    = array( self::url( $relative ), self::ver( $relative ) );
+		$plain    = array( self::url( $relative ), self::ver( $relative ), self::path( $relative ) );
 		$map      = self::moved_breakpoints();
 		$uploads  = $map ? Utils::uploads() : null;
 		if ( ! $uploads ) {
@@ -217,7 +221,7 @@ final class Assets {
 				return $plain;
 			}
 		}
-		return array( $uploads['url'] . $file, $plain[1] );
+		return array( $uploads['url'] . $file, $plain[1], $uploads['dir'] . $file );
 	}
 
 	/**
@@ -243,6 +247,15 @@ final class Assets {
 	/**
 	 * Enqueues everything a document (and documents it references) needs.
 	 */
+	/**
+	 * IDs of the documents queued for this page so far (the page itself, its templates, popups).
+	 *
+	 * @return int[]
+	 */
+	public static function documents(): array {
+		return array_map( 'intval', array_keys( self::$docs_done ) );
+	}
+
 	public static function enqueue_document( Document $doc ): void {
 		$id = $doc->id();
 		if ( isset( self::$docs_done[ $id ] ) ) {

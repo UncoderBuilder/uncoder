@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
 final class Templates_Controller {
 
 	/** Types placed on the site by display conditions (the others are used by reference). */
-	public const CONDITIONAL = array( 'header', 'footer', 'single-post', 'single-page', 'single', 'archive', 'search-results', 'error-404', 'popup' );
+	public const CONDITIONAL = array( 'header', 'footer', 'single-post', 'single-page', 'single', 'archive', 'search-results', 'error-404', 'single-product', 'product-archive', 'popup' );
 
 	/** Conditions given to a new template when none are provided. */
 	public const DEFAULT_CONDITIONS = array(
@@ -41,6 +41,9 @@ final class Templates_Controller {
 		'archive'        => array( array( 'type' => 'include', 'rule' => 'archive' ) ),
 		'search-results' => array( array( 'type' => 'include', 'rule' => 'search' ) ),
 		'error-404'      => array( array( 'type' => 'include', 'rule' => 'not_found' ) ),
+		// WooCommerce: every product; the shop with product categories and tags (the product rules drop without it).
+		'single-product' => array( array( 'type' => 'include', 'rule' => 'singular', 'post_type' => 'product' ) ),
+		'product-archive' => array( array( 'type' => 'include', 'rule' => 'archive', 'post_type' => 'product' ) ),
 		'popup'          => array( array( 'type' => 'include', 'rule' => 'general' ) ),
 	);
 

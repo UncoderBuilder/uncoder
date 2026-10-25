@@ -229,6 +229,30 @@ abstract class Element_Base {
 		}
 	}
 
+	/**
+	 * Removes a section with its controls (a widget built on another one drops what does not apply to it).
+	 */
+	public function remove_section( string $id ): void {
+		$this->ensure();
+		if ( ! isset( $this->sections[ $id ] ) ) {
+			return;
+		}
+		$keys = $this->sections[ $id ]['controls'];
+		foreach ( (array) ( $this->sections[ $id ]['tab_controls'] ?? array() ) as $tabs ) {
+			foreach ( (array) $tabs as $list ) {
+				$keys = array_merge( $keys, (array) $list );
+			}
+		}
+		foreach ( $keys as $key ) {
+			if ( 0 === strpos( $key, '@tabs:' ) ) {
+				unset( $this->ui_tabs[ substr( $key, 6 ) ] );
+			} else {
+				unset( $this->controls[ $key ] );
+			}
+		}
+		unset( $this->sections[ $id ] );
+	}
+
 	private function ensure(): void {
 		if ( null !== $this->controls ) {
 			return;

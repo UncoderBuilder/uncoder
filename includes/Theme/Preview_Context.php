@@ -44,8 +44,11 @@ final class Preview_Context {
 		}
 
 		switch ( $type ) {
-			case 'single-post':
 			case 'loop-item':
+				// A product card (a loop item with WooCommerce widgets) previews with a product.
+				$out['post'] = post_type_exists( 'product' ) && self::uses_woo_widgets( $doc_id ) ? self::latest( 'product' ) : self::latest( 'post' );
+				break;
+			case 'single-post':
 			case 'header':
 			case 'footer':
 			case 'popup':
@@ -61,6 +64,17 @@ final class Preview_Context {
 				break;
 			case 'archive':
 				$out['query'] = self::archive_query( $doc_id );
+				break;
+			case 'single-product':
+				$out['post'] = post_type_exists( 'product' ) ? self::latest( 'product' ) : 0;
+				break;
+			case 'product-archive':
+				// The shop (or the product category / tag of its conditions), as many products as a shop page shows.
+				$query        = self::archive_query( $doc_id );
+				$out['query'] = isset( $query['tax_query'] ) || isset( $query['post_type'] ) ? $query : array( 'post_type' => 'product' );
+				if ( function_exists( 'wc_get_default_products_per_row' ) ) {
+					$out['query']['posts_per_page'] = (int) apply_filters( 'loop_shop_per_page', wc_get_default_products_per_row() * wc_get_default_product_rows_per_page() ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WooCommerce hook.
+				}
 				break;
 			case 'search-results':
 				$out['query'] = array(
@@ -213,5 +227,22 @@ final class Preview_Context {
 			}
 		}
 		return 'the';
+	}
+
+	/**
+	 * Whether a document holds widgets of the WooCommerce category.
+	 */
+	public static function uses_woo_widgets( int $doc_id ): bool {
+		$doc = Plugin::instance()->documents()->get( $doc_id );
+		if ( ! $doc ) {
+			return false;
+		}
+		foreach ( \Uncoder\Builder\Core\Tree::types( $doc->elements() ) as $name ) {
+			$element = Plugin::instance()->elements()->get( $name );
+			if ( $element && 'woo' === $element->category() ) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

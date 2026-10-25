@@ -396,7 +396,7 @@ class Image extends Widget_Base {
 			$attrs['loading']       = 'eager';
 			$attrs['fetchpriority'] = 'high';
 		}
-		$img = $this->image( $media, $size, $attrs );
+		$img = self::sizes_for_fit( $this->image( $media, $size, $attrs ), $s );
 		if ( '' === $img ) {
 			if ( ! $ctx->editor ) {
 				return;

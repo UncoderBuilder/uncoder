@@ -124,8 +124,8 @@ class Template extends Widget_Base {
 		$html      = (string) Template_Embed::guard(
 			array( $id ),
 			static fn() => $props
-				? $doc->render_tree( Components::apply( $doc->elements(), $props, $overrides ), array( 'post_id' => $ctx->post_id ) )
-				: $doc->render( array( 'post_id' => $ctx->post_id ) )
+				? $doc->render_tree( Components::apply( $doc->elements(), $props, $overrides ), array( 'post_id' => $ctx->post_id, 'embedded' => true, 'eager' => $ctx->eager ) )
+				: $doc->render( array( 'post_id' => $ctx->post_id, 'embedded' => true, 'eager' => $ctx->eager ) )
 		);
 
 		if ( ! $ctx->editor ) {

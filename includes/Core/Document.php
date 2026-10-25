@@ -134,7 +134,15 @@ final class Document {
 				'saved'    => false,
 			);
 		}
-		update_post_meta( $this->id, Utils::META_DATA, wp_slash( $json ) );
+		$json = self::storable_json( $json );
+		if ( false === update_post_meta( $this->id, Utils::META_DATA, wp_slash( $json ) ) && get_post_meta( $this->id, Utils::META_DATA, true ) !== $json ) {
+			// The database refused the value: keep what was saved before, and say so.
+			return array(
+				'elements' => $this->elements(),
+				'errors'   => array_merge( $tree->errors, array( __( 'The page was not saved: the database refused it.', 'uncoder' ) ) ),
+				'saved'    => false,
+			);
+		}
 		update_post_meta( $this->id, Utils::META_MODE, 'builder' );
 		$this->elements = $clean;
 
@@ -156,6 +164,23 @@ final class Document {
 			'elements' => $clean,
 			'errors'   => $tree->errors,
 		);
+	}
+
+	/**
+	 * Older sites keep their tables in utf8mb3, which cannot hold 4-byte characters (emoji, some symbols): MySQL then
+	 * refuses the whole value. There those characters go in as JSON escapes (🎉), which read back the same.
+	 */
+	private static function storable_json( string $json ): string {
+		global $wpdb;
+		static $utf8mb4 = null;
+		if ( null === $utf8mb4 ) {
+			$charset = $wpdb->get_col_charset( $wpdb->postmeta, 'meta_value' );
+			$utf8mb4 = ! is_string( $charset ) || 'utf8mb4' === $charset;
+		}
+		if ( $utf8mb4 ) {
+			return $json;
+		}
+		return (string) preg_replace_callback( '/[\x{10000}-\x{10FFFF}]/u', static fn( array $m ): string => substr( (string) wp_json_encode( $m[0] ), 1, -1 ), $json );
 	}
 
 	/**

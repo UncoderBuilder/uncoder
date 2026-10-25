@@ -7,15 +7,17 @@
 
 defined( 'ABSPATH' ) || exit;
 
-\Uncoder\Builder\Theme\Shell::header();
-?>
+\Uncoder\Builder\Theme\Shell::page(
+	static function (): void {
+		?>
 <main id="content" class="uncoder-main uncoder-main--full-width">
-	<?php
-	while ( have_posts() ) {
-		the_post();
-		the_content();
-	}
-	?>
+		<?php
+		while ( have_posts() ) {
+			the_post();
+			the_content();
+		}
+		?>
 </main>
-<?php
-\Uncoder\Builder\Theme\Shell::footer();
+		<?php
+	}
+);

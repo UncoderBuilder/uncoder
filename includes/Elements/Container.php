@@ -742,5 +742,18 @@ class Container extends Element_Base {
 				'condition'   => array( 'bg_animation' => Animated_Backgrounds::using( 'interactive' ) ),
 			)
 		);
+		$this->add_control(
+			'bg_anim_opacity',
+			array(
+				'type'        => 'number',
+				'label'       => __( 'Opacity', 'uncoder' ),
+				'description' => __( 'How strongly the animation shows over the background (1 = fully).', 'uncoder' ),
+				'min'         => 0,
+				'max'         => 1,
+				'step'        => 0.05,
+				'condition'   => array( 'bg_animation!' => '' ),
+				'selectors'   => array( '{{WRAPPER}} > .uncoder-abg' => 'opacity: {{VALUE}}' ),
+			)
+		);
 	}
 }

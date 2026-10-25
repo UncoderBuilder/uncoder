@@ -33,7 +33,7 @@ final class Template_Preview {
 
 	public const QUERY  = 'uncoder_template_preview';
 	private const AT    = 'uncoder_tp_at';
-	private const BODY  = array( 'single-post', 'single-page', 'single', 'archive', 'search-results', 'error-404' );
+	private const BODY  = array( 'single-post', 'single-page', 'single', 'archive', 'search-results', 'error-404', 'single-product', 'product-archive' );
 	private const ALONE = array( 'section', 'loop-item', 'mega-menu' );
 	/** Shown on their own unless `in_page` asks for them on a page. */
 	private const PARTS = array( 'header', 'footer' );
@@ -203,6 +203,13 @@ final class Template_Preview {
 			case 'error-404':
 				$url = trailingslashit( $home ) . 'uncoder-preview-not-found-' . wp_rand( 1000, 9999 ) . '/';
 				break;
+			case 'single-product':
+				$url = post_type_exists( 'product' ) ? $latest( 'product' ) : '';
+				break;
+			case 'product-archive':
+				$shop = function_exists( 'wc_get_page_id' ) ? wc_get_page_id( 'shop' ) : 0;
+				$url  = $shop > 0 ? (string) get_permalink( Multilingual::translate_id( $shop, $lang ) ) : (string) get_post_type_archive_link( 'product' );
+				break;
 			default: // header, footer, popup.
 				$url = $home;
 		}
@@ -228,7 +235,9 @@ final class Template_Preview {
 		$html = '';
 		if ( 'loop-item' === $this->type ) {
 			Assets::enqueue_widget_style( 'loop-grid' );
-			$posts = get_posts( array( 'post_type' => 'post', 'post_status' => 'publish', 'numberposts' => 3 ) );
+			// A product card (a loop item with WooCommerce widgets) shows products.
+			$product = post_type_exists( 'product' ) && Preview_Context::uses_woo_widgets( $this->id );
+			$posts   = get_posts( array( 'post_type' => $product ? 'product' : 'post', 'post_status' => 'publish', 'numberposts' => 3 ) );
 			foreach ( $posts as $p ) {
 				$html .= Theme_Context::with_post(
 					$p,
@@ -243,7 +252,7 @@ final class Template_Preview {
 			}
 			$html = '<div class="uncoder-loop-grid uncoder-loop-grid--equal" style="max-width:1200px;margin:48px auto;padding:0 24px"><div class="uncoder-loop-grid__grid" style="grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr))">' . $html . '</div></div>';
 			if ( ! $posts ) {
-				$html = '<p style="text-align:center;margin:64px 16px">' . esc_html__( 'Publish a post to preview this loop item with real content.', 'uncoder' ) . '</p>';
+				$html = '<p style="text-align:center;margin:64px 16px">' . esc_html( $product ? __( 'Publish a product to preview this loop item with real content.', 'uncoder' ) : __( 'Publish a post to preview this loop item with real content.', 'uncoder' ) ) . '</p>';
 			}
 		} elseif ( 'mega-menu' === $this->type ) {
 			Assets::enqueue_widget_style( 'mega-menu' );

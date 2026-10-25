@@ -38,6 +38,17 @@ final class Widgets {
 		'nested-tabs'               => 'nested_tabs',
 		'accordion'                 => 'accordion',
 		'toggle'                    => 'accordion',
+		// UiCore Elements and Element Pack widgets that share Elementor's shapes.
+		'uicore-accordion'          => 'accordion',
+		'bdt-accordion'             => 'accordion',
+		'uicore-the-title'          => 'post_title',
+		'bdt-custom-carousel'       => 'media_carousel',
+		'highlighted-text'          => 'uicore_highlighted_text',
+		'bdt-countdown'             => 'bdt_countdown',
+		'bdt-search'                => 'bdt_search',
+		'bdt-wc-elements'           => 'bdt_wc_elements',
+		'wpforms'                   => 'wpforms',
+		'uncoder-accordion'         => 'uncoder_accordion',
 		'nested-accordion'          => 'nested_accordion',
 		'social-icons'              => 'social_icons',
 		'google_maps'               => 'google_maps',
@@ -58,6 +69,7 @@ final class Widgets {
 		'loop-grid'                 => 'loop_grid',
 		'loop-carousel'             => 'loop_carousel',
 		'nav-menu'                  => 'nav_menu',
+		'uncoder-nav-menu'          => 'uncoder_nav_menu',
 		'call-to-action'            => 'call_to_action',
 		'price-list'                => 'price_list',
 		'price-table'               => 'price_table',
@@ -89,6 +101,32 @@ final class Widgets {
 		'author-box'                => 'author_box',
 		'post-comments'             => 'post_comments',
 		'search-form'               => 'search_form',
+		'search'                    => 'search',
+		'woocommerce-archive-description' => 'archive_description',
+		'wc-archive-products'       => 'wc_archive_products',
+		'woocommerce-products'      => 'wc_products',
+		'woocommerce-product-related' => 'wc_related',
+		'woocommerce-product-upsell' => 'wc_upsells',
+		'wc-categories'             => 'wc_categories',
+		'woocommerce-categories'    => 'wc_categories',
+		'woocommerce-product-title' => 'wc_product_title',
+		'woocommerce-product-images' => 'wc_product_images',
+		'woocommerce-product-price' => 'wc_product_price',
+		'woocommerce-product-add-to-cart' => 'wc_add_to_cart',
+		'wc-add-to-cart'            => 'wc_custom_add_to_cart',
+		'woocommerce-product-rating' => 'wc_product_rating',
+		'woocommerce-product-stock' => 'wc_product_stock',
+		'woocommerce-product-meta'  => 'wc_product_meta',
+		'woocommerce-product-short-description' => 'wc_short_description',
+		'woocommerce-product-content' => 'wc_product_content',
+		'woocommerce-product-data-tabs' => 'wc_product_tabs',
+		'woocommerce-product-additional-information' => 'wc_additional_information',
+		'woocommerce-breadcrumb'    => 'wc_breadcrumb',
+		'woocommerce-notices'       => 'wc_notices',
+		'woocommerce-cart'          => 'wc_cart',
+		'woocommerce-checkout-page' => 'wc_checkout',
+		'woocommerce-my-account'    => 'wc_my_account',
+		'woocommerce-menu-cart'     => 'wc_menu_cart',
 		'breadcrumbs'               => 'breadcrumbs',
 		'login'                     => 'login',
 		'e-heading'                 => 'atomic',
@@ -121,6 +159,7 @@ final class Widgets {
 		'theme-page-title'          => array( 'title' => '', 'link' => '' ),
 		'theme-post-title'          => array( 'title' => '', 'link' => '' ),
 		'theme-archive-title'       => array( 'title' => '' ),
+		'search'                    => array( 'search_input_placeholder_text' => 'placeholder' ),
 		'theme-post-excerpt'        => array( 'excerpt' => '' ),
 	);
 
@@ -172,6 +211,15 @@ final class Widgets {
 		'md' => 'md',
 		'lg' => 'lg',
 		'xl' => 'xl',
+	);
+
+	/** Elementor form field sizes: font size, vertical and horizontal padding, radius (px). */
+	private const FIELD_SIZES = array(
+		'xs' => array( 13, 4, 12, 2 ),
+		'sm' => array( 15, 5, 14, 3 ),
+		'md' => array( 16, 6, 16, 4 ),
+		'lg' => array( 18, 7, 20, 5 ),
+		'xl' => array( 20, 8, 24, 6 ),
 	);
 
 	/** Elementor button hover animations → Uncoder hover effects. */
@@ -265,12 +313,19 @@ final class Widgets {
 	/**
 	 * Icon colors of the icon / icon box widgets (Elementor's primary / secondary depend on the view).
 	 *
+	 * With Elementor's default colors switched off (Settings → Disable Default Colors), an unset icon color is
+	 * Elementor's grey, not the primary color Uncoder would use.
+	 *
 	 * @param array<string,mixed> $o    Output.
 	 * @param string[]            $keys [ icon color, shape color, hover icon color, hover shape color ].
 	 */
-	private static function icon_colors( Source $s, array &$o, string $view, array $keys ): void {
+	private static function icon_colors( Source $s, array &$o, string $view, array $keys, bool $default_colors = true ): void {
 		$p  = $s->color( 'primary_color' );
 		$sc = $s->color( 'secondary_color' );
+		if ( ! $default_colors ) {
+			$p  = '' !== $p ? $p : '#69727d';
+			$sc = '' !== $sc || 'stacked' !== $view ? $sc : '#ffffff';
+		}
 		$hp = $s->color( 'hover_primary_color' );
 		$hs = $s->color( 'hover_secondary_color' );
 		if ( 'stacked' === $view ) {
@@ -404,6 +459,37 @@ final class Widgets {
 		$s->opt( $o, 'arrows_position', 'arrows_position', array( 'inside' => 'inside', 'outside' => 'outside' ) );
 		$s->sl( $o, 'arrow_icon_size', 'arrows_size' );
 		$s->col( $o, 'arrow_color', 'arrows_color' );
+		// Loop / nested carousels: arrows at a distance from the slides' edges (negative = outside them), in a box
+		// of the icon, its padding and border, transparent unless a background is set.
+		if ( $s->exists( 'navigation_previous_icon_horizontal_position' ) || $s->exists( 'arrows_padding' ) || $s->exists( 'arrow_normal_color' ) ) {
+			foreach ( Source::SUFFIXES as $suffix ) {
+				$off = $s->slider( 'navigation_previous_icon_horizontal_position' . $suffix );
+				if ( $off ) {
+					$o[ 'arrow_offset' . $suffix ] = $off;
+				}
+			}
+			$s->col( $o, 'arrow_color', 'arrow_normal_color' );
+			$s->col( $o, 'arrow_hover_color', 'arrow_hover_color' );
+			$s->brd( $o, 'arrow_border', 'arrows_normal_border_type' );
+			$hb = $s->border( 'arrows_hover_border_type' );
+			if ( ! empty( $hb['color'] ) ) {
+				$o['arrow_hover_border_color'] = $hb['color'];
+			}
+			$bg = $s->bg( 'arrows_normal_background' );
+			$o['arrow_background'] = $bg && ! empty( $bg['color'] ) ? $bg['color'] : 'transparent';
+			$hover = $s->bg( 'arrows_hover_background' );
+			if ( $hover && ! empty( $hover['color'] ) ) {
+				$o['arrow_hover_background'] = $hover['color'];
+			}
+			$s->radius( $o, 'arrow_radius', 'arrows_border_radius', false );
+			$icon   = $o['arrow_icon_size'] ?? array( 'size' => 25, 'unit' => 'px' );
+			$pad    = $s->dims( 'arrows_padding' );
+			$border = $o['arrow_border']['width'] ?? null;
+			if ( 'px' === $icon['unit'] ) {
+				$o['arrow_size'] = array( 'size' => $icon['size'] + ( $pad ? (float) $pad['top'] + (float) $pad['bottom'] : 0 ) + ( $border ? (float) $border['top'] + (float) $border['bottom'] : 0 ), 'unit' => 'px' );
+			}
+		}
+		$s->use( 'navigation_next_icon_horizontal_position' );
 		$s->sl( $o, 'dots_size', 'dots_size', false );
 		$s->col( $o, 'dots_color', 'dots_inactive_color' );
 		$s->col( $o, 'dots_active_color', 'dots_color' );
@@ -443,12 +529,54 @@ final class Widgets {
 		$s->col( $o, 'color', 'title_color' );
 		$s->col( $o, 'hover_color', 'title_hover_color' );
 		$s->typ( $o, 'typography', 'typography' );
+		// Elementor headings have a line height of 1 unless their typography sets one, or, for h1–h6, Site Settings.
+		$typo = $o['typography'] ?? array();
+		$tag  = $o['tag'] ?? 'h2';
+		if ( ! isset( $typo['preset'] ) && ! isset( $typo['line_height'] ) && ( ! preg_match( '/^h[1-6]$/', $tag ) || ! self::kit_line_height( $c, $tag ) ) ) {
+			$o['typography'] = $typo + array( 'line_height' => array( 'size' => 1, 'unit' => '' ) );
+		}
 		$s->tsh( $o, 'text_shadow', 'text_shadow' );
 		$size = $s->str( 'size' );
 		if ( '' !== $size && 'default' !== $size ) {
 			$c->setting( 'heading', 'size: ' . $size );
 		}
+		self::span_highlight( $s, $o );
 		return array( 'heading', $o );
+	}
+
+	/**
+	 * Whether the kit's typography for a heading tag (h1–h6) sets a line height.
+	 */
+	private static function kit_line_height( Converter $c, string $tag ): bool {
+		// UiCore's theme CSS gives h1–h6 headings its own line heights (its Theme Options, the h1–h6 text styles here).
+		if ( Uicore::has_options() ) {
+			return true;
+		}
+		$kit = (array) $c->option( 'kit' );
+		$ref = (string) ( $kit['__globals__'][ $tag . '_typography_typography' ] ?? '' );
+		if ( '' !== $ref ) {
+			$typo = $c->global_typography( $ref );
+			return null !== $typo && ( isset( $typo['preset'] ) || isset( $typo['line_height'] ) );
+		}
+		return 'custom' === ( $kit[ $tag . '_typography_typography' ] ?? '' ) && null !== Source::to_slider( $kit[ $tag . '_typography_line_height' ] ?? null, 'em', '' );
+	}
+
+	/**
+	 * Uncoder Elements' "Span Text Color" on a heading (a colour, or a gradient, for the <span> words of the title):
+	 * those words become <mark>, Uncoder's highlight, with the colour (a gradient keeps its first colour) and the
+	 * span typography when it is switched on.
+	 *
+	 * @param array<string,mixed> $o Uncoder settings (by reference).
+	 */
+	private static function span_highlight( Source $s, array &$o ): void {
+		$s->use( 'uncoder_heading_span_link_typography_font_family' );
+		if ( '' === $s->str( 'uncoder_heading_span_color_background' ) || false === stripos( (string) ( $o['title'] ?? '' ), '<span' ) ) {
+			return;
+		}
+		$o['title'] = (string) preg_replace( '#<span(?:\s[^>]*)?>(.*?)</span>#is', '<mark>$1</mark>', (string) $o['title'] );
+		$s->col( $o, 'highlight_color', 'uncoder_heading_span_color_color' );
+		$s->typ( $o, 'highlight_typography', 'uncoder_heading_span_link_typography' );
+		$s->use( 'uncoder_heading_span_color_background', 'uncoder_heading_span_color_color_b', 'uncoder_heading_span_color_gradient_type', 'uncoder_heading_span_color_gradient_angle' );
 	}
 
 	public static function text_editor( Source $s ): array {
@@ -554,13 +682,36 @@ final class Widgets {
 			$o['text'] = 'Click here';
 		}
 		$s->lnk( $o, 'link', 'link' );
-		$o['size'] = self::BUTTON_SIZES[ $s->str( 'size', 'sm' ) ] ?? 'md';
+		// Site Settings → Buttons (padding, type) override Elementor's size presets (same specificity, printed later):
+		// with a button style in the kit every size looks the same, so the Design System button is used as it is.
+		$kit       = (array) $c->option( 'kit' );
+		$kit_style = ! Source::blank( $kit['button_padding'] ?? null ) || 'custom' === ( $kit['button_typography_typography'] ?? '' ) || ! empty( $kit['__globals__']['button_typography_typography'] );
+		$o['size'] = $kit_style ? 'md' : ( self::BUTTON_SIZES[ $s->str( 'size', 'sm' ) ] ?? 'md' );
 		$s->ico( $o, 'icon', 'selected_icon', 'icon' );
 		if ( isset( $o['icon'] ) ) {
 			$o['icon_position'] = in_array( $s->str( 'icon_align', 'left' ), array( 'right', 'row-reverse' ), true ) ? 'after' : 'before';
 		}
 		$s->use( 'icon_align' );
 		$s->sl( $o, 'icon_spacing', 'icon_indent', false );
+		// Uncoder Elements' button icon style: the icon in a box of its own (colour, background, radius, padding).
+		$s->col( $o, 'icon_color', 'uncoder_btn_icon_style_normal_icon_color' );
+		$s->col( $o, 'icon_background', 'uncoder_btn_icon_style_normal_background_color' );
+		if ( isset( $o['icon_background'] ) ) {
+			$pad           = $s->raw( 'uncoder_btn_icon_padding' );
+			$pad           = is_array( $pad ) && is_numeric( $pad['top'] ?? null ) ? (float) $pad['top'] : 0;
+			$o['icon_box'] = array(
+				'size' => ( $s->num( 'button_icon_size' ) ?? 14 ) + 2 * $pad,
+				'unit' => 'px',
+			);
+			$radius = $s->raw( 'uncoder_btn_icon_border_radius' );
+			if ( is_array( $radius ) && is_numeric( $radius['top'] ?? null ) ) {
+				$o['icon_radius'] = array(
+					'size' => (float) $radius['top'],
+					'unit' => (string) ( $radius['unit'] ?? 'px' ),
+				);
+			}
+		}
+		$s->use( 'uncoder_btn_icon_padding', 'uncoder_btn_icon_border_radius', 'uncoder_btn_icon_hover_background_color', 'uncoder_btn_icon_hover_icon_color', 'button_icon_rotate_hover' );
 		$s->opt( $o, 'align', 'align', array( 'left' => 'left', 'center' => 'center', 'right' => 'right', 'justify' => 'stretch', 'start' => 'left', 'end' => 'right', 'stretch' => 'stretch' ), true );
 		$s->col( $o, 'text_color', 'button_text_color' );
 		$bg = $s->bg( 'background' );
@@ -600,7 +751,7 @@ final class Widgets {
 		return array( 'button', $o );
 	}
 
-	public static function icon( Source $s ): array {
+	public static function icon( Source $s, Converter $c ): array {
 		$o        = array();
 		$has_icon = $s->exists( 'selected_icon' ) || $s->exists( 'icon' );
 		$s->ico( $o, 'icon', 'selected_icon', 'icon' );
@@ -615,7 +766,7 @@ final class Widgets {
 		$s->use( 'shape' );
 		$s->lnk( $o, 'link', 'link' );
 		$s->opt( $o, 'align', 'align', self::ALIGN3, true );
-		self::icon_colors( $s, $o, $view, array( 'color', 'shape_color', 'hover_color', 'hover_shape_color' ) );
+		self::icon_colors( $s, $o, $view, array( 'color', 'shape_color', 'hover_color', 'hover_shape_color' ), (bool) $c->option( 'default_colors' ) );
 		$s->sl( $o, 'size', 'size' );
 		if ( ! isset( $o['size'] ) ) {
 			$o['size'] = array( 'size' => 50, 'unit' => 'px' );
@@ -625,6 +776,9 @@ final class Widgets {
 		if ( $rotate && is_numeric( $rotate['size'] ) ) {
 			$o['rotate'] = array( 'size' => $rotate['size'], 'unit' => 'deg' );
 		}
+		// Elementor's icon sits on the baseline of a line of the surrounding text, which leaves that line's descent
+		// under it: an empty text item on the same baseline gives the icon the same height.
+		$o['_custom_css'] = trim( ( $o['_custom_css'] ?? '' ) . "\n" . 'selector{line-height:inherit;align-items:baseline}selector::after{content:"\200b"}' );
 		return array( 'icon', $o );
 	}
 
@@ -648,17 +802,26 @@ final class Widgets {
 		$s->use( 'shape' );
 		$s->text( $o, 'title', 'title_text' );
 		$s->text( $o, 'description', 'description_text' );
+		// Elementor's defaults fill only settings that were never saved: an emptied description stays empty.
 		$o += array(
 			'title'       => 'This is the heading',
-			'description' => self::LOREM,
+			'description' => $s->exists( 'description_text' ) ? '' : self::LOREM,
 		);
 		$s->lnk( $o, 'link', 'link' );
 		$s->opt( $o, 'title_tag', 'title_size', self::TAGS );
 		$s->opt( $o, 'position', 'position', array( 'top' => 'top', 'left' => 'left', 'right' => 'right', 'block-start' => 'top', 'block-end' => 'top', 'inline-start' => 'left', 'inline-end' => 'right' ), true );
 		$s->opt( $o, 'vertical_align', 'content_vertical_alignment', array( 'top' => 'top', 'middle' => 'middle', 'bottom' => 'bottom' ), true );
 		$s->opt( $o, 'align', 'text_align', self::ALIGN, true );
-		$o += array( 'align' => 'center' );
-		self::icon_colors( $s, $o, $view, array( 'icon_color', 'icon_shape_color', 'hover_icon_color', 'hover_icon_shape_color' ) );
+		// Without an alignment of its own, Elementor aligns the text with the media's side: to the start beside a left
+		// icon or image, to the end beside a right one, centred under a top one (per device, with the position).
+		$side = array( 'left' => 'left', 'right' => 'right' );
+		$o   += array( 'align' => $side[ $o['position'] ?? '' ] ?? 'center' );
+		foreach ( array( '_tablet', '_mobile' ) as $suffix ) {
+			if ( ! isset( $o[ 'align' . $suffix ] ) && isset( $o[ 'position' . $suffix ] ) ) {
+				$o[ 'align' . $suffix ] = $side[ $o[ 'position' . $suffix ] ] ?? 'center';
+			}
+		}
+		self::icon_colors( $s, $o, $view, array( 'icon_color', 'icon_shape_color', 'hover_icon_color', 'hover_icon_shape_color' ), (bool) $c->option( 'default_colors' ) );
 		$s->sl( $o, 'icon_spacing', 'icon_space' );
 		$s->sl( $o, 'icon_size', 'icon_size' );
 		$o += array( 'icon_size' => array( 'size' => 50, 'unit' => 'px' ) );
@@ -697,16 +860,25 @@ final class Widgets {
 		$s->use( 'thumbnail_custom_dimension' );
 		$s->text( $o, 'title', 'title_text' );
 		$s->text( $o, 'description', 'description_text' );
+		// Elementor's defaults fill only settings that were never saved: an emptied description stays empty.
 		$o += array(
 			'title'       => 'This is the heading',
-			'description' => self::LOREM,
+			'description' => $s->exists( 'description_text' ) ? '' : self::LOREM,
 		);
 		$s->lnk( $o, 'link', 'link' );
 		$s->opt( $o, 'title_tag', 'title_size', self::TAGS );
 		$s->opt( $o, 'position', 'position', array( 'top' => 'top', 'left' => 'left', 'right' => 'right', 'block-start' => 'top', 'block-end' => 'top', 'inline-start' => 'left', 'inline-end' => 'right' ), true );
 		$s->opt( $o, 'vertical_align', 'content_vertical_alignment', array( 'top' => 'top', 'middle' => 'middle', 'bottom' => 'bottom' ), true );
 		$s->opt( $o, 'align', 'text_align', self::ALIGN, true );
-		$o += array( 'align' => 'center' );
+		// Without an alignment of its own, Elementor aligns the text with the media's side: to the start beside a left
+		// icon or image, to the end beside a right one, centred under a top one (per device, with the position).
+		$side = array( 'left' => 'left', 'right' => 'right' );
+		$o   += array( 'align' => $side[ $o['position'] ?? '' ] ?? 'center' );
+		foreach ( array( '_tablet', '_mobile' ) as $suffix ) {
+			if ( ! isset( $o[ 'align' . $suffix ] ) && isset( $o[ 'position' . $suffix ] ) ) {
+				$o[ 'align' . $suffix ] = $side[ $o[ 'position' . $suffix ] ] ?? 'center';
+			}
+		}
 		$s->sl( $o, 'image_spacing', 'image_space' );
 		$s->sl( $o, 'image_width', 'image_size' );
 		$o += array( 'image_width' => array( 'size' => 30, 'unit' => '%' ) );
@@ -737,17 +909,42 @@ final class Widgets {
 			} else {
 				$item['icon'] = array( 'library' => 'fa-solid', 'value' => 'check' );
 			}
-			$link = $c->link( $row['link'] ?? null );
+			$link = $c->row_link( $row );
 			if ( $link ) {
 				$item['link'] = $link;
 			}
 			$items[] = self::row( $item, $row );
 		}
 		$o['items'] = $items;
+		// Items whose text or link is dynamic (a breadcrumb ending with the post title).
+		$dynamic = $c->item_dynamic( $s->type, 'icon-list', 'items', (array) $s->raw( 'icon_list' ), array( 'text' => 'text', 'link' => 'link' ) );
+		if ( $dynamic ) {
+			$o['__dynamic'] = $dynamic;
+		}
 		if ( 'inline' === $s->str( 'view' ) ) {
 			$o['layout'] = 'inline';
 		}
 		$s->sl( $o, 'gap', 'space_between' );
+		if ( ! isset( $o['gap'] ) ) {
+			// Elementor puts no space between the items unless it is set (Uncoder's list has a small default gap).
+			$o['gap'] = array(
+				'size' => 0,
+				'unit' => 'px',
+			);
+		}
+		if ( isset( $o['layout'] ) ) {
+			// Uncoder Elements' "Inline Gap" spaces inline items, rows too, on top of Elementor's spacing.
+			foreach ( Source::SUFFIXES as $suffix ) {
+				$gap  = $s->slider( 'uncoder_icon_list_mobile_inline_gap' . $suffix );
+				$base = $o[ 'gap' . $suffix ] ?? null;
+				if ( null !== $gap ) {
+					if ( $base && $base['unit'] === $gap['unit'] ) {
+						$gap['size'] += $base['size'];
+					}
+					$o[ 'gap' . $suffix ] = $gap;
+				}
+			}
+		}
 		$s->opt( $o, 'align', 'icon_align', self::ALIGN3, true );
 		if ( $s->yes( 'divider' ) ) {
 			$o['divider'] = true;
@@ -763,12 +960,57 @@ final class Widgets {
 		$s->col( $o, 'icon_color', 'icon_color' );
 		$s->col( $o, 'icon_hover_color', 'icon_color_hover' );
 		$s->sl( $o, 'icon_size', 'icon_size' );
-		$s->sl( $o, 'icon_gap', 'text_indent' );
+		// Elementor's defaults: 14px icons in the text color (the Primary color only with its default colors on).
+		$o += array( 'icon_size' => array( 'size' => 14, 'unit' => 'px' ) );
+		if ( ! isset( $o['icon_color'] ) ) {
+			$o['_custom_css'] = trim( ( $o['_custom_css'] ?? '' ) . "\nselector{--uncoder-ilist-icon-color:currentColor}" );
+		}
+		// Elementor's icon "Gap" (text_indent) pads the icon's box; the text keeps 5px of its own and the icon a margin
+		// of a quarter of its size (an eighth when centred in its box, none when right-aligned). Uncoder Elements' icon
+		// spacing (a margin it shows once the icon padding is set) adds to it.
+		$align = $s->str( 'icon_self_align' );
+		$share = 'center' === $align ? 0.125 : ( 'right' === $align ? 0.0 : 0.25 );
+		foreach ( Source::SUFFIXES as $suffix ) {
+			$indent = $s->slider( 'text_indent' . $suffix );
+			if ( '' !== $suffix && null === $indent && ! isset( $o[ 'icon_size' . $suffix ] ) ) {
+				continue;
+			}
+			$indent = $indent ?? array( 'size' => 0, 'unit' => 'px' );
+			$icon   = $o[ 'icon_size' . $suffix ] ?? $o['icon_size'];
+			if ( 'px' !== $indent['unit'] ) {
+				$o[ 'icon_gap' . $suffix ] = $indent;
+				continue;
+			}
+			$gap = (float) $indent['size'] + 5 + ( 'px' === $icon['unit'] ? (float) $icon['size'] * $share : 0 );
+			$o[ 'icon_gap' . $suffix ] = array( 'size' => round( $gap, 2 ), 'unit' => 'px' );
+		}
+		if ( ! Source::blank( $s->raw( 'uncoder_icon_list_padding' ) ) ) {
+			$space = $s->slider( 'uncoder_icon_list_icon_space' ) ?? array( 'size' => 5, 'unit' => 'px' );
+			if ( $space['unit'] === $o['icon_gap']['unit'] ) {
+				$o['icon_gap']['size'] += $space['size'];
+			}
+		}
+		$s->use( 'uncoder_icon_list_icon_space', 'uncoder_icon_list_padding' );
 		$va = $s->str( 'icon_self_vertical_align' );
 		if ( 'flex-start' === $va ) {
 			$o['icon_valign'] = 'top';
 		} elseif ( 'center' === $va ) {
 			$o['icon_valign'] = 'middle';
+		}
+		$css    = array();
+		$offset = $s->slider( 'icon_vertical_offset' );
+		if ( null !== $offset && 0.0 !== (float) $offset['size'] ) {
+			$css[] = 'selector .uncoder-icon-list__icon{position:relative;top:' . $offset['size'] . $offset['unit'] . '}';
+		}
+		if ( $s->yes( 'link_hover_underline' ) ) {
+			// Uncoder Elements' underline that grows under link text on hover.
+			$height = $s->slider( 'link_hover_underline_height' ) ?? array( 'size' => 1, 'unit' => 'px' );
+			$height = $height['size'] . $height['unit'];
+			$css[]  = 'selector a.uncoder-icon-list__inner .uncoder-icon-list__text{padding-bottom:3px;margin-bottom:-3px;background-image:linear-gradient(currentColor,currentColor);background-repeat:no-repeat;background-position:0 100%;background-size:0 ' . $height . ';transition:background-size .3s cubic-bezier(.2,1,.3,1)}'
+				. 'selector a.uncoder-icon-list__inner:hover .uncoder-icon-list__text{background-size:100% ' . $height . '}';
+		}
+		if ( $css ) {
+			$o['_custom_css'] = trim( ( $o['_custom_css'] ?? '' ) . "\n" . implode( "\n", $css ) );
 		}
 		$s->col( $o, 'text_color', 'text_color' );
 		$s->col( $o, 'text_hover_color', 'text_color_hover' );
@@ -866,6 +1108,8 @@ final class Widgets {
 		$s->sl( $o, 'width', 'width' );
 		$s->opt( $o, 'align', 'align', self::ALIGN3, true );
 		$s->sl( $o, 'gap', 'gap' );
+		// Elementor's default spacing.
+		$o += array( 'gap' => array( 'size' => 15, 'unit' => 'px' ) );
 		$look = $s->str( 'look', 'line' );
 		if ( 'line_text' === $look ) {
 			$o['element'] = 'text';
@@ -1095,6 +1339,86 @@ final class Widgets {
 		return array( 'tabs', $o, self::nested_children( $el, count( $rows ), $depth, $c ) );
 	}
 
+	/**
+	 * Uncoder Elements' accordion: Elementor's accordion items with an icon of their own per item, its open / close
+	 * icons on the right in a round box, no dividers, the item to open first by number (0 = all closed). Unset
+	 * options take that widget's defaults.
+	 */
+	public static function uncoder_accordion( Source $s, Converter $c ): array {
+		list( $type, $o, $children ) = self::accordion( $s, $c );
+		$s->ico( $o, 'icon', 'accordion_icon' );
+		$s->ico( $o, 'active_icon', 'accordion_active_icon' );
+		$o['icon_position'] = 'left' === $s->str( 'icon_align', is_rtl() ? 'left' : 'right' ) ? 'start' : 'end';
+		$open               = is_numeric( $s->raw( 'active_item' ) ) ? (int) $s->raw( 'active_item' ) : 1;
+		$o['first_open']    = 1 === $open;
+		if ( $open > 1 ) {
+			$o['open_item'] = $open;
+		}
+		$o['multiple'] = false;
+		if ( ! isset( $o['item_border'] ) ) {
+			$o['item_border'] = array( 'style' => 'none' );
+		}
+		if ( 'classic' === $s->str( 'icon_background_color_background' ) ) {
+			// A round box: the add-on sizes it by the icon (default 15px) plus its padding, per screen size.
+			$size = 15;
+			$pad  = 0;
+			foreach ( Source::SUFFIXES as $suffix ) {
+				$p    = $s->raw( 'icon_padding' . $suffix );
+				$p    = is_array( $p ) && is_numeric( $p['top'] ?? null ) ? (float) $p['top'] : null;
+				$sz   = $s->num( 'icon_size' . $suffix );
+				$size = $sz ?? $size;
+				$pad  = $p ?? $pad;
+				if ( '' === $suffix || null !== $p || null !== $sz ) {
+					$o[ 'icon_box' . $suffix ] = array( 'size' => $size + 2 * $pad, 'unit' => 'px' );
+				}
+			}
+			$s->col( $o, 'icon_background', 'icon_background_color_color' );
+			$s->radius( $o, 'icon_radius', 'icon_border_radius', false );
+		}
+		$s->col( $o, 'icon_color', 'icon_color' );
+		$s->col( $o, 'active_icon_color', 'icon_active_color' );
+		$s->sl( $o, 'icon_size', 'icon_size' );
+		// The add-on spaces the open / close icon by "Icon Spacing" (none by default) and the item icon by "Icon
+		// Indent" (5px by default); Uncoder's header has one gap for both, so the item icon gets the difference.
+		$gap               = $s->slider( 'icon_spacing' ) ?? array( 'size' => 0, 'unit' => 'px' );
+		$o['icon_spacing'] = $gap;
+		if ( 'yes' === $s->str( 'show_custom_icon' ) ) {
+			$indent           = $s->slider( 'icon_indent' ) ?? array( 'size' => 5, 'unit' => 'px' );
+			$o['_custom_css'] = trim( ( $o['_custom_css'] ?? '' ) . "\nselector .uncoder-accordion__item-icon{margin-inline-end:calc(" . $indent['size'] . $indent['unit'] . ' - ' . $gap['size'] . $gap['unit'] . ')}' );
+		}
+		$s->sl( $o, 'item_icon_size', 'title_icon_size' );
+		$s->col( $o, 'item_icon_color', 'title_icon_color' );
+		// The add-on's item icons are often coloured with custom CSS on its own class.
+		if ( ! isset( $o['item_icon_color'] ) && preg_match( '/\.uncoder-sa-custom-icon\s*\{[^}]*?(?<![-\w])color\s*:\s*([^;}]+)/i', $s->str( 'custom_css' ), $m ) ) {
+			$v                    = trim( $m[1] );
+			$o['item_icon_color'] = preg_match( '/^var\(\s*--e-global-color-([A-Za-z0-9_-]+)\s*\)$/', $v, $g ) ? 'var(--uncoder-c-' . Converter::color_id( $g[1] ) . ')' : Utils::sanitize_color( $v );
+		}
+		$s->dm( $o, 'content_padding', 'content_padding' );
+		// The add-on's item box: 15px padding, 5px between items, the title without padding of its own and 15px
+		// above the answer.
+		$s->sl( $o, 'gap', 'item_spacing' );
+		$o += array( 'gap' => array( 'size' => 5, 'unit' => 'px' ) );
+		$s->dm( $o, 'item_padding', 'item_padding' );
+		$o += array( 'item_padding' => array( 'top' => 15, 'right' => 15, 'bottom' => 15, 'left' => 15, 'unit' => 'px', 'linked' => true ) );
+		$o += array( 'header_padding' => array( 'top' => 0, 'right' => 0, 'bottom' => 0, 'left' => 0, 'unit' => 'px', 'linked' => true ) );
+		$spacing = array( 'size' => 15, 'unit' => 'px' );
+		$pad     = array( 'top' => 0, 'right' => 0, 'bottom' => 0, 'left' => 0, 'unit' => 'px', 'linked' => false );
+		foreach ( Source::SUFFIXES as $suffix ) {
+			$sp = $s->slider( 'content_spacing' . $suffix );
+			$pd = $o[ 'content_padding' . $suffix ] ?? null;
+			if ( '' !== $suffix && null === $sp && null === $pd ) {
+				continue;
+			}
+			$spacing = $sp ?? $spacing;
+			$pad     = $pd ?? $pad;
+			if ( $spacing['unit'] === $pad['unit'] ) {
+				$o[ 'content_padding' . $suffix ] = array( 'top' => (float) $pad['top'] + (float) $spacing['size'], 'linked' => false ) + $pad;
+			}
+		}
+		$s->use( 'show_custom_icon', 'icon_indent', 'collapsible', 'icon_padding' );
+		return array( $type, $o, $children );
+	}
+
 	public static function accordion( Source $s, Converter $c ): array {
 		$toggle = 'toggle' === $s->type;
 		$o      = array();
@@ -1107,7 +1431,13 @@ final class Widgets {
 			if ( ! is_array( $row ) ) {
 				continue;
 			}
-			$rows[]     = self::row( array( 'title' => (string) ( $row['tab_title'] ?? 'Item' ) ), $row );
+			$item = array( 'title' => (string) ( $row['tab_title'] ?? 'Item' ) );
+			// Uncoder Elements' accordion: an icon of its own before each title.
+			$own = ! empty( $row['repeater_icon'] ) ? $c->icon( $row['repeater_icon'] ) : null;
+			if ( $own ) {
+				$item['icon'] = $own;
+			}
+			$rows[]     = self::row( $item, $row );
 			$children[] = self::panel( (string) ( $row['tab_content'] ?? '' ), $text, $c );
 		}
 		$o['items'] = $rows;
@@ -1121,9 +1451,38 @@ final class Widgets {
 			$o['icon']        = array( 'library' => 'none', 'value' => '' );
 			$o['active_icon'] = array( 'library' => 'none', 'value' => '' );
 		}
+		// UiCore Elements' and Element Pack's accordions: their own icons (a plus, and a minus when open, unless set)
+		// at the end of the title, in the title's colour unless set.
+		$uicore = in_array( $s->type, array( 'uicore-accordion', 'bdt-accordion' ), true );
+		if ( 'bdt-accordion' === $s->type ) {
+			// Element Pack's titles are bordered boxes with round corners that join their content when open: the
+			// item's border and corners here.
+			$s->sl( $o, 'gap', 'item_spacing' );
+			$s->brd( $o, 'item_border', 'title_border' );
+			$s->radius( $o, 'item_radius', 'title_radius' );
+			$s->col( $o, 'header_background', 'title_background_color' );
+			$s->col( $o, 'hover_title_color', 'hover_title_color' );
+			$s->use( 'title_background_background', 'active_title_border_border', 'active_title_border_width', 'active_title_radius', 'active_title_radius_tablet', 'active_title_radius_mobile' );
+		}
+		if ( $uicore ) {
+			foreach ( array( 'icon' => array( 'accordion_icon', 'fas fa-plus' ), 'active_icon' => array( 'accordion_active_icon', 'fas fa-minus' ) ) as $to => list( $key, $default ) ) {
+				$raw      = $s->raw( $key );
+				$o[ $to ] = is_array( $raw ) && '' === (string) ( $raw['value'] ?? '' )
+					? array( 'library' => 'none', 'value' => '' )
+					: ( $c->icon( is_array( $raw ) ? $raw : array( 'value' => $default, 'library' => 'fa-solid' ) ) ?? array( 'library' => 'none', 'value' => '' ) );
+				$s->use( $key );
+			}
+			$s->col( $o, 'icon_color', 'title_icon_color' );
+			$s->col( $o, 'active_icon_color', 'title_active_icon_color' );
+			$s->col( $o, 'active_title_color', 'active_title_color' );
+			$s->brd( $o, 'item_border', 'item_border' );
+			if ( ! isset( $o['active_icon_color'] ) ) {
+				$o['active_icon_color'] = 'currentColor';
+			}
+		}
 		$tag            = $s->str( 'title_html_tag', 'div' );
 		$o['title_tag'] = array( 'div' => 'span', 'h1' => 'h2', 'h2' => 'h2', 'h3' => 'h3', 'h4' => 'h4', 'h5' => 'h5', 'h6' => 'h6', 'span' => 'span', 'p' => 'span' )[ $tag ] ?? 'span';
-		$o['icon_position'] = 'right' === $s->str( 'icon_align', 'left' ) ? 'end' : 'start';
+		$o['icon_position'] = 'right' === $s->str( 'icon_align', $uicore ? 'right' : 'left' ) ? 'end' : 'start';
 		$o['first_open']    = ! $toggle;
 		$o['multiple']      = $toggle;
 		if ( $s->yes( 'faq_schema' ) ) {
@@ -1220,6 +1579,16 @@ final class Widgets {
 			$icon    = $c->icon( $row['social_icon'] ?? ( $row['social'] ?? null ) );
 			$name    = $icon ? (string) $icon['value'] : '';
 			$network = self::NETWORKS[ $name ] ?? '';
+			// An uploaded SVG named after a network (x-twitter.svg, tiktok-icon.svg): Uncoder's own icon for it.
+			$file = strtolower( (string) pathinfo( (string) ( $row['social_icon']['value']['url'] ?? '' ), PATHINFO_FILENAME ) );
+			if ( '' === $network && '' !== $file ) {
+				foreach ( array( 'x-twitter' => 'x', 'twitter-x' => 'x', 'twitter' => 'x', 'tiktok' => 'tiktok', 'threads' => 'threads', 'discord' => 'discord', 'telegram' => 'telegram', 'whatsapp' => 'whatsapp', 'pinterest' => 'pinterest', 'linkedin' => 'linkedin', 'instagram' => 'instagram', 'facebook' => 'facebook', 'youtube' => 'youtube' ) as $needle => $candidate ) {
+					if ( false !== strpos( $file, $needle ) ) {
+						$network = $candidate;
+						break;
+					}
+				}
+			}
 			$item    = array( 'network' => '' !== $network ? $network : 'custom' );
 			if ( '' === $network ) {
 				$item['icon'] = $icon ? $icon : array( 'library' => 'lucide', 'value' => 'link' );
@@ -1253,9 +1622,18 @@ final class Widgets {
 		$s->sl( $o, 'gap', 'icon_spacing' );
 		$s->sl( $o, 'row_gap', 'rows_gap' );
 		$s->radius( $o, 'radius', 'border_radius' );
-		if ( $s->border( 'image_border' ) ) {
-			$c->setting( 'social-icons', 'border' );
+		// Uncoder's outline takes the icon color; Elementor's border has its own (often a faint ring around a filled
+		// shape), so it is kept as the link's CSS border.
+		$border = $s->border( 'image_border' );
+		if ( $border ) {
+			$w   = (array) ( $border['width'] ?? array() );
+			$px  = static fn( $v ) => is_numeric( $v ) ? (float) $v . ( $w['unit'] ?? 'px' ) : '1px';
+			$css = 'none' === $border['style']
+				? 'border:none'
+				: 'border-style:' . $border['style'] . ';border-width:' . $px( $w['top'] ?? 1 ) . ' ' . $px( $w['right'] ?? 1 ) . ' ' . $px( $w['bottom'] ?? 1 ) . ' ' . $px( $w['left'] ?? 1 ) . ';border-color:' . ( $border['color'] ?? 'currentColor' );
+			$o['_custom_css'] = trim( ( $o['_custom_css'] ?? '' ) . "\nselector .uncoder-social-icons__link{" . $css . '}' );
 		}
+		$s->col( $o, 'hover_border_color', 'hover_border_color' );
 		$s->col( $o, 'hover_shape_color', 'hover_primary_color' );
 		$s->col( $o, 'hover_icon_color', 'hover_secondary_color' );
 		$anim = $s->str( 'hover_animation' );
@@ -1429,6 +1807,22 @@ final class Widgets {
 			$o['size'] = 'custom' === $size ? 'full' : $size;
 		}
 		$s->use( 'thumbnail_custom_dimension' );
+		// Elementor shows each image in its own proportions (logos, mixed shapes), not cropped to one ratio. Images
+		// that share one proportion get it set exactly (a row of logos keeps its height in any layout).
+		$ratios = array();
+		foreach ( (array) $o['gallery'] as $item ) {
+			$meta = ! empty( $item['id'] ) ? wp_get_attachment_metadata( (int) $item['id'] ) : null;
+			if ( is_array( $meta ) && ! empty( $meta['width'] ) && ! empty( $meta['height'] ) ) {
+				$ratios[] = array( (int) $meta['width'], (int) $meta['height'] );
+			}
+		}
+		$first = $ratios[0] ?? null;
+		$same  = $first && count( $ratios ) === count( (array) $o['gallery'] ) && ! array_filter( $ratios, static fn( $r ) => abs( $r[0] / $r[1] - $first[0] / $first[1] ) > 0.02 );
+		if ( $same ) {
+			$o['_custom_css'] = 'selector{--uncoder-image-carousel-ratio:' . $first[0] . ' / ' . $first[1] . '}';
+		} else {
+			$o['ratio'] = 'auto';
+		}
 		self::carousel( $s, $o );
 		$link         = $s->str( 'link_to', 'none' );
 		$o['link_to'] = 'file' === $link ? 'lightbox' : '';
@@ -1443,6 +1837,9 @@ final class Widgets {
 		$o['hover_effect'] = '';
 		$s->brd( $o, 'border', 'image_border' );
 		$s->radius( $o, 'radius', 'image_border_radius' );
+		// No frame of its own: square corners, nothing behind transparent images (logos).
+		$o += array( 'radius' => array( 'top' => 0, 'right' => 0, 'bottom' => 0, 'left' => 0, 'unit' => 'px', 'linked' => true ) );
+		$o['_custom_css'] = trim( ( $o['_custom_css'] ?? '' ) . "\nselector .uncoder-image-carousel__media{background:none}\nselector .uncoder-image-carousel__item{height:auto;align-items:center}" );
 		$s->opt( $o, 'caption_align', 'caption_align', self::ALIGN3, true );
 		$s->col( $o, 'caption_color', 'caption_text_color' );
 		$s->typ( $o, 'caption_typography', 'caption_typography' );
@@ -1466,6 +1863,37 @@ final class Widgets {
 			if ( $m ) {
 				$images[] = $m;
 			}
+		}
+		// UiCore Animate's marquee switch on an Element Pack carousel: the slides glide on without stopping, each one
+		// taking the carousel's speed to pass (Uncoder's Marquee of images; the slides' height, 220px by default).
+		if ( 'ui-is-marquee' === $s->str( 'carousel_marquee', '' ) && $images ) {
+			$height = $s->slider( 'height' );
+			$gap    = $s->slider( 'space_between' );
+			$m      = array(
+				'items'        => array_map(
+					static fn( $img ) => array(
+						'type'  => 'image',
+						'image' => $img,
+					),
+					$images
+				),
+				'separator'    => array(
+					'library' => 'none',
+					'value'   => '',
+				),
+				'speed'        => max( 2, min( 300, (int) round( count( $images ) * ( $s->num( 'speed' ) ?? 5000 ) / 1000 ) ) ),
+				'image_height' => $height && 'px' === $height['unit'] ? $height : array(
+					'size' => 220,
+					'unit' => 'px',
+				),
+				'gap'          => $gap ? $gap : array(
+					'size' => 10,
+					'unit' => 'px',
+				),
+				'fade_edges'   => $s->yes( 'shadow_mode' ),
+			);
+			$s->use( 'carousel_marquee', 'slides_per_view', 'slides_per_view_tablet', 'slides_per_view_mobile', 'navigation', 'shadow_color', 'image_fit', 'skin_template_slides', 'width' );
+			return array( 'marquee', $m );
 		}
 		$o['gallery'] = $images;
 		$skin         = $s->str( 'skin', 'carousel' );
@@ -1510,10 +1938,440 @@ final class Widgets {
 		return array( 'html', is_string( $html ) && '' !== trim( $html ) ? array( 'html' => $html ) : array() );
 	}
 
-	public static function shortcode( Source $s ): array {
+	public static function shortcode( Source $s, Converter $c ): array {
 		$o = array();
 		$s->text( $o, 'shortcode', 'shortcode' );
+		// Just a WPForms form: the form itself, as an Uncoder form.
+		if ( preg_match( '/^\s*\[wpforms\s+id=["\']?(\d+)["\']?[^\]]*\]\s*$/', (string) ( $o['shortcode'] ?? '' ), $m ) ) {
+			$form = Wpforms::form( (int) $m[1], $c );
+			if ( $form ) {
+				return array( 'form', $form );
+			}
+		}
 		return array( 'shortcode', $o );
+	}
+
+	/** WooCommerce's archive (term) description. */
+	public static function archive_description( Source $s ): array {
+		$o = array();
+		$s->opt( $o, 'align', 'text_align', self::ALIGN, true );
+		$s->col( $o, 'color', 'text_color' );
+		$s->typ( $o, 'typography', 'text_typography' );
+		return array( 'archive-description', $o );
+	}
+
+	/**
+	 * Elementor's Archive Products: the shop / product archive grid as WooCommerce prints it (result count,
+	 * sorting, products, pagination), through a shortcode the importer provides (Elementor_Import::wc_archive_products()).
+	 */
+	public static function wc_archive_products( Source $s, Converter $c ): array {
+		// The shop / product archive being viewed: the Products widget's "current listing".
+		$o = array( 'source' => 'current' );
+		self::wc_grid( $s, $o );
+		$s->text( $o, 'nothing_found', 'nothing_found_message' );
+		$s->use( 'products_related_products_title_text', 'products_upsells_title_text', 'products_cross_sells_title_text', 'paginate', 'rows' );
+		return array( 'products', $o );
+	}
+
+	/* ------------------------------------------------------------------ WooCommerce */
+
+	/**
+	 * Grid and card settings shared by Elementor's product grids (Products, Archive Products, Related, Upsells).
+	 *
+	 * @param array<string,mixed> $o Output.
+	 */
+	private static function wc_grid( Source $s, array &$o ): void {
+		foreach ( Source::SUFFIXES as $suffix ) {
+			$n = $s->num( 'columns' . $suffix );
+			if ( null !== $n && $n > 0 ) {
+				$o[ 'columns' . $suffix ] = (int) min( 8, $n );
+			}
+		}
+		$s->sl( $o, 'gap', 'column_gap' );
+		$s->sl( $o, 'row_gap', 'row_gap' );
+		$s->opt( $o, 'align', 'align', self::ALIGN, true );
+		$s->flag( $o, 'ordering', 'allow_order' );
+		$s->flag( $o, 'result_count', 'show_result_count' );
+		$s->col( $o, 'title_color', 'title_color' );
+		$s->typ( $o, 'title_typography', 'title_typography' );
+		$s->col( $o, 'price_color', 'price_color' );
+		$s->typ( $o, 'price_typography', 'price_typography' );
+		$s->col( $o, 'star_color', 'star_color' );
+		$s->col( $o, 'star_empty_color', 'empty_star_color' );
+		$s->sl( $o, 'star_size', 'star_size', false );
+		$s->col( $o, 'button_color', 'button_text_color' );
+		$s->col( $o, 'button_background', 'button_background_color' );
+		$s->col( $o, 'button_hover_color', 'button_hover_color' );
+		$s->col( $o, 'button_hover_background', 'button_hover_background_color' );
+		$s->typ( $o, 'button_typography', 'button_typography' );
+		$s->radius( $o, 'button_radius', 'button_border_radius' );
+		$s->dm( $o, 'button_padding', 'button_text_padding' );
+		$s->radius( $o, 'image_radius', 'image_border_radius' );
+		$s->col( $o, 'badge_background', 'onsale_text_background_color' );
+		$s->col( $o, 'badge_color', 'onsale_text_color' );
+		$s->typ( $o, 'badge_typography', 'onsale_typography' );
+		$s->col( $o, 'card_background', 'box_bg_color' );
+		$s->radius( $o, 'card_radius', 'box_border_radius' );
+		$s->dm( $o, 'card_padding', 'box_padding' );
+		if ( $s->has( 'onsale_position' ) ) {
+			$o['badge_position'] = 'right' === $s->str( 'onsale_position' ) ? 'right' : 'left';
+		}
+		if ( $s->has( 'show_onsale_flash' ) || $s->has( 'onsale_flash' ) ) {
+			$o['show_badge'] = $s->yes( $s->has( 'show_onsale_flash' ) ? 'show_onsale_flash' : 'onsale_flash', true );
+		}
+	}
+
+	public static function wc_products( Source $s, Converter $c ): array {
+		$sources = array(
+			'current_query'    => 'current',
+			'product'          => 'latest',
+			'sale'             => 'sale',
+			'featured'         => 'featured',
+			'by_id'            => 'manual',
+			'related_products' => 'related',
+			'upsells'          => 'upsells',
+			'cross_sells'      => 'cross_sells',
+		);
+		$type = $s->str( 'query_post_type', 'product' );
+		$o    = array( 'source' => $sources[ $type ] ?? 'latest' );
+		if ( ! isset( $sources[ $type ] ) ) {
+			$c->setting( 'woocommerce-products', 'query_post_type: ' . $type );
+		}
+		if ( 'manual' === $o['source'] ) {
+			$o['products'] = array_values( array_map( 'strval', array_filter( array_map( 'absint', (array) $s->raw( 'query_posts_ids' ) ) ) ) );
+		}
+		// Latest products narrowed to categories or tags (Include → Term): the widget's "From categories or tags".
+		if ( 'latest' === $o['source'] && in_array( 'terms', (array) $s->raw( 'query_include' ), true ) ) {
+			$terms = array( 'product_cat' => array(), 'product_tag' => array() );
+			foreach ( array_filter( array_map( 'absint', (array) $s->raw( 'query_include_term_ids' ) ) ) as $term_id ) {
+				$term = get_term( $term_id );
+				if ( $term instanceof \WP_Term && isset( $terms[ $term->taxonomy ] ) ) {
+					$terms[ $term->taxonomy ][] = (string) $term_id;
+				}
+			}
+			if ( $terms['product_cat'] || $terms['product_tag'] ) {
+				$o['source']     = 'terms';
+				$o['categories'] = $terms['product_cat'];
+				$o['tags']       = $terms['product_tag'];
+			}
+		}
+		$orderby = array(
+			'date'       => 'date',
+			'title'      => 'title',
+			'price'      => 'price',
+			'popularity' => 'popularity',
+			'rating'     => 'rating',
+			'rand'       => 'rand',
+			'menu_order' => 'menu_order',
+		);
+		$by = $s->str( 'query_orderby' );
+		if ( isset( $orderby[ $by ] ) ) {
+			$o['orderby'] = 'price' === $by && 'desc' === strtolower( $s->str( 'query_order' ) ) ? 'price-desc' : $orderby[ $by ];
+		}
+		// Elementor saves only what differs from its defaults: 4 columns, 4 rows.
+		$columns = $s->num( 'columns' ) ?? 4;
+		$rows    = $s->num( 'rows' ) ?? 4;
+		if ( 'current' !== $o['source'] ) {
+			$o['limit'] = (int) max( 1, min( 100, $columns * $rows ) );
+		}
+		$s->flag( $o, 'paginate', 'paginate' );
+		self::wc_grid( $s, $o );
+		$s->text( $o, 'nothing_found', 'nothing_found_message' );
+		$s->use( 'query_order', 'rows', 'query_include', 'query_include_term_ids', 'query_exclude', 'query_select_ids' );
+		return array( 'products', $o );
+	}
+
+	public static function wc_related( Source $s, Converter $c ): array {
+		$o = array(
+			'source' => 'related',
+			'limit'  => 4, // Elementor's default.
+		);
+		$s->number( $o, 'limit', 'posts_per_page', 1, 100 );
+		self::wc_grid( $s, $o );
+		if ( $s->yes( 'show_heading', true ) ) {
+			$o['heading'] = __( 'Related products', 'uncoder' );
+		}
+		$s->use( 'orderby', 'order', 'show_heading' );
+		return array( 'product-related', $o );
+	}
+
+	public static function wc_upsells( Source $s, Converter $c ): array {
+		$o = array( 'source' => 'upsells', 'limit' => 4 );
+		self::wc_grid( $s, $o );
+		if ( $s->yes( 'show_heading', true ) ) {
+			$o['heading'] = __( 'You may also like…', 'uncoder' );
+		}
+		$s->use( 'orderby', 'order', 'show_heading' );
+		return array( 'product-related', $o );
+	}
+
+	public static function wc_categories( Source $s, Converter $c ): array {
+		$sources = array(
+			''                      => 'all',
+			'by_id'                 => 'manual',
+			'by_parent'             => 'top',
+			'current_subcategories' => 'current',
+		);
+		$o = array(
+			'source' => $sources[ $s->str( 'source' ) ] ?? 'all',
+			'limit'  => 4, // Elementor's default.
+		);
+		if ( 'manual' === $o['source'] ) {
+			$o['categories'] = array_values( array_map( 'strval', array_filter( array_map( 'absint', (array) $s->raw( 'categories' ) ) ) ) );
+		}
+		// "By parent" with a parent chosen: that category's subcategories, as a list (the widget lists top-level ones).
+		$parent = absint( $s->str( 'parent' ) );
+		if ( 'top' === $o['source'] && $parent ) {
+			$children        = get_terms( array( 'taxonomy' => 'product_cat', 'parent' => $parent, 'hide_empty' => false, 'fields' => 'ids' ) );
+			$o['source']     = 'manual';
+			$o['categories'] = is_array( $children ) ? array_values( array_map( 'strval', $children ) ) : array();
+		}
+		$s->number( $o, 'limit', 'number', 1, 100 );
+		foreach ( Source::SUFFIXES as $suffix ) {
+			$n = $s->num( 'columns' . $suffix );
+			if ( null !== $n && $n > 0 ) {
+				$o[ 'columns' . $suffix ] = (int) min( 8, $n );
+			}
+		}
+		$s->flag( $o, 'hide_empty', 'hide_empty' );
+		$s->opt( $o, 'orderby', 'orderby', array( 'name' => 'name', 'slug' => 'name', 'description' => 'name', 'count' => 'count', 'id' => 'id', 'menu_order' => 'menu_order' ) );
+		$s->sl( $o, 'gap', 'column_gap' );
+		$s->sl( $o, 'row_gap', 'row_gap' );
+		$s->opt( $o, 'align', 'align', self::ALIGN, true );
+		$s->col( $o, 'title_color', 'title_color' );
+		$s->typ( $o, 'title_typography', 'title_typography' );
+		$s->col( $o, 'count_color', 'count_color' );
+		$s->radius( $o, 'image_radius', 'image_border_radius' );
+		$s->use( 'parent', 'order' );
+		return array( 'product-categories', $o );
+	}
+
+	public static function wc_product_title( Source $s ): array {
+		list( , $o ) = self::post_title( $s );
+		return array( 'product-title', $o );
+	}
+
+	public static function wc_product_images( Source $s ): array {
+		$o = array();
+		$s->flag( $o, 'sale_badge', 'sale_flash' );
+		$s->radius( $o, 'radius', 'image_border_radius' );
+		$s->sl( $o, 'gap', 'spacing_thumbs' );
+		$s->use( 'spacing', 'thumbs_border_radius', 'image_border_border', 'image_border_width', 'image_border_color', 'thumbs_border_border', 'thumbs_border_width', 'thumbs_border_color' );
+		return array( 'product-images', $o );
+	}
+
+	public static function wc_product_price( Source $s ): array {
+		$o = array();
+		$s->opt( $o, 'align', 'text_align', self::ALIGN, true );
+		$s->col( $o, 'color', 'price_color' );
+		$s->typ( $o, 'typography', 'typography' );
+		$s->col( $o, 'sale_color', 'sale_price_color' );
+		$s->typ( $o, 'sale_typography', 'sale_price_typography' );
+		$s->sl( $o, 'gap', 'sale_price_spacing' );
+		if ( $s->yes( 'price_block' ) ) {
+			$o['stacked'] = true;
+		}
+		$s->use( 'price_block', 'sale_heading' );
+		return array( 'product-price', $o );
+	}
+
+	/**
+	 * Button and quantity styles of Elementor's add to cart widgets.
+	 *
+	 * @param array<string,mixed> $o Output.
+	 */
+	private static function wc_cart_button( Source $s, array &$o ): void {
+		$s->typ( $o, 'button_typography', 'button_typography' );
+		$s->col( $o, 'button_color', 'button_text_color' );
+		$s->col( $o, 'button_background', 'button_bg_color' );
+		$s->col( $o, 'button_hover_color', 'button_text_color_hover' );
+		$s->col( $o, 'button_hover_background', 'button_bg_color_hover' );
+		$s->col( $o, 'button_hover_border', 'button_border_color_hover' );
+		$s->brd( $o, 'button_border', 'button_border' );
+		$s->radius( $o, 'button_radius', 'button_border_radius' );
+		$s->dm( $o, 'button_padding', 'button_padding' );
+		$s->sl( $o, 'gap', 'spacing' );
+		$s->col( $o, 'qty_color', 'quantity_text_color' );
+		$s->col( $o, 'qty_background', 'quantity_bg_color' );
+		$s->col( $o, 'qty_border_color', 'quantity_border_color' );
+		$s->typ( $o, 'qty_typography', 'quantity_typography' );
+	}
+
+	public static function wc_add_to_cart( Source $s ): array {
+		$o = array();
+		$s->flag( $o, 'quantity', 'show_quantity' );
+		if ( 'stacked' === $s->str( 'layout' ) ) {
+			$o['layout'] = 'stacked';
+		}
+		$align = $s->str( 'alignment' );
+		if ( 'justify' === $align ) {
+			$o['full_width'] = true;
+		} elseif ( isset( self::ALIGN[ $align ] ) ) {
+			$o['align'] = self::ALIGN[ $align ];
+		}
+		self::wc_cart_button( $s, $o );
+		$s->use( 'layout', 'alignment' );
+		return array( 'add-to-cart', $o );
+	}
+
+	public static function wc_custom_add_to_cart( Source $s, Converter $c ): array {
+		$o  = array( 'mode' => 'form' );
+		$id = absint( $s->raw( 'product_id' ) );
+		if ( $id ) {
+			$o['product'] = array( (string) $id );
+		}
+		$s->flag( $o, 'quantity', 'show_quantity' );
+		$s->text( $o, 'button_text', 'text' );
+		self::wc_cart_button( $s, $o );
+		$s->use( 'quantity', 'product_id' );
+		return array( 'add-to-cart', $o );
+	}
+
+	public static function wc_product_rating( Source $s ): array {
+		$o = array();
+		$s->col( $o, 'star_color', 'star_color' );
+		$s->col( $o, 'star_empty_color', 'empty_star_color' );
+		$s->sl( $o, 'star_size', 'star_size' );
+		$s->col( $o, 'text_color', 'link_color' );
+		$s->typ( $o, 'text_typography', 'text_typography' );
+		$s->sl( $o, 'text_gap', 'space_between' );
+		$s->opt( $o, 'align', 'alignment', self::ALIGN, true );
+		return array( 'product-rating', $o );
+	}
+
+	public static function wc_product_stock( Source $s ): array {
+		$o = array();
+		$s->col( $o, 'in_color', 'text_color' );
+		$s->typ( $o, 'typography', 'text_typography' );
+		return array( 'product-stock', $o );
+	}
+
+	public static function wc_product_meta( Source $s ): array {
+		$o = array( 'layout' => 'inline' === $s->str( 'view' ) ? 'inline' : 'stacked' );
+		$s->text( $o, 'sku_label', 'sku_caption' );
+		$s->text( $o, 'categories_label', 'category_caption_single' );
+		$s->text( $o, 'tags_label', 'tag_caption_single' );
+		$s->sl( $o, 'gap', 'space_between' );
+		$s->col( $o, 'label_color', 'text_color' );
+		$s->typ( $o, 'label_typography', 'text_typography' );
+		$s->col( $o, 'value_color', 'link_color' );
+		$s->typ( $o, 'value_typography', 'link_typography' );
+		$s->use( 'view', 'category_caption_plural', 'tag_caption_plural', 'sku_missing_caption', 'divider', 'divider_style', 'divider_weight', 'divider_width', 'divider_color' );
+		return array( 'product-meta', $o );
+	}
+
+	public static function wc_short_description( Source $s ): array {
+		$o = array();
+		$s->opt( $o, 'align', 'text_align', self::ALIGN, true );
+		$s->col( $o, 'color', 'text_color' );
+		$s->typ( $o, 'typography', 'text_typography' );
+		return array( 'product-short-description', $o );
+	}
+
+	public static function wc_product_content( Source $s ): array {
+		list( , $o ) = self::post_content( $s );
+		return array( 'product-content', $o );
+	}
+
+	public static function wc_product_tabs( Source $s ): array {
+		$o = array( 'layout_mobile' => 'accordion' );
+		$s->col( $o, 'color', 'tab_text_color' );
+		$s->col( $o, 'active_color', 'tab_active_text_color' );
+		$s->typ( $o, 'typography', 'tab_typography' );
+		$s->use( 'tab_bg_color', 'tab_active_bg_color', 'tabs_border_color', 'tab_border_radius', 'text_color', 'content_typography', 'panel_border_width', 'panel_border_radius', 'panel_box_shadow', 'heading_color', 'content_heading_typography' );
+		return array( 'product-tabs', $o );
+	}
+
+	public static function wc_additional_information( Source $s ): array {
+		$o = array();
+		if ( $s->yes( 'show_heading', true ) ) {
+			$o['heading'] = __( 'Additional information', 'uncoder' );
+		}
+		$s->col( $o, 'heading_color', 'heading_color' );
+		$s->typ( $o, 'heading_typography', 'heading_typography' );
+		$s->col( $o, 'value_color', 'content_color' );
+		$s->typ( $o, 'value_typography', 'content_typography' );
+		$s->use( 'show_heading' );
+		return array( 'product-attributes', $o );
+	}
+
+	public static function wc_breadcrumb( Source $s ): array {
+		// WooCommerce's trail: Home / Category / Product (no shop page crumb).
+		$o = array( 'show_archive' => false );
+		$s->opt( $o, 'align', 'alignment', self::ALIGN, true );
+		$s->col( $o, 'color', 'text_color' );
+		$s->col( $o, 'link_color', 'link_color' );
+		$s->typ( $o, 'typography', 'text_typography' );
+		return array( 'breadcrumbs', $o );
+	}
+
+	public static function wc_notices( Source $s ): array {
+		return array( 'woo-notices', array() );
+	}
+
+	public static function wc_cart( Source $s, Converter $c ): array {
+		$o = array();
+		// Two columns stack on tablets and phones in Elementor, as the widget's default (empty) does.
+		if ( 'one-column' === $s->str( 'cart_layout' ) ) {
+			$o['layout'] = 'stacked';
+		}
+		$c->note( 'Cart: the layout comes over; colors and spacing follow the Design System (restyle in the Cart widget).' );
+		return array( 'cart', $o );
+	}
+
+	public static function wc_checkout( Source $s, Converter $c ): array {
+		$o = array();
+		if ( 'one-column' === $s->str( 'checkout_layout' ) ) {
+			$o['layout'] = 'stacked';
+		}
+		$s->flag( $o, 'sticky', 'sticky_right_column' );
+		$c->note( 'Checkout: the layout comes over; colors and spacing follow the Design System (restyle in the Checkout widget).' );
+		return array( 'checkout', $o );
+	}
+
+	public static function wc_my_account( Source $s, Converter $c ): array {
+		$o = array();
+		// A menu beside the content goes above it on phones in Elementor, as the widget's default (empty) does.
+		if ( 'horizontal' === $s->str( 'tabs_layout' ) ) {
+			$o['layout'] = 'top';
+		}
+		$c->note( 'My Account: the layout comes over; colors and spacing follow the Design System (restyle in the My Account widget).' );
+		return array( 'my-account', $o );
+	}
+
+	public static function wc_menu_cart( Source $s, Converter $c ): array {
+		$o = array( 'mode' => 'drawer' );
+		$indicator = $s->str( 'items_indicator', 'bubble' );
+		$o['show_count'] = 'none' !== $indicator;
+		$s->flag( $o, 'hide_empty', 'hide_empty_indicator' );
+		if ( $s->has( 'hide_subtotal' ) ) {
+			$o['show_subtotal'] = ! $s->yes( 'hide_subtotal' );
+		}
+		$s->flag( $o, 'open_on_add', 'automatically_open_cart' );
+		$icons = array(
+			'cart-light'   => 'shopping-cart',
+			'cart-medium'  => 'shopping-cart',
+			'cart-solid'   => 'shopping-cart',
+			'basket-light' => 'shopping-basket',
+			'basket-medium' => 'shopping-basket',
+			'basket-solid' => 'shopping-basket',
+			'bag-light'    => 'shopping-bag',
+			'bag-medium'   => 'shopping-bag',
+			'bag-solid'    => 'shopping-bag',
+		);
+		$icon = $s->str( 'icon', 'cart-medium' );
+		if ( 'custom' === $icon ) {
+			$s->ico( $o, 'icon', 'menu_icon_svg' );
+		} else {
+			$o['icon'] = array( 'library' => 'lucide', 'value' => $icons[ $icon ] ?? 'shopping-bag' );
+		}
+		$s->col( $o, 'icon_color', 'toggle_button_icon_color' );
+		$s->col( $o, 'icon_hover_color', 'toggle_button_icon_hover_color' );
+		$s->sl( $o, 'icon_size', 'toggle_icon_size' );
+		$s->col( $o, 'count_color', 'items_indicator_text_color' );
+		$s->col( $o, 'count_background', 'items_indicator_background_color' );
+		$s->use( 'items_indicator', 'icon', 'cart_type', 'open_cart', 'main_close_cart_button', 'alignment', 'hide_subtotal' );
+		return array( 'mini-cart', $o );
 	}
 
 	public static function menu_anchor( Source $s ): array {
@@ -1575,14 +2433,22 @@ final class Widgets {
 			if ( '' !== $id ) {
 				$f['field_id'] = $id;
 			}
-			if ( '' !== (string) ( $row['placeholder'] ?? '' ) ) {
+			// Elementor shows no placeholder on a select (its first option stands in), even when one is stored.
+			if ( '' !== (string) ( $row['placeholder'] ?? '' ) && 'select' !== $t ) {
 				$f['placeholder'] = (string) $row['placeholder'];
 			}
 			if ( 'step' !== $t && 'hidden' !== $t ) {
 				$f['required'] = in_array( $row['required'] ?? '', array( 'true', 'yes', true, 1, '1' ), true );
 			}
-			if ( '' !== (string) ( $row['field_options'] ?? '' ) ) {
-				$f['options'] = (string) $row['field_options'];
+			$options = (string) ( $row['field_options'] ?? '' );
+			// A first option with an empty value ("Please select|") is the select's prompt, which Uncoder draws
+			// from the placeholder.
+			if ( 'select' === $t && preg_match( '/^([^\r\n|]*\S[^\r\n|]*)\|[ \t]*(?:\r?\n|$)/', $options, $m ) ) {
+				$f['placeholder'] = trim( $m[1] );
+				$options          = substr( $options, strlen( $m[0] ) );
+			}
+			if ( '' !== trim( $options ) ) {
+				$f['options'] = $options;
 			}
 			if ( ! empty( $row['inline_list'] ) ) {
 				$f['inline_options'] = true;
@@ -1629,14 +2495,19 @@ final class Widgets {
 		$o['required_mark'] = $s->yes( 'mark_required', false );
 		$s->text( $o, 'button_text', 'button_text' );
 		$o += array( 'button_text' => 'Send' );
-		$o['button_size'] = self::BUTTON_SIZES[ $s->str( 'button_size', 'sm' ) ] ?? 'md';
+		// As on the Button widget, a button style in Site Settings overrides Elementor's size presets.
+		$kit              = (array) $c->option( 'kit' );
+		$kit_style        = ! Source::blank( $kit['button_padding'] ?? null ) || 'custom' === ( $kit['button_typography_typography'] ?? '' ) || ! empty( $kit['__globals__']['button_typography_typography'] );
+		$o['button_size'] = $kit_style ? 'md' : ( self::BUTTON_SIZES[ $s->str( 'button_size', 'sm' ) ] ?? 'md' );
 		foreach ( Source::SUFFIXES as $suffix ) {
-			$w = self::width( $s->raw( 'button_width' . $suffix ) );
+			// Elementor's submit button is full width unless set otherwise.
+			$w = self::width( $s->raw( 'button_width' . $suffix ) ?? ( '' === $suffix ? 100 : null ) );
 			if ( null !== $w ) {
 				$o[ 'button_width' . $suffix ] = $w;
 			}
 		}
 		$s->opt( $o, 'button_align', 'button_align', array( 'start' => 'left', 'left' => 'left', 'center' => 'center', 'end' => 'right', 'right' => 'right', 'stretch' => 'stretch', 'justify' => 'stretch' ), true );
+		$o += array( 'button_align' => 'stretch' );
 		$s->ico( $o, 'button_icon', 'selected_button_icon', 'button_icon' );
 		if ( isset( $o['button_icon'] ) ) {
 			$o['button_icon_position'] = 'right' === $s->str( 'button_icon_align', 'left' ) ? 'after' : 'before';
@@ -1707,33 +2578,87 @@ final class Widgets {
 				$c->setting( 'form', 'action: ' . $action );
 			}
 		}
-		// Styles.
+		// Styles. Where neither the widget nor Site Settings style something, Elementor's own look is written out,
+		// as Uncoder's form defaults differ: labels in the text around the form, fields sized by "Input Size" in
+		// #1f2124 on white with a #69727d border, 10px gaps and no space under labels.
+		$kit_set  = static fn( string $k ): bool => ! Source::blank( $kit[ $k ] ?? null ) || ! empty( $kit['__globals__'][ $k ] );
+		$kit_typo = static fn( string $k ): array => 'custom' === ( $kit[ $k . '_typography' ] ?? '' ) ? (array) Source::typo_fields( $kit, $k ) : array();
+		$size     = self::FIELD_SIZES[ $s->str( 'input_size', 'sm' ) ] ?? self::FIELD_SIZES['sm'];
 		$s->sl( $o, 'column_gap', 'column_gap' );
 		$s->sl( $o, 'row_gap', 'row_gap' );
+		$o += array(
+			'column_gap' => array( 'size' => 10, 'unit' => 'px' ),
+			'row_gap'    => array( 'size' => 10, 'unit' => 'px' ),
+		);
 		$s->sl( $o, 'label_spacing', 'label_spacing', false );
+		$o += array( 'label_spacing' => array( 'size' => 0, 'unit' => 'px' ) );
+		if ( defined( 'UNCODER_ELEMENTS_VERSION' ) && 'px' === $o['label_spacing']['unit'] ) {
+			// Uncoder Elements adds 10px under Elementor form labels.
+			$o['label_spacing']['size'] = (float) $o['label_spacing']['size'] + 10;
+		}
 		$s->col( $o, 'label_color', 'label_color' );
 		if ( isset( $o['label_color'] ) ) {
 			// Elementor's label color covers checkbox, radio and acceptance labels too.
 			$o['option_color'] = $o['label_color'];
 		}
 		$s->typ( $o, 'label_typography', 'label_typography' );
+		if ( ! isset( $o['label_typography']['preset'] ) ) {
+			$weight                = (string) ( $kit['body_typography_font_weight'] ?? '' );
+			$o['label_typography'] = (array) ( $o['label_typography'] ?? array() ) + array_diff_key(
+				array(
+					'size'   => array( 'size' => 1, 'unit' => 'em' ),
+					'weight' => preg_match( '/^[1-9]00$/', $weight ) ? $weight : '400',
+				),
+				$kit_typo( 'form_label_typography' )
+			);
+		}
 		$s->col( $o, 'mark_color', 'mark_required_color' );
 		$s->col( $o, 'field_color', 'field_text_color' );
+		$own_color = isset( $o['field_color'] );
+		if ( ! $own_color && ! $kit_set( 'form_field_text_color' ) ) {
+			$o['field_color'] = '#1f2124';
+		}
 		$s->typ( $o, 'field_typography', 'field_typography' );
+		$own_typo = isset( $o['field_typography'] );
+		if ( ! isset( $o['field_typography']['preset'] ) ) {
+			$o['field_typography'] = (array) ( $o['field_typography'] ?? array() ) + array_diff_key(
+				array(
+					'size'        => array( 'size' => $size[0], 'unit' => 'px' ),
+					'line_height' => array( 'size' => 1.4, 'unit' => '' ),
+				),
+				$kit_typo( 'form_field_typography' )
+			);
+		}
+		// Elementor's select takes its size, line height and color from the form around it, not from the field
+		// styles of Site Settings.
+		$select = array_keys( array_filter( array( 'font-size:inherit;line-height:inherit' => ! $own_typo, 'color:inherit' => ! $own_color ) ) );
+		if ( $select && in_array( 'select', array_column( $o['fields'], 'type' ), true ) ) {
+			$o['_custom_css'] = trim( ( $o['_custom_css'] ?? '' ) . "\nselector .uncoder-form__select .uncoder-form__field{" . implode( ';', $select ) . '}' );
+		}
 		$s->col( $o, 'field_bg', 'field_background_color' );
+		if ( ! $s->exists( 'field_background_color' ) ) {
+			// The widget's default, which Elementor applies over Site Settings.
+			$o['field_bg'] = '#ffffff';
+		}
 		$fb = $s->color( 'field_border_color' );
 		$fw = $s->dims( 'field_border_width' );
-		if ( '' !== $fb || $fw ) {
+		if ( '' !== $fb || $fw || ! $kit_set( 'form_field_border_color' ) ) {
 			// Elementor fields have a 1px border unless the width is set.
 			$o['field_border'] = array_filter(
 				array(
 					'style' => 'solid',
 					'width' => $fw ? $fw : array( 'top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1, 'unit' => 'px', 'linked' => true ),
-					'color' => $fb,
+					'color' => '' !== $fb ? $fb : ( $kit_set( 'form_field_border_color' ) ? '' : '#69727d' ),
 				)
 			);
 		}
 		$s->radius( $o, 'field_radius', 'field_border_radius' );
+		if ( ! isset( $o['field_radius'] ) && ! $kit_set( 'form_field_border_radius' ) ) {
+			$o['field_radius'] = array( 'top' => $size[3], 'right' => $size[3], 'bottom' => $size[3], 'left' => $size[3], 'unit' => 'px', 'linked' => true );
+		}
+		if ( ! $kit_set( 'form_field_padding' ) ) {
+			$o['field_padding'] = array( 'top' => $size[1], 'right' => $size[2], 'bottom' => $size[1], 'left' => $size[2], 'unit' => 'px', 'linked' => false );
+		}
 		$button_bg = $s->bg( 'button_background' );
 		if ( ! $button_bg ) {
 			$color     = $s->color( 'button_background_color' );
@@ -1959,6 +2884,37 @@ final class Widgets {
 		$s->text( $o, 'load_more_text', 'load_more_button_text' );
 		$s->sl( $o, 'column_gap', 'column_gap' );
 		$s->sl( $o, 'row_gap', 'row_gap' );
+		// Elementor's loop grid spaces items by 30px and puts its Load More button 30px under them.
+		$o += array(
+			'column_gap' => array( 'size' => 30, 'unit' => 'px' ),
+			'row_gap'    => array( 'size' => 30, 'unit' => 'px' ),
+		);
+		if ( in_array( $o['pagination'], array( 'load_more', 'infinite' ), true ) ) {
+			$s->sl( $o, 'nav_spacing', 'load_more_spacing' );
+			$o += array( 'nav_spacing' => array( 'size' => 30, 'unit' => 'px' ) );
+		}
+		if ( 'load_more' === $o['pagination'] ) {
+			// The button is an Elementor button: Site Settings' button style with the widget's own on top.
+			$o['more_variant'] = 'primary';
+			$s->text( $o, 'load_more_text', 'text' );
+			$s->typ( $o, 'more_typography', 'typography' );
+			$s->col( $o, 'more_color', 'button_text_color' );
+			$s->col( $o, 'more_hover_color', 'hover_color' );
+			$bg = $s->bg( 'background' );
+			if ( ! $bg ) {
+				$color = $s->color( 'background_color' );
+				$bg    = '' !== $color ? array( 'type' => 'classic', 'color' => $color ) : null;
+			}
+			if ( $bg && '' !== (string) ( $bg['color'] ?? '' ) ) {
+				$o['more_bg'] = $bg['color'];
+			}
+			$hover = $s->color( 'button_background_hover_color' );
+			if ( '' !== $hover ) {
+				$o['more_hover_bg'] = $hover;
+			}
+			$s->radius( $o, 'more_radius', 'border_radius' );
+			$s->dm( $o, 'more_padding', 'text_padding' );
+		}
 		$s->text( $o, 'nothing_found', 'nothing_found_message_text' );
 		$s->use( '_skin', 'pagination_page_limit', 'pagination_numbers_shorten', 'nothing_found_message' );
 		return array( 'loop-grid', $o );
@@ -1977,6 +2933,93 @@ final class Widgets {
 		self::carousel( $s, $o );
 		$s->use( '_skin' );
 		return array( 'loop-carousel', $o );
+	}
+
+	/**
+	 * Uncoder Elements' Nav Menu (an Elementor add-on with the same ideas as Uncoder's menu: hover effects, a
+	 * full-screen or compact slide panel with up to two buttons). Unset options take that widget's defaults.
+	 */
+	public static function uncoder_nav_menu( Source $s, Converter $c ): array {
+		$o    = array();
+		$menu = static function ( string $type, string $key ) use ( $s, $c ): string {
+			$slug = 'custom' === $s->str( $type, 'theme-default' ) ? $s->str( $key ) : '';
+			$term = '' !== $slug ? wp_get_nav_menu_object( $slug ) : false;
+			if ( '' !== $slug && ! $term ) {
+				$c->setting( 'uncoder-nav-menu', 'menu “' . $slug . '” (not on this site)' );
+			}
+			// "Default" prints the theme's primary location, else the first menu with items: Uncoder's empty menu.
+			return $term ? (string) $term->term_id : '';
+		};
+		$o['menu']        = $menu( 'menu_type', 'selected_menu' );
+		$o['mobile_menu'] = $menu( 'slide_menu_type', 'slide_selected_menu' );
+		$o['align']       = array( 'flex-start' => 'start', 'center' => 'center', 'flex-end' => 'end' )[ $s->str( 'toggle_alignment', 'flex-end' ) ] ?? 'end';
+		$hover            = $s->str( 'menu_hover_style', 'nav-hover-underline' );
+		$o['hover_effect'] = array( 'nav-hover-underline' => 'underline', 'nav-hover-flip' => 'flip', 'nav-hover-magnet' => 'magnet', 'nav-hover-focus' => 'focus', 'nav-hover-button' => 'highlight', 'nav-hover-button nav-hover-flip' => 'flip', '' => 'none' )[ $hover ] ?? 'underline';
+		$s->ico( $o, 'submenu_icon', 'nav_dropdown_icon' );
+		$bp = $s->str( 'mobile_breakpoint', 'mobile-expand-lg' );
+		if ( 'mobile-expand-custom' === $bp ) {
+			$px              = (int) ( $s->num( 'mobile_breakpoint_custom' ) ?? 1025 );
+			$o['breakpoint'] = $px <= 768 ? 'mobile' : ( $px <= 1025 ? 'tablet' : 'all' );
+		} else {
+			$o['breakpoint'] = array( 'mobile-expand-md' => 'mobile', 'mobile-expand-mdx' => 'mobile', 'mobile-expand-lg' => 'tablet', 'mobile-expand-lgx' => 'tablet', 'mobile-expand-xl' => 'all', 'mobile-expand-xxl' => 'all' )[ $bp ] ?? 'tablet';
+		}
+		$o['mobile_mode']  = 'compact' === $s->str( 'panel_design', 'full-screen' ) ? 'offcanvas' : 'fullscreen';
+		$o['toggle_style'] = 'lines';
+		foreach ( array( '' => array( 'show_panel_button', 'button_text', 'link', 'm_button' ), '_2' => array( 'show_panel_button_2', 'button_text_2', 'link_2', 'm_button_2' ) ) as $to ) {
+			if ( '' !== $s->str( $to[0], 'yes' ) && '' !== $s->str( $to[1] ) ) {
+				$o[ $to[3] . '_text' ] = $s->str( $to[1] );
+				$s->lnk( $o, $to[3] . '_link', $to[2] );
+			}
+		}
+		$s->typ( $o, 'typography', 'menu_item_typography' );
+		// The add-on spaces items by half the spacing (25px by default) and pads each link by the other half.
+		$spacing = $s->slider( 'nav_item_spacing' ) ?? array( 'size' => 25, 'unit' => 'px' );
+		if ( 'px' === $spacing['unit'] ) {
+			$half              = $spacing['size'] / 2;
+			$o['item_gap']     = array( 'size' => $half, 'unit' => 'px' );
+			$o['item_padding'] = array( 'top' => 10, 'right' => $half, 'bottom' => 10, 'left' => $half, 'unit' => 'px', 'linked' => false );
+		}
+		if ( false !== strpos( $hover, 'nav-hover-button' ) && 'highlight' !== $o['hover_effect'] ) {
+			// "Button" combined with another effect (flip): its pill behind the link, also on the current page's item.
+			$height  = $s->slider( 'menu_hover_button_height' ) ?? array( 'size' => 32, 'unit' => 'px' );
+			$radius  = Source::to_dims( $s->raw( 'menu_hover_button_border_radius' ) );
+			$opacity = $s->slider( 'menu_hover_button_bg_opacity' );
+			$bg      = $s->color( 'menu_hover_button_bg' );
+			$link    = 'selector .uncoder-menu--main > .uncoder-menu__item';
+			$pill    = $link . ' > .uncoder-menu__link,' . $link . ' > .uncoder-menu__link > .uncoder-menu__text{position:relative}'
+				. $link . ' > .uncoder-menu__link::before{content:"";position:absolute;inset-inline:0;top:50%;height:' . $height['size'] . $height['unit']
+				. ';transform:translateY(-50%);border-radius:' . ( $radius ? $radius['top'] . $radius['unit'] : '4px' ) . ';opacity:' . ( $opacity ? (float) $opacity['size'] : 0.08 )
+				. ';background-color:transparent;transition:background-color .3s;pointer-events:none}'
+				. $link . ':hover > .uncoder-menu__link::before' . ( 'yes' === $s->str( 'menu_hover_show_on_active', 'yes' ) ? ',' . $link . '--current > .uncoder-menu__link::before' : '' )
+				. '{background-color:' . ( '' !== $bg ? $bg : 'var(--uncoder-c-primary)' ) . '}';
+			$o['_custom_css'] = trim( ( $o['_custom_css'] ?? '' ) . "\n" . $pill );
+		}
+		$s->use( 'nav_item_spacing', 'menu_hover_button_height', 'menu_hover_button_border_radius', 'menu_hover_button_bg_opacity', 'menu_hover_show_on_active' );
+		$s->col( $o, 'color', 'menu_item_color' );
+		$s->col( $o, 'hover_color', 'menu_item_hover_color' );
+		$s->col( $o, 'active_color', 'active_menu_item_color' );
+		$s->col( $o, 'pointer_color', 'menu_item_hover_underline_color' );
+		$s->sl( $o, 'pointer_width', 'menu_item_hover_underline_height', false );
+		$s->col( $o, 'dd_bg', 'submenu_bg' );
+		$s->col( $o, 'dd_color', 'submenu_item_color' );
+		$s->col( $o, 'dd_hover_color', 'submenu_item_hover_color' );
+		$s->radius( $o, 'dd_radius', 'submenu_bg_border_radius' );
+		$s->shd( $o, 'dd_shadow', 'submenu_shadow' );
+		$s->col( $o, 'm_bg', 'panel_bg' );
+		$s->col( $o, 'm_color', 'panel_item_color' );
+		$s->col( $o, 'm_hover_color', 'panel_item_hover_color' );
+		$s->col( $o, 'm_close_color', 'panel_close_color' );
+		$s->col( $o, 'toggle_color', 'toggler_color' );
+		$s->col( $o, 'toggle_bg', 'toggler_bg_color' );
+		$s->brd( $o, 'toggle_border', 'toggler_border' );
+		$s->radius( $o, 'toggle_radius', 'toggler_border_radius' );
+		$s->dm( $o, 'toggle_padding', 'toggler_padding' );
+		$s->col( $o, 'm_button_color', 'button_color' );
+		$s->col( $o, 'm_button_bg', 'button_bg_color' );
+		$s->col( $o, 'm_button_2_color', 'button_color_02' );
+		$s->col( $o, 'm_button_2_bg', 'button_bg_color_02' );
+		$s->use( 'toggle_lines', 'panel_logo', 'panel_logo_type', 'panel_text_logo', 'panel_image_logo', 'uncoder_widget_tooltip_text', 'icon_align', 'menu_hover_button_bg' );
+		return array( 'nav-menu', $o );
 	}
 
 	public static function nav_menu( Source $s, Converter $c ): array {
@@ -2870,6 +3913,14 @@ final class Widgets {
 		$o = array( 'source' => 'site' );
 		$s->opt( $o, 'align', 'align', self::ALIGN3, true );
 		$s->sl( $o, 'width', 'width' );
+		// Elementor shows a linked SVG image 48px wide when no width is set (an SVG often has no size of its own).
+		$logo = (int) get_theme_mod( 'custom_logo' );
+		if ( ! isset( $o['width'] ) && 'none' !== $s->str( 'link_to' ) && $logo && 'image/svg+xml' === get_post_mime_type( $logo ) ) {
+			$o['width'] = array(
+				'size' => 48,
+				'unit' => 'px',
+			);
+		}
 		$s->sl( $o, 'max_width', 'space' );
 		$s->sl( $o, 'max_height', 'height' );
 		$s->brd( $o, 'border', 'image_border' );
@@ -2901,10 +3952,12 @@ final class Widgets {
 		$o += array( 'tag' => 'h1' );
 		$s->opt( $o, 'align', 'align', self::ALIGN, true );
 		$s->col( $o, 'color', 'title_color' );
+		$s->col( $o, 'hover_color', 'title_hover_color' );
 		$s->typ( $o, 'typography', 'typography' );
 		$s->tsh( $o, 'text_shadow', 'text_shadow' );
 		$s->use( 'title', 'size', 'blend_mode' );
-		if ( '' !== (string) ( $s->all()['link']['url'] ?? '' ) ) {
+		// A link to the post: a URL, or (in loop items) the "Post URL" dynamic tag.
+		if ( '' !== (string) ( $s->all()['link']['url'] ?? '' ) || false !== strpos( (string) ( $s->dynamic()['link'] ?? '' ), 'name="post-url"' ) ) {
 			$o['link'] = true;
 		}
 		$s->use( 'link' );
@@ -2925,7 +3978,8 @@ final class Widgets {
 	}
 
 	public static function post_content( Source $s ): array {
-		$o = array();
+		// Elementor leaves the spacing inside post content to the theme and site CSS.
+		$o = array( 'theme_styles' => true );
 		$s->opt( $o, 'align', 'align', self::ALIGN, true );
 		$s->col( $o, 'color', 'text_color' );
 		$s->typ( $o, 'typography', 'typography' );
@@ -2942,7 +3996,16 @@ final class Widgets {
 		$s->sl( $o, 'width', 'width' );
 		$s->sl( $o, 'max_width', 'space' );
 		$s->sl( $o, 'height', 'height' );
+		// Elementor shows the image at its own size, centred, unless a width is set; Uncoder's frame fills the column.
+		if ( ! isset( $o['width'] ) && ! isset( $o['height'] ) ) {
+			$o['_custom_css'] = trim( ( $o['_custom_css'] ?? '' ) . "\nselector .uncoder-featured-image__frame{width:auto}" );
+			$o += array( 'align' => 'center' );
+		}
 		$s->opt( $o, 'object_fit', 'object-fit', array( 'cover' => 'cover', 'contain' => 'contain', 'fill' => 'fill' ), true );
+		$pos = $s->str( 'object-position' );
+		if ( Source::is_position( $pos ) ) {
+			$o['object_position'] = $pos;
+		}
 		$s->brd( $o, 'border', 'image_border' );
 		$s->radius( $o, 'radius', 'image_border_radius' );
 		$s->shd( $o, 'shadow', 'image_box_shadow' );
@@ -2969,6 +4032,14 @@ final class Widgets {
 		$s->col( $o, 'color', 'title_color' );
 		$s->typ( $o, 'typography', 'typography' );
 		$s->tsh( $o, 'text_shadow', 'text_shadow' );
+		// The title is Elementor's Archive Title tag: "Include Context" (on by default) keeps "Category:" and the like.
+		$dynamic = $s->dynamic();
+		if ( preg_match( '/settings="([^"]*)"/', (string) ( $dynamic['title'] ?? '' ), $m ) ) {
+			$tag = json_decode( urldecode( $m[1] ), true );
+			if ( is_array( $tag ) && array_key_exists( 'include_context', $tag ) && 'yes' !== $tag['include_context'] ) {
+				$o['remove_prefix'] = true;
+			}
+		}
 		$s->use( 'title', 'link', 'size', 'blend_mode', 'include_context' );
 		return array( 'archive-title', $o );
 	}
@@ -2991,6 +4062,11 @@ final class Widgets {
 					}
 					break;
 				case 'custom':
+					// Uncoder Elements' reading time shortcode, given as the item's dynamic text: Uncoder's own item.
+					if ( false !== strpos( urldecode( (string) ( $row['__dynamic__']['custom_text'] ?? '' ) ), 'uncoder-post-reading-time' ) ) {
+						$item['type'] = 'reading-time';
+						break;
+					}
 					$item['type'] = 'custom';
 					$item['text'] = (string) ( $row['custom_text'] ?? '' );
 					$link         = $c->link( $row['custom_url'] ?? null );
@@ -3027,6 +4103,21 @@ final class Widgets {
 		}
 		$o['items']  = $items;
 		$o['layout'] = 'traditional' === $s->str( 'view', 'inline' ) ? 'list' : 'inline';
+		// Elementor's inline items have no divider unless it is switched on (Uncoder's separator defaults to "·").
+		if ( 'inline' === $o['layout'] && 'yes' !== $s->str( 'divider' ) ) {
+			$o['separator'] = '';
+		} elseif ( 'inline' === $o['layout'] ) {
+			// Elementor's divider is a line (by default 1px wide, as tall as the text, #ddd); small sizes make dots.
+			$weight = $s->slider( 'divider_weight' ) ?? array( 'size' => 1, 'unit' => 'px' );
+			$height = $s->slider( 'divider_height' );
+			$color  = $s->color( 'divider_color' );
+			$o['_custom_css'] = trim(
+				( $o['_custom_css'] ?? '' ) . "\nselector .uncoder-post-info__sep{display:inline-block;width:" . $weight['size'] . $weight['unit']
+				. ';height:' . ( $height ? $height['size'] . $height['unit'] : '1em' ) . ';background-color:' . ( '' !== $color ? $color : '#ddd' )
+				. ';font-size:0;vertical-align:middle;margin-inline-end:var(--uncoder-pinfo-gap)}'
+			);
+		}
+		$s->use( 'divider', 'divider_style', 'divider_weight', 'divider_width', 'divider_height', 'divider_color' );
 		$s->sl( $o, 'gap', 'space_between' );
 		$s->opt( $o, 'align', 'icon_align', self::ALIGN_SE, true );
 		$s->col( $o, 'icon_color', 'icon_color' );
@@ -3034,6 +4125,20 @@ final class Widgets {
 		$s->sl( $o, 'icon_gap', 'text_indent', false );
 		$s->col( $o, 'text_color', 'text_color' );
 		$s->typ( $o, 'typography', 'icon_typography' );
+		// What Elementor's post info does not style comes from the text around it (Uncoder's is smaller and muted).
+		$typo = $o['typography'] ?? array();
+		$css  = array_keys(
+			array_filter(
+				array(
+					'font-size:inherit'   => ! isset( $typo['preset'] ) && ! isset( $typo['size'] ),
+					'line-height:inherit' => ! isset( $typo['preset'] ) && ! isset( $typo['line_height'] ),
+					'color:inherit'       => ! isset( $o['text_color'] ),
+				)
+			)
+		);
+		if ( $css ) {
+			$o['_custom_css'] = trim( ( $o['_custom_css'] ?? '' ) . "\nselector{" . implode( ';', $css ) . '}' );
+		}
 		return array( 'post-info', $o );
 	}
 
@@ -3078,7 +4183,8 @@ final class Widgets {
 
 	public static function post_comments( Source $s ): array {
 		$s->use( '_skin', 'source_type', 'source_custom' );
-		return array( 'post-comments', array() );
+		// Elementor prints the theme's comments template as the theme styles it.
+		return array( 'post-comments', array( 'theme_styles' => true ) );
 	}
 
 	public static function search_form( Source $s ): array {
@@ -3101,6 +4207,63 @@ final class Widgets {
 		$s->col( $o, 'button_hover_bg', 'button_background_color_hover' );
 		$s->radius( $o, 'field_radius', 'border_radius' );
 		$s->use( 'skin', 'button_type', 'icon', 'size', 'toggle_align', 'heading' );
+		return array( 'search-form', $o );
+	}
+
+	/**
+	 * Elementor's Search widget (a field with live results). Its search icon sits inside the field at the start (at
+	 * the field's padding, the text after the icon and its gap); the field is sent with Enter or a Search button.
+	 */
+	public static function search( Source $s ): array {
+		$o = array( 'layout' => 'inline' );
+		$s->text( $o, 'placeholder', 'search_input_placeholder_text' );
+		$o += array( 'placeholder' => 'Type to start searching...' );
+		$type = $s->str( 'search_query_post_type' );
+		if ( '' !== $type && post_type_exists( $type ) ) {
+			$o['post_type'] = $type;
+		}
+		if ( '' !== $s->str( 'template_id' ) ) {
+			$o['live'] = true;
+		}
+		$s->ico( $o, 'button_icon', 'icon_search' );
+		$o += array( 'button_icon' => array( 'library' => 'lucide', 'value' => 'search' ) );
+		$s->col( $o, 'button_color', 'search_field_icon_search_normal_color_normal' );
+		$s->sl( $o, 'button_icon_size', 'search_field_icon_label_size', false );
+		$o += array( 'button_icon_size' => array( 'size' => 24, 'unit' => 'px' ) );
+		// The field: Elementor's defaults are 16px padding, square corners, a light grey border.
+		$s->typ( $o, 'input_typography', 'search_field_typography' );
+		$s->col( $o, 'input_color', 'search_field_text_color_normal' );
+		$s->col( $o, 'field_bg', 'search_field_background_normal_color' );
+		$o += array( 'field_bg' => '#ffffff' );
+		$s->brd( $o, 'field_border', 'search_field_border_normal' );
+		$o += array( 'field_border' => array( 'style' => 'solid', 'width' => array( 'top' => 1, 'right' => 1, 'bottom' => 1, 'left' => 1, 'unit' => 'px', 'linked' => true ), 'color' => '#cdcdcd' ) );
+		$focus = $s->border( 'search_field_border_focus' );
+		if ( ! empty( $focus['color'] ) ) {
+			$o['focus_border_color'] = $focus['color'];
+		}
+		$o['focus_ring'] = 'transparent';
+		$s->radius( $o, 'field_radius', 'search_field_border_radius', false );
+		$o   += array( 'field_radius' => array( 'top' => 0, 'right' => 0, 'bottom' => 0, 'left' => 0, 'unit' => 'px', 'linked' => true ) );
+		$pad  = $s->dims( 'search_field_padding' ) ?? array( 'top' => 16, 'right' => 16, 'bottom' => 16, 'left' => 16, 'unit' => 'px', 'linked' => true );
+		$gap  = $s->slider( 'search_field_icon_gap' ) ?? array( 'size' => 4, 'unit' => 'px' );
+		$size = $o['button_icon_size'];
+		$o['field_padding'] = $pad;
+		$css  = array(
+			'selector .uncoder-search__box{position:relative;padding-inline-start:calc(' . $pad['left'] . $pad['unit'] . ' + ' . $size['size'] . $size['unit'] . ' + ' . $gap['size'] . $gap['unit'] . ')}',
+			'selector .uncoder-search__input{padding:0}',
+		);
+		if ( 'key_enter' === $s->str( 'submit_trigger', 'click_submit' ) ) {
+			// No button: the icon is the field's label.
+			$o['button_type'] = 'icon';
+			$css[]            = 'selector .uncoder-search__button{position:absolute;inset-inline-start:' . $pad['left'] . $pad['unit'] . ';top:50%;transform:translateY(-50%);min-width:0;min-height:0;padding:0;background:none;pointer-events:none}';
+		} else {
+			$o['button_type'] = 'text';
+			$s->text( $o, 'button_text', 'submit_button_text' );
+			$o += array( 'button_text' => 'Search' );
+			$s->typ( $o, 'button_typography', 'submit_typography' );
+		}
+		$o['_custom_css'] = implode( "\n", $css );
+		$s->use( 'submit_trigger', 'enable_loader', 'nothing_found_message_text', 'pagination_prev_label', 'pagination_next_label', 'template_id' );
 		return array( 'search-form', $o );
 	}
 
@@ -3133,5 +4296,240 @@ final class Widgets {
 		$o['logged_in'] = $s->yes( 'show_logged_in_message', true ) ? 'message' : 'nothing';
 		$s->use( 'redirect_url', 'custom_labels', 'redirect_after_logout', 'redirect_logout_url' );
 		return array( 'login', $o );
+	}
+
+	/**
+	 * UiCore Elements' Highlighted Text: a line of text parts, some highlighted (a colour, a background, or a drawn
+	 * stroke under the words), images and icons between them. One drawn stroke → Animated Headline (its marker); text
+	 * with images → Text Editor (the images inline, one line high); the rest → Heading with the highlighted parts as
+	 * <mark>.
+	 */
+	public static function uicore_highlighted_text( Source $s, Converter $c ): array {
+		$parts  = array();
+		$marked = array();
+		$stroke = '';
+		$images = false;
+		foreach ( (array) $s->raw( 'content' ) as $row ) {
+			if ( ! is_array( $row ) ) {
+				continue;
+			}
+			$type = (string) ( $row['type'] ?? 'text' );
+			if ( 'image' === $type ) {
+				$url = (string) ( $row['image']['url'] ?? '' );
+				if ( '' !== $url ) {
+					$images  = true;
+					$parts[] = array( 'html' => '<img src="' . esc_url( $url ) . '" alt="' . esc_attr( (string) ( $row['image']['alt'] ?? '' ) ) . '" style="display:inline-block;height:1.6em;width:auto;vertical-align:middle;margin-inline-end:.35em">' );
+				}
+				continue;
+			}
+			if ( 'icon' === $type ) {
+				$c->setting( 'highlighted-text', 'icon part' );
+				continue;
+			}
+			$text  = (string) ( $row['text'] ?? '' );
+			$style = (string) ( $row['headline_style'] ?? 'none' );
+			if ( '' === $style || 'none' === $style ) {
+				$parts[] = array( 'text' => $text );
+				continue;
+			}
+			$marked[] = $row;
+			if ( 'color' !== $style ) {
+				$stroke = $style;
+			}
+			$parts[] = array(
+				'text' => $text,
+				'mark' => true,
+			);
+		}
+		$tag = $s->str( 'tag', 'h2' );
+		// A drawn stroke under one part (and nothing else highlighted): the Animated Headline's marker.
+		if ( '' !== $stroke && 1 === count( $marked ) && ! $images ) {
+			$o      = array(
+				'style'       => 'highlight',
+				'before_text' => '',
+				'after_text'  => '',
+			);
+			$before = true;
+			foreach ( $parts as $p ) {
+				if ( ! empty( $p['mark'] ) ) {
+					$o['highlighted_text'] = trim( wp_strip_all_tags( $p['text'] ) );
+					$before                = false;
+				} else {
+					$o[ $before ? 'before_text' : 'after_text' ] .= wp_strip_all_tags( $p['text'] );
+				}
+			}
+			$o['before_text'] = trim( $o['before_text'] );
+			$o['after_text']  = trim( $o['after_text'] );
+			$o['shape']       = array( 'stroke3' => 'curly', 'stroke4' => 'double', 'stroke6' => 'double', 'stroke9' => 'double' )[ $stroke ] ?? 'underline';
+			$o['loop']        = false;
+			$o['tag']         = self::TAGS[ $tag ] ?? 'h2';
+			$s->opt( $o, 'align', 'align', self::ALIGN, true );
+			$o += array( 'align' => 'center' );
+			$s->col( $o, 'shape_color', 'marker_color' );
+			$width = $s->num( 'stroke_width' );
+			$o['shape_width'] = null !== $width ? Utils::number( min( 20, max( 2, $width / 2.5 ) ) ) : 8;
+			$s->col( $o, 'color', 'title_color' );
+			$s->typ( $o, 'typography', 'title_typography' );
+			$s->col( $o, 'animated_color', 'higlighted_title_color' );
+			$s->typ( $o, 'animated_typography', 'higlighted_title_typography' );
+			$s->use( 'stroke_width', 'vertical_offset', 'shape_animation', 'shape_animation_delay' );
+			return array( 'animated-headline', $o );
+		}
+		$html = '';
+		foreach ( $parts as $p ) {
+			if ( isset( $p['html'] ) ) {
+				$html .= $p['html'];
+			} elseif ( ! empty( $p['mark'] ) ) {
+				// UiCore sets a highlighted part apart with a space on each side.
+				$html .= ( '' !== $html && ! preg_match( '/\s$|>$/', $html ) ? ' ' : '' ) . '<mark>' . trim( $p['text'] ) . '</mark> ';
+			} else {
+				$html .= str_ends_with( $html, '</mark> ' ) ? ltrim( $p['text'] ) : $p['text'];
+			}
+		}
+		$html = rtrim( $html );
+		$first = $marked[0] ?? array();
+		if ( $images ) {
+			$o = array( 'content' => '<p>' . $html . '</p>' );
+			$s->opt( $o, 'align', 'align', self::ALIGN, true );
+			$s->col( $o, 'color', 'title_color' );
+			$s->typ( $o, 'typography', 'title_typography' );
+			$o['_custom_css'] = 'selector p{margin:0;display:flex;align-items:center;flex-wrap:wrap}';
+			return array( 'text-editor', $o );
+		}
+		$o = array(
+			'title' => $html,
+			'tag'   => self::TAGS[ $tag ] ?? 'h2',
+		);
+		$s->opt( $o, 'align', 'align', self::ALIGN, true );
+		$o += array( 'align' => 'center' );
+		$s->col( $o, 'color', 'title_color' );
+		$s->typ( $o, 'typography', 'title_typography' );
+		$s->col( $o, 'highlight_color', 'higlighted_title_color' );
+		$s->typ( $o, 'highlight_typography', 'higlighted_title_typography' );
+		if ( $first ) {
+			// A highlighted part keeps the text colour unless it has its own, and no background unless it has one.
+			if ( ! isset( $o['highlight_color'] ) && isset( $o['color'] ) ) {
+				$o['highlight_color'] = $o['color'];
+			}
+			$o['highlight_background'] = 'transparent';
+			$item = new Source( $first, $s->type, $c );
+			// Its colour (the part's own text colour), and its background: behind the words, or as their colour.
+			$item->col( $o, 'highlight_color', 'icon_color' );
+			// Elementor draws a background group only once its type is chosen (a colour alone stays unused).
+			$bg = in_array( $item->str( 'background_color_background' ), array( 'classic', 'gradient' ), true ) ? $item->color( 'background_color_color' ) : '';
+			if ( '' !== $bg ) {
+				if ( $item->yes( 'background_color_as_text' ) ) {
+					$o['highlight_color'] = $bg;
+				} else {
+					$o['highlight_background'] = $bg;
+					$o['highlight_padding']    = array( 'top' => 0, 'right' => 0.25, 'bottom' => 0, 'left' => 0.25, 'unit' => 'em', 'linked' => false );
+				}
+			}
+		}
+		$s->use( 'marker_color', 'stroke_width', 'vertical_offset', 'shape_animation', 'shape_animation_delay', 'content_width' );
+		return array( 'heading', $o );
+	}
+
+	/** Element Pack's Countdown. A looping countdown ("loop hours") → the evergreen countdown. */
+	public static function bdt_countdown( Source $s ): array {
+		$o    = array( 'view' => 'boxes' );
+		$loop = $s->num( 'loop_hours' );
+		if ( null !== $loop ) {
+			$o['mode']              = 'evergreen';
+			$o['evergreen_hours']   = (int) $loop;
+			$o['evergreen_minutes'] = 0;
+		} else {
+			$o['mode'] = 'due';
+			$s->text( $o, 'due_date', 'due_date' );
+		}
+		foreach ( array( 'days', 'hours', 'minutes', 'seconds' ) as $unit ) {
+			$o[ 'show_' . $unit ] = $s->yes( 'show_' . $unit, true );
+			$s->text( $o, 'label_' . $unit, 'label_' . $unit );
+		}
+		$o['show_labels'] = $s->yes( 'show_labels', true );
+		$s->col( $o, 'digits_color', 'number_color' );
+		$s->typ( $o, 'digits_typography', 'number_typography' );
+		$s->col( $o, 'label_color', 'label_color' );
+		$s->typ( $o, 'label_typography', 'label_typography' );
+		// Element Pack's units are as wide as their content, with labels as written.
+		$o['box_width']        = array( 'size' => 40, 'unit' => 'px' );
+		$o['label_typography'] = ( $o['label_typography'] ?? array() ) + array(
+			'transform'      => 'none',
+			'letter_spacing' => array( 'size' => 0, 'unit' => 'px' ),
+		);
+		$s->sl( $o, 'label_spacing', 'number_label_gap' );
+		if ( in_array( $s->str( 'count_background_color_background' ), array( 'classic', 'gradient' ), true ) ) {
+			$s->col( $o, 'box_background', 'count_background_color_color' );
+		}
+		$s->dm( $o, 'box_padding', 'count_padding' );
+		$s->radius( $o, 'box_radius', 'count_border_radius' );
+		$s->sl( $o, 'gap', 'gap' );
+		$s->use( 'count_column_tablet', 'count_column_mobile', 'count_gap', 'number_label_gap', 'separator', 'number_background_background', 'number_background_color', 'label_margin', 'count_background_color_background', 'count_background_color_color_b' );
+		return array( 'countdown', $o );
+	}
+
+	/** Element Pack's Search: a rounded field with the search icon in front. */
+	public static function bdt_search( Source $s ): array {
+		$o = array(
+			'layout'      => 'inline',
+			'button_type' => 'icon',
+			'button_icon' => array( 'library' => 'lucide', 'value' => 'search' ),
+		);
+		$s->text( $o, 'placeholder', 'placeholder' );
+		$o += array( 'placeholder' => 'Search' );
+		$type = $s->str( 'search_query' );
+		if ( '' !== $type && post_type_exists( $type ) ) {
+			$o['post_type'] = $type;
+		}
+		$s->col( $o, 'field_bg', 'search_container_background' );
+		$s->col( $o, 'button_color', 'icon_color' );
+		$s->radius( $o, 'field_radius', 'search_container_radius', false );
+		$pad = $s->dims( 'search_container_padding' );
+		if ( $pad ) {
+			$o['field_padding'] = $pad;
+		}
+		$o['field_border'] = array( 'style' => 'none' );
+		$o['focus_ring']   = 'transparent';
+		$width             = $s->slider( 'search_width' );
+		$css               = array( 'selector .uncoder-search__box{flex-direction:row-reverse;gap:10px}', 'selector .uncoder-search__button{padding:0;min-width:0;min-height:0;background:none}' );
+		if ( $width ) {
+			$css[] = 'selector{max-width:' . $width['size'] . $width['unit'] . ';margin-inline:auto}';
+		}
+		$o['_custom_css'] = implode( "\n", $css );
+		$s->use( 'button_text', 'search_align', 'border_radius', 'input_background_color', 'button_border_width' );
+		return array( 'search-form', $o );
+	}
+
+	/**
+	 * Element Pack's WooCommerce Elements (a WooCommerce page through its shortcode): Uncoder's Cart, Checkout or My
+	 * Account widget, laid out as a store theme shows them; other elements keep their shortcode.
+	 */
+	public static function bdt_wc_elements( Source $s, Converter $c ): array {
+		$element = $s->str( 'element' );
+		$widget  = array(
+			'woocommerce_cart'       => 'cart',
+			'woocommerce_checkout'   => 'checkout',
+			'woocommerce_my_account' => 'my-account',
+		)[ $element ] ?? '';
+		if ( '' !== $widget ) {
+			return array( $widget, array() );
+		}
+		if ( ! preg_match( '/^woocommerce_[a-z_]+$/', $element ) ) {
+			$c->setting( 'bdt-wc-elements', 'element: ' . $element );
+			return array( 'shortcode', array( 'shortcode' => '' ) );
+		}
+		return array( 'shortcode', array( 'shortcode' => '[' . $element . ']' ) );
+	}
+
+	/** The WPForms widget: its form through the WPForms shortcode. */
+	public static function wpforms( Source $s, Converter $c ): array {
+		$id = absint( $s->str( 'form_id' ) );
+		// The form itself as an Uncoder form (no WPForms needed); its shortcode when it cannot be read.
+		$form = Wpforms::form( $id, $c );
+		if ( $form ) {
+			$s->use( 'display_form_name', 'display_form_description' );
+			return array( 'form', $form );
+		}
+		return array( 'shortcode', $id ? array( 'shortcode' => '[wpforms id="' . $id . '" title="' . ( $s->yes( 'display_form_name' ) ? 'true' : 'false' ) . '" description="' . ( $s->yes( 'display_form_description' ) ? 'true' : 'false' ) . '"]' ) : array() );
 	}
 }

@@ -85,6 +85,7 @@ class Search_Form extends Widget_Base {
 				'type'    => 'text',
 				'label'   => __( 'Placeholder', 'uncoder' ),
 				'default' => __( 'Search…', 'uncoder' ),
+				'dynamic' => true,
 			)
 		);
 		$this->add_control(

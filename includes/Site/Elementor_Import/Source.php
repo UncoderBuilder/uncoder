@@ -246,7 +246,7 @@ final class Source {
 		}
 		foreach ( array( 'size' => 'font_size', 'line_height' => 'line_height', 'letter_spacing' => 'letter_spacing', 'word_spacing' => 'word_spacing' ) as $to => $from ) {
 			foreach ( self::SUFFIXES as $suffix ) {
-				$v = self::to_slider( $s[ $p . $from . $suffix ] ?? null, 'line_height' === $to ? 'em' : 'px' );
+				$v = self::to_slider( $s[ $p . $from . $suffix ] ?? null, 'line_height' === $to ? 'em' : 'px', 'line_height' === $to ? '' : null );
 				if ( null !== $v ) {
 					$out[ $to . $suffix ] = $v;
 				}
@@ -647,10 +647,12 @@ final class Source {
 	/* ------------------------------------------------------------------ Converters (static) */
 
 	/**
-	 * @param mixed $v Elementor slider ({unit, size}) or number.
+	 * @param mixed       $v         Elementor slider ({unit, size}) or number.
+	 * @param string|null $bare_unit Unit of a bare number typed in Elementor's "custom" unit (raw CSS): "" keeps a
+	 *                               line height unitless like Elementor prints it; null means $default_unit.
 	 * @return array<string,mixed>|null
 	 */
-	public static function to_slider( $v, string $default_unit = 'px' ): ?array {
+	public static function to_slider( $v, string $default_unit = 'px', ?string $bare_unit = null ): ?array {
 		if ( is_int( $v ) || is_float( $v ) || ( is_string( $v ) && is_numeric( $v ) ) ) {
 			return array( 'size' => Utils::number( $v ), 'unit' => $default_unit );
 		}
@@ -663,7 +665,7 @@ final class Source {
 			return null;
 		}
 		if ( 'custom' === $unit || ! is_numeric( $size ) ) {
-			$parsed = is_string( $size ) ? Utils::parse_size( $size, 'px' ) : null;
+			$parsed = is_string( $size ) ? Utils::parse_size( $size, $bare_unit ?? $default_unit ) : null;
 			if ( $parsed && '' !== $parsed['size'] ) {
 				return array( 'size' => Utils::number( $parsed['size'] ), 'unit' => $parsed['unit'] );
 			}

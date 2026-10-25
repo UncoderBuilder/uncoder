@@ -88,8 +88,12 @@ final class Kit_Map {
 			}
 			return 'custom' === ( $k[ $group . '_typography' ] ?? '' ) ? Source::typo_fields( $k, $group ) : null;
 		};
+		$h1_family = '';
 		foreach ( array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' ) as $h ) {
 			$v = $typo( $h . '_typography' );
+			if ( 'h1' === $h ) {
+				$h1_family = (string) ( $v['family'] ?? '' );
+			}
 			if ( $v ) {
 				$typos[] = array(
 					'id'    => $h,
@@ -107,11 +111,13 @@ final class Kit_Map {
 			);
 		}
 		$fonts = array();
-		if ( ! empty( $by_id['primary']['family'] ) ) {
+		// Kits that replace the system fonts with their own (no "primary") still style h1: its family leads.
+		$heading_family = (string) ( $by_id['primary']['family'] ?? $h1_family );
+		if ( '' !== $heading_family ) {
 			$fonts[] = array(
 				'id'     => 'heading',
 				'name'   => 'Headings',
-				'family' => $by_id['primary']['family'],
+				'family' => $heading_family,
 			);
 		}
 		$body_family = $by_id['text']['family'] ?? ( $body['family'] ?? '' );
@@ -136,9 +142,9 @@ final class Kit_Map {
 				'background'       => 'classic' === ( $k['body_background_background'] ?? '' ) ? $color( 'body_background_color' ) : '',
 			)
 		);
-		if ( $theme ) {
-			$out['theme'] = $theme;
-		}
+		// Elementor's Site Settings style every page of the site: so do the imported ones ("Apply to the whole site"
+		// starts off when Uncoder is installed on a site built with Elementor, see Install::activate()).
+		$out['theme'] = array( 'enabled' => true ) + $theme;
 
 		// Layout.
 		$layout = array();
@@ -217,6 +223,10 @@ final class Kit_Map {
 				$buttons['shadow'] = $shadow;
 			}
 		}
+		if ( $buttons && defined( 'UNCODER_ELEMENTS_VERSION' ) && class_exists( 'WooCommerce' ) ) {
+			// Uncoder Elements gives WooCommerce's buttons the Site Settings button style.
+			$buttons['woocommerce'] = true;
+		}
 		if ( $buttons ) {
 			$out['buttons'] = $buttons;
 		}
@@ -238,6 +248,17 @@ final class Kit_Map {
 				'field_padding'      => Source::to_dims( $k['form_field_padding'] ?? null ),
 			)
 		);
+		// Uncoder Elements' back to top button (on unless switched off, bottom right by default).
+		if ( defined( 'UNCODER_ELEMENTS_VERSION' ) && 'yes' === ( $k['uncoder_kit_settings_back_to_top'] ?? 'yes' ) ) {
+			$out['settings'] = array(
+				'back_to_top'          => true,
+				'back_to_top_position' => false !== strpos( (string) ( $k['uncoder_kit_settings_back_to_top_position'] ?? '' ), 'left: 30px' ) ? 'left' : 'right',
+			);
+		}
+		if ( $forms && class_exists( 'WooCommerce' ) ) {
+			// Elementor's form field style covers every field of the site, WooCommerce's too.
+			$forms['woocommerce'] = true;
+		}
 		if ( $forms ) {
 			$out['forms'] = $forms;
 		}
@@ -260,7 +281,59 @@ final class Kit_Map {
 			$out['breakpoints'] = $bps;
 		}
 
-		$css = trim( (string) ( $k['custom_css'] ?? '' ) );
+		// Custom CSS written for Elementor (site-wide or on widgets) uses its global color variables: they stay
+		// defined, pointing at the imported Design System colors.
+		$alias = array();
+		foreach ( array( 'system_colors', 'custom_colors' ) as $list ) {
+			foreach ( (array) ( $k[ $list ] ?? array() ) as $c ) {
+				if ( is_array( $c ) && preg_match( '/^[A-Za-z0-9_-]+$/', (string) ( $c['_id'] ?? '' ) ) ) {
+					$alias[] = '--e-global-color-' . $c['_id'] . ':var(--uncoder-c-' . Converter::color_id( (string) $c['_id'] ) . ')';
+				}
+			}
+		}
+		// … and its global font variables (--e-global-typography-{id}-font-size…), from the imported text styles.
+		$props = array( 'font-family' => 'ff', 'font-size' => 'fs', 'font-weight' => 'fw', 'text-transform' => 'tt', 'font-style' => 'fst', 'text-decoration' => 'td', 'line-height' => 'lh', 'letter-spacing' => 'ls' );
+		foreach ( array( 'system_typography', 'custom_typography' ) as $list ) {
+			foreach ( (array) ( $k[ $list ] ?? array() ) as $t ) {
+				if ( is_array( $t ) && isset( $by_id[ (string) ( $t['_id'] ?? '' ) ] ) && preg_match( '/^[A-Za-z0-9_-]+$/', (string) $t['_id'] ) ) {
+					foreach ( $props as $prop => $short ) {
+						$alias[] = '--e-global-typography-' . $t['_id'] . '-' . $prop . ':var(--uncoder-t-' . Converter::typo_id( (string) $t['_id'] ) . '-' . $short . ')';
+					}
+				}
+			}
+		}
+		// Uncoder Elements' "Blog Typography" (Site Settings → Typography): a global text style for each heading and the
+		// text inside post content, kept as site CSS on .entry-content like Elementor prints it (Uncoder's Post Content
+		// has that class, and the variables above are defined). The add-on wraps only single posts in .entry-content,
+		// so pages keep the Site Settings headings.
+		$blog = array();
+		foreach ( array( 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p' ) as $tag ) {
+			$ref = Converter::global_id( (string) ( $globals[ 'uncoder_kit_settings_blog_typography_' . $tag . '_typography' ] ?? '' ), 'typography' );
+			if ( '' === $ref || ! isset( $by_id[ $ref ] ) || ! preg_match( '/^[A-Za-z0-9_-]+$/', $ref ) ) {
+				continue;
+			}
+			$decl = array();
+			foreach ( array_keys( $props ) as $prop ) {
+				$decl[] = $prop . ':var(--e-global-typography-' . $ref . '-' . $prop . ')';
+			}
+			$blog[] = ( 'p' === $tag ? '.single .entry-content, .single .entry-content p' : '.single .entry-content ' . $tag ) . '{' . implode( ';', $decl ) . '}';
+		}
+		// Elementor colors every link of the site (WooCommerce and theme pages too) with the Site Settings link colors;
+		// Uncoder's apply inside its own content. As low as a plain "a" rule (the state inside :where() too), so any
+		// other link style wins: menus, buttons, widget link colours.
+		foreach ( array( 'link_normal_color' => '', 'link_hover_color' => ':hover' ) as $key => $state ) {
+			$link = $color( $key );
+			if ( '' !== $link ) {
+				$blog[] = ':where(body.uncoder-kit) a:where(:not(.uncoder-btn)' . $state . '){color:' . $link . '}';
+			}
+		}
+		$css = Converter::css_locations( trim( (string) ( $k['custom_css'] ?? '' ) ) );
+		if ( $blog ) {
+			$css = trim( implode( "\n", $blog ) . "\n" . $css );
+		}
+		if ( $alias ) {
+			$css = trim( ':root{' . implode( ';', $alias ) . "}\n" . $css );
+		}
 		if ( '' !== $css ) {
 			$out['custom_css'] = $css;
 		}

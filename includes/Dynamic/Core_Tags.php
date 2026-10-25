@@ -172,16 +172,10 @@ final class Core_Tags {
 			array(
 				'title'    => __( 'Archive title', 'uncoder' ),
 				'group'    => 'archive',
-				'callback' => static function () {
-					if ( is_search() ) {
-						/* translators: %s: search query. */
-						return sprintf( __( 'Search results for “%s”', 'uncoder' ), get_search_query() );
-					}
-					if ( is_home() && ! is_front_page() ) {
-						return get_the_title( (int) get_option( 'page_for_posts' ) );
-					}
-					return wp_strip_all_tags( get_the_archive_title() );
-				},
+				'controls' => array(
+					'remove_prefix' => array( 'type' => 'switch', 'label' => __( 'Remove prefix ("Category:", "Search results for")', 'uncoder' ) ),
+				),
+				'callback' => static fn( $o ) => wp_strip_all_tags( \Uncoder\Builder\Widgets\Archive_Title::current_title( ! empty( $o['remove_prefix'] ) ) ),
 			)
 		);
 		$tags->register(
@@ -189,7 +183,7 @@ final class Core_Tags {
 			array(
 				'title'    => __( 'Archive description', 'uncoder' ),
 				'group'    => 'archive',
-				'callback' => static fn() => wp_strip_all_tags( (string) get_the_archive_description() ),
+				'callback' => static fn() => wp_strip_all_tags( function_exists( 'is_shop' ) && is_shop() ? \Uncoder\Builder\Widgets\Archive_Description::shop_description() : (string) get_the_archive_description() ),
 			)
 		);
 		// Terms: the item of a container term loop, else the term archive being shown.

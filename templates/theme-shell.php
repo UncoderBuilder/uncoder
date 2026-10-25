@@ -7,15 +7,17 @@
 
 defined( 'ABSPATH' ) || exit;
 
-\Uncoder\Builder\Theme\Shell::header();
-?>
+\Uncoder\Builder\Theme\Shell::page(
+	static function (): void {
+		?>
 <main id="content" class="uncoder-main">
-	<?php
-	$uncoder_wb_theme = \Uncoder\Builder\Theme\Theme_Builder::instance();
-	if ( $uncoder_wb_theme ) {
-		$uncoder_wb_theme->print_body();
-	}
-	?>
+		<?php
+		$uncoder_wb_theme = \Uncoder\Builder\Theme\Theme_Builder::instance();
+		if ( $uncoder_wb_theme ) {
+			$uncoder_wb_theme->print_body();
+		}
+		?>
 </main>
-<?php
-\Uncoder\Builder\Theme\Shell::footer();
+		<?php
+	}
+);

@@ -34,13 +34,15 @@ final class Template_Tools {
 		'archive'        => array( array( 'type' => 'include', 'rule' => 'archive' ) ),
 		'search-results' => array( array( 'type' => 'include', 'rule' => 'search' ) ),
 		'error-404'      => array( array( 'type' => 'include', 'rule' => 'not_found' ) ),
+		'single-product' => array( array( 'type' => 'include', 'rule' => 'singular', 'post_type' => 'product' ) ),
+		'product-archive' => array( array( 'type' => 'include', 'rule' => 'archive', 'post_type' => 'product' ) ),
 		'popup'          => array( array( 'type' => 'include', 'rule' => 'general' ) ),
 	);
 
 	/** Types that are placed by conditions (the others are used by reference). */
-	private const CONDITIONAL = array( 'header', 'footer', 'single-post', 'single-page', 'single', 'archive', 'search-results', 'error-404', 'popup' );
+	private const CONDITIONAL = array( 'header', 'footer', 'single-post', 'single-page', 'single', 'archive', 'search-results', 'error-404', 'single-product', 'product-archive', 'popup' );
 	/** Types a template can be switched between after it was made (they share how they are stored and placed). */
-	private const SWITCHABLE = array( 'header', 'footer', 'single-post', 'single-page', 'single', 'archive', 'search-results', 'error-404' );
+	private const SWITCHABLE = array( 'header', 'footer', 'single-post', 'single-page', 'single', 'archive', 'search-results', 'error-404', 'single-product', 'product-archive' );
 
 	public function register( Registry $r ): void {
 		$types      = array_keys( Post_Types::TEMPLATE_TYPES );
@@ -117,7 +119,7 @@ final class Template_Tools {
 						'type'       => array(
 							'type'        => 'string',
 							'enum'        => self::SWITCHABLE,
-							'description' => 'Change the template type (e.g. a single-page template that should be the 404 page: "error-404"). Only between header, footer, single-post, single-page, single, archive, search-results and error-404. Pass conditions too when the new type needs different ones.',
+							'description' => 'Change the template type (e.g. a single-page template that should be the 404 page: "error-404"). Only between header, footer, single-post, single-page, single, archive, search-results, error-404, single-product and product-archive. Pass conditions too when the new type needs different ones.',
 						),
 						'elements'   => array(
 							'type'  => 'array',
@@ -326,7 +328,7 @@ final class Template_Tools {
 		$new_type = isset( $a['type'] ) ? sanitize_key( (string) $a['type'] ) : $type;
 		if ( $new_type !== $type ) {
 			if ( ! in_array( $new_type, self::SWITCHABLE, true ) || ! in_array( $type, self::SWITCHABLE, true ) ) {
-				return new WP_Error( 'invalid', sprintf( 'A "%s" template cannot become "%s" (nothing was saved). Only header, footer, single-post, single-page, single, archive, search-results and error-404 templates switch between each other; create a new template instead.', $type, $new_type ) );
+				return new WP_Error( 'invalid', sprintf( 'A "%s" template cannot become "%s" (nothing was saved). Only header, footer, single-post, single-page, single, archive, search-results, error-404, single-product and product-archive templates switch between each other; create a new template instead.', $type, $new_type ) );
 			}
 			if ( Post_Types::needs_theme_caps( $new_type ) && ! current_user_can( 'edit_theme_options' ) ) {
 				return new WP_Error( 'forbidden', sprintf( '"%s" templates change the whole site and require the edit_theme_options capability (nothing was saved).', $new_type ) );

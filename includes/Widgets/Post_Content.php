@@ -67,6 +67,15 @@ class Post_Content extends Widget_Base {
 				'selectors' => array( '{{WRAPPER}}' => 'text-align: {{VALUE}}' ),
 			)
 		);
+		$this->add_control(
+			'theme_styles',
+			array(
+				'type'        => 'switch',
+				'label'       => __( 'Theme styling', 'uncoder' ),
+				'description' => __( 'Leave the spacing of paragraphs, headings and lists, and the look of quotes, to your theme and site CSS.', 'uncoder' ),
+				'ai'          => 'On for content styled by the theme or site CSS (sites moved from another builder); off uses Uncoder\'s spacing.',
+			)
+		);
 		$this->end_section();
 
 		$this->start_section( 'style_text', array( 'label' => __( 'Text', 'uncoder' ), 'tab' => 'style' ) );
@@ -102,6 +111,7 @@ class Post_Content extends Widget_Base {
 				'label'      => __( 'Paragraph spacing', 'uncoder' ),
 				'size_units' => array( 'px', 'em', 'rem' ),
 				'selectors'  => array( '{{WRAPPER}}' => '--uncoder-content-flow: {{VALUE}}' ),
+				'condition'  => array( 'theme_styles!' => true ),
 			)
 		);
 		$this->end_section();
@@ -123,6 +133,7 @@ class Post_Content extends Widget_Base {
 				'label'      => __( 'Space above headings', 'uncoder' ),
 				'size_units' => array( 'px', 'em', 'rem' ),
 				'selectors'  => array( '{{WRAPPER}} > :is(h1, h2, h3, h4, h5, h6):not(:first-child)' => 'margin-top: {{VALUE}}' ),
+				'condition'  => array( 'theme_styles!' => true ),
 			)
 		);
 		$this->end_section();
@@ -143,6 +154,7 @@ class Post_Content extends Widget_Base {
 				'type'      => 'color',
 				'label'     => __( 'Quote accent', 'uncoder' ),
 				'selectors' => array( '{{WRAPPER}} blockquote' => 'border-color: {{VALUE}}' ),
+				'condition' => array( 'theme_styles!' => true ),
 			)
 		);
 		$this->end_section();
@@ -165,12 +177,14 @@ class Post_Content extends Widget_Base {
 	protected function render( array $s, Render_Context $ctx ): void {
 		$post = Theme_Context::post( $ctx );
 
+		// "entry-content" as in themes, so theme, plugin and site CSS written for post content keeps applying.
+		$class = 'uncoder-post-content entry-content' . ( ! empty( $s['theme_styles'] ) ? ' uncoder-post-content--theme' : '' );
 		if ( $ctx->editor ) {
 			if ( $post && $post->ID === $ctx->doc_id ) {
 				echo '<div class="uncoder-post-content-notice">' . esc_html__( 'Post Content shows the content of the post being viewed, so it cannot be placed inside that same post. Use it in a single post or page template.', 'uncoder' ) . '</div>';
 				return;
 			}
-			echo '<div class="uncoder-post-content">' . $this->sample() . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped sample.
+			echo '<div class="' . esc_attr( $class ) . '">' . $this->sample() . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped sample.
 			return;
 		}
 
@@ -207,6 +221,6 @@ class Post_Content extends Widget_Base {
 		if ( '' === trim( (string) $html ) ) {
 			return;
 		}
-		echo '<div class="uncoder-post-content">' . $html . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- output of the_content filters, like core themes.
+		echo '<div class="' . esc_attr( $class ) . '">' . $html . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- output of the_content filters, like core themes.
 	}
 }

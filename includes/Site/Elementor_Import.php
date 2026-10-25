@@ -14,6 +14,7 @@ use Uncoder\Builder\Plugin;
 use Uncoder\Builder\Rest\Rest;
 use Uncoder\Builder\Site\Elementor_Import\Converter;
 use Uncoder\Builder\Site\Elementor_Import\Kit_Map;
+use Uncoder\Builder\Site\Elementor_Import\Uicore;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -45,9 +46,9 @@ final class Elementor_Import {
 		'single-post'    => 'single-post',
 		'single-page'    => 'single-page',
 		'single'         => 'single',
-		'product'        => 'single',
+		'product'        => 'single-product',
 		'archive'        => 'archive',
-		'product-archive' => 'archive',
+		'product-archive' => 'product-archive',
 		'search-results' => 'search-results',
 		'error-404'      => 'error-404',
 		'popup'          => 'popup',
@@ -64,6 +65,68 @@ final class Elementor_Import {
 
 	public function register(): void {
 		add_action( 'rest_api_init', array( $this, 'routes' ) );
+		add_action( 'init', array( $this, 'compat_shortcode' ), 30 );
+	}
+
+	/**
+	 * Once Elementor Pro is off, its [elementor-template id="…"] shortcodes (in content, widgets, theme code)
+	 * print the Uncoder template converted from that Elementor template, instead of the raw shortcode.
+	 */
+	public function compat_shortcode(): void {
+		if ( class_exists( 'WooCommerce' ) && ! shortcode_exists( 'uncoder_wc_archive_products' ) ) {
+			add_shortcode( 'uncoder_wc_archive_products', array( self::class, 'wc_archive_products' ) );
+		}
+		// The same for UiCore's [uicore-block id="…"] once UiCore is off.
+		foreach ( array( 'elementor-template', 'uicore-block' ) as $tag ) {
+			if ( shortcode_exists( $tag ) ) {
+				continue;
+			}
+			add_shortcode(
+				$tag,
+				static function ( $atts ) use ( $tag ): string {
+					$source = absint( shortcode_atts( array( 'id' => 0 ), (array) $atts, $tag )['id'] );
+					$target = $source ? ( self::template_map()[ $source ] ?? 0 ) : 0;
+					return $target ? do_shortcode( '[uncoder_template id="' . $target . '"]' ) : '';
+				}
+			);
+		}
+	}
+
+	/**
+	 * [uncoder_wc_archive_products columns="" rows=""]: the products of the shop or product archive being viewed, as
+	 * WooCommerce's archive template prints them, for templates converted from Elementor's Archive Products widget.
+	 *
+	 * @param array<string,string>|string $atts Shortcode attributes.
+	 */
+	public static function wc_archive_products( $atts ): string {
+		if ( ! function_exists( 'woocommerce_product_loop' ) || ! ( is_shop() || is_product_taxonomy() ) ) {
+			return '';
+		}
+		$atts    = shortcode_atts( array( 'columns' => '', 'rows' => '' ), (array) $atts, 'uncoder_wc_archive_products' );
+		$columns = absint( $atts['columns'] );
+		if ( $columns ) {
+			wc_set_loop_prop( 'columns', $columns );
+		}
+		$columns = absint( wc_get_loop_prop( 'columns' ) );
+		ob_start();
+		if ( woocommerce_product_loop() ) {
+			do_action( 'woocommerce_before_shop_loop' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WooCommerce hook.
+			woocommerce_product_loop_start();
+			if ( wc_get_loop_prop( 'total' ) ) {
+				while ( have_posts() ) {
+					the_post();
+					do_action( 'woocommerce_shop_loop' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WooCommerce hook.
+					wc_get_template_part( 'content', 'product' );
+				}
+			}
+			woocommerce_product_loop_end();
+			do_action( 'woocommerce_after_shop_loop' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WooCommerce hook.
+		} else {
+			do_action( 'woocommerce_no_products_found' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WooCommerce hook.
+		}
+		rewind_posts();
+		wp_reset_postdata();
+		return '<div class="woocommerce' . ( $columns ? ' columns-' . $columns : '' ) . '">' . ob_get_clean() . '</div>';
 	}
 
 	public function routes(): void {
@@ -151,6 +214,16 @@ final class Elementor_Import {
 		if ( ! is_array( $data ) ) {
 			$data = json_decode( wp_unslash( $raw ), true );
 		}
+		if ( ! is_array( $data ) ) {
+			// Some sites carry a shortcode whose attribute quotes were saved unescaped ("[x a="1"]" inside a JSON
+			// string): Elementor then shows the page from its element cache only. Escape those quotes and try again.
+			$fixed = (string) preg_replace_callback(
+				'/\[[a-z_][a-z0-9_-]*\s[^\]\[]*\]/i',
+				static fn( array $m ): string => (string) preg_replace( '/(?<!\\\\)"/', '\\"', $m[0] ),
+				$raw
+			);
+			$data  = $fixed !== $raw ? json_decode( $fixed, true ) : null;
+		}
 		return is_array( $data ) ? $data : null;
 	}
 
@@ -227,20 +300,22 @@ final class Elementor_Import {
 			if ( ! $post || ! self::can_edit( $post ) ) {
 				continue;
 			}
-			$library  = 'elementor_library' === $post->post_type;
-			$template = $library ? (string) get_post_meta( $post->ID, '_elementor_template_type', true ) : '';
+			$uicore   = Uicore::is_template( $post );
+			$library  = 'elementor_library' === $post->post_type || $uicore;
+			$template = $uicore ? Uicore::kind( $post->ID ) : ( $library ? (string) get_post_meta( $post->ID, '_elementor_template_type', true ) : '' );
 			if ( in_array( $template, array( 'kit' ), true ) ) {
 				continue;
 			}
 			$object  = get_post_type_object( $post->post_type );
 			$raw     = get_post_meta( $post->ID, '_elementor_data', true );
+			$label   = $uicore ? Uicore::label( $post->ID ) : __( 'Elementor template', 'uncoder' );
 			$items[] = array(
 				'id'          => (int) $post->ID,
 				'title'       => '' !== $post->post_title ? $post->post_title : __( '(no title)', 'uncoder' ),
 				'type'        => $post->post_type,
-				'typeLabel'   => $library ? __( 'Elementor template', 'uncoder' ) : ( $object ? $object->labels->singular_name : $post->post_type ),
+				'typeLabel'   => $library ? $label : ( $object ? $object->labels->singular_name : $post->post_type ),
 				'template'    => $template,
-				'templateAs'  => $library ? self::template_type( $template ) : '',
+				'templateAs'  => $uicore ? Uicore::template_type( $post->ID ) : ( $library ? self::template_type( $template ) : '' ),
 				'status'      => $post->post_status,
 				'modified'    => (string) get_post_modified_time( 'c', true, $post ),
 				'uncoder'     => Utils::is_builder_post( $post->ID ) && '' !== (string) get_post_meta( $post->ID, Utils::META_DATA, true ),
@@ -326,6 +401,9 @@ final class Elementor_Import {
 		}
 		// Templates first (loop items and popups before the rest) so pages that use them point at the new ones.
 		$rank = static function ( int $id ): int {
+			if ( Uicore::POST_TYPE === get_post_type( $id ) ) {
+				return in_array( Uicore::kind( $id ), array( 'mm', 'popup', 'block' ), true ) ? 1 : 2;
+			}
 			if ( 'elementor_library' !== get_post_type( $id ) ) {
 				return 3;
 			}
@@ -351,10 +429,16 @@ final class Elementor_Import {
 				'message' => __( 'This site has no Elementor Site Settings (kit) to import.', 'uncoder' ),
 			);
 		}
-		$partial = self::convert_kit( $settings );
-		$kit     = Plugin::instance()->kit();
+		// The kit's text styles may use Elementor Pro's uploaded fonts: bring the files along first.
+		$custom_fonts = self::import_elementor_fonts();
+		$partial      = Uicore::kit( self::convert_kit( $settings ) );
+		// Elementor loads Google fonts as static files, without the optical-size axis: the text keeps that cut (and its
+		// width, so headings wrap where they did) instead of the display cut variable fonts use at large sizes.
+		$partial['theme'] = array_merge( (array) ( $partial['theme'] ?? array() ), array( 'optical_sizing' => 'none' ) );
+		$kit              = Plugin::instance()->kit();
 		if ( isset( $partial['custom_css'] ) ) {
-			$existing = (string) $kit->get( 'custom_css', '' );
+			$partial['custom_css'] = Converter::site_css( (string) $partial['custom_css'] );
+			$existing              = (string) $kit->get( 'custom_css', '' );
 			if ( false !== strpos( $existing, $partial['custom_css'] ) ) {
 				unset( $partial['custom_css'] );
 			} else {
@@ -390,9 +474,170 @@ final class Elementor_Import {
 			'colors'     => count( (array) ( $clean['colors'] ?? array() ) ),
 			'typography' => count( (array) ( $clean['typography'] ?? array() ) ),
 			'fonts'      => array_values( array_filter( array_column( (array) ( $clean['fonts'] ?? array() ), 'family' ) ) ),
+			'customFonts' => $custom_fonts,
 			'sections'   => array_values( array_intersect( array_keys( $clean ), array( 'theme', 'layout', 'buttons', 'forms', 'breakpoints', 'custom_css' ) ) ),
 			'errors'     => $errors,
 		);
+	}
+
+	/**
+	 * Elementor Pro display conditions (_elementor_conditions: "include/singular/portfolio", "exclude/archive/
+	 * category/12"…) → Uncoder conditions, and the template type they need: Elementor lets a single-page or
+	 * single-post template show on any post type, Uncoder keeps those types to pages / posts and gives other post
+	 * types to "single". Elementor Pro shows pages built with Elementor full width, without a single template, so
+	 * those pages are left out of a template that covers pages.
+	 *
+	 * @return array{0: array<int, array<string,mixed>>, 1: string} [ conditions, Uncoder template type ].
+	 */
+	private static function elementor_conditions( int $source, string $type ): array {
+		$out   = array();
+		$types = array();
+		foreach ( (array) get_post_meta( $source, '_elementor_conditions', true ) as $raw ) {
+			$p     = explode( '/', (string) $raw );
+			$mode  = 'exclude' === ( $p[0] ?? '' ) ? 'exclude' : 'include';
+			$group = (string) ( $p[1] ?? '' );
+			$sub   = (string) ( $p[2] ?? '' );
+			$ids   = ! empty( $p[3] ) ? array( absint( $p[3] ) ) : array();
+			$c     = null;
+			if ( 'general' === $group ) {
+				$c = array( 'rule' => 'general' );
+			} elseif ( 'singular' === $group ) {
+				if ( '' === $sub ) {
+					$c = array( 'rule' => 'singular' );
+				} elseif ( 'front_page' === $sub ) {
+					$c = array( 'rule' => 'front_page' );
+				} elseif ( 'not_found404' === $sub ) {
+					$c = array( 'rule' => 'not_found' );
+				} elseif ( post_type_exists( $sub ) ) {
+					$c       = array( 'rule' => 'singular', 'post_type' => $sub ) + ( $ids ? array( 'ids' => $ids ) : array() );
+					$types[] = $sub;
+				}
+			} elseif ( 'archive' === $group || 'product_archive' === $group ) {
+				if ( '' === $sub ) {
+					$c = 'product_archive' === $group ? array( 'rule' => 'archive', 'post_type' => 'product' ) : array( 'rule' => 'archive' );
+					if ( 'archive' === $group && 'include' === $mode && class_exists( 'WooCommerce' ) ) {
+						// Elementor's "All Archives" leaves the shop and product archives to WooCommerce (and its
+						// product archive templates).
+						$out[] = array( 'type' => 'exclude', 'rule' => 'archive', 'post_type' => 'product' );
+					}
+				} elseif ( 'post_archive' === $sub ) {
+					// Elementor's "Posts Archive" is the blog page only (its categories, tags… stay with other templates).
+					$c = array( 'rule' => 'posts_page' );
+				} elseif ( 'shop_page' === $sub ) {
+					$c = array( 'rule' => 'archive', 'post_type' => 'product' );
+				} elseif ( preg_match( '/^(.+)_archive$/', $sub, $m ) && post_type_exists( $m[1] ) ) {
+					$c = array( 'rule' => 'archive', 'post_type' => $m[1] );
+				} elseif ( in_array( $sub, array( 'author', 'date', 'search' ), true ) ) {
+					$c = array( 'rule' => $sub );
+				} elseif ( taxonomy_exists( $sub ) ) {
+					$c = array( 'rule' => 'archive', 'taxonomy' => $sub ) + ( $ids ? array( 'ids' => $ids ) : array() );
+				}
+			}
+			if ( $c ) {
+				$out[] = array( 'type' => $mode ) + $c;
+			}
+		}
+		$own = array( 'single-page' => 'page', 'single-post' => 'post', 'single-product' => 'product' )[ $type ] ?? '';
+		if ( '' !== $own && array_diff( $types, array( $own ) ) ) {
+			$type = 'single';
+		}
+		$pages = false;
+		foreach ( $out as $c ) {
+			$pages = $pages || ( 'include' === $c['type'] && 'singular' === $c['rule'] && in_array( $c['post_type'] ?? 'page', array( 'page' ), true ) && empty( $c['ids'] ) );
+		}
+		if ( $pages && in_array( $type, array( 'single', 'single-page' ), true ) ) {
+			$built = get_posts(
+				array(
+					'post_type'      => 'page',
+					'post_status'    => 'any',
+					'posts_per_page' => 500,
+					'fields'         => 'ids',
+					'meta_key'       => '_elementor_edit_mode', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+					'meta_value'     => 'builder', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value
+				)
+			);
+			if ( $built ) {
+				$out[] = array( 'type' => 'exclude', 'rule' => 'singular', 'post_type' => 'page', 'ids' => array_map( 'intval', $built ) );
+			}
+		}
+		$errors = array();
+		return array( $out ? \Uncoder\Builder\Theme\Conditions::sanitize( $out, $errors ) : array(), $type );
+	}
+
+	/**
+	 * Uncoder Elements' sticky header → the header template's behaviour. That add-on makes every container with the
+	 * "header" tag sticky and "smart" (back on scroll up) unless switched off, with an optional background for the
+	 * stuck state. The header keeps its own background (sites that want it transparent over a hero do that with
+	 * CSS on the "not stuck" state, converted by Converter::css_locations()). Without the add-on nothing changes.
+	 *
+	 * @param array<int, mixed>               $data     Elementor elements of the header template.
+	 * @param array<int, array<string,mixed>> $elements Converted elements.
+	 * @return array<string,mixed> Header behaviour page settings.
+	 */
+	private static function header_behaviour( array $data, array &$elements ): array {
+		if ( ! defined( 'UNCODER_ELEMENTS_VERSION' ) ) {
+			return array();
+		}
+		$color = static function ( array $s, string $key ): string {
+			$id = Converter::global_id( (string) ( $s['__globals__'][ $key ] ?? '' ), 'colors' );
+			return '' !== $id ? 'var(--uncoder-c-' . Converter::color_id( $id ) . ')' : Utils::sanitize_color( (string) ( $s[ $key ] ?? '' ) );
+		};
+		foreach ( $data as $el ) {
+			$s = is_array( $el ) ? (array) ( $el['settings'] ?? array() ) : array();
+			if ( 'container' !== ( $el['elType'] ?? '' ) || 'header' !== ( $s['html_tag'] ?? '' ) || 'yes' !== ( $s['uncoder_sticky_header'] ?? 'yes' ) ) {
+				continue;
+			}
+			$out = array( 'header_sticky' => 'yes' === ( $s['uncoder_sticky_header_smart'] ?? 'yes' ) ? 'reveal' : 'always' );
+			$bg  = $color( $s, 'uncoder_sticky_header_bg_color' );
+			if ( '' !== $bg ) {
+				$out['header_scrolled_bg'] = $bg;
+			}
+			return $out;
+		}
+		return array();
+	}
+
+	/**
+	 * Elementor Pro's custom fonts (elementor_font posts) → Uncoder custom fonts, so text styles that use them keep
+	 * their typeface once Elementor is turned off. A family Uncoder already has is left as it is.
+	 *
+	 * @return string[] Families added.
+	 */
+	private static function import_elementor_fonts(): array {
+		$have  = Custom_Fonts::all();
+		$added = array();
+		foreach ( get_posts( array( 'post_type' => 'elementor_font', 'post_status' => 'publish', 'numberposts' => 100 ) ) as $font ) {
+			$family = Custom_Fonts::clean_family( $font->post_title );
+			if ( '' === $family || isset( $have[ $family ] ) ) {
+				continue;
+			}
+			$category = preg_match( '/serif/i', $family ) && ! preg_match( '/sans/i', $family ) ? 'serif' : 'sans-serif';
+			foreach ( (array) get_post_meta( $font->ID, 'elementor_font_files', true ) as $face ) {
+				$weight = (string) ( $face['font_weight'] ?? 'normal' );
+				$weight = array( 'normal' => '400', 'bold' => '700' )[ $weight ] ?? $weight;
+				if ( ! is_array( $face ) || ! preg_match( '/^[1-9]00$/', $weight ) ) {
+					continue;
+				}
+				$style = 'italic' === ( $face['font_style'] ?? '' ) ? 'italic' : 'normal';
+				foreach ( array( 'woff2', 'woff', 'ttf' ) as $format ) {
+					$path = ! empty( $face[ $format ]['id'] ) ? (string) get_attached_file( (int) $face[ $format ]['id'] ) : '';
+					if ( '' !== $path && is_readable( $path ) && true === Custom_Fonts::add_face( $family, $category, $weight, $style, $path, false, false ) ) {
+						$added[ $family ] = $family;
+					}
+				}
+			}
+		}
+		foreach ( Uicore::custom_fonts() as $face ) {
+			$family = Custom_Fonts::clean_family( $face['family'] );
+			if ( '' === $family || ( isset( $have[ $family ] ) && ! isset( $added[ $family ] ) ) ) {
+				continue;
+			}
+			$category = preg_match( '/serif/i', $family ) && ! preg_match( '/sans/i', $family ) ? 'serif' : 'sans-serif';
+			if ( true === Custom_Fonts::add_face( $family, $category, $face['weight'], $face['style'], $face['path'], false, false ) ) {
+				$added[ $family ] = $family;
+			}
+		}
+		return array_values( $added );
 	}
 
 	/**
@@ -414,18 +659,49 @@ final class Elementor_Import {
 		}
 		$report   = array();
 		$elements = self::convert( $data, $report, self::site_options( self::kit_imported() ) );
-		$library  = 'elementor_library' === $post->post_type;
+		$uicore   = Uicore::is_template( $post );
+		$library  = 'elementor_library' === $post->post_type || $uicore;
 		$settings = get_post_meta( $id, '_elementor_page_settings', true );
 		$settings = is_array( $settings ) ? $settings : array();
 
-		if ( $library ) {
+		if ( $uicore ) {
+			$type = Uicore::template_type( $id );
+			if ( ! self::can_create_template( $type ) ) {
+				return $base + array( 'message' => __( 'You are not allowed to create this kind of template (headers, footers and other site-wide templates need the theme options capability).', 'uncoder' ) );
+			}
+			$conds = array();
+			if ( ! in_array( $type, array( 'section', 'mega-menu' ), true ) ) {
+				$errors = array();
+				$conds  = \Uncoder\Builder\Theme\Conditions::sanitize( Uicore::conditions( $id ), $errors );
+			}
+			$target = self::create_template( $post->post_title, $type, $elements, $id, $settings, $report, $conds );
+			if ( is_wp_error( $target ) ) {
+				return $base + array( 'message' => $target->get_error_message() );
+			}
+			if ( 'mega-menu' === $type ) {
+				$linked = Uicore::attach_mega_menu( $id, $target );
+				/* translators: %d: number of menu items. */
+				self::note( $report, sprintf( _n( 'Attached as the mega menu of %d menu item.', 'Attached as the mega menu of %d menu items.', $linked, 'uncoder' ), $linked ) );
+			} elseif ( 'pagetitle' === Uicore::kind( $id ) ) {
+				self::note( $report, __( 'A UiCore page title: place this section at the top of the pages or templates where it showed.', 'uncoder' ) );
+			} elseif ( 'block' === Uicore::kind( $id ) ) {
+				self::note( $report, __( 'Its [uicore-block] shortcodes now print this template.', 'uncoder' ) );
+			}
+			$used = 'template';
+		} elseif ( $library ) {
 			$type = self::template_type( (string) get_post_meta( $id, '_elementor_template_type', true ) );
 			if ( ! self::can_create_template( $type ) ) {
 				return $base + array( 'message' => __( 'You are not allowed to create this kind of template (headers, footers and other site-wide templates need the theme options capability).', 'uncoder' ) );
 			}
-			$target = self::create_template( $post->post_title, $type, $elements, $id, $settings, $report );
+			$behaviour           = 'header' === $type ? self::header_behaviour( $data, $elements ) : array();
+			list( $conds, $type ) = in_array( $type, array( 'section', 'loop-item' ), true ) ? array( array(), $type ) : self::elementor_conditions( $id, $type );
+			$target              = self::create_template( $post->post_title, $type, $elements, $id, $settings, $report, $conds );
 			if ( is_wp_error( $target ) ) {
 				return $base + array( 'message' => $target->get_error_message() );
+			}
+			if ( $behaviour ) {
+				Plugin::instance()->documents()->get( $target )->save_page_settings( $behaviour );
+				self::note( $report, __( 'The Uncoder Elements sticky header became the header behaviour (sticky, scrolled background).', 'uncoder' ) );
 			}
 			$used = 'template';
 			if ( 'replace' === $mode ) {
@@ -477,6 +753,12 @@ final class Elementor_Import {
 				'elementor_header_footer' => 'uncoder-full-width',
 				'elementor_theme'         => 'default',
 			)[ $page_template ] ?? '';
+			// Hello Elementor prints Elementor pages edge to edge on its default template (its boxed page layout is
+			// only for other content): without Elementor, Uncoder Full Width keeps that.
+			// UiCore themes (Framey…) do the same when their page title is off (Theme Options → Page Title).
+			if ( '' === $uncoder_tpl && in_array( $page_template, array( '', 'default' ), true ) && ( 'hello-elementor' === get_template() || Uicore::page_title_off() ) ) {
+				$uncoder_tpl = 'uncoder-full-width';
+			}
 			if ( '' !== $uncoder_tpl && 'page' === $post->post_type ) {
 				update_post_meta( $target, '_wp_page_template', $uncoder_tpl );
 			}
@@ -527,7 +809,7 @@ final class Elementor_Import {
 			}
 		}
 		if ( ! empty( $s['custom_css'] ) && is_string( $s['custom_css'] ) ) {
-			$out['custom_css'] = str_replace( 'selector', '.uncoder-' . $target, $s['custom_css'] );
+			$out['custom_css'] = Converter::css_locations( str_replace( 'selector', '.uncoder-' . $target, $s['custom_css'] ) );
 		}
 		return $out;
 	}
@@ -538,15 +820,18 @@ final class Elementor_Import {
 	 * @param array<int, array<string,mixed>> $elements Uncoder elements.
 	 * @param array<string,mixed>             $settings Elementor page settings of the template.
 	 * @param array<string,mixed>             $report   Report (by reference).
+	 * @param array<int, array<string,mixed>> $conds    Display conditions converted from Elementor Pro.
 	 * @return int|WP_Error
 	 */
-	private static function create_template( string $title, string $type, array $elements, int $source, array $settings, array &$report ) {
-		$id = wp_insert_post(
+	private static function create_template( string $title, string $type, array $elements, int $source, array $settings, array &$report, array $conds = array() ) {
+		// A draft (switched-off) template stays a draft: it must not start showing on the site.
+		$draft = $source && 'publish' !== get_post_status( $source );
+		$id    = wp_insert_post(
 			wp_slash(
 				array(
 					'post_type'   => Post_Types::TEMPLATE,
 					'post_title'  => '' !== trim( $title ) ? $title : __( 'Imported from Elementor', 'uncoder' ),
-					'post_status' => 'publish',
+					'post_status' => $draft ? 'draft' : 'publish',
 					'post_author' => get_current_user_id(),
 				)
 			),
@@ -556,20 +841,26 @@ final class Elementor_Import {
 			return $id;
 		}
 		$id = (int) $id;
+		if ( $draft ) {
+			self::note( $report, __( 'Saved as a draft, like the original: publish it in Theme Builder to use it.', 'uncoder' ) );
+		}
 		update_post_meta( $id, Utils::META_MODE, 'builder' );
 		update_post_meta( $id, Utils::META_TYPE, $type );
-		update_post_meta( $id, Utils::META_CONDS, array() );
+		update_post_meta( $id, Utils::META_CONDS, $conds );
 		if ( $source ) {
 			update_post_meta( $id, self::META_SOURCE, $source );
 		}
-		if ( ! in_array( $type, array( 'section', 'loop-item' ), true ) ) {
-			self::note( $report, __( 'Display conditions were not converted: set where this template shows in Theme Builder.', 'uncoder' ) );
+		$builder = $conds ? \Uncoder\Builder\Theme\Theme_Builder::instance() : null;
+		if ( $builder ) {
+			$builder->rebuild_index();
+		} elseif ( ! $conds && ! in_array( $type, array( 'section', 'loop-item', 'mega-menu' ), true ) ) {
+			self::note( $report, __( 'This template had no Elementor display conditions: set where it shows in Theme Builder.', 'uncoder' ) );
 		}
 		if ( 'popup' === $type ) {
 			self::note( $report, __( 'Popup triggers and layout were not converted: set them in the popup settings.', 'uncoder' ) );
 		}
 		if ( ! empty( $settings['custom_css'] ) && is_string( $settings['custom_css'] ) && current_user_can( 'unfiltered_html' ) ) {
-			Plugin::instance()->documents()->get( $id )->save_page_settings( array( 'custom_css' => str_replace( 'selector', '.uncoder-' . $id, $settings['custom_css'] ) ) );
+			Plugin::instance()->documents()->get( $id )->save_page_settings( array( 'custom_css' => Converter::css_locations( str_replace( 'selector', '.uncoder-' . $id, $settings['custom_css'] ) ) ) );
 		}
 		return $id;
 	}

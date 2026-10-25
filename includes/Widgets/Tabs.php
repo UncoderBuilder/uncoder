@@ -126,7 +126,7 @@ class Tabs extends Widget_Base {
 						'type'        => 'text',
 						'label'       => __( 'Anchor', 'uncoder' ),
 						'placeholder' => 'pricing',
-						'description' => __( 'With deep linking on, /page#anchor opens this tab. Letters, numbers, - and _ only.', 'uncoder' ),
+						'description' => __( 'With deep linking on, /page#anchor opens this tab. Start with a letter; letters, numbers, - and _ only.', 'uncoder' ),
 					),
 				),
 				'default'     => $this->default_tabs(),
@@ -770,7 +770,17 @@ class Tabs extends Widget_Base {
 			}
 			return;
 		}
+		$this->render_tabs( $s, $ctx, $rows, static fn( int $i ): string => $ctx->render_child( $i ) );
+	}
 
+	/**
+	 * The tabs markup: a tab list and a panel per row (with its accordion header).
+	 *
+	 * @param array<string,mixed>            $s     Settings.
+	 * @param array<int,array<string,mixed>> $rows  Rows (title, anchor, icon, image, badge, description, _id).
+	 * @param callable                       $panel Panel content by row index (escaped HTML).
+	 */
+	protected function render_tabs( array $s, Render_Context $ctx, array $rows, callable $panel ): void {
 		$uid     = 'uncoder-tabs-' . sanitize_html_class( $ctx->element_id );
 		$count   = count( $rows );
 		$active  = is_numeric( $s['active'] ?? '' ) ? (int) $s['active'] : 1;
@@ -873,7 +883,7 @@ class Tabs extends Widget_Base {
 				)
 			) . '>';
 			// phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo $ctx->render_child( $i ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- rendered child container.
+			echo $panel( $i ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- rendered child container / escaped panel content.
 			echo '</div>';
 		}
 		echo '</div></div>';

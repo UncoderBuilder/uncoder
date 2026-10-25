@@ -14,8 +14,10 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * { source, post_type, posts_per_page, offset, orderby, order, include_ids, exclude_ids, terms, authors,
- *   meta_key, meta_value, ignore_sticky, exclude_current, avoid_duplicates }.
+ *   meta_key, meta_value, ignore_sticky, exclude_current, avoid_duplicates, product_filter }.
  * meta_key / meta_value: only posts whose custom field has that value (public fields only; "!value" for "is not").
+ * WooCommerce products: product_filter (featured, sale, best_selling, top_rated, in_stock), ordering by price,
+ * sales or rating, and WooCommerce's catalog visibility (hidden products, "hide out of stock items").
  */
 class Query extends Group_Type {
 
@@ -36,6 +38,19 @@ class Query extends Group_Type {
 				),
 			),
 			'post_type'        => array( 'type' => 'select', 'label' => __( 'Post type', 'uncoder' ), 'options_dynamic' => true, 'options' => array() ),
+			'product_filter'   => array(
+				'type'      => 'select',
+				'label'     => __( 'Products', 'uncoder' ),
+				'options'   => array(
+					''             => __( 'All products', 'uncoder' ),
+					'featured'     => __( 'Featured', 'uncoder' ),
+					'sale'         => __( 'On sale', 'uncoder' ),
+					'best_selling' => __( 'Best selling', 'uncoder' ),
+					'top_rated'    => __( 'Top rated', 'uncoder' ),
+					'in_stock'     => __( 'In stock', 'uncoder' ),
+				),
+				'condition' => array( 'post_type' => 'product' ),
+			),
 			'posts_per_page'   => array( 'type' => 'number', 'label' => __( 'Items', 'uncoder' ), 'min' => 1, 'max' => 100 ),
 			'offset'           => array( 'type' => 'number', 'label' => __( 'Offset', 'uncoder' ), 'min' => 0, 'max' => 1000 ),
 			'orderby'          => array(
@@ -49,6 +64,9 @@ class Query extends Group_Type {
 					'comment_count' => 'Comments',
 					'rand'          => 'Random',
 					'post__in'      => 'Manual order',
+					'price'         => 'Price (products)',
+					'popularity'    => 'Sales (products)',
+					'rating'        => 'Rating (products)',
 				),
 			),
 			'order'            => array( 'type' => 'select', 'label' => __( 'Order', 'uncoder' ), 'options' => array( 'desc' => 'Descending', 'asc' => 'Ascending' ) ),
@@ -181,6 +199,12 @@ class Query extends Group_Type {
 				);
 			}
 		}
+		if ( in_array( $args['orderby'], array( 'price', 'popularity', 'rating' ), true ) && 'product' !== $args['post_type'] ) {
+			$args['orderby'] = 'date';
+		}
+		if ( 'product' === $args['post_type'] && function_exists( 'wc_get_product_visibility_term_ids' ) ) {
+			$args = self::product_args( $args, $q );
+		}
 		/**
 		 * Filters the WP_Query arguments built from a query control.
 		 *
@@ -188,5 +212,96 @@ class Query extends Group_Type {
 		 * @param array $q    Query control value.
 		 */
 		return apply_filters( 'uncoder_wb/query/args', $args, $q );
+	}
+
+	/**
+	 * WooCommerce rules for product queries: catalog visibility, the product filter and ordering by price, sales or
+	 * rating. Ordering reads WooCommerce's own meta (_price, total_sales, _wc_average_rating), so nothing is added to
+	 * other queries of the page.
+	 *
+	 * @param array<string,mixed> $args WP_Query args.
+	 * @param array<string,mixed> $q    Query control value.
+	 * @return array<string,mixed>
+	 */
+	private static function product_args( array $args, array $q ): array {
+		$filter     = (string) ( $q['product_filter'] ?? '' );
+		$visibility = wc_get_product_visibility_term_ids();
+		$hidden     = array( (int) ( $visibility['exclude-from-catalog'] ?? 0 ) );
+		if ( 'in_stock' === $filter || 'yes' === get_option( 'woocommerce_hide_out_of_stock_items' ) ) {
+			$hidden[] = (int) ( $visibility['outofstock'] ?? 0 );
+		}
+		$hidden = array_values( array_filter( $hidden ) );
+		$rules  = $hidden ? array(
+			array(
+				'taxonomy' => 'product_visibility',
+				'field'    => 'term_taxonomy_id',
+				'terms'    => $hidden,
+				'operator' => 'NOT IN',
+			),
+		) : array();
+		if ( 'featured' === $filter && ! empty( $visibility['featured'] ) ) {
+			$rules[] = array(
+				'taxonomy' => 'product_visibility',
+				'field'    => 'term_taxonomy_id',
+				'terms'    => array( (int) $visibility['featured'] ),
+			);
+		}
+		// Keep the terms already asked for (an OR list for related products) as one condition beside these.
+		$existing          = $args['tax_query'] ?? array();
+		$args['tax_query'] = array_merge( array( 'relation' => 'AND' ), $existing ? array( $existing ) : array(), $rules ); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+
+		if ( 'sale' === $filter ) {
+			$on_sale          = array_map( 'intval', wc_get_product_ids_on_sale() );
+			$on_sale          = isset( $args['post__in'] ) ? array_intersect( (array) $args['post__in'], $on_sale ) : $on_sale;
+			$args['post__in'] = $on_sale ? array_values( $on_sale ) : array( 0 );
+		}
+
+		$orderby = (string) $args['orderby'];
+		if ( 'best_selling' === $filter ) {
+			$orderby = 'popularity';
+		} elseif ( 'top_rated' === $filter ) {
+			$orderby = 'rating';
+		}
+		if ( in_array( $orderby, array( 'price', 'popularity', 'rating' ), true ) ) {
+			$direction = 'price' === $orderby ? (string) $args['order'] : ( 'best_selling' === $filter || 'top_rated' === $filter ? 'DESC' : (string) $args['order'] );
+			// Sorted on WooCommerce's product lookup table, as its shop sorting is (see product_order_clauses()).
+			$args['uncoder_wb_product_order'] = array( $orderby, strtoupper( $direction ) );
+			$args['orderby']                  = array( 'date' => 'DESC' );
+			if ( ! has_filter( 'posts_clauses', array( self::class, 'product_order_clauses' ) ) ) {
+				add_filter( 'posts_clauses', array( self::class, 'product_order_clauses' ), 10, 2 );
+			}
+		}
+		return $args;
+	}
+
+	/**
+	 * Price, sales and rating order from WooCommerce's product lookup table (one row per product): variable and
+	 * grouped products have several "_price" meta rows, and a product without a sales or rating meta row would drop
+	 * out of a meta_key query. Price: the lowest price going up, the highest going down, as WooCommerce sorts.
+	 *
+	 * @param array<string,string> $clauses Query clauses.
+	 * @return array<string,string>
+	 */
+	public static function product_order_clauses( $clauses, $query ): array {
+		$clauses = (array) $clauses;
+		$order   = $query instanceof \WP_Query ? $query->get( 'uncoder_wb_product_order' ) : null;
+		if ( ! is_array( $order ) || 2 !== count( $order ) ) {
+			return $clauses;
+		}
+		global $wpdb;
+		list( $by, $dir ) = array_values( $order );
+		$dir              = 'ASC' === $dir ? 'ASC' : 'DESC';
+		$columns          = array(
+			'price'      => 'ASC' === $dir ? 'min_price' : 'max_price',
+			'popularity' => 'total_sales',
+			'rating'     => 'average_rating',
+		);
+		if ( ! isset( $columns[ $by ] ) || empty( $wpdb->wc_product_meta_lookup ) ) {
+			return $clauses;
+		}
+		$clauses['join']   .= " LEFT JOIN {$wpdb->wc_product_meta_lookup} uncoder_wb_lookup ON {$wpdb->posts}.ID = uncoder_wb_lookup.product_id ";
+		$then               = 'rating' === $by ? "uncoder_wb_lookup.rating_count {$dir}, " : '';
+		$clauses['orderby'] = "uncoder_wb_lookup.{$columns[ $by ]} {$dir}, {$then}{$wpdb->posts}.post_date DESC, {$wpdb->posts}.ID DESC";
+		return $clauses;
 	}
 }

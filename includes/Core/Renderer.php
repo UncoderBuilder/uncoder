@@ -18,6 +18,9 @@ defined( 'ABSPATH' ) || exit;
  */
 final class Renderer {
 
+	/** Template types whose first section is not at the top of the screen when the page opens. */
+	private const BELOW_FOLD = array( 'footer', 'popup', 'mega-menu' );
+
 	private Render_Context $ctx;
 
 	/** @var array<string,bool> */
@@ -148,11 +151,14 @@ final class Renderer {
 			self::$rendered[ $doc ] = $this->ctx->doc_type;
 		}
 		$html                = '';
-		$first               = true;
-		$eager               = $this->ctx->eager;
+		// A document placed inside another (Template widget) is not the top of the page: its sections are as eager
+		// as the place it sits in.
+		$embedded            = ! empty( $args['embedded'] );
+		$first               = ! $embedded && ! in_array( $this->ctx->doc_type, self::BELOW_FOLD, true );
+		$eager               = $embedded ? ! empty( $args['eager'] ) : $this->ctx->eager;
 		foreach ( $elements as $element ) {
 			if ( is_array( $element ) ) {
-				// The first section is above the fold: its background images are never lazy.
+				// The first section is above the fold: its images and background images are never lazy.
 				$this->ctx->eager = $eager || ( $first && ! $this->ctx->repeat );
 				$html            .= $this->render_element( $element, 0 );
 				$first            = $first && ! empty( $element['disabled'] );
@@ -205,13 +211,18 @@ final class Renderer {
 			return $this->render_loop( $type, $element, $type->effective_settings( $settings ), $depth );
 		}
 
-		$settings = $this->resolve_dynamic( $element, $type->effective_settings( $settings ) );
+		$settings = $this->resolve_dynamic( $element, $type->effective_settings( $settings ), $type );
 
 		if ( $type->is_container() ) {
 			return $this->render_container( $element, $settings, $depth );
 		}
 		if ( $type instanceof Widget_Base ) {
 			$parts = $this->widget_parts( $type, $element, $settings, $depth );
+			// A site-data widget with nothing to show here (post info without terms, closed comments…) leaves no
+			// empty element on the site, where it would still take a gap in its container.
+			if ( '' === trim( $parts['html'] ) && ! $this->ctx->editor && 'dynamic' === $type->render_mode() ) {
+				return '';
+			}
 			return self::merge( $type, $parts['html'], $parts['attrs'] );
 		}
 		return '';
@@ -290,9 +301,9 @@ final class Renderer {
 			if ( isset( $item['post'] ) && $item['post'] instanceof \WP_Post ) {
 				$post               = $item['post'];
 				$this->ctx->post_id = $post->ID;
-				$html              .= \Uncoder\Builder\Widgets\Support\Theme_Context::with_post( $post, fn() => $this->render_container( $element, $this->resolve_dynamic( $element, $s ), $depth ) );
+				$html              .= \Uncoder\Builder\Widgets\Support\Theme_Context::with_post( $post, fn() => $this->render_container( $element, $this->resolve_dynamic( $element, $s, $type ), $depth ) );
 			} else {
-				$html .= $this->render_container( $element, $this->resolve_dynamic( $element, $s ), $depth );
+				$html .= $this->render_container( $element, $this->resolve_dynamic( $element, $s, $type ), $depth );
 			}
 		}
 		list( $this->ctx->post_id, $this->ctx->term, $this->ctx->repeat ) = $prev;
@@ -589,27 +600,18 @@ final class Renderer {
 	}
 
 	/**
-	 * Applies dynamic tags: element.dynamic = { key: { tag, options, before, after, fallback } }.
+	 * Applies dynamic tags: element.dynamic = { key: { tag, options, before, after, fallback } }, the key being a
+	 * setting or a field of a repeater item ("items.<item _id>.text").
 	 *
 	 * @param array<string,mixed> $element  Node.
 	 * @param array<string,mixed> $settings Settings.
 	 * @return array<string,mixed>
 	 */
-	private function resolve_dynamic( array $element, array $settings ): array {
+	private function resolve_dynamic( array $element, array $settings, ?Element_Base $type = null ): array {
 		if ( empty( $element['dynamic'] ) || ! is_array( $element['dynamic'] ) ) {
 			return $settings;
 		}
-		$tags = Plugin::instance()->tags();
-		foreach ( $element['dynamic'] as $key => $def ) {
-			if ( ! is_array( $def ) || empty( $def['tag'] ) ) {
-				continue;
-			}
-			$value = $tags->resolve( $def, $settings[ $key ] ?? null, $this->ctx );
-			if ( null !== $value ) {
-				$settings[ $key ] = $value;
-			}
-		}
-		return $settings;
+		return Plugin::instance()->tags()->apply( $element['dynamic'], $settings, $this->ctx, $type );
 	}
 
 	/**
