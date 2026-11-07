@@ -46,6 +46,8 @@ final class Plugin {
 
 	public function on_plugins_loaded(): void {
 		Install::maybe_upgrade();
+		// The paid features, when this site has them (pro/: Licence\Pro_Module), add their modules below.
+		Licence\Pro_Module::load();
 		// Inline styles in rich text (a muted word: <span style="color: rgba(…)">) keep plain color functions.
 		add_filter( 'safecss_filter_attr_allow_css', array( Core\Utils::class, 'allow_color_functions' ), 10, 2 );
 
@@ -85,19 +87,20 @@ final class Plugin {
 			'updater'      => Site\Updater::class,
 			'find_replace' => Site\Find_Replace::class,
 			'consent'    => Site\Consent::class,
+			'comments'   => Site\Comments::class,
 			'lottie'     => Site\Lottie_Files::class,
 			'page_effects' => Site\Page_Effects::class,
 			'performance'  => Site\Performance::class,
 			'schema'       => Site\Schema::class,
 			'starters'     => Site\Starters::class,
+			'restore_points' => Site\Restore_Points::class,
 			'licence'      => Licence\Licence::class,
+			'pro_module'   => Licence\Pro_Module::class,
 			'library'      => Site\Library::class,
 			'white_label'  => Site\White_Label::class,
 			'handoff'      => Site\Handoff::class,
-			'cloud_library' => Site\Cloud_Library::class,
 			'page_checks'  => Site\Page_Checks::class,
 			'section_library' => Site\Section_Library::class,
-			'starter_rewrite' => Site\Starter_Rewrite::class,
 			'mcp'        => Mcp\Mcp::class,
 			'abilities'  => Mcp\Abilities_Bridge::class,
 		);

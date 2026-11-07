@@ -64,7 +64,8 @@ final class Prompts {
 				),
 			),
 		);
-		if ( ! Starter_Rewrite::allowed() ) {
+		// "Make it yours" comes with the Pro module.
+		if ( ! class_exists( Starter_Rewrite::class ) || ! Starter_Rewrite::allowed() ) {
 			unset( $defs['make_it_yours'] ); // Pro and Agency only.
 		}
 		return $defs;

@@ -4,7 +4,7 @@ Tags: page builder, website builder, theme builder, drag and drop, mcp
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 0.1.5
+Stable tag: 0.1.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -200,7 +200,7 @@ This plugin connects to the following third-party services only in the situation
 Uncoder's own servers. Nothing is sent until an administrator uses one of these features.
 
 * **Licences (uncoderbuilder.com):** when an administrator activates, checks or removes a licence under **Settings → Licence**, and once a day while a key is stored, the site sends the licence key, its address, its WordPress environment type and the Uncoder version. The server answers with a signed token that names the site, the plan and its features.
-* **Starter sites, premium sections and the cloud library (cloud.uncoderbuilder.com):** when an administrator opens **Library → Starter sites** or **Premium sections**, inserts a premium section, imports a starter site, or uses the Agency cloud library, the site asks for the catalogue and the chosen files. Paid content is requested with the site's address, environment type, Uncoder version and its signed licence token (never the key). Items an agency saves to its cloud library are stored there under its licence.
+* **Pro features, starter sites, premium sections and the cloud library (cloud.uncoderbuilder.com):** while a Pro or Agency licence is active, the site checks once a day for its Pro features and their updates. When an administrator opens **Library → Starter sites** or **Premium sections**, inserts a premium section, imports a starter site, or uses the Agency cloud library, the site asks for the catalogue and the chosen files. Paid content is requested with the site's address, environment type, Uncoder version and its signed licence token (never the key). Items an agency saves to its cloud library are stored there under its licence.
 
 Uncoder Cloud: https://uncoderbuilder.com/ — Privacy policy: https://uncoderbuilder.com/privacy-policy/ — Terms: https://uncoderbuilder.com/terms/
 
@@ -332,6 +332,16 @@ Bundled assets:
 
 == Changelog ==
 
+= 0.1.6 =
+* Restore points: every starter site and site kit import first saves a restore point. Library → Import & export → Restore points undoes a whole import: the Design System, settings, custom code, fonts, menus, logo, home page and every page or template it replaced come back exactly, and what it added goes to the trash. The import report has Undo this import.
+* Section library in the editor: a big window with Patterns, premium Sections (Pro), your Saved sections and the Cloud library (Agency), with categories, search, a starter-site filter and photo previews. Open it from Library beside + Section on the canvas, the Add section bar or Insert → Sections; it inserts where you opened it.
+* Empty boxes in the editor: a calmer drop area, and boxes drawn at their own size (divider lines, dots, swatches) now look as they do on the site.
+* The menu now reads Dashboard, Design System, Theme Builder, Library. Settings → General → Updates switches on automatic updates for the plugin, the Uncoder theme and your Pro features (the same switches as on the Plugins and Themes screens).
+* Pro and Agency: your Pro features install by themselves when the licence is activated and stay up to date on their own. Settings → Licence shows their status.
+* Settings → Forms → Comments: take comments only where a comments section is shown, or nowhere, to stop spam on posts without a comment form.
+* Font picker: every font shows in its own typeface, with a style menu and keyboard support.
+* Fixes: several Fontshare fonts on one page, Fontshare fonts listed before Google fonts, the Rank Math sitemap not updating after saving in the editor, an uploaded italic-only font hiding the Google font of the same name.
+
 = 0.1.5 =
 * WooCommerce support: Single product and Product archive templates, product page widgets (images and gallery, title, price, add to cart for every product type, rating, stock, meta, descriptions, tabs with reviews, additional information, sale badge, notices), product grids and categories, the cart, checkout and account pages, and a header Mini Cart with a cart drawer. WooCommerce stays in charge of prices, stock, cart, checkout and payments.
 * Design System → Shop (price, sale badge, star and message colors, and WooCommerce's own buttons and fields), WooCommerce dynamic tags, product queries for Loop Grid and Loop Carousel, and Load WooCommerce files only on store pages.
@@ -390,6 +400,9 @@ Bundled assets:
 * First release.
 
 == Upgrade Notice ==
+
+= 0.1.6 =
+Restore points before every import and a section library in the editor. With a Pro or Agency licence, your Pro features install by themselves after this update. If your host limits outgoing connections, allow cloud.uncoderbuilder.com.
 
 = 0.1.5 =
 WooCommerce support: design product pages, the shop, cart, checkout and account with Uncoder. Better Elementor imports (UiCore themes, Element Pack, WPForms) and lighter pages. Nothing to migrate.

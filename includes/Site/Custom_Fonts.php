@@ -100,6 +100,11 @@ final class Custom_Fonts {
 		return self::all()[ $family ] ?? null;
 	}
 
+	/** Forgets the fonts read in this request (after the option was written directly, e.g. by a restore). */
+	public static function flush(): void {
+		self::$cache = null;
+	}
+
 	/**
 	 * Replaces the stored fonts (already validated: see upload() and Site_Kit::import_fonts()).
 	 *

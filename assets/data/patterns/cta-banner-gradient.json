@@ -82,6 +82,7 @@
 							"size": 100,
 							"unit": "%"
 						},
+						"_flex_shrink": 0,
 						"gap": {
 							"size": 16,
 							"unit": "px"
@@ -136,7 +137,8 @@
 							"unit": "px"
 						},
 						"wrap": "wrap",
-						"_flex_shrink": 0,
+						"justify": "flex-end",
+						"justify_tablet": "flex-start",
 						"_align_self_mobile": "stretch"
 					},
 					"children": [

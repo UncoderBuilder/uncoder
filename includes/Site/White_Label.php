@@ -8,6 +8,9 @@
  * "Only me": the Licence and White-label settings show only to the administrator who saved them, so other admins
  * (the client) do not see them.
  *
+ * Showing a saved brand and switching it off live here, in the plugin; setting or changing a brand is the Pro module's
+ * (Site\White_Label_Admin, Agency edition), through the uncoder_wb/white_label/save filter.
+ *
  *   GET/POST uncoder/v1/white-label
  *
  * Option uncoder_wb_white_label: name, logo (attachment id), icon (attachment id), url, hide_links, owner (user id).
@@ -205,31 +208,30 @@ final class White_Label {
 
 	/** @return WP_REST_Response|WP_Error */
 	public function save( WP_REST_Request $request ) {
-		$p = (array) $request->get_json_params();
-		// Turning white-label off is always allowed; setting or changing a brand needs the Agency licence.
-		$off = '' === trim( (string) ( $p['name'] ?? '' ) ) && empty( $p['logo'] ) && empty( $p['icon'] );
-		if ( ! $off && ! Licence::allows( 'white_label' ) ) {
-			return new WP_Error( 'uncoder_needs_agency', __( 'White-label comes with the Agency licence. Your saved brand keeps applying; changing it needs an active Agency licence.', 'uncoder' ), array( 'status' => 403 ) );
+		$p   = (array) $request->get_json_params();
+		// Off: no brand and none of its options ("Only me", link, hidden links) either.
+		$off = '' === trim( (string) ( $p['name'] ?? '' ) ) && empty( $p['logo'] ) && empty( $p['icon'] ) && '' === trim( (string) ( $p['url'] ?? '' ) ) && empty( $p['hideLinks'] ) && empty( $p['onlyMe'] );
+		if ( $off ) {
+			// Turning white-label off is always possible, licence and Pro module or not: everything back to the defaults.
+			$s = array();
+		} else {
+			/**
+			 * Setting or changing a brand (the Pro module's White_Label_Admin answers).
+			 *
+			 * @param array|WP_Error|null $saved The settings to store, an error, or null (no Pro module).
+			 * @param array               $p     What the screen sent.
+			 */
+			$s = apply_filters( 'uncoder_wb/white_label/save', null, $p );
+			if ( null === $s ) {
+				return new WP_Error( 'uncoder_needs_agency', __( 'White-label comes with the Agency licence. Your saved brand keeps applying; changing it needs an active Agency licence.', 'uncoder' ), array( 'status' => 403 ) );
+			}
+			if ( is_wp_error( $s ) ) {
+				return $s;
+			}
 		}
-		if ( $off && ! Licence::allows( 'white_label' ) ) {
-			$p = array(); // Without the licence, off means everything back to the defaults.
-		}
-		$name = trim( wp_strip_all_tags( (string) ( $p['name'] ?? '' ) ) );
-		$s    = array(
-			'name'       => mb_substr( $name, 0, 40 ),
-			'logo'       => self::own_image( (int) ( $p['logo'] ?? 0 ) ),
-			'icon'       => self::own_image( (int) ( $p['icon'] ?? 0 ) ),
-			'url'        => esc_url_raw( (string) ( $p['url'] ?? '' ) ),
-			'hide_links' => ! empty( $p['hideLinks'] ),
-			'owner'      => ! empty( $p['onlyMe'] ) ? get_current_user_id() : 0,
-		);
-		update_option( self::OPTION, $s, true );
-		self::$settings = $s;
+		update_option( self::OPTION, (array) $s, true );
+		self::$settings = (array) $s;
 		return $this->get();
 	}
 
-	/** An image attachment id, or 0. */
-	private static function own_image( int $id ): int {
-		return $id > 0 && wp_attachment_is_image( $id ) ? $id : 0;
-	}
 }

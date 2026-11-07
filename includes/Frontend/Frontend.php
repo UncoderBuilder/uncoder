@@ -39,6 +39,30 @@ final class Frontend {
 		add_filter( 'the_title', array( $this, 'hide_classic_title' ), 10, 2 );
 		add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_site_features' ), 21 );
 		add_action( 'wp_footer', array( $this, 'back_to_top' ), 30 );
+		add_action( 'wp_footer', array( $this, 'console_signature' ), 1000 );
+	}
+
+	/**
+	 * "Powered by Uncoder Builder v…" in the browser console of pages that load Uncoder's runtime. Not in the editor
+	 * canvas, and not under a white-label brand (the client's site never names Uncoder). Off with
+	 * add_filter( 'uncoder_wb/console_signature', '__return_false' ).
+	 */
+	public function console_signature(): void {
+		if ( is_admin() || is_feed() || $this->is_preview() || ! wp_script_is( 'uncoder-runtime', 'done' ) || \Uncoder\Builder\Site\White_Label::active() ) {
+			return;
+		}
+		if ( ! apply_filters( 'uncoder_wb/console_signature', true ) ) {
+			return;
+		}
+		$badge = 'color:#fff;padding:3px 7px;font:500 12px/1.4 system-ui,sans-serif;';
+		wp_print_inline_script_tag(
+			sprintf(
+				'console.log(%s,%s,%s,"");',
+				wp_json_encode( '%c Powered by Uncoder Builder %c v' . UNCODER_WB_VERSION . ' %c https://uncoderbuilder.com', JSON_UNESCAPED_SLASHES ),
+				wp_json_encode( $badge . 'background:#100f0f;border-radius:4px 0 0 4px', JSON_UNESCAPED_SLASHES ),
+				wp_json_encode( $badge . 'background:#aa412a;border-radius:0 4px 4px 0', JSON_UNESCAPED_SLASHES )
+			)
+		);
 	}
 
 	/**

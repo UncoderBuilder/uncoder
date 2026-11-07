@@ -1,6 +1,48 @@
 {
   "changelog": [
     {
+      "version": "0.1.6",
+      "date": "2026-11-07",
+      "title": "Restore points and a section library",
+      "groups": [
+        {
+          "label": "Safer imports",
+          "items": [
+            "Every starter site and site kit import first saves a restore point. Library → Import & export → Restore points undoes a whole import; what it added goes to the trash.",
+            "Undo this import, right from the import report."
+          ]
+        },
+        {
+          "label": "Editor",
+          "items": [
+            "Section library: patterns, premium sections, saved sections and the cloud library in one big window, with categories, search and filters. Open it from Library beside + Section on the canvas.",
+            "A calmer drop area in empty boxes; divider lines and dots look as they do on the site.",
+            "Font picker: every font shows in its own typeface, with a style menu."
+          ]
+        },
+        {
+          "label": "Admin",
+          "items": [
+            "The menu now reads Dashboard, Design System, Theme Builder, Library.",
+            "Settings → General → Updates: automatic updates for the plugin, the theme and your Pro features.",
+            "Settings → Forms → Comments: stop comment spam on posts without a comment form."
+          ]
+        },
+        {
+          "label": "Pro and Agency",
+          "items": [
+            "Your Pro features install by themselves when the licence is activated and stay up to date on their own."
+          ]
+        },
+        {
+          "label": "Fixes",
+          "items": [
+            "Several Fontshare fonts on one page, Fontshare fonts listed before Google fonts, the Rank Math sitemap not updating after saving in the editor."
+          ]
+        }
+      ]
+    },
+    {
       "version": "0.1.5",
       "date": "2026-10-25",
       "title": "WooCommerce support and better Elementor imports",
@@ -257,6 +299,17 @@
     }
   ],
   "news": [
+    {
+      "id": "2026-11-release-0-1-6",
+      "date": "2026-11-07",
+      "tag": "release",
+      "title": "Uncoder 0.1.6: restore points and a section library",
+      "body": "Undo any import with restore points, pick sections from a big library window in the editor, and switch on automatic updates.",
+      "link": {
+        "label": "See what’s new",
+        "docs": "changelog/"
+      }
+    },
     {
       "id": "2026-10-release-0-1-5",
       "date": "2026-10-25",

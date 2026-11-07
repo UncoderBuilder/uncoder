@@ -7,6 +7,7 @@ Cursor and other AI apps can build and edit your site with the same widgets you 
 - Theme Builder: headers, footers, post layouts, archives, 404 pages, popups and mega menus
 - WooCommerce: product pages, the shop, cart, checkout, account and a header mini cart, with WooCommerce still in charge of prices, stock and payments
 - Design System: colors, fonts, text styles and buttons every page — and every AI — uses
+- Restore points: every starter-site or site-kit import can be undone in one click, and a section library in the editor
 - 58 MCP tools with permissions, an activity log and one-click undo
 - Optional [Pro and Agency licences](https://uncoderbuilder.com/pricing/): the starter-site library, premium sections,
   “Make it yours” through your own AI app, and agency tools (white-label, client handoff, a private cloud library,

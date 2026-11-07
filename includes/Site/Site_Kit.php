@@ -53,7 +53,7 @@ final class Site_Kit {
 	/** Parts a kit can carry (all optional). */
 	public const PARTS = array( 'design', 'templates', 'content', 'posts', 'menus', 'media', 'fonts', 'settings', 'snippets' );
 	/** Settings never exported: secrets and site-local switches. */
-	private const PRIVATE_SETTINGS = array( 'remove_data', 'roles', 'maintenance', 'form_retention_days' );
+	private const PRIVATE_SETTINGS = array( 'remove_data', 'roles', 'maintenance', 'form_retention_days', 'pro_auto_update' );
 	/**
 	 * Settings never imported: connections to outside services. A kit carries no keys, and taking an
 	 * endpoint or account URL from a file would send this site's saved key there.
@@ -911,6 +911,24 @@ final class Site_Kit {
 		return (int) ( $found[0] ?? 0 );
 	}
 
+	/**
+	 * Names a staged import for its restore point (the starter library: "Starter site: Rowan").
+	 *
+	 * @param string $token  Staging token (from stage_zip()).
+	 * @param string $label  What is imported.
+	 * @param string $source "site-kit" | "starter".
+	 */
+	public static function label_import( string $token, string $label, string $source = 'site-kit' ): void {
+		$dir = self::dir( 'import-' . preg_replace( '/[^a-z0-9]/', '', $token ) );
+		if ( '' === $token || ! is_dir( $dir ) ) {
+			return;
+		}
+		$state = self::read( $dir, 'state.json' );
+		$state['label']  = sanitize_text_field( $label );
+		$state['source'] = $source;
+		file_put_contents( $dir . '/state.json', (string) wp_json_encode( $state ) ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+	}
+
 	/* ------------------------------------------------------------------ Import: run */
 
 	/**
@@ -930,6 +948,18 @@ final class Site_Kit {
 			'done'     => 0,
 			'warnings' => array(),
 		);
+		// A restore point notes the site as it was, the first time this import touches each part of it, so the whole
+		// import can be undone (Library → Import & export → Restore points). It spans every step of the import.
+		$point = (string) ( $state['restore_point'] ?? '' );
+		if ( '' === $point || ! Restore_Points::recording( $point ) ) {
+			$name = (string) ( self::read( $dir, 'manifest.json' )['site']['name'] ?? '' );
+			/* translators: %s: name of the site the kit was made from. */
+			$label                  = (string) ( $state['label'] ?? ( '' !== $name ? sprintf( __( 'Site kit: %s', 'uncoder' ), $name ) : __( 'Site kit import', 'uncoder' ) ) );
+			$point                  = Restore_Points::begin( $label, (string) ( $state['source'] ?? 'site-kit' ) );
+			$state['restore_point'] = $point;
+			file_put_contents( $dir . '/state.json', (string) wp_json_encode( $state ) ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+		}
+		Restore_Points::resume( $point );
 		if ( 'media' === $request->get_param( 'step' ) ) {
 			// The site's own logo, noted before any media arrives (the kit's files may take over ids a deleted logo had).
 			if ( ! isset( $state['logo_before'] ) ) {
@@ -1005,6 +1035,7 @@ final class Site_Kit {
 				}
 			}
 			file_put_contents( $dir . '/state.json', (string) wp_json_encode( $state ) ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+			Restore_Points::pause();
 			return new WP_REST_Response(
 				array(
 					'done'   => (int) $state['done'],
@@ -1014,6 +1045,8 @@ final class Site_Kit {
 			);
 		}
 		$result = $this->finish( $dir, $parts, $state, (string) $request->get_param( 'conflicts' ), (bool) $request->get_param( 'homepage' ), false !== $request->get_param( 'activate' ) );
+		Restore_Points::close( $point );
+		$result['restorePoint'] = $point;
 		self::rrmdir( $dir );
 		return new WP_REST_Response( $result );
 	}

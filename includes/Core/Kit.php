@@ -318,6 +318,11 @@ final class Kit {
 		return $out;
 	}
 
+	/** Reads the Design System from the database again (after it was written there directly, e.g. by a restore). */
+	public function reload(): void {
+		$this->data = null;
+	}
+
 	/**
 	 * @return array<string,mixed>
 	 */

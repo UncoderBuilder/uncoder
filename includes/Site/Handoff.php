@@ -9,6 +9,9 @@
  * plugins. Turning handoff on needs the "handoff" feature; once on it stays on when the licence ends, and the
  * builders can always turn it off.
  *
+ * The restrictions, the status and turning it off live here, in the plugin; turning it on or changing it is the Pro
+ * module's (Site\Handoff_Admin, Agency edition), through the uncoder_wb/handoff/save filter.
+ *
  *   GET/POST uncoder/v1/handoff
  *
  * Option uncoder_wb_handoff: on, builders (user ids with full access), contact (shown to the client), since.
@@ -35,7 +38,7 @@ final class Handoff {
 	 * users for anything but GET. Their texts, images and links go through documents/*, which Role_Manager limits to
 	 * content changes.
 	 */
-	private const DESIGN_ROUTES = array( 'kit', 'templates', 'settings', 'snippets', 'custom-fonts', 'adobe-fonts', 'icon-sets', 'transfer', 'site-kit', 'elementor-import', 'starters', 'library', 'find-replace', 'safe-mode', 'rollback', 'mcp-admin', 'overview', 'cloud', 'reports' );
+	private const DESIGN_ROUTES = array( 'kit', 'templates', 'settings', 'snippets', 'custom-fonts', 'adobe-fonts', 'icon-sets', 'transfer', 'site-kit', 'elementor-import', 'starters', 'library', 'find-replace', 'safe-mode', 'rollback', 'restore-points', 'mcp-admin', 'overview', 'cloud', 'reports' );
 
 	/** @var array<string,mixed>|null */
 	private static $settings = null;
@@ -192,26 +195,47 @@ final class Handoff {
 
 	/** @return WP_REST_Response|WP_Error */
 	public function save( WP_REST_Request $request ) {
-		$p  = (array) $request->get_json_params();
-		$on = ! empty( $p['on'] );
-		// Turning handoff off is always allowed; turning it on or changing it needs the Agency licence.
-		if ( ( $on || ! self::on() ) && ! Licence::allows( 'handoff' ) ) {
-			return new WP_Error( 'uncoder_needs_agency', __( 'Client handoff comes with the Agency licence.', 'uncoder' ), array( 'status' => 403 ) );
+		$p = (array) $request->get_json_params();
+		if ( empty( $p['on'] ) && self::on() ) {
+			// Turning handoff off is always possible, licence or not.
+			$s = array(
+				'on'       => false,
+				'builders' => self::clean_builders( (array) ( $p['builders'] ?? array() ) ),
+				'contact'  => mb_substr( sanitize_text_field( (string) ( $p['contact'] ?? '' ) ), 0, 120 ),
+				'since'    => '',
+			);
+		} else {
+			/**
+			 * Turning handoff on or changing it (the Pro module's Handoff_Admin answers).
+			 *
+			 * @param array|WP_Error|null $saved The settings to store, an error, or null (no Pro module).
+			 * @param array               $p     What the screen sent.
+			 */
+			$s = apply_filters( 'uncoder_wb/handoff/save', null, $p );
+			if ( null === $s ) {
+				return new WP_Error( 'uncoder_needs_agency', __( 'Client handoff comes with the Agency licence.', 'uncoder' ), array( 'status' => 403 ) );
+			}
+			if ( is_wp_error( $s ) ) {
+				return $s;
+			}
 		}
-		$builders = array_map( 'intval', (array) ( $p['builders'] ?? array() ) );
-		$builders = array_values( array_unique( array_filter( $builders, static fn( int $id ): bool => $id > 0 && user_can( $id, 'edit_posts' ) ) ) );
-		// Whoever saves keeps full access: nobody hands a site over and locks themselves out.
+		update_option( self::OPTION, (array) $s, true );
+		self::$settings = (array) $s;
+		return $this->get();
+	}
+
+	/**
+	 * The builders who keep full access: users who can edit, always including whoever saves (nobody hands a site over
+	 * and locks themselves out).
+	 *
+	 * @param array<int,mixed> $ids User ids.
+	 * @return int[]
+	 */
+	public static function clean_builders( array $ids ): array {
+		$builders = array_values( array_unique( array_filter( array_map( 'intval', $ids ), static fn( int $id ): bool => $id > 0 && user_can( $id, 'edit_posts' ) ) ) );
 		if ( ! in_array( get_current_user_id(), $builders, true ) ) {
 			$builders[] = get_current_user_id();
 		}
-		$s = array(
-			'on'       => $on,
-			'builders' => $builders,
-			'contact'  => mb_substr( sanitize_text_field( (string) ( $p['contact'] ?? '' ) ), 0, 120 ),
-			'since'    => $on ? ( self::on() ? (string) ( self::settings()['since'] ?? '' ) : gmdate( 'c' ) ) : '',
-		);
-		update_option( self::OPTION, $s, true );
-		self::$settings = $s;
-		return $this->get();
+		return $builders;
 	}
 }

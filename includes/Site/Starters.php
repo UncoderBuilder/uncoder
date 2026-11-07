@@ -150,6 +150,10 @@ final class Starters {
 		if ( ! $transfer instanceof Transfer ) {
 			return new WP_Error( 'uncoder_unavailable', __( 'Import is not available.', 'uncoder' ), array( 'status' => 500 ) );
 		}
+		// A restore point notes what the import changes, so it can be undone completely (Restore_Points).
+		/* translators: %s: starter site name. */
+		$point = Restore_Points::begin( sprintf( __( 'Starter site: %s', 'uncoder' ), (string) $starter['title'] ), 'starter' );
+		Restore_Points::resume( $point );
 		$result = $transfer->run(
 			array(
 				'format'  => Transfer::FORMAT,
@@ -163,9 +167,11 @@ final class Starters {
 				'conditions' => $flag( 'conditions' ),
 			)
 		);
+		Restore_Points::close( $point );
 		if ( is_wp_error( $result ) ) {
 			return $result;
 		}
+		$result['restorePoint'] = $point;
 		$result['starter'] = $this->summary( $starter );
 		// The Design System before the import (newest restore point), for an "undo" in the dashboard.
 		$result['kitSnapshot'] = ! empty( $result['kit'] ) ? (string) ( Plugin::instance()->kit()->snapshots()[0]['id'] ?? '' ) : '';

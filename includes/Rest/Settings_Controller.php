@@ -133,6 +133,7 @@ final class Settings_Controller {
 			'maintenance'         => Maintenance::get(),
 			'roleAccess'          => \Uncoder\Builder\Site\Role_Manager::settings(),
 			'captcha'             => \Uncoder\Builder\Site\Captcha::public_settings(),
+			'comments'            => \Uncoder\Builder\Site\Comments::mode(),
 			'integrations'        => \Uncoder\Builder\Forms\Integrations::public_settings(),
 			'disabledWidgets'     => Prefs_Controller::disabled_widgets(),
 			'widgets'             => array_values(
@@ -154,6 +155,7 @@ final class Settings_Controller {
 			'businessTypes'       => \Uncoder\Builder\Site\Schema::TYPES,
 			'maintenancePage'     => $this->page_ref( Maintenance::get()['page'] ),
 			'roles'               => $this->roles(),
+			'updates'             => \Uncoder\Builder\Site\Auto_Updates::get(),
 		);
 	}
 
@@ -215,6 +217,11 @@ final class Settings_Controller {
 			$stored['remove_data'] = (bool) $body['removeData'];
 			$changed               = true;
 		}
+		if ( isset( $body['updates'] ) && is_array( $body['updates'] ) ) {
+			// The plugin and theme switches are WordPress's site options; only the Pro switch lands in $stored.
+			\Uncoder\Builder\Site\Auto_Updates::save( $body['updates'], $stored );
+			$changed = true;
+		}
 		if ( array_key_exists( 'formRetentionDays', $body ) ) {
 			$stored['form_retention_days'] = max( 0, min( 3650, absint( $body['formRetentionDays'] ) ) );
 			$changed                       = true;
@@ -235,6 +242,10 @@ final class Settings_Controller {
 		if ( isset( $body['captcha'] ) && is_array( $body['captcha'] ) ) {
 			$stored['captcha'] = \Uncoder\Builder\Site\Captcha::sanitize( $body['captcha'] );
 			$changed           = true;
+		}
+		if ( isset( $body['comments'] ) ) {
+			$stored['comments'] = \Uncoder\Builder\Site\Comments::sanitize( $body['comments'] );
+			$changed            = true;
 		}
 		if ( isset( $body['disabledWidgets'] ) && is_array( $body['disabledWidgets'] ) ) {
 			$stored['disabled_widgets'] = Prefs_Controller::sanitize_disabled( $body['disabledWidgets'] );

@@ -197,8 +197,10 @@ final class Fonts {
 		$families  = array();
 		$fontshare = array();
 		foreach ( $fonts as $family => $weights ) {
-			// An uploaded font with the same name replaces the Google (or Fontshare) one.
-			if ( \Uncoder\Builder\Site\Custom_Fonts::get( $family ) ) {
+			// An uploaded font with the same name replaces the Google (or Fontshare) one, unless it has only italic faces
+			// (a Site Kit can bring just the italic of a Google family): the upright weights then still come from there.
+			$custom = \Uncoder\Builder\Site\Custom_Fonts::get( $family );
+			if ( $custom && self::has_upright( $custom ) ) {
 				continue;
 			}
 			if ( self::is_fontshare( $family ) ) {
@@ -234,13 +236,11 @@ final class Fonts {
 			}
 			$families[ $family ] = $wanted;
 		}
-		if ( $fontshare ) {
-			ksort( $fontshare );
-			$params = array();
-			foreach ( $fontshare as $family => $weights ) {
-				$params[] = self::fontshare_param( $family, $weights );
-			}
-			self::enqueue_url( 'https://api.fontshare.com/v2/css?' . implode( '&', $params ) . '&display=swap', $delivery );
+		// One stylesheet per Fontshare family: asked for several at once, Fontshare mixes them up (it drops every
+		// family after one with a single weight, and can serve the first family's weights, or another family).
+		ksort( $fontshare );
+		foreach ( $fontshare as $family => $weights ) {
+			self::enqueue_url( 'https://api.fontshare.com/v2/css?' . self::fontshare_param( $family, $weights ) . '&display=swap', $delivery );
 		}
 		if ( ! $families ) {
 			return;
@@ -254,6 +254,20 @@ final class Fonts {
 			self::$requested[ $family ] = is_array( $weights ) && is_array( self::$requested[ $family ] ?? null ) ? array_values( array_unique( array_merge( self::$requested[ $family ], $weights ) ) ) : $weights;
 		}
 		self::enqueue_url( 'https://fonts.googleapis.com/css2?' . implode( '&', $parts ) . '&display=swap', $delivery );
+	}
+
+	/**
+	 * Whether an uploaded font has an upright (not italic) face.
+	 *
+	 * @param array<string,mixed> $font Uploaded font (Custom_Fonts::get()).
+	 */
+	private static function has_upright( array $font ): bool {
+		foreach ( (array) ( $font['faces'] ?? array() ) as $face ) {
+			if ( 'italic' !== ( is_array( $face ) ? ( $face['style'] ?? 'normal' ) : 'normal' ) ) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

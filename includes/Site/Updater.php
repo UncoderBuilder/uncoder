@@ -139,7 +139,17 @@ final class Updater {
 		$fresh = is_admin() && ! empty( $_GET['force-check'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only refresh.
 		$list  = self::releases( $fresh );
 		if ( is_wp_error( $list ) || ! $list || ! version_compare( $list[0]['version'], UNCODER_WB_VERSION, '>' ) ) {
-			return $update;
+			// Up to date (or GitHub unreachable): answering with this version puts Uncoder in WordPress's "no update"
+			// list, which is what shows the "Enable auto-updates" link on the Plugins screen between releases.
+			return array(
+				'id'           => 'github.com/' . self::REPO,
+				'slug'         => 'uncoder',
+				'version'      => UNCODER_WB_VERSION,
+				'url'          => 'https://github.com/' . self::REPO,
+				'package'      => '',
+				'requires'     => '6.6',
+				'requires_php' => UNCODER_WB_MIN_PHP,
+			);
 		}
 		return array(
 			'id'           => 'github.com/' . self::REPO,

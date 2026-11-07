@@ -321,7 +321,8 @@ final class Editor {
 			'version'     => UNCODER_WB_VERSION,
 			'brand'       => \Uncoder\Builder\Site\White_Label::brand(),
 			'handoff'     => \Uncoder\Builder\Site\Handoff::notice(),
-			'cloud'       => \Uncoder\Builder\Site\Cloud_Library::client_config(),
+			// The agency's cloud library comes with the Pro module (Agency edition).
+			'cloud'       => class_exists( \Uncoder\Builder\Site\Cloud_Library::class ) ? \Uncoder\Builder\Site\Cloud_Library::client_config() : null,
 			// Paid plans launched (Licence::enabled()): Insert → Sections shows the premium sections.
 			'licensing'   => \Uncoder\Builder\Licence\Licence::enabled(),
 			'post'        => array(

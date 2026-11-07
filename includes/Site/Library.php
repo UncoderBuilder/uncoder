@@ -120,6 +120,11 @@ final class Library {
 		}
 		$staged = ( new Site_Kit() )->stage_zip( $tmp );
 		wp_delete_file( $tmp );
+		if ( $staged instanceof WP_REST_Response ) {
+			$title = sanitize_text_field( (string) $request->get_param( 'title' ) );
+			/* translators: %s: starter site name. */
+			Site_Kit::label_import( (string) ( $staged->get_data()['token'] ?? '' ), sprintf( __( 'Starter site: %s', 'uncoder' ), '' !== $title ? $title : ucwords( str_replace( '-', ' ', $slug ) ) ), 'starter' );
+		}
 		return $staged;
 	}
 

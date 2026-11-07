@@ -35,6 +35,25 @@ final class Seo {
 		if ( ! is_admin() ) {
 			add_action( 'wp', array( $this, 'maybe_output' ) );
 		}
+		// Rank Math clears its sitemap cache only for saves in wp-admin or by cron. The editor and AI clients save through
+		// the REST API, which would leave the sitemap without new pages and with old addresses.
+		add_action( 'save_post', array( $this, 'rank_math_sitemap' ), 20 );
+	}
+
+	/**
+	 * Clears Rank Math's sitemap cache for the saved post's type, at the end of the request (see register()).
+	 *
+	 * @param int $post_id Post id.
+	 */
+	public function rank_math_sitemap( $post_id ): void {
+		$watcher = '\RankMath\Sitemap\Cache_Watcher';
+		if ( is_admin() || wp_doing_cron() || ! class_exists( $watcher ) || wp_is_post_revision( $post_id ) || wp_is_post_autosave( $post_id ) ) {
+			return;
+		}
+		$watcher::invalidate_post( (int) $post_id );
+		if ( ! has_action( 'shutdown', array( $watcher, 'clear_queued' ) ) ) {
+			add_action( 'shutdown', array( $watcher, 'clear_queued' ) );
+		}
 	}
 
 	public function register_meta(): void {

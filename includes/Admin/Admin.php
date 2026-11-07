@@ -51,16 +51,16 @@ final class Admin {
 	private const LIBRARY_SEEN = 'uncoder_wb_library_seen';
 
 	public function menu(): void {
-		// Eight screens grouped by job, with a thin rule between the groups (menu_css()): build (Home, Library, Theme
-		// Builder, Design System) · watch (Submissions, Page Checks) · connect and configure (AI & MCP, Settings).
+		// Eight screens grouped by job, with a thin rule between the groups (menu_css()): build (Dashboard, Design System,
+		// Theme Builder, Library) · watch (Submissions, Page Checks) · connect and configure (AI & MCP, Settings).
 		// Library holds everything you bring in: starter sites, saved sections, premium sections, the cloud library,
 		// import and export. Popups live in the Theme Builder, custom fonts in the Design System, custom code in Settings.
 		$licensed    = \Uncoder\Builder\Licence\Licence::enabled();
 		$this->pages = array(
-			'uncoder'               => array( __( 'Home', 'uncoder' ), 'edit_posts' ),
-			'uncoder-library'       => array( __( 'Library', 'uncoder' ), 'edit_posts' ),
-			'uncoder-templates'     => array( __( 'Theme Builder', 'uncoder' ), 'edit_theme_options' ),
+			'uncoder'               => array( __( 'Dashboard', 'uncoder' ), 'edit_posts' ),
 			'uncoder-design-system' => array( __( 'Design System', 'uncoder' ), 'edit_theme_options' ),
+			'uncoder-templates'     => array( __( 'Theme Builder', 'uncoder' ), 'edit_theme_options' ),
+			'uncoder-library'       => array( __( 'Library', 'uncoder' ), 'edit_posts' ),
 			'uncoder-submissions'   => array( __( 'Submissions', 'uncoder' ), 'edit_pages' ),
 		);
 		// Page checks (and the Agency's branded reports) arrive with the paid plans (Site\Page_Checks).
@@ -70,7 +70,7 @@ final class Admin {
 		$this->pages['uncoder-ai']       = array( __( 'AI & MCP', 'uncoder' ), 'manage_options' );
 		$this->pages['uncoder-settings'] = array( __( 'Settings', 'uncoder' ), 'manage_options' );
 		if ( \Uncoder\Builder\Site\Handoff::restricts() ) {
-			// A handed-over site: the client keeps Home and Submissions; the design screens stay with the builders.
+			// A handed-over site: the client keeps the Dashboard and Submissions; the design screens stay with the builders.
 			$this->pages = array_intersect_key( $this->pages, array_flip( array( 'uncoder', 'uncoder-submissions' ) ) );
 		}
 		$unread = current_user_can( 'edit_pages' ) ? \Uncoder\Builder\Forms\Store::unread_count() : 0;
@@ -191,7 +191,8 @@ final class Admin {
 			'premium'   => \Uncoder\Builder\Licence\Licence::enabled() && \Uncoder\Builder\Site\Section_Library::can_use(),
 			'brand'     => \Uncoder\Builder\Site\White_Label::brand(),
 			'handoff'   => \Uncoder\Builder\Site\Handoff::notice(),
-			'cloud'     => \Uncoder\Builder\Site\Cloud_Library::client_config(),
+			// The agency's cloud library comes with the Pro module (Agency edition).
+			'cloud'     => class_exists( \Uncoder\Builder\Site\Cloud_Library::class ) ? \Uncoder\Builder\Site\Cloud_Library::client_config() : null,
 			// Settings → Performance offers "Load WooCommerce files only on store pages".
 			'woocommerce' => class_exists( 'WooCommerce' ),
 			'rest'    => array(

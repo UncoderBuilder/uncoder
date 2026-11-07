@@ -190,6 +190,35 @@ final class Theme_Builder {
 		return array( 0, '' );
 	}
 
+	/**
+	 * Body template that displays a post, from any request (e.g. a comment sent to wp-comments-post.php, which has no
+	 * main query of its own): the post's query stands in for the main one while the conditions are scored.
+	 *
+	 * @return array{0:int,1:string} [ template id, type ]
+	 */
+	public function body_for_post( int $post_id ): array {
+		global $wp_query, $wp_the_query, $post;
+		$type  = get_post_type( $post_id );
+		$saved = array( $wp_query, $wp_the_query, $post, $this->resolved );
+		// phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited -- restored right below.
+		$wp_query       = new \WP_Query(
+			array(
+				'page' === $type ? 'page_id' : 'p' => $post_id,
+				'post_type'           => 'page' === $type ? 'page' : 'any',
+				'post_status'         => 'any',
+				'posts_per_page'      => 1,
+				'ignore_sticky_posts' => true,
+				'no_found_rows'       => true,
+			)
+		);
+		$wp_the_query   = $wp_query;
+		$this->resolved = array();
+		$body           = $this->resolve_body();
+		list( $wp_query, $wp_the_query, $post, $this->resolved ) = $saved;
+		// phpcs:enable
+		return $body;
+	}
+
 	/* ------------------------------------------------------------------ Output */
 
 	public function render_template( int $id, array $args = array() ): string {

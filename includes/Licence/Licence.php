@@ -229,6 +229,10 @@ final class Licence {
 		}
 		self::save( $data );
 		self::schedule();
+		/**
+		 * A licence was activated on this site (the Pro module installs itself now: Pro_Module).
+		 */
+		do_action( 'uncoder_wb/licence/activated' );
 		return true;
 	}
 
